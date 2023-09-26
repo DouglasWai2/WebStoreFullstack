@@ -7,7 +7,7 @@ const clothesSchema = new mongoose.Schema({
   genre: { type: String, required: true },
   features: [{ type: String }],
   thumbnail: { type: String, required: true },
-  images: [{ type: String, required: true }]
+  images: [{ type: String, required: true }],
 });
 
 module.exports = mongoose.model("cloth", clothesSchema, "Clothes");
