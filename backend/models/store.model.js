@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-const UserSchema = new mongoose.Schema({
+const StoreSchema = new mongoose.Schema({
   username: {
     type: String,
     unique: true,
@@ -29,32 +29,20 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  address: {
-    street: {
-      type: String,
-      trim: true,
-    },
-    neighbourhood: {
-      type: String,
-      trim: true,
-    },
-    city: {
-      type: String,
-      trim: true,
-    },
-    country: {
-      type: String,
-      trim: true,
-    }  
+  CNPJ: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true,
   },
   role: {
     type: String,
-    default: "Costumer",
+    default: "Store",
     required: true,
   },
 });
 
-UserSchema.pre("save", async function (next) {
+StoreSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -62,4 +50,4 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
-module.exports = mongoose.model("user", UserSchema, "Users");
+module.exports = mongoose.model("store", StoreSchema, "stores");
