@@ -1,5 +1,10 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const { jwtExpiration,
+  jwtRefreshExpiration,
+  testjwtExpiration,
+  testjwtRefreshExpiration } = require('../utils/expiration')
+
 
 const verifyToken = (req, res, next) => {
   const accessToken = req.headers["authorization"];
@@ -21,7 +26,7 @@ const verifyToken = (req, res, next) => {
     const accessToken = jwt.sign(
       { user: decoded.user },
       process.env.SECRET_JWT_TOKEN,
-      { expiresIn: "1h" }
+      { expiresIn: testjwtExpiration }
     );
 
     res

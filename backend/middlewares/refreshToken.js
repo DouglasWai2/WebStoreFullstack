@@ -1,3 +1,8 @@
+const { jwtExpiration,
+  jwtRefreshExpiration,
+  testjwtExpiration,
+  testjwtRefreshExpiration } = require('../utils/expiration')
+
 exports.refreshToken = (req, res, next) => {
   const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken) {
@@ -9,7 +14,7 @@ exports.refreshToken = (req, res, next) => {
     const accessToken = jwt.sign(
       { user: decoded.user },
       process.env.SECRET_JWT_KEY,
-      { expiresIn: "1h" }
+      { expiresIn: testjwtExpiration }
     );
 
     res.header("Authorization", accessToken).send(decoded.user);

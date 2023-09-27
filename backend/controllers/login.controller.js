@@ -1,16 +1,12 @@
 const UserSchema = require("../models/user.model");
 const bcrypt = require("bcryptjs");
-const randToken = require("rand-token");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const { jwtExpiration,
+  jwtRefreshExpiration,
+  testjwtExpiration,
+  testjwtRefreshExpiration } = require('../utils/expiration')
 
-const expiration = {
-  jwtExpiration: 900,
-  jwtRefreshExpiration: 86400,
-
-  testjwtExpiration: 60, // 1 minute
-  testjwtRefreshExpiration: 120, // 2 minutes
-};
 
 //
 exports.login = (req, res) => {
@@ -29,17 +25,15 @@ exports.login = (req, res) => {
         if (!bcrypt.compareSync(password, user.password)) {
           res.status(401).json({ success: false, error: "Wrong password" });
         } else {
-          // const token = jwt.sign({id: user._id, email: user.email}, process.env.SECRET_JWT_TOKEN, { expiresIn: 60 })
-          // res.status(200).json({ success: true, token: token})
           const accessToken = jwt.sign(
             { id: user._id, email: user.email },
             process.env.SECRET_JWT_TOKEN,
-            { expiresIn: expiration.testjwtExpiration }
+            { expiresIn: testjwtExpiration }
           );
           const refreshToken = jwt.sign(
             { id: user._id, email: user.email },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: expiration.testjwtRefreshExpiration }
+            { expiresIn: testjwtRefreshExpiration }
           );
           res
             .cookie("refreshToken", refreshToken, {
