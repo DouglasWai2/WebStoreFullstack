@@ -1,4 +1,4 @@
-const RatingSchema = require("../models/rating.models");
+const RatingSchema = require("../models/rating.model");
 
 exports.rateProduct = (req, res) => {
   const { title,

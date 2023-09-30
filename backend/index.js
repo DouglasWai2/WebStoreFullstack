@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const auth = require("./middlewares/verifyToken");
+const cors = require('cors')
 require("dotenv").config();
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors())
 
 mongoose
   .connect(process.env.MONGODB_URI)

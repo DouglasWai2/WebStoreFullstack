@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.hover-border{
+    @apply hover:border-[1px] border-white
+}
+
+.input-login{
+    @apply border-[#D7E3EA] border-[1px] rounded-sm h-[30px]
+}
+
+.button-login{
+    @apply bg-yellow-300 border-[1px] shadow-sm shadow-yellow-400 rounded-md h-[30px] w-full cursor-pointer hover:bg-yellow-400
+}
+
+.box-shadow-bottom{
+    @apply relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:shadow-[0_8px_10px_-10px_rgba(0,0,0,0.5)] after:w-full after:h-[30px] after:z-[-1] after:rounded-[50%]
+}
