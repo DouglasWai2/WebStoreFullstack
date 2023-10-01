@@ -4,9 +4,9 @@ const LoginCard = () => {
       <a href="/login" className="bg-yellow-400 w-[100%] cursor-pointer text-center hover:bg-yellow-600 transition-colors duration-200">
         Faça login
       </a>
-      <p className="text-sm text-blue-600 cursor-pointer hover:underline">
+      <a href="/signup"><p className="text-sm text-blue-600 cursor-pointer hover:underline">
         Não possui conta? Cadastre-se
-      </p>
+      </p></a>
     </div>
   );
 };

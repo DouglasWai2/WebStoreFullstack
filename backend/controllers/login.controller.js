@@ -41,8 +41,7 @@ exports.login = (req, res) => {
               httpOnly: true,
               sameSite: "strict",
             })
-            .header("Authorization", accessToken)
-            .send(user);
+            .send( {user, accessToken} )
         }
       }
     })

@@ -3,6 +3,7 @@ import SearchBar from './SearchBar'
 import Profile from './Profile'
 import Cart from './Cart'
 import Logo from '../../logo-no-background.svg'
+import { UseSelector } from 'react-redux'
 
 const Navbar =  () => {
     return(

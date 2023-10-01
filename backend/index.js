@@ -23,7 +23,8 @@ app.get("/api", (req, res) => {
 app.use("/api", auth, require("./routes/clothes"));
 app.use("/auth", require("./routes/auth/register"));
 app.use("/auth", require("./routes/auth/login"));
-app.use("/api", require("./routes/rating"));
+app.use("/auth", require("./routes/auth/refreshToken"));
+app.use("/api", auth, require("./routes/rating"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}....`);
