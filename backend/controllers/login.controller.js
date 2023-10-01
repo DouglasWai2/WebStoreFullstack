@@ -10,7 +10,6 @@ const { jwtExpiration,
 
 //
 exports.login = (req, res) => {
-  console.log(req.body)
   if (!req.body.email || !req.body.password) {
     res.json({ success: false, error: "missing params" });
     return;

@@ -7,7 +7,7 @@ import { UseSelector } from 'react-redux'
 
 const Navbar =  () => {
     return(
-        <div className="w-full h-[9vh] bg-[#152128] py-2 px-4 flex items-center gap-12 text-white">
+        <div className="w-full h-[9vh] bg-[#152128] py-2 px-4 flex items-center justify-between text-white">
             <img className='h-[40px]' alt='logo' src={Logo} />       
             <Address />
             <SearchBar />

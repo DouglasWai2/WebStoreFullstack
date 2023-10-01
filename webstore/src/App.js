@@ -2,6 +2,8 @@ import "./App.css";
 import Home from "./routes/Home";
 import LoginForm from "./routes/LoginForm";
 import RegisterForm from './routes/RegisterForm'
+import Terms from './routes/Terms'
+import PrivacyPolicy from './routes/PrivacyPolicy'
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -16,6 +18,8 @@ function App() {
         <Route path="/" element={<Home />}></Route>
         <Route path="login" element={<LoginForm />} />
         <Route path="signup" element={<RegisterForm />} />
+        <Route path="termsandconditions" element={<Terms />} />
+        <Route path="privacypolicy" element={<PrivacyPolicy />} />
       </>
     )
   );

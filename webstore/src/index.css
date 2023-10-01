@@ -17,3 +17,7 @@
 .box-shadow-bottom{
     @apply relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:shadow-[0_8px_10px_-10px_rgba(0,0,0,0.5)] after:w-full after:h-[30px] after:z-[-1] after:rounded-[50%]
 }
+
+.link{
+    @apply text-sm text-blue-600 cursor-pointer hover:underline
+}

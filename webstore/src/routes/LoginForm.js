@@ -16,7 +16,6 @@ const LoginForm = () => {
   const [invalid, setInvalid] = useState("");
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [errMsg, setErrMsg] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -44,17 +43,13 @@ const LoginForm = () => {
         setPassword('')
         navigate('/')
     } catch (err) {
-        if (!err?.originalStatus) {
-            // isLoading: true until timeout occurs
-            setErrMsg('No Server Response');
-        } else if (err.originalStatus === 400) {
-            setErrMsg('Missing Username or Password');
-        } else if (err.originalStatus === 401) {
-            setErrMsg('Unauthorized');
-        } else {
-            setErrMsg('Login Failed');
+      console.log(err)
+      const { error } =  err.response.data
+        if (error === 'User does not exist') {
+          setInvalid('E-mail ou senha incorretos')
+        } else if (error === 'Wrong password'){
+          setInvalid('Senha incorreta')
         }
-        console.log(errMsg)
     }
 }
 
@@ -72,7 +67,7 @@ const handlePasswordInput = (e) => setPassword(e.target.value)
         </div>
       )}
       <div className="w-[500px] rounded-lg shadow-md p-8 py-24">
-        <img src={Logo} />
+        <a href='/'><img src={Logo} /></a>
             <form
               className="flex flex-col justify-center gap-8 relative"
               onSubmit={handleSubmit}
@@ -111,7 +106,7 @@ const handlePasswordInput = (e) => setPassword(e.target.value)
       </div>
       <div className="mt-6 text-center w-full box-shadow-bottom">
         <h3>É novo por aqui?</h3>
-        <button className="bg-white border-[#D7E3EA] border-[1px] px-16 py-1 rounded-md mt-2">
+        <button onClick={() => navigate('/signup')} className="bg-white border-[#D7E3EA] border-[1px] px-16 py-1 rounded-md mt-2">
           Crie sua conta
         </button>
       </div>

@@ -17,10 +17,16 @@ exports.register = async (req, res) => {
     await newUser.save();
     res.status(201).send(JSON.stringify(newUser));
   } catch (err) {
-    console.log(err)
-    res.status(401).json({
-      message: "User not successful created",
-      error: err.mesage,
-    });
-  }
+    if(err.code === 11000){
+      res.status(400).json({
+        message: 'already registered',
+        err: err.keyPattern
+      })
+    }else{
+      res.status(401).json({
+        message: "User not successful created",
+        error: err.mesage,
+      });
+    }
+    }   
 };
