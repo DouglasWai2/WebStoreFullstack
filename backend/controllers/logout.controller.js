@@ -2,10 +2,11 @@ const UserSchema = require("../models/user.model");
 require("dotenv").config();
 
 exports.logout = async (req, res) => {
-    if(!req.cookies){
+  const refreshToken = req.cookies['refreshToken'];
+    if(!refreshToken){
         res.status(200).send('No cookie provided, user already logged out')
     }
-  const refreshToken = req.cookies['refreshToken'];
+  
   const  userId  = req.params.userId;
   try {
     const loggedOutUser = await UserSchema.findByIdAndUpdate(

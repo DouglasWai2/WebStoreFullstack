@@ -1,6 +1,9 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoggedIn = () => {
+  const navigate = useNavigate()
+
   async function logOut() {
     const userId = window.localStorage.getItem("userid");
     try {
@@ -33,7 +36,8 @@ const LoggedIn = () => {
       const userInfo = await axios.get(
         `https://localhost:3001/api/${userid}/${token}`
       );
-      console.log(userInfo);
+      window.localStorage.setItem("accessToken", userInfo.data.accessToken);
+
     } catch (error) {
       console.log(error);
     }
@@ -42,7 +46,7 @@ const LoggedIn = () => {
   return (
     <div className="bg-white text-black absolute bottom-[-110px] left-[-160px] w-[300px] p-6 flex flex-col gap-2 items-center">
       <a
-        onClick={getUserInfo}
+        onClick={() => navigate('/profile')}
         className="text-sm text-blue-600 cursor-pointer hover:underline"
       >
         Meu cadastro
