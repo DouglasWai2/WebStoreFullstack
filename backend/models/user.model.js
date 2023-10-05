@@ -58,6 +58,9 @@ const UserSchema = new mongoose.Schema({
   confirmedEmail: {
     type: Boolean,
     default: false
+  },
+  refreshTokens: {
+    type: [String]
   }
 });
 

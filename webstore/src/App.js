@@ -1,9 +1,9 @@
 import "./App.css";
-import Home from "./routes/Home";
-import LoginForm from "./routes/LoginForm";
-import RegisterForm from './routes/RegisterForm'
-import Terms from './routes/Terms'
-import PrivacyPolicy from './routes/PrivacyPolicy'
+import Home from "./Pages/Home";
+import LoginForm from "./Pages/LoginForm";
+import RegisterForm from './Pages/RegisterForm'
+import Terms from './Pages/Terms'
+import PrivacyPolicy from './Pages/PrivacyPolicy'
 import {
   createBrowserRouter,
   createRoutesFromElements,

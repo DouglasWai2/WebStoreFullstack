@@ -1,14 +1,14 @@
 const clothesSchema = require("../models/clothes.models");
 
-exports.addClothes = (req, res) => {
+exports.addClothes = async (req, res) => {
   const { title, description, tags, genre, features } = req.body;
 
   const newCloth = new clothesSchema({
     title,
-    description,
-    tags,
-    genre,
-    features,
+    // description,
+    // tags,
+    // genre,
+    // features,
   });
   newCloth.thumbnail = req.files[0].location;
   newCloth.images = req.files.map((file) => {
@@ -16,7 +16,7 @@ exports.addClothes = (req, res) => {
   });
 
   try {
-    newCloth.save();
+    await newCloth.save();
     res.status(200).send("Product saved successfully");
   } catch (error) {
     console.log(error);

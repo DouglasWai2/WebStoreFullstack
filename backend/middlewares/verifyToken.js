@@ -7,7 +7,7 @@ const { jwtExpiration,
 
 
 const verifyToken = (req, res, next) => {
-  const accessToken = req.headers["authorization"];
+  const accessToken = req.params.access_token;
   const refreshToken = req.cookies["refreshToken"];
 
   if (!accessToken && !refreshToken) {
@@ -26,7 +26,7 @@ const verifyToken = (req, res, next) => {
     const accessToken = jwt.sign(
       { user: decoded.user },
       process.env.SECRET_JWT_TOKEN,
-      { expiresIn: testjwtExpiration }
+      { expiresIn: jwtExpiration }
     );
 
     res

@@ -5,6 +5,7 @@ import Logo from "../logo-no-background-2.svg";
 import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 const RegisterForm = () => {
   const [name, setName] = useState("");
@@ -15,6 +16,7 @@ const RegisterForm = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errMessage, setErrMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
   let strongPassword = new RegExp(
     "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
@@ -24,20 +26,24 @@ const RegisterForm = () => {
   );
 
   const handleSubmit = async (e) => {
-    const baseUrl = "http://localhost:5000";
+    setIsLoading(true)
+    const baseUrl = "https://localhost:3001";
     e.preventDefault();
 
     if(!strongPassword.test(password)){
       setErrMessage('Escolha uma senha mais forte')
+      setIsLoading(false)
       return
     }
     if(email !== confirmEmail){
       setErrMessage('E-mails não conferem')
+      setIsLoading(false)
       return
     }
 
     if(password !== confirmPassword){
       setErrMessage('Senhas não conferem')
+      setIsLoading(false)
       return
     }
 
@@ -58,15 +64,17 @@ const RegisterForm = () => {
           },
         }
       );
-      navigate("/");
+      navigate("/login");
     } catch (error) {
-      if(Object.keys(error.response.data.err).includes('phone')){
-        setErrMessage('Número de celular já cadastrado')
-      } else if(Object.keys(error.response.data.err).includes('email')){
-        setErrMessage('E-mail já cadastrado')
-      } else{
-        setErrMessage('Erro inesperado. Tente novamente')
-      }
+        console.log(error)
+      // if(Object.keys(error.response.data.err).includes('phone')){
+      //   setErrMessage('Número de celular já cadastrado')
+      // } else if(Object.keys(error.response.data.err).includes('email')){
+      //   setErrMessage('E-mail já cadastrado')
+      // } else{
+      //   setErrMessage('Erro inesperado. Tente novamente')
+      // }
+      setIsLoading(false)
     }
   };
 
@@ -211,8 +219,8 @@ const RegisterForm = () => {
               name="passwordConfirm"
             />
           </label>
-          <button className="button-login" type="submit">
-            Criar conta
+          <button className={"button-login flex items-center justify-center" + (isLoading ? " brightness-75 pointer-events-none" : '')} type="submit">
+          {isLoading ? <LoadingSpinner /> : 'Criar conta'}
           </button>
         </form>
         <h5 className="!text-[8pt] mt-3 w-full text-center">

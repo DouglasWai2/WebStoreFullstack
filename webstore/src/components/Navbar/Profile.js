@@ -22,7 +22,7 @@ const Profile = () => {
         <FontAwesomeIcon icon={faCaretDown} style={{ color: "#94989e" }} />
       </div>
       {
-        toggleCard ? (  loggedIn === "false" ? <LoginCard /> : <LoggedIn />) : ''
+        toggleCard ? (  loggedIn === "true" ? <LoggedIn /> : <LoginCard />) : ''
     }
     </div>
   );
