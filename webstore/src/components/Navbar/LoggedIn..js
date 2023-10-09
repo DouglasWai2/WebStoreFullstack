@@ -1,28 +1,13 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { logOut } from "../../helpers/logOut";
 
 const LoggedIn = () => {
   const navigate = useNavigate()
 
-  async function logOut() {
-    const userId = window.localStorage.getItem("userid");
-    try {
-        const data = await axios.get(
-            `http://localhost:5000/auth/logout/${userId}`
-          );
-            window.localStorage.removeItem('accessToken')
-            window.localStorage.removeItem('name')
-            window.localStorage.setItem('LoggedIn', false)
-            window.localStorage.removeItem('verified')
-            window.location.reload()
-    } catch (error) {
-        console.log(error)
-    }   
-  }
-
   async function refreshToken(){
     try {
-      const response = await axios.get(`http://localhost:5000/auth/refresh`)
+      const response = await axios.get(`http://localhost:5000/auth/refresh`, {withCredentials: true})
       console.log(response)
     } catch (err) {
       console.log(err)

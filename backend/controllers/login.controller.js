@@ -36,12 +36,17 @@ exports.login = async (req, res) => {
           process.env.REFRESH_TOKEN_SECRET,
           { expiresIn: jwtRefreshExpiration }
         );
+        try{
+          const newUserToken = await UserSchema.updateOne(
+            { _id: user._id },
+            { $push: { refreshTokens: refreshToken } },
+            { new: true }
+          );
+        }catch(error){
+          return res.status(400).json({error, message: 'Unable to reach database' })
+        }
 
-        const newUserToken = await UserSchema.updateOne(
-          { _id: user._id },
-          { $push: { refreshTokens: refreshToken } },
-          { new: true }
-        );
+        
         res
           .cookie("refreshToken", refreshToken, {
             httpOnly: true,

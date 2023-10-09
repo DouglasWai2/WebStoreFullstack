@@ -3,41 +3,27 @@ require("dotenv").config();
 const { jwtExpiration,
   jwtRefreshExpiration,
   testjwtExpiration,
-  testjwtRefreshExpiration } = require('../utils/expiration')
+  testjwtRefreshExpiration } = require('../utils/expiration');
+const UserSchema = require("../models/user.model");
 
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   const accessToken = req.params.access_token;
   const refreshToken = req.cookies["refreshToken"];
 
-  if (!accessToken && !refreshToken) {
-    return res.status(401).send("Access Denied. No token provided.");
-  }
+  if (!accessToken && !refreshToken) return res.status(401).send("Access Denied. No token provided.");
+
+  const foundUser = await UserSchema.findOne({refreshTokens: refreshToken})
+  if(!foundUser) return res.status(403).send('Invalid Refresh Token')
+    
+  
   try {
+    const refreshDecoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     const decoded = jwt.verify(accessToken, process.env.SECRET_JWT_TOKEN);
-    req.user = decoded;
-    next();
+    req.userInfo = decoded
+    next()
   } catch (err) {
-    return res.status(401).send("Invalid Token");
-  }
-
-  try {
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-    const accessToken = jwt.sign(
-      { user: decoded.user },
-      process.env.SECRET_JWT_TOKEN,
-      { expiresIn: jwtExpiration }
-    );
-
-    res
-      .cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        sameSite: "strict",
-      })
-      .header("Authorization", accessToken)
-      .send(decoded.user);
-  } catch (error) {
-    return res.status(400).send("Invalid Token.");
+    return res.status(401).send('Invalid Token');
   }
 };
 

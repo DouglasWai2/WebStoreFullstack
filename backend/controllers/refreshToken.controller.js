@@ -38,7 +38,7 @@ exports.refreshToken = async (req, res) => {
   );
   const accessToken = jwt.sign(
     { id: decoded.id, email: decoded.email },
-    `${process.env.SECRET_JWT_KEY}`,
+    `${process.env.SECRET_JWT_TOKEN}`,
     { expiresIn: jwtExpiration }
   );
   

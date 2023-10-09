@@ -1,4 +1,5 @@
 import Navbar from "../components/Navbar/index";
+import PersonalData from "../components/ProfilePage/PersonalData";
 
 const ProfilePage = () => {
   const isVerified = window.localStorage.getItem("verified");
@@ -18,8 +19,8 @@ const ProfilePage = () => {
       </header>
       <main className="p-10">
         <h1 className="text-3xl mb-4">Seu perfil</h1>
-        <div>
-            <ul className="flex flex-col gap-4 text-lg max-w-md">
+        <div className="flex">
+            <ul className="flex flex-col gap-4 text-lg max-w-sm">
                 <li className="border-b-[1px] border-black">
                     Dados pessoais
                 </li>
@@ -36,6 +37,9 @@ const ProfilePage = () => {
                     Seus pedidos
                 </li>
             </ul>
+            <div className="w-full flex justify-center px-9">
+            <PersonalData />
+            </div>
         </div>
       </main>
     </>

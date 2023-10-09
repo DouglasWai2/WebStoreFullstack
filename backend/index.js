@@ -1,16 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const multer = require("multer");
-const auth = require("./middlewares/verifyToken");
 const cors = require('cors');
-const fs = require("fs");
-const https = require("https");
-const key = fs.readFileSync("localhost-key.pem", "utf-8");
-const cert = fs.readFileSync("localhost.pem", "utf-8");
 const cookieParser = require('cookie-parser');
-const userModel = require("./models/user.model");
-const Token = require("./models/token.model");
 require("dotenv").config();
 const app = express();
 
@@ -47,7 +39,3 @@ app.use("/auth", require("./routes/auth/logout"));
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}....`);
 });
-
-// https.createServer({ key, cert }, app).listen(process.env.PORT, ()=> {
-//    console.log(`Server is listening on port ${process.env.PORT}....`);
-// });

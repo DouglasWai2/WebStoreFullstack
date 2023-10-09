@@ -1,4 +1,5 @@
 import axios from "axios";
+import InputMask from 'react-input-mask';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../logo-no-background-2.svg";
@@ -24,6 +25,7 @@ const RegisterForm = () => {
   let mediumPassword = new RegExp(
     "((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))"
   );
+
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
@@ -165,8 +167,9 @@ const RegisterForm = () => {
           </label>
           <label htmlFor="phone" className="flex flex-col">
             <span className="flex justify-between">Celular</span>
-            <input
+            <InputMask
               required
+              mask='(99)99999-9999'
               value={phone}
               onChange={handlePhone}
               className={"input-login"}

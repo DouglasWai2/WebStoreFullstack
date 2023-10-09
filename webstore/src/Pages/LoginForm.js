@@ -110,7 +110,7 @@ const handlePasswordInput = (e) => setPassword(e.target.value)
       </div>
       <div className="mt-6 text-center w-full box-shadow-bottom">
         <h3>É novo por aqui?</h3>
-        <button onClick={() => navigate('/login')} className="bg-white border-[#D7E3EA] border-[1px] px-16 py-1 rounded-md mt-2">
+        <button onClick={() => navigate('/signup')} className="bg-white border-[#D7E3EA] border-[1px] px-16 py-1 rounded-md mt-2">
           Crie sua conta
         </button>
       </div>
