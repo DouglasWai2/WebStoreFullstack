@@ -29,8 +29,9 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
-    const baseUrl = "https://localhost:3001";
+    const baseUrl = "http://localhost:5000";
     e.preventDefault();
+    const cleanPhone = phone.replace(/\D+/g, '')
 
     if(!strongPassword.test(password)){
       setErrMessage('Escolha uma senha mais forte')
@@ -57,7 +58,7 @@ const RegisterForm = () => {
           name,
           lastName,
           email,
-          phone,
+          phone: cleanPhone,
           password,
         },
         {
@@ -69,13 +70,6 @@ const RegisterForm = () => {
       navigate("/login");
     } catch (error) {
         console.log(error)
-      // if(Object.keys(error.response.data.err).includes('phone')){
-      //   setErrMessage('Número de celular já cadastrado')
-      // } else if(Object.keys(error.response.data.err).includes('email')){
-      //   setErrMessage('E-mail já cadastrado')
-      // } else{
-      //   setErrMessage('Erro inesperado. Tente novamente')
-      // }
       setIsLoading(false)
     }
   };

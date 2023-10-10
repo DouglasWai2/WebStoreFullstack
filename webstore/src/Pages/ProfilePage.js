@@ -1,8 +1,14 @@
+import { useState } from "react";
 import Navbar from "../components/Navbar/index";
 import PersonalData from "../components/ProfilePage/PersonalData";
+import Security from "../components/ProfilePage/Security";
+import Address from "../components/ProfilePage/Address";
+import PaymentMethods from "../components/ProfilePage/PaymentMethods";
+import YourPurchases from "../components/ProfilePage/YourPurchases";
 
 const ProfilePage = () => {
   const isVerified = window.localStorage.getItem("verified");
+  const [currentPage, setCurrentPage] = useState('Personal Data');
 
   return (
     <>
@@ -20,26 +26,63 @@ const ProfilePage = () => {
       <main className="p-10">
         <h1 className="text-3xl mb-4">Seu perfil</h1>
         <div className="flex">
-            <ul className="flex flex-col gap-4 text-lg max-w-sm">
-                <li className="border-b-[1px] border-black">
-                    Dados pessoais
-                </li>
-                <li className="border-b-[1px] border-black">
-                    Segurança
-                </li>
-                <li className="border-b-[1px] border-black">
-                    Endereços
-                </li>
-                <li className="border-b-[1px] border-black">
-                    Formas de pagamento
-                </li>
-                <li className="border-b-[1px] border-black">
-                    Seus pedidos
-                </li>
-            </ul>
-            <div className="w-full flex justify-center px-9">
-            <PersonalData />
-            </div>
+          <ul className="flex flex-col gap-4 text-lg w-1/4">
+            <li
+              onClick={() => setCurrentPage("Personal Data")}
+              className={
+                currentPage === "Personal Data" ? "active-li" : "unactive-li"
+              }
+            >
+              Dados pessoais
+            </li>
+            <li
+              onClick={() => setCurrentPage("Security")}
+              className={
+                currentPage === "Security" ? "active-li" : "unactive-li"
+              }
+            >
+              Segurança
+            </li>
+            <li
+              onClick={() => setCurrentPage("Address")}
+              className={
+                currentPage === "Address" ? "active-li" : "unactive-li"
+              }
+            >
+              Endereços
+            </li>
+            <li
+              onClick={() => setCurrentPage("Payment Methods")}
+              className={
+                currentPage === "Payment Methods" ? "active-li" : "unactive-li"
+              }
+            >
+              Formas de pagamento
+            </li>
+            <li
+              onClick={() => setCurrentPage("Your Purchases")}
+              className={
+                currentPage === "Your Purchases" ? "active-li" : "unactive-li"
+              }
+            >
+              Seus pedidos
+            </li>
+          </ul>
+          <div className="w-full flex justify-center px-9">
+            {currentPage === "Personal Data" ? (
+              <PersonalData />
+            ) : currentPage === "Security" ? (
+              <Security />
+            ) : currentPage === "Address" ? (
+              <Address />
+            ) : currentPage === "Payment Methods" ? (
+              <PaymentMethods />
+            ) : currentPage === "Your Purchases" ? (
+              <YourPurchases />
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </main>
     </>

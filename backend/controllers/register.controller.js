@@ -6,6 +6,7 @@ require("dotenv").config;
 
 exports.register = async (req, res) => {
   const { name, lastName, email, phone, password } = req.body;
+  console.log(phone)
   if (password.length < 6) {
     return res.status(400).json({ message: "Password less than 6 characters" });
   }
@@ -22,7 +23,7 @@ exports.register = async (req, res) => {
     token: crypto.randomBytes(32).toString("hex"),
   });
   const message = `Este é seu e-mail de verificação, não compartilhe com ninguem: 
-  https://localhost:3001/auth/register/user/verify/${newUser.id}/${token.token}`;
+  http://localhost:5000/auth/register/user/verify/${newUser.id}/${token.token}`;
   try {
     await newUser.save();
     await token.save();

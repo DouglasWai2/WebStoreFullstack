@@ -1,30 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { formatPhoneNumber } from '../../helpers/formatPhoneNumber'
+import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
 import { refreshToken } from "../../helpers/refreshToken";
 import { logOut } from "../../helpers/logOut";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
+import SkeletonData from "./SkeletonPersonalData";
+import EditButton from "./EditButton";
 
 const PersonalData = () => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [birth, setBirth] = useState("");
-
   const [userInfo, setUserInfo] = useState({
-    name: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    cpf: '',
-    birth: '',
-    address: '',
-  })
+    Nome: "",
+    "Ultimo Nome": "",
+    Email: "",
+    Celular: "",
+    CPF: "",
+    "Data de Nascimento": "",
+    Endereço: "",
+  });
+
+  const [loading, setLoading] = useState(false);
 
   const getUserData = async () => {
     const token = window.localStorage.getItem("accessToken");
     const userId = window.localStorage.getItem("userid");
+    setLoading(true);
 
     try {
       const data = await axios.get(
@@ -32,37 +32,35 @@ const PersonalData = () => {
         { withCredentials: true }
       );
 
-      const { name, lastName, email, phone, cpf, birth, address } = data.data
-      setUserInfo(userInfo => ({
+      const { name, lastName, email, phone, cpf, birth, address } = data.data;
+      setUserInfo((userInfo) => ({
         ...userInfo,
-        name,
-        lastName,
-        email,
-        phone,
-        cpf,
-        birth,
-        address
-      }))
-      console.log(userInfo)
-      setName(data.data.name);
-      setLastName(data.data.lastName);
-      setEmail(data.data.email);
-      setPhone(data.data.phone);
-      setCpf(data.data.cpf);
-      setBirth(data.data.birth);
+        Nome: name,
+        "Ultimo Nome": lastName,
+        Email: email,
+        Celular: phone,
+        CPF: cpf,
+        "Data de Nascimento": birth,
+        Endereço: address,
+      }));
+      setLoading(false);
     } catch (error) {
       console.log(error);
       if (error?.response.data === "Invalid Token") {
         try {
-          await refreshToken()
+          await refreshToken();
+          getUserData();
         } catch (error) {
+          console.log(error);
+          if (
+            error?.response.data === "Access Denied. No refresh token provided."
+          ) {
             console.log(error)
-            if (error?.response.data === "Access Denied. No refresh token provided.") {
-                logOut()
-            }
-            
+            // logOut();
+          }
         }
       }
+      setLoading(false);
     }
   };
 
@@ -70,55 +68,36 @@ const PersonalData = () => {
     getUserData();
   }, []);
 
-
   return (
     <div className="w-[80%] border-[2px] rounded-md overflow-hidden shadow-md">
-      <table className="w-full">
-        <tbody className="w-full">
-          <tr className="flex border-b-[1px] p-10 w-full">
-            <th>Nome:</th>
-            <td className="w-full flex justify-between">
-              <span className="ml-5">{name + " " + lastName}</span>
-              <button>Editar</button>
-            </td>
-          </tr>
-          <tr className="flex border-b-[1px] p-10 w-full">
-            <th>Email:</th>
-            <td className="w-full flex justify-between">
-              <span className="ml-5">{email}</span> <button>Editar</button>
-            </td>
-          </tr>
-          <tr className="flex border-b-[1px] p-10 w-full">
-            <th>Celular:</th>
-            <td className="w-full flex justify-between">
-              <span className="ml-5">{formatPhoneNumber(phone)}</span>{" "}
-              <button>Editar</button>
-            </td>
-          </tr>
-          <tr className="flex border-b-[1px] p-10 w-full">
-            <th>CPF:</th>
-            <td className="w-full flex justify-between">
-              <span className="ml-5">{cpf ? cpf : "Insira seu cpf"}</span>
-              <button>Editar</button>
-            </td>
-          </tr>
-          <tr className="flex border-b-[1px] p-10 w-full">
-            <th>Data de nascimento:</th>
-            <td className="w-full flex justify-between">
-              <span className="ml-5">
-                {birth ? birth : "Insira sua data de nascimento"}
-              </span>
-              <button>Editar</button>
-            </td>
-          </tr>
-          <tr className="flex p-10 w-full">
-            <th>Endereço principal:</th>
-            <td className="w-full flex justify-between">
-              <span className="ml-5">Nenum endereço selecionado</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      {loading ? (
+        <SkeletonData />
+      ) : (
+        <table className="w-full">
+          <tbody className="w-full">
+            {Object.keys(userInfo).map((item) => {
+              // const newItem = item.replace(/_/g, ' ');
+              return (
+                <tr className="flex border-b-[1px] p-10 w-full">
+                  <th className="flex w-[20%]">{item}:</th>
+                  <td className="w-full flex justify-between">
+                    <span className="ml-5">
+                      {item === "Celular"
+                        ? formatPhoneNumber(userInfo[item])
+                        : !userInfo[item]
+                        ? (item === "Data de Nascimento"
+                            ? "Insira uma "
+                            : "Insira um ") + item
+                        : userInfo[item]}
+                    </span>
+                    <EditButton />
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

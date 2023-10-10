@@ -21,3 +21,11 @@
 .link{
     @apply text-sm text-blue-600 cursor-pointer hover:underline
 }
+
+.active-li{
+    @apply font-semibold cursor-pointer
+}
+
+.unactive-li{
+    @apply text-gray-600 cursor-pointer hover:text-gray-800
+}
