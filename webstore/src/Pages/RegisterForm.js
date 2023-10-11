@@ -9,15 +9,17 @@ import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 const RegisterForm = () => {
-  const [name, setName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [errMessage, setErrMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [registerInfo, setRegisterInfo] = useState({
+    name: '',
+    lastName: '',
+    email: '',
+    confirmEmail: '',
+    phone: '',
+    password: '',
+    confirmPassword: ''
+  })
   const navigate = useNavigate();
   let strongPassword = new RegExp(
     "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
@@ -29,6 +31,7 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     setIsLoading(true)
+    const { name, lastName, email,confirmEmail, phone, password, confirmPassword } = registerInfo
     const baseUrl = "http://localhost:5000";
     e.preventDefault();
     const cleanPhone = phone.replace(/\D+/g, '')
@@ -49,17 +52,15 @@ const RegisterForm = () => {
       setIsLoading(false)
       return
     }
-
-
     try {
       const response = await axios.post(
         baseUrl + "/auth/register",
-        {
+        { 
           name,
           lastName,
           email,
-          phone: cleanPhone,
           password,
+          phone: cleanPhone
         },
         {
           headers: {
@@ -70,31 +71,18 @@ const RegisterForm = () => {
       navigate("/login");
     } catch (error) {
         console.log(error)
+    }finally{
       setIsLoading(false)
     }
   };
 
-  const handleName = (e) => {
-    setName(e.target.value);
-  };
-  const handleLastName = (e) => {
-    setLastName(e.target.value);
-  };
-  const handleEmail = (e) => {
-    setEmail(e.target.value);
-  };
-  const handleConfirmEmail = (e) => {
-    setConfirmEmail(e.target.value);
-  };
-  const handlePhone = (e) => {
-    setPhone(e.target.value);
-  };
-  const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
-  };
+  const handleInputChange = (e) =>{
+    setRegisterInfo(registerInfo => ({
+      ...registerInfo,
+      [e.target.name]: e.target.value
+    })
+    )
+  }
 
   return (
     <main className="flex flex-col z-[-1] p-10 justify-center items-center w-screen bg-[#F9F7F1]">  
@@ -110,7 +98,7 @@ const RegisterForm = () => {
           <img className="w-[200px] absolute top-5" src={Logo} alt="logo" />
         </a>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleInputChange}
           className="flex flex-col justify-center gap-8 relative"
         >
           <div className="flex justify-between">
@@ -118,22 +106,22 @@ const RegisterForm = () => {
               <span className="flex justify-between">Nome</span>
               <input
                 required
-                value={name}
-                onChange={handleName}
+                value={registerInfo.name}
+                onChange={handleInputChange}
                 className={"input-login"}
                 type="text"
-                name="Nome"
+                name="name"
               />
             </label>
             <label htmlFor="sobrenome" className="flex flex-col">
               <span className="flex justify-between">Sobrenome</span>
               <input
                 required
-                value={lastName}
-                onChange={handleLastName}
+                value={registerInfo.lastName}
+                onChange={handleInputChange}
                 className={"input-login"}
                 type="text"
-                name="sobrenome"
+                name="lastName"
               />
             </label>
           </div>
@@ -141,8 +129,8 @@ const RegisterForm = () => {
             <span className="flex justify-between">E-mail</span>
             <input
               required
-              value={email}
-              onChange={handleEmail}
+              value={registerInfo.email}
+              onChange={handleInputChange}
               className={"input-login"}
               type="email"
               name="email"
@@ -152,11 +140,11 @@ const RegisterForm = () => {
             <span className="flex justify-between">Confirmar e-mail</span>
             <input
               required
-              value={confirmEmail}
-              onChange={handleConfirmEmail}
+              value={registerInfo.confirmEmail}
+              onChange={handleInputChange}
               className={"input-login"}
               type="email"
-              name="emailConfirm"
+              name="confirmEmail"
             />
           </label>
           <label htmlFor="phone" className="flex flex-col">
@@ -164,8 +152,8 @@ const RegisterForm = () => {
             <InputMask
               required
               mask='(99)99999-9999'
-              value={phone}
-              onChange={handlePhone}
+              value={registerInfo.phone}
+              onChange={handleInputChange}
               className={"input-login"}
               type="tel"
               name="phone"
@@ -174,10 +162,10 @@ const RegisterForm = () => {
           <label htmlFor="password" className="flex flex-col">
             <span className="flex justify-between">
               Senha{" "}
-              {password !== "" ? (
-                strongPassword.test(password) ? (
+              {registerInfo.password !== "" ? (
+                strongPassword.test(registerInfo.password) ? (
                   <span className="text-green-500">Senha forte</span>
-                ) : mediumPassword.test(password) ? (
+                ) : mediumPassword.test(registerInfo.password) ? (
                   <span className="text-yellow-500">Senha média</span>
                 ) : (
                   <span className="text-red-500">Senha fraca</span>
@@ -188,14 +176,14 @@ const RegisterForm = () => {
             </span>
             <input
               required
-              value={password}
-              onChange={handlePassword}
+              value={registerInfo.password}
+              onChange={handleInputChange}
               className={
                 "input-login " +
-                (password !== ""
-                  ? strongPassword.test(password)
+                (registerInfo.password !== ""
+                  ? strongPassword.test(registerInfo.password)
                     ? "!border-green-300"
-                    : mediumPassword.test(password)
+                    : mediumPassword.test(registerInfo.password)
                     ? "!border-yellow-500"
                     : "!border-red-500"
                   : "")
@@ -203,20 +191,20 @@ const RegisterForm = () => {
               type="password"
               name="password"
             />
-            <RegisterRegex password={password} />
+            <RegisterRegex password={registerInfo.password} />
           </label>
           <label htmlFor="passwordConfirm" className="flex flex-col">
             <span className="flex justify-between">Confirmar senha</span>
             <input
               required
-              value={confirmPassword}
-              onChange={handleConfirmPassword}
+              value={registerInfo.confirmPassword}
+              onChange={handleInputChange}
               className={"input-login"}
               type="password"
-              name="passwordConfirm"
+              name="confirmPassword"
             />
           </label>
-          <button className={"button-login flex items-center justify-center" + (isLoading ? " brightness-75 pointer-events-none" : '')} type="submit">
+          <button onClick={handleSubmit} className={"button-login flex items-center justify-center" + (isLoading ? " brightness-75 pointer-events-none" : '')} type="submit">
           {isLoading ? <LoadingSpinner /> : 'Criar conta'}
           </button>
         </form>

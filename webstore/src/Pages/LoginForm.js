@@ -36,13 +36,18 @@ const LoginForm = () => {
                 "application/x-www-form-urlencoded;charset=utf-8",
             }
     })
-        console.log(userData)
+        console.log(userData.data)
         dispatch(setCredentials({accessToken: userData.data.authorization, email}))
         window.localStorage.setItem('accessToken', userData.data.authorization)
         window.localStorage.setItem('LoggedIn', true)
         window.localStorage.setItem('name', userData.data.name)
         window.localStorage.setItem('userid', userData.data.userId)
-        window.localStorage.setItem('verified', userData.data.isVerfied)
+        if(!userData.data['isVerfied']){
+          window.localStorage.setItem('verified', false)
+        }else{
+          window.localStorage.setItem('verified', true)
+        }
+        
         setEmail('')
         setPassword('')
         navigate('/')

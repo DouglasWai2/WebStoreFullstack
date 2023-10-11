@@ -5,8 +5,8 @@ const sendEmail = require("../utils/sendEmail");
 require("dotenv").config;
 
 exports.register = async (req, res) => {
+  console.log(req.body)
   const { name, lastName, email, phone, password } = req.body;
-  console.log(phone)
   if (password.length < 6) {
     return res.status(400).json({ message: "Password less than 6 characters" });
   }

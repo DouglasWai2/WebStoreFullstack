@@ -1,5 +1,3 @@
-import React from "react";
-
 const SkeletonData = () => {
   return (
     <div className="w-full overflow-hidden animate-pulse">

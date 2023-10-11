@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
 import { refreshToken } from "../../helpers/refreshToken";
 import { logOut } from "../../helpers/logOut";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen } from "@fortawesome/free-solid-svg-icons";
 import SkeletonData from "./SkeletonPersonalData";
 import EditButton from "./EditButton";
 
@@ -18,12 +16,12 @@ const PersonalData = () => {
     "Data de Nascimento": "",
     Endereço: "",
   });
-
+  const token = window.localStorage.getItem("accessToken");
+  const userId = window.localStorage.getItem("userid");
   const [loading, setLoading] = useState(false);
+  
 
   const getUserData = async () => {
-    const token = window.localStorage.getItem("accessToken");
-    const userId = window.localStorage.getItem("userid");
     setLoading(true);
 
     try {
@@ -55,8 +53,8 @@ const PersonalData = () => {
           if (
             error?.response.data === "Access Denied. No refresh token provided."
           ) {
-            console.log(error)
-            // logOut();
+            console.log(error);
+            logOut();
           }
         }
       }

@@ -51,6 +51,7 @@ exports.login = async (req, res) => {
           .cookie("refreshToken", refreshToken, {
             httpOnly: true,
             sameSite: "strict",
+            maxAge : 1 * 1000 * 60 * 60 * 24 * 365
           })
           .header("Authorization", accessToken)
           .json({
