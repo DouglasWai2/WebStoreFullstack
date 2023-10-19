@@ -5,80 +5,80 @@ const SkeletonData = () => {
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>
         <div className="w-full">
           <div className="flex border-b-[1px] p-10 w-full">
             <div className="flex w-[20%]">
-              <div class="w-36 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-36 bg-gray-300 h-6 rounded-md "></div>
             </div>
             <div className="w-full flex justify-between">
-              <div class="w-24 bg-gray-300 h-6 rounded-md "></div>
+              <div className="w-24 bg-gray-300 h-6 rounded-md "></div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 const expiration = {
-    jwtExpiration: 900,
-    jwtRefreshExpiration: 86400,
+    jwtExpiration: 300,
+    jwtRefreshExpiration: '30d',
   
     testjwtExpiration: 60, // 1 minute
     testjwtRefreshExpiration: 120, // 2 minutes

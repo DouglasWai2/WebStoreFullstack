@@ -5,10 +5,15 @@ import Security from "../components/ProfilePage/Security";
 import Address from "../components/ProfilePage/Address";
 import PaymentMethods from "../components/ProfilePage/PaymentMethods";
 import YourPurchases from "../components/ProfilePage/YourPurchases";
+import AddressForm from "../components/ProfilePage/AddressForm";
 
 const ProfilePage = () => {
   const isVerified = window.localStorage.getItem("verified");
   const [currentPage, setCurrentPage] = useState('Personal Data');
+  const [form, setForm] = useState(false)
+  const handleClick = () => {
+    setForm(true)
+  }
 
   return (
     <>
@@ -26,7 +31,7 @@ const ProfilePage = () => {
       <main className="p-10">
         <h1 className="text-3xl mb-4">Seu perfil</h1>
         <div className="flex">
-          <ul className="flex flex-col gap-4 text-lg w-1/4">
+          <ul onClick={()=> {setForm(false)}} className="flex flex-col gap-4 text-lg w-1/4">
             <li
               onClick={() => setCurrentPage("Personal Data")}
               className={
@@ -73,8 +78,8 @@ const ProfilePage = () => {
               <PersonalData />
             ) : currentPage === "Security" ? (
               <Security />
-            ) : currentPage === "Address" ? (
-              <Address />
+            ) : currentPage === "Address" ? ( form ? <AddressForm /> :
+              <Address handleClick={handleClick} />
             ) : currentPage === "Payment Methods" ? (
               <PaymentMethods />
             ) : currentPage === "Your Purchases" ? (

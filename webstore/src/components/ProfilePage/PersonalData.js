@@ -16,13 +16,14 @@ const PersonalData = () => {
     "Data de Nascimento": "",
     Endereço: "",
   });
-  const token = window.localStorage.getItem("accessToken");
-  const userId = window.localStorage.getItem("userid");
+
   const [loading, setLoading] = useState(false);
   
 
   const getUserData = async () => {
     setLoading(true);
+    const token = window.localStorage.getItem("accessToken");
+    const userId = window.localStorage.getItem("userid");
 
     try {
       const data = await axios.get(
@@ -54,7 +55,7 @@ const PersonalData = () => {
             error?.response.data === "Access Denied. No refresh token provided."
           ) {
             console.log(error);
-            logOut();
+            // logOut();
           }
         }
       }
@@ -74,9 +75,8 @@ const PersonalData = () => {
         <table className="w-full">
           <tbody className="w-full">
             {Object.keys(userInfo).map((item) => {
-              // const newItem = item.replace(/_/g, ' ');
               return (
-                <tr className="flex border-b-[1px] p-10 w-full">
+                <tr key={item} className="flex border-b-[1px] p-10 w-full">
                   <th className="flex w-[20%]">{item}:</th>
                   <td className="w-full flex justify-between">
                     <span className="ml-5">

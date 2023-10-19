@@ -5,10 +5,10 @@ exports.addClothes = async (req, res) => {
 
   const newCloth = new clothesSchema({
     title,
-    // description,
-    // tags,
-    // genre,
-    // features,
+    description,
+    tags,
+    genre,
+    features,
   });
   newCloth.thumbnail = req.files[0].location;
   newCloth.images = req.files.map((file) => {

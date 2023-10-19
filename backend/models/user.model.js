@@ -32,8 +32,12 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  address: {
+  address: [{
     street: {
+      type: String,
+      trim: true,
+    },
+    number: {
       type: String,
       trim: true,
     },
@@ -45,11 +49,15 @@ const UserSchema = new mongoose.Schema({
       type: String,
       trim: true,
     },
+    state: {
+      type: String,
+      trim: true,
+    },
     country: {
       type: String,
       trim: true,
     }  
-  },
+  }],
   role: {
     type: String,
     default: "Costumer",

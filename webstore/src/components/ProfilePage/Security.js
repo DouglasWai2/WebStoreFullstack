@@ -12,7 +12,7 @@ const Security = () => {
         <tbody className="w-full">
           {Object.keys(securityInfo).map((item) => {
             return (
-              <tr className="flex border-b-[1px] p-10 w-full">
+              <tr key={item} className="flex border-b-[1px] p-10 w-full">
                 <th className="flex w-[20%]">{item}:</th>
                 <td className="w-full flex justify-between">
                   <span className="ml-5">{securityInfo[item]}</span>

@@ -70,6 +70,7 @@ const RegisterForm = () => {
       );
       navigate("/login");
     } catch (error) {
+      //TODO: Handle errors
         console.log(error)
     }finally{
       setIsLoading(false)

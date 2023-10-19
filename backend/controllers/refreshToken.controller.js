@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken");
 require('dotenv').config()
 const { jwtExpiration,
   jwtRefreshExpiration,
-  testjwtExpiration,
-  testjwtRefreshExpiration } = require('../utils/expiration')
+} = require('../utils/expiration')
 
 exports.refreshToken = async (req, res) => {
   const refreshToken = req.cookies["refreshToken"];
@@ -15,12 +14,15 @@ exports.refreshToken = async (req, res) => {
   try {
     const foundUser = await User.findOne({refreshTokens: refreshToken}).exec()
     if (!foundUser){
-      const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
       try {
-        const hackedUser = await User.finedOne({id: user.id}).exec()
-        hackedUser.refreshToken = [];
-        const result = await hackedUser.save()
+        const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const hackedUser = await User.findByIdAndUpdate(
+          user.id,
+          { $set: { refreshTokens: [] } },
+          { safe: true, upsert: true }
+        ); 
       } catch (error) {
+        console.log(error)
         return res.status(403).send(
           error
         )
@@ -64,6 +66,7 @@ exports.refreshToken = async (req, res) => {
       accessToken
     });
   } catch (error) { 
-    return res.status(400).send("Invalid refresh token.");
+    console.log(error)
+    return res.status(400).json({message: "Invalid refresh token.", error});
   }
 };

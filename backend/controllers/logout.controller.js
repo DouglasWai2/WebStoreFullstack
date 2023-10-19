@@ -18,7 +18,7 @@ exports.logout = async (req, res) => {
       .clearCookie("refreshToken", {
         httpOnly: true,
         sameSite: "strict",
-        maxAge: 1 * 1000 * 60 * 60 * 24 * 365,
+        maxAge : 1000 * 60 * 60 * 24 * 365,
       })
       .status(200)
       .send("User Logged Out succesfully");
