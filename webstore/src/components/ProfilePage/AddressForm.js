@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import LoadingSpinner from "../shared/LoadingSpinner";
 import ErrorCard from "../shared/ErrorCard";
+import { refreshToken } from "../../helpers/getRefreshToken";
+import SuccessCard from "../shared/SuccessCard";
 
-const AddressForm = () => {
+const AddressForm = ({ backToAddress }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submiting, setSubmiting] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
     cep: "",
     street: "",
@@ -20,6 +24,7 @@ const AddressForm = () => {
 
   const [lastCep, setLastCep] = useState("");
   const [lastAdress, setLastAddress] = useState("");
+  const [success, setSuccess] = useState("");
 
   const getCityOptions = async () => {
     // get cities from given state
@@ -89,6 +94,7 @@ const AddressForm = () => {
       .then((response) => response.json())
       .then((data) => {
         const newData = data.sort((a, b) => {
+          // Sort states in alphabetical order
           const nameA = a.nome.toUpperCase();
           const nameB = b.nome.toUpperCase();
           if (nameA < nameB) {
@@ -111,36 +117,55 @@ const AddressForm = () => {
       const newStreet = street.toLowerCase().replace("rua ", "");
       fetch(`https://viacep.com.br/ws/${state}/${city}/${newStreet}/json/`)
         .then((response) => {
-            response.json()
-            .then((data) => {
-              console.log(data)
-              if(data.length === 0){
-                setError('Endereço não encontrado')
-              }else{
-                const dataCep = data[0].cep.replace("-", "");
-                setAddressInfo((addressInfo) => ({
-                  ...addressInfo,
-                  neighborhood: data[0].bairro,
-                  cep: dataCep,
-                }));
-                setLastCep(dataCep);             
-              }
-            })
-        })  
-        .catch((error) => console.log(error))
-        .finally(() => {  
-          setLoading(false)
+          response.json().then((data) => {
+            console.log(data);
+            if (data.length === 0) {
+              setError("Endereço não encontrado");
+            } else {
+              const dataCep = data[0].cep.replace("-", "");
+              setAddressInfo((addressInfo) => ({
+                ...addressInfo,
+                neighborhood: data[0].bairro,
+                cep: dataCep,
+              }));
+              setLastCep(dataCep);
+            }
           });
+        })
+        .catch((error) => console.log(error))
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
   const handleClick = () => {
     setError("");
+    setSuccess("");
   };
 
-  const handleSubmit = async () => {
-    // TODO
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmiting(true);
+    const accessToken = window.localStorage.getItem("accessToken");
+    const userId = window.localStorage.getItem("userid");
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/address/${userId}/${accessToken}`,
+        { address: addressInfo },
+        { withCredentials: true }
+      );
+      setSuccess("Endereço adicionado com sucesso...");
+      setTimeout(backToAddress, 1500);
+    } catch (error) {
+      if (error?.response.data === "Invalid Token") {
+        await refreshToken();
+        handleSubmit(e);
+      }
+    } finally {
+      setSubmiting(false);
+    }
+  };
 
   return (
     <div
@@ -151,6 +176,10 @@ const AddressForm = () => {
       {error !== "" ? (
         <div className="absolute top-[-75px] left-[50%] translate-x-[-50%]">
           <ErrorCard invalid={error} handleClick={handleClick} />
+        </div>
+      ) : success !== "" ? (
+        <div className="absolute top-[-75px] left-[50%] translate-x-[-50%]">
+          <SuccessCard success={success} handleClick={handleClick} />
         </div>
       ) : (
         ""
@@ -260,7 +289,13 @@ const AddressForm = () => {
             />
           </label>
         </div>
-        <button className="button-login">Adicionar Endereço</button>
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className={"button-login" + (submiting ? " brightness-75" : "")}
+        >
+          {submiting ? <LoadingSpinner /> : "Adicionar Endereço"}
+        </button>
       </form>
     </div>
   );

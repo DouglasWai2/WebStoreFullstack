@@ -30,14 +30,10 @@
     @apply text-gray-600 cursor-pointer hover:text-gray-800
 }
 
-.react-select__option{
-    background-color: white;
+body{
+    height: 100vh;
 }
-.select-scroll{
-    scrollbar-width: 1px !important;
-  }
 
-.react-select__option:hover{
-    background-color: #188FA7;
-    color: white
+#root{
+    height: 100vh;
 }

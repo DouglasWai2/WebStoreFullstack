@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
-import { refreshToken } from "../../helpers/refreshToken";
+import { refreshToken } from "../../helpers/getRefreshToken";
 import { logOut } from "../../helpers/logOut";
 import SkeletonData from "./SkeletonPersonalData";
 import EditButton from "./EditButton";
@@ -50,12 +50,10 @@ const PersonalData = () => {
           await refreshToken();
           getUserData();
         } catch (error) {
-          console.log(error);
           if (
             error?.response.data === "Access Denied. No refresh token provided."
           ) {
-            console.log(error);
-            // logOut();
+            logOut();
           }
         }
       }

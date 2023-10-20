@@ -7,7 +7,7 @@ const Address = ({handleClick}) => {
   
 
   return (
-    
+    <main>
     <div onClick={handleClick} className="w-full flex gap-5 flex-wrap">
       <div className="bg-white border-[1px] w-[250px] h-[100px] shadow-md p-3 flex items-center gap-2 transition-all cursor-pointer duration-500 hover:brightness-75">
         <h1>Adicionar novo endereço</h1>
@@ -19,6 +19,7 @@ const Address = ({handleClick}) => {
       </div>
       <AddressCard />
     </div>
+    </main>
   );
 };
 

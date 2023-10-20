@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const auth = require('./middlewares/verifyToken')
 require("dotenv").config();
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors())
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
 app.use(cookieParser());
 
 mongoose
@@ -31,6 +32,7 @@ app.use(function(req, res, next) {
 app.use("/api", require("./routes/clothes"));
 app.use("/api", require("./routes/rating"));
 app.use("/api", require("./routes/getUserInfo"));
+app.use("/api", require("./routes/address"));
 app.use("/auth", require("./routes/auth/register"));
 app.use("/auth", require("./routes/auth/login"));
 app.use("/auth", require("./routes/auth/refreshToken"));

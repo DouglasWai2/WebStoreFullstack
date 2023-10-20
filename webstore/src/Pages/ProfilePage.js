@@ -15,6 +15,10 @@ const ProfilePage = () => {
     setForm(true)
   }
 
+  const backToAddress = () => {
+    setForm(false)
+  }
+
   return (
     <>
       <header>
@@ -28,10 +32,11 @@ const ProfilePage = () => {
           ""
         )}
       </header>
-      <main className="p-10">
+      <main className="p-10 h-full">
         <h1 className="text-3xl mb-4">Seu perfil</h1>
         <div className="flex">
-          <ul onClick={()=> {setForm(false)}} className="flex flex-col gap-4 text-lg w-1/4">
+          <aside>
+          <ul onClick={()=> {setForm(false)}} className="flex flex-col gap-4 text-lg w-full">
             <li
               onClick={() => setCurrentPage("Personal Data")}
               className={
@@ -73,12 +78,13 @@ const ProfilePage = () => {
               Seus pedidos
             </li>
           </ul>
+          </aside>
           <div className="w-full flex justify-center px-9">
             {currentPage === "Personal Data" ? (
               <PersonalData />
             ) : currentPage === "Security" ? (
               <Security />
-            ) : currentPage === "Address" ? ( form ? <AddressForm /> :
+            ) : currentPage === "Address" ? ( form ? <AddressForm backToAddress={backToAddress} /> :
               <Address handleClick={handleClick} />
             ) : currentPage === "Payment Methods" ? (
               <PaymentMethods />

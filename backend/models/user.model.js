@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const Address = require("./address.model");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -32,32 +33,13 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  address: [{
-    street: {
-      type: String,
-      trim: true,
-    },
-    number: {
-      type: String,
-      trim: true,
-    },
-    neighbourhood: {
-      type: String,
-      trim: true,
-    },
-    city: {
-      type: String,
-      trim: true,
-    },
-    state: {
-      type: String,
-      trim: true,
-    },
-    country: {
-      type: String,
-      trim: true,
-    }  
-  }],
+  addressess: 
+    [{
+      address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "address",
+      },
+    }],
   role: {
     type: String,
     default: "Costumer",
@@ -65,11 +47,11 @@ const UserSchema = new mongoose.Schema({
   },
   confirmedEmail: {
     type: Boolean,
-    default: false
+    default: false,
   },
   refreshTokens: {
-    type: [String]
-  }
+    type: [String],
+  },
 });
 
 UserSchema.pre("save", async function (next) {
