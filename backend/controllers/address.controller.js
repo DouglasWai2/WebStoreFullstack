@@ -36,3 +36,8 @@ exports.addressController = async (req, res) => {
         res.status(400).json({message: 'Bad request', error})
     }  
 }
+
+exports.addressInfo = async (req, res) => {
+    const userid = req.params.userid
+
+}
