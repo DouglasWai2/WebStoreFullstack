@@ -65,6 +65,6 @@ exports.login = async (req, res) => {
       }
     }
   } catch (err) {
-    res.json({ success: false, err: err });
+    res.status(400).json({ success: false, err: err });
   }
 };

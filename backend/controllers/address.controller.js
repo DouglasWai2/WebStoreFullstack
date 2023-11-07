@@ -37,7 +37,9 @@ exports.addressController = async (req, res) => {
     }  
 }
 
-exports.addressInfo = async (req, res) => {
+exports.sendAddressInfo = async (req, res) => {
     const userid = req.params.userid
+    const addressess = await UserSchema.find({_id: userid}, {addressess: 1})
+    res.status(200).send(addressess)
 
 }

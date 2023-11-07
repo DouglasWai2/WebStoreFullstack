@@ -40,7 +40,10 @@ const AddressForm = ({ backToAddress }) => {
         setCityeOptions(newData);
       })
       .catch((error) => console.log(error))
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false)
+        console.log(cityOptions)
+      });
   };
 
   const getAddressByCEPData = async () => {
@@ -49,12 +52,10 @@ const AddressForm = ({ backToAddress }) => {
       setLoading(true);
       fetch(`https://brasilapi.com.br/api/cep/v2/${cep}`)
         .then((response) => {
-          console.log(response.status);
           if (response.status === 404) {
             setError("CEP não encontrado");
           } else {
             response.json().then((data) => {
-              console.log(data);
               setAddressInfo((addressInfo) => ({
                 ...addressInfo,
                 street: data.street,
@@ -85,6 +86,8 @@ const AddressForm = ({ backToAddress }) => {
     // get city options from api when state changes
     if (state !== "" && state) {
       getCityOptions();
+      console.log(city.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase()
+      )
     }
   }, [state]);
 
@@ -232,7 +235,7 @@ const AddressForm = ({ backToAddress }) => {
           <select
             required
             onChange={handleInputChange}
-            value={city?.toUpperCase()}
+            value={city.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase()}
             name="city"
             className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
             disabled={state === "" ? true : false}
