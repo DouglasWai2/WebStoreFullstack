@@ -56,7 +56,6 @@ exports.login = async (req, res) => {
           .header("Authorization", accessToken)
           .json({
             authorization: accessToken,
-            userId: user.id,
             name: user.name,
             lastName: user.lastName,
             email: user.email,

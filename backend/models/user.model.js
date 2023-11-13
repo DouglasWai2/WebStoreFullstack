@@ -33,13 +33,10 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  addressess: 
-    [{
-      address: {
+  address: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "address",
-      },
-    }],
+      }],
   role: {
     type: String,
     default: "Costumer",

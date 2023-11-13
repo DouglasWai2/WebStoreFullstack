@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
 import { refreshToken } from "../../helpers/getRefreshToken";
 import { logOut } from "../../helpers/logOut";
-import SkeletonData from "./SkeletonPersonalData";
-import EditButton from "./EditButton";
+import EditButton from "../../components/User/EditButton";
+import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
 
-const PersonalData = () => {
+
+const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState({
     Nome: "",
     "Ultimo Nome": "",
@@ -23,11 +24,10 @@ const PersonalData = () => {
   const getUserData = async () => {
     setLoading(true);
     const token = window.localStorage.getItem("accessToken");
-    const userId = window.localStorage.getItem("userid");
 
     try {
       const data = await axios.get(
-        `http://localhost:5000/api/${userId}/${token}`,
+        `http://localhost:5000/api/${token}`,
         { withCredentials: true }
       );
 
@@ -56,7 +56,8 @@ const PersonalData = () => {
             logOut();
           }
         }
-      }
+      } 
+    } finally{
       setLoading(false);
     }
   };
@@ -98,4 +99,4 @@ const PersonalData = () => {
   );
 };
 
-export default PersonalData;
+export default ProfilePage;

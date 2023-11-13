@@ -1,9 +1,5 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const { jwtExpiration,
-  jwtRefreshExpiration,
-  testjwtExpiration,
-  testjwtRefreshExpiration } = require('../utils/expiration');
 const UserSchema = require("../models/user.model");
 
 

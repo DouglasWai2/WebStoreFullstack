@@ -45,12 +45,12 @@ exports.refreshToken = async (req, res) => {
   );
   
   try { 
-    const newUser = await User.findByIdAndUpdate(
+   await User.findByIdAndUpdate(
       decoded.id,
       { $pull: { refreshTokens: refreshToken } },
       { safe: true, upsert: true }
     ); 
-    const newUserToken = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         decoded.id ,
       { $push: { refreshTokens: newRefreshToken } },
       { new: true }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EditButton from "./EditButton";
+import EditButton from "../../components/User/EditButton";
 
 const Security = () => {
   const [securityInfo, setSecurityInfo] = useState({

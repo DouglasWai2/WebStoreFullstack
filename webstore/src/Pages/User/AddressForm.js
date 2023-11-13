@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import LoadingSpinner from "../shared/LoadingSpinner";
-import ErrorCard from "../shared/ErrorCard";
+import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import ErrorCard from "../../components/shared/ErrorCard";
 import { refreshToken } from "../../helpers/getRefreshToken";
-import SuccessCard from "../shared/SuccessCard";
+import SuccessCard from "../../components/shared/SuccessCard";
+import { useNavigate } from "react-router-dom";
 
-const AddressForm = ({ backToAddress }) => {
+const AddressForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [submiting, setSubmiting] = useState(false);
@@ -16,15 +17,18 @@ const AddressForm = ({ backToAddress }) => {
     neighborhood: "",
     city: "",
     state: "",
+    recieverName: '',
+    CPF: '',
+    nickname: '',
     country: "Brasil",
   });
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityeOptions] = useState([]);
-  const { cep, street, neighborhood, city, state, number } = addressInfo;
-
+  const { cep, street, neighborhood, city, state, number, recieverName, CPF, nickname } = addressInfo;
   const [lastCep, setLastCep] = useState("");
   const [lastAdress, setLastAddress] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate()
 
   const getCityOptions = async () => {
     // get cities from given state
@@ -35,14 +39,13 @@ const AddressForm = ({ backToAddress }) => {
       .then((response) => response.json())
       .then((data) => {
         const newData = data.map((city) => {
-          return city.nome.replace(/\(.+?\)/gi, "");
+          return city.nome.replace(/\(.+?\)/gi, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase();
         });
         setCityeOptions(newData);
       })
       .catch((error) => console.log(error))
       .finally(() => {
         setLoading(false)
-        console.log(cityOptions)
       });
   };
 
@@ -85,9 +88,8 @@ const AddressForm = ({ backToAddress }) => {
   useEffect(() => {
     // get city options from api when state changes
     if (state !== "" && state) {
-      getCityOptions();
-      console.log(city.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase()
-      )
+      getCityOptions()    
+      
     }
   }, [state]);
 
@@ -151,15 +153,15 @@ const AddressForm = ({ backToAddress }) => {
     e.preventDefault();
     setSubmiting(true);
     const accessToken = window.localStorage.getItem("accessToken");
-    const userId = window.localStorage.getItem("userid");
+
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/address/${userId}/${accessToken}`,
+        `http://localhost:5000/api/address/${accessToken}`,
         { address: addressInfo },
         { withCredentials: true }
       );
       setSuccess("Endereço adicionado com sucesso...");
-      setTimeout(backToAddress, 1500);
+      setTimeout(()=> navigate('/user/address'), 1500);
     } catch (error) {
       if (error?.response.data === "Invalid Token") {
         await refreshToken();
@@ -194,32 +196,32 @@ const AddressForm = ({ backToAddress }) => {
       ) : (
         ""
       )}
-      <form className="flex flex-col gap-8">
+      <form className="flex flex-col gap-8 address-form">
         <div className="flex gap-4 w-full">
-          <label className="text-lg font-medium" htmlFor="CEP">
+          <label className="text-lg font-medium w-full" htmlFor="CEP">
             CEP
-          </label>
           <input
             required
-            className="border-[#152128] h-[2em] w-1/4 border-[1px] rounded-sm"
+            className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
             value={cep}
             onChange={handleInputChange}
             onBlur={getAddressByCEPData}
             type="text"
             name="cep"
-          />
+            placeholder="12345-678"
+            />
+            </label>
 
-          <label className="text-lg font-medium" htmlFor="state">
+          <label className="text-lg font-medium w-2/5" htmlFor="state">
             Estado
-          </label>
           <select
             required
             onChange={handleInputChange}
             value={state}
             name="state"
-            className="border-[#152128] h-[2em] border-[1px] rounded-sm"
+            className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
             placeholder="Selecione seu estado"
-          >
+            >
             <option value="" key="placeholder">
               Selecione seu Estado
             </option>
@@ -229,6 +231,7 @@ const AddressForm = ({ backToAddress }) => {
               </option>
             ))}
           </select>
+            </label>
         </div>
         <label className="text-lg font-medium" htmlFor="city">
           Cidade
@@ -265,6 +268,7 @@ const AddressForm = ({ backToAddress }) => {
             onChange={handleInputChange}
             type="text"
             name="neighborhood"
+            placeholder="Digite seu bairro aqui"
           />
         </label>
         <div className="flex w-full gap-10">
@@ -278,6 +282,7 @@ const AddressForm = ({ backToAddress }) => {
               onBlur={getCEPByAddress}
               type="text"
               name="street"
+              placeholder="Digite o nome da sua rua aqui"
             />
           </label>
           <label className="text-lg font-medium w-1/4" htmlFor="street">
@@ -289,9 +294,48 @@ const AddressForm = ({ backToAddress }) => {
               onChange={handleInputChange}
               type="text"
               name="number"
+              placeholder="Número da casa"
             />
           </label>
         </div>
+        <div className="flex w-full gap-10">
+          <label className="text-lg font-medium w-3/4 " htmlFor="street">
+            Nome do destinatário
+            <input
+              required
+              className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+              value={recieverName}
+              onChange={handleInputChange}
+              type="text"
+              name="recieverName"
+              placeholder="Digite o nome do destinatário aqui"
+            />
+          </label>
+          <label className="text-lg font-medium w-2/5" htmlFor="street">
+            CPF
+            <input
+              required
+              className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
+              value={CPF}
+              onChange={handleInputChange}
+              type="text"
+              name="CPF"
+              placeholder="CPF do destinatário"
+            />
+          </label>
+        </div>
+        <label className="text-lg font-medium w-full" htmlFor="street">
+            Apelido
+            <input
+              required
+              className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
+              value={nickname}
+              onChange={handleInputChange}
+              type="text"
+              name="nickname"
+              placeholder="Ex: Casa, trabalho..."
+            />
+          </label>
         <button
           type="submit"
           onClick={handleSubmit}

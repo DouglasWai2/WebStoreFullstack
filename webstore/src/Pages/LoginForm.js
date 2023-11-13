@@ -41,7 +41,7 @@ const LoginForm = () => {
         window.localStorage.setItem('accessToken', userData.data.authorization)
         window.localStorage.setItem('LoggedIn', true)
         window.localStorage.setItem('name', userData.data.name)
-        window.localStorage.setItem('userid', userData.data.userId)
+        window.localStorage.setItem('lastName', userData.data.lastName)
         if(!userData.data['isVerfied']){
           window.localStorage.setItem('verified', false)
         }else{

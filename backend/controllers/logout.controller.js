@@ -1,4 +1,5 @@
 const UserSchema = require("../models/user.model");
+const jwt = require('jsonwebtoken')
 require("dotenv").config();
 
 exports.logout = async (req, res) => {
@@ -7,10 +8,10 @@ exports.logout = async (req, res) => {
     return res.status(200).send("No cookie provided, user already logged out");
   }
 
-  const userId = req.params.userId;
+
   try {
-    const loggedOutUser = await UserSchema.findByIdAndUpdate(
-      userId,
+    const loggedOutUser = await UserSchema.findOneAndUpdate(
+      {refreshTokens: refreshToken},
       { $pull: { refreshTokens: refreshToken } },
       { safe: true, upsert: true }
     );
