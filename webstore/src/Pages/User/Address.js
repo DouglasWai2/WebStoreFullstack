@@ -1,42 +1,27 @@
 import React, { useState } from "react";
 import AddressCard from "../../components/User/Address/AddressCard";
-import { refreshToken } from "../../helpers/getRefreshToken";
-import { logOut } from "../../helpers/logOut";
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import {getUserAddressess} from "../../helpers/getUserAddress";
+import { handleError } from "../../helpers/handleError";
 
 const Address = () => {
   const navigate = useNavigate();
   const [addressess, setAddressess] = useState([]);
 
-  const getUserAddressess = async () => {
-    const accessToken = window.localStorage.getItem("accessToken");
+  async function awaitAddress(){
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/address/${accessToken}`,
-        { withCredentials: true }
-      );
-      setAddressess(response.data);
+      const data = await getUserAddressess()
+      setAddressess(data)     
     } catch (error) {
-      if (error?.response.data === "Invalid Token") {
-        try {
-          await refreshToken();
-          getUserAddressess();
-        } catch (error) {
-          if (
-            error?.response.data === "Access Denied. No refresh token provided."
-          ) {
-            logOut();
-          }
-        }
-      }
+      handleError(error, awaitAddress)
     }
-  };
+  }
 
+ 
   useState(() => {
-    getUserAddressess();
+    awaitAddress()
   }, []);
 
   return (
@@ -55,7 +40,7 @@ const Address = () => {
         />
       </div>
       {addressess.map((address) => {
-        return <AddressCard address={address} />;
+        return <AddressCard key={address.nickname} address={address} />;
       })}
     </div>
   );

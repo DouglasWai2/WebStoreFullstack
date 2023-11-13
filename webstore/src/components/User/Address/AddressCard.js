@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   faIdCard,
   faLocationDot,
+  faTrash,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,11 +13,41 @@ import { logOut } from "../../../helpers/logOut";
 const AddressCard = ({ address }) => {
   async function setMainAddress(id) {
     const accessToken = window.localStorage.getItem("accessToken");
+    try {
+      await axios.get(
+        `http://localhost:5000/api/address/set/${id}/${accessToken}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      window.location.reload();
+    } catch (error) {
+      if (error?.response.data === "Invalid Token") {
+        try {
+          await refreshToken();
+          setMainAddress(id);
+        } catch (error) {
+          console.log(error);
+        }
+        if (
+          error?.response.data ===
+            "Access Denied. No refresh token provided." ||
+          error?.response.data === "Invalid Refresh Token"
+        ) {
+          logOut();
+        }
+      }
+    }
+  }
+
+  async function deleteAddress(id) {
+    const accessToken = window.localStorage.getItem("accessToken");
     axios
-      .get(`http://localhost:5000/api/address/set/${id}/${accessToken}`, {
+      .get(`http://localhost:5000/api/address/delete/${id}/${accessToken}`, {
         withCredentials: true,
       })
-      .then((response) => {
+      .then(() => {
         window.location.reload();
       })
       .catch((error) => {
@@ -67,16 +98,24 @@ const AddressCard = ({ address }) => {
         </span>
         {address.CPF}
       </p>
-      {address.main ? (
-        <p>Endereço selecionado</p>
-      ) : (
+      <div className="flex justify-between">
+        {address.main ? (
+          <p>Endereço selecionado</p>
+        ) : (
+          <button
+            onClick={() => setMainAddress(address.id)}
+            className="bg-yellow-300 w-full h-fit px-3 hover:bg-yellow-400"
+          >
+            Definir como principal
+          </button>
+        )}
         <button
-          onClick={() => setMainAddress(address.id)}
-          className="bg-yellow-300 w-full h-fit px-3 hover:bg-yellow-400"
+          onClick={() => deleteAddress(address.id)}
+          className="w-max text-red-500 px-2"
         >
-          Definir como principal
+          <FontAwesomeIcon icon={faTrash} />
         </button>
-      )}
+      </div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { refreshToken } from "../../helpers/getRefreshToken";
 import { logOut } from "../../helpers/logOut";
 import EditButton from "../../components/User/EditButton";
 import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
+import { handleError } from "../../helpers/handleError";
 
 
 const ProfilePage = () => {
@@ -44,19 +45,7 @@ const ProfilePage = () => {
       }));
       setLoading(false);
     } catch (error) {
-      console.log(error);
-      if (error?.response.data === "Invalid Token") {
-        try {
-          await refreshToken();
-          getUserData();
-        } catch (error) {
-          if (
-            error?.response.data === "Access Denied. No refresh token provided."
-          ) {
-            logOut();
-          }
-        }
-      } 
+        handleError(error, getUserData)
     } finally{
       setLoading(false);
     }

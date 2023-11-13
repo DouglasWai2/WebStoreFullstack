@@ -5,6 +5,7 @@ import ErrorCard from "../../components/shared/ErrorCard";
 import { refreshToken } from "../../helpers/getRefreshToken";
 import SuccessCard from "../../components/shared/SuccessCard";
 import { useNavigate } from "react-router-dom";
+import { handleError } from "../../helpers/handleError";
 
 const AddressForm = () => {
   const [error, setError] = useState("");
@@ -163,10 +164,7 @@ const AddressForm = () => {
       setSuccess("Endereço adicionado com sucesso...");
       setTimeout(()=> navigate('/user/address'), 1500);
     } catch (error) {
-      if (error?.response.data === "Invalid Token") {
-        await refreshToken();
-        handleSubmit(e);
-      }
+      handleError(error, function(){handleSubmit(e)})
     } finally {
       setSubmiting(false);
     }
@@ -325,9 +323,8 @@ const AddressForm = () => {
           </label>
         </div>
         <label className="text-lg font-medium w-full" htmlFor="street">
-            Apelido
+            Apelido (opcional)
             <input
-              required
               className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
               value={nickname}
               onChange={handleInputChange}

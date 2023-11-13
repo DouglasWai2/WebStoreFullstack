@@ -36,7 +36,6 @@ const LoginForm = () => {
                 "application/x-www-form-urlencoded;charset=utf-8",
             }
     })
-        console.log(userData.data)
         dispatch(setCredentials({accessToken: userData.data.authorization, email}))
         window.localStorage.setItem('accessToken', userData.data.authorization)
         window.localStorage.setItem('LoggedIn', true)

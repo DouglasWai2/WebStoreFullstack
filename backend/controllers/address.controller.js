@@ -96,7 +96,7 @@ exports.updateMainAddress = async (req, res) => {
     const addressId = req.params.address_id
     const userId = req.userInfo.id
 try {
-    const foundUser =  await AddressSchema.findOneAndUpdate({user: userId, main: true}, {main: false} )
+    const foundUserAddressess =  await AddressSchema.findOneAndUpdate({user: userId, main: true}, {main: false} )
     const alteredAddress = await AddressSchema.findOneAndUpdate({_id: addressId}, {main: true})
     res.status(200).send("Main address altered successfully")
 
@@ -105,3 +105,16 @@ try {
 }
 
 };
+
+exports.deleteAddress = async (req, res) => {
+    const addressId = req.params.address_id
+    const userId = req.userInfo.id
+    try {
+        await UserSchema.findByIdAndUpdate(userId, {$pull: {address:{ $in: [addressId]}}})
+        const alteredAddress = await AddressSchema.findByIdAndDelete(addressId)
+        res.status(200).send("Address deleted successfully")
+    
+    } catch (error) {
+        console.log(error)
+    }
+}
