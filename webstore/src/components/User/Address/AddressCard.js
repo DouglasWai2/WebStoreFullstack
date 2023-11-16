@@ -7,8 +7,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { refreshToken } from "../../../helpers/getRefreshToken";
-import { logOut } from "../../../helpers/logOut";
+import { handleError } from "../../../helpers/handleError";
 
 const AddressCard = ({ address }) => {
   async function setMainAddress(id) {
@@ -23,21 +22,9 @@ const AddressCard = ({ address }) => {
 
       window.location.reload();
     } catch (error) {
-      if (error?.response.data === "Invalid Token") {
-        try {
-          await refreshToken();
-          setMainAddress(id);
-        } catch (error) {
-          console.log(error);
-        }
-        if (
-          error?.response.data ===
-            "Access Denied. No refresh token provided." ||
-          error?.response.data === "Invalid Refresh Token"
-        ) {
-          logOut();
-        }
-      }
+      handleError(error, function(){
+        setMainAddress(id)
+      })
     }
   }
 
@@ -51,21 +38,9 @@ const AddressCard = ({ address }) => {
         window.location.reload();
       })
       .catch((error) => {
-        if (error?.response.data === "Invalid Token") {
-          try {
-            refreshToken();
-            setMainAddress();
-          } catch (error) {
-            console.log(error);
-          }
-          if (
-            error?.response.data ===
-              "Access Denied. No refresh token provided." ||
-            error?.response.data === "Invalid Refresh Token"
-          ) {
-            logOut();
-          }
-        }
+        handleError(error, function () {
+          deleteAddress(id);
+        });
       });
   }
 

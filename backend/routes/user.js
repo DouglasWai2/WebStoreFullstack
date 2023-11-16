@@ -6,6 +6,7 @@ require('dotenv').config()
 
 router.get("/:access_token", auth, async (req, res) => {
   const user = await User.findById(req.userInfo.id);
+  
 
   res
     .status(200)
@@ -18,5 +19,25 @@ router.get("/:access_token", auth, async (req, res) => {
       birth: user.birth
     })
 });
+
+router.post("/user/update/:access_token", auth, async(req, res) => {
+  const data = req.body
+  const user = await User.findById(req.userInfo.id)
+
+  data.map(item => {
+    if(Object.values(item)[0]){
+      user[item.value] = Object.values(item)[0]
+    } 
+  })
+
+  try {
+    await user.save()
+    res.status(200).send('User data updated')
+  } catch (error) {
+    console.log(error)
+    res.status(400).send(error.message)
+  }
+
+})
 
 module.exports = router;

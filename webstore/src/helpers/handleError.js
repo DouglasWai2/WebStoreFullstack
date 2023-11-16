@@ -7,7 +7,6 @@ export async function handleError(error, cb) {
       await refreshToken();
       cb();
     } catch (error) {
-      console.log(error);
       if (
         error?.response.data === "Access Denied. No refresh token provided."
       ) {

@@ -3,25 +3,29 @@ import AddressCard from "../../components/User/Address/AddressCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import {getUserAddressess} from "../../helpers/getUserAddress";
+import { getUserAddressess } from "../../helpers/getUserAddress";
 import { handleError } from "../../helpers/handleError";
+import SkeletonAddressCard from "../../components/User/Address/SkeletonAddressCard";
 
 const Address = () => {
   const navigate = useNavigate();
   const [addressess, setAddressess] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  async function awaitAddress(){
+  async function awaitAddress() {
+    setLoading(true);
     try {
-      const data = await getUserAddressess()
-      setAddressess(data)     
+      const data = await getUserAddressess();
+      setAddressess(data);
     } catch (error) {
-      handleError(error, awaitAddress)
+      handleError(error, awaitAddress);
+    } finally {
+      setLoading(false);
     }
   }
 
- 
   useState(() => {
-    awaitAddress()
+    awaitAddress();
   }, []);
 
   return (
@@ -39,9 +43,13 @@ const Address = () => {
           size="2xl"
         />
       </div>
-      {addressess.map((address) => {
-        return <AddressCard key={address.nickname} address={address} />;
-      })}
+      {loading ? (
+        <SkeletonAddressCard />
+      ) : (
+        addressess.map((address) => {
+          return <AddressCard key={address.nickname} address={address} />;
+        })
+      )}
     </div>
   );
 };

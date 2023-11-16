@@ -6,7 +6,8 @@ const Home = () => {
 
   return (
     <>
-        <Navbar /> 
+        <Navbar />
+        <Outlet /> 
     </>
   );
 };

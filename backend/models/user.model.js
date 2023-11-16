@@ -26,6 +26,17 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
+  cpf: {
+    type: String,
+    minlength: 11,
+    trim: true,
+  },
+  birth: {
+    type: Date,
+    offset: {
+      type: String
+    }
+  },
   phone: {
     type: String,
     minlength: 11,

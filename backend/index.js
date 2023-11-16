@@ -31,7 +31,8 @@ app.use(function(req, res, next) {
 
 app.use("/api", require("./routes/clothes"));
 app.use("/api", require("./routes/rating"));
-app.use("/api", require("./routes/getUserInfo"));
+app.use("/api", require("./routes/user"));
+app.use("/api", require("./routes/user"));
 app.use("/api", require("./routes/address"));
 app.use("/auth", require("./routes/auth/register"));
 app.use("/auth", require("./routes/auth/login"));
