@@ -7,7 +7,7 @@ import {
   faCartShopping,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
 import { getUserAddressess } from "../helpers/getUserAddress";
@@ -31,6 +31,29 @@ const Navbar = () => {
       handleError(error, getMainAddress);
     }
   }
+
+  function useOutsideAlerter(ref) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setToggleCard(false)
+          console.log(toggleCard)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef);
 
   useEffect(() => {
     if (loggedIn === "true") {
@@ -84,7 +107,7 @@ const Navbar = () => {
           <div className="flex items-center gap-1 relative">
             <div
               onClick={() => {
-                setToggleCard(!toggleCard);
+                setToggleCard(true);
               }}
               className="flex hover-border p-2 items-center gap-1 cursor-pointer"
             >
@@ -102,12 +125,18 @@ const Navbar = () => {
             {toggleCard ? (
               loggedIn === "true" ? (
                 // if user is logged in, render this
-                <div className="bg-white text-black absolute bottom-[-110px] left-[-160px] w-[300px] p-6 flex flex-col gap-2 items-center">
+                <div ref={wrapperRef} className="bg-white absolute bottom-[-110px] left-[-160px] h-fit w-[300px] p-6 flex flex-col gap-2 items-center">
                   <Link
                     to="/user/profile"
                     className="text-sm text-blue-600 cursor-pointer hover:underline"
                   >
                     Meu cadastro
+                  </Link>
+                  <Link
+                    to="/store"
+                    className="text-sm text-blue-600 cursor-pointer hover:underline"
+                  >
+                    Venda seu produto
                   </Link>
                   <a onClick={logOut}>
                     <p className="text-sm text-blue-600 cursor-pointer hover:underline">
@@ -117,7 +146,7 @@ const Navbar = () => {
                 </div>
               ) : (
                 // if user is not logged in, render this
-                <div className="bg-white text-black absolute bottom-[-110px] left-[-160px] w-[300px] p-6 flex flex-col gap-2 items-center">
+                <div ref={wrapperRef} className="bg-white text-black absolute bottom-[-110px] left-[-160px] w-[300px] p-6 flex flex-col gap-2 items-center">
                   <a
                     href="/login"
                     className="bg-yellow-400 w-[100%] cursor-pointer text-center hover:bg-yellow-600 transition-colors duration-200"

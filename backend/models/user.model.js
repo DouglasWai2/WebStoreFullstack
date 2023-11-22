@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
-const Address = require("./address.model");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -59,6 +58,13 @@ const UserSchema = new mongoose.Schema({
   },
   refreshTokens: {
     type: [String],
+  },
+  customerId: {
+    type: String
+  },
+  store: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "store",
   },
 });
 

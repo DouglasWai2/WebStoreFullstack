@@ -1,50 +1,58 @@
 const mongoose = require("mongoose");
-const User = require("./user.model");
 
 const AddressSchema = new mongoose.Schema({
   cep: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 8,
   },
   street: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 100,
   },
   number: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 10,
   },
   neighborhood: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 100,
   },
   city: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 100
   },
   state: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 100
   },
   CPF: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 11,
   },
   nickname: {
     type: String,
     trim: true,
+    maxlength: 30,
   },
   recieverName: {
     type: String,
     trim: true,
     required: true,
+    maxlength: 100
   },
   country: {
     type: String,

@@ -17,18 +17,25 @@ import Security from "./Pages/User/Security";
 import PaymentMethods from "./Pages/User/PaymentMethods";
 import YourPurchases from "./Pages/User/YourPurchases";
 import AddressForm from "./Pages/User/AddressForm";
+import PaymentMethodForm from "./Pages/User/SetupForm";
+import Merchant from "./Pages/Store/Store";
+import RegisterStore from "./Pages/Store/RegisterStore";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route path="/" element={<Home />}>
+          <Route path="store" element={<Merchant />}>
+            <Route path="signup" element={<RegisterStore />} />
+          </Route>
           <Route path="user" element={<User />}>
             <Route path="profile" element={<ProfilePage />} />
             <Route path="address" element={<Address />} />
             <Route path="new-address" element={<AddressForm />} />
             <Route path="security" element={<Security />} />
             <Route path="payment-methods" element={<PaymentMethods />} />
+            <Route path="new-payment-method" element={<PaymentMethodForm />} />
             <Route path="your-purchases" element={<YourPurchases />} />
           </Route>
         </Route>

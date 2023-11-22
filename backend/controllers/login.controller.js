@@ -2,12 +2,7 @@ const UserSchema = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const {
-  jwtExpiration,
-  jwtRefreshExpiration,
-  testjwtExpiration,
-  testjwtRefreshExpiration,
-} = require("../utils/expiration");
+const { jwtExpiration, jwtRefreshExpiration } = require("../utils/expiration");
 
 //
 exports.login = async (req, res) => {
@@ -36,22 +31,23 @@ exports.login = async (req, res) => {
           process.env.REFRESH_TOKEN_SECRET,
           { expiresIn: jwtRefreshExpiration }
         );
-        try{
+        try {
           const newUserToken = await UserSchema.updateOne(
             { _id: user._id },
             { $push: { refreshTokens: refreshToken } },
             { new: true }
           );
-        }catch(error){
-          return res.status(400).json({error, message: 'Unable to reach database' })
+        } catch (error) {
+          return res
+            .status(400)
+            .json({ error, message: "Unable to reach database" });
         }
 
-        
         res
           .cookie("refreshToken", refreshToken, {
             httpOnly: true,
             sameSite: "strict",
-            maxAge : 1000 * 60 * 60 * 24 * 365
+            maxAge: 1000 * 60 * 60 * 24 * 365,
           })
           .header("Authorization", accessToken)
           .json({

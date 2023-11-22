@@ -2,10 +2,11 @@ const UserSchema = require("../models/user.model");
 const Token = require("../models/token.model");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_KEY)
 require("dotenv").config;
 
 exports.register = async (req, res) => {
-  console.log(req.body)
   const { name, lastName, email, phone, password } = req.body;
   if (password.length < 6) {
     return res.status(400).json({ message: "Password less than 6 characters" });
@@ -22,6 +23,11 @@ exports.register = async (req, res) => {
     userId: newUser._id,
     token: crypto.randomBytes(32).toString("hex"),
   });
+
+  const customer = await stripe.customers.create();
+
+  const {id} = customer
+  newUser.customerId = id
   const message = `Este é seu e-mail de verificação, não compartilhe com ninguem: 
   http://localhost:5000/auth/register/user/verify/${newUser.id}/${token.token}`;
   try {
