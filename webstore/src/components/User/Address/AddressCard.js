@@ -22,9 +22,9 @@ const AddressCard = ({ address }) => {
 
       window.location.reload();
     } catch (error) {
-      handleError(error, function(){
-        setMainAddress(id)
-      })
+      handleError(error, function () {
+        setMainAddress(id);
+      });
     }
   }
 
@@ -56,7 +56,9 @@ const AddressCard = ({ address }) => {
           <FontAwesomeIcon icon={faLocationDot} />
           Endereço:{" "}
         </span>
-        {`${address.street} - ${address.number} - ${address.city}/${address.state}`}
+        {`${address.street} - ${address.number} - ${address.city}/${address.state}`}{" "}
+        <br></br>
+        <span>CEP: {address.cep}</span>
       </p>
       <p>
         <span className="font-semibold flex gap-3 items-center">

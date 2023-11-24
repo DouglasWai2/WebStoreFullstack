@@ -28,10 +28,52 @@ const StoreSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
-  CNPJ: {
+  cnpj: {
     type: String,
     unique: true,
     trim: true,
+  },
+  cpf: {
+    type: String,
+    unique: true,
+    trim: true,
+  },
+  storeAddress: {
+    cep: {
+      type: String,
+      trim: true,
+      maxlength: 8,
+    },
+    street: {
+      type: String,
+      trim: true,
+      maxlength: 100,
+    },
+    number: {
+      type: String,
+      trim: true,
+      maxlength: 10,
+    },
+    neighborhood: {
+      type: String,
+      trim: true,
+      maxlength: 100,
+    },
+    city: {
+      type: String,
+      trim: true,
+      required: true,
+      maxlength: 100
+    },
+    state: {
+      type: String,
+      trim: true,
+      maxlength: 100
+    },
+    country: {
+      type: String,
+      trim: true,
+    }
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
 });

@@ -1,8 +1,10 @@
 import React from "react";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet, useLocation} from "react-router-dom";
 
 const Merchant = () => {
-  return window.location.pathname === "/store" ? (
+  const location = useLocation()
+
+  return location.pathname === "/store" ? (
     <main>
       <h1 className="text-2xl">Seja bem-vindo a área do vendedor</h1>
       <p>
@@ -11,9 +13,9 @@ const Merchant = () => {
       </p>
       <p>
         Primeiro passo é registrar sua loja{" "}
-        <a className="link !text-base" href="/store/signup">
+        <Link className="link !text-base" to="signup">
           neste link.
-        </a>
+        </Link>
       </p>
       <p>
         O segundo passo é colocar as informações da sua loja
@@ -22,9 +24,9 @@ const Merchant = () => {
           Você pode fazer isso clicando neste link ou na barra de navegação
           clicando no seu nome e "Minha loja" ou{" "}
         </span>{" "}
-        <a className="link !text-base" href="signup">
+        <Link className="link !text-base" to="my-store">
           neste link.
-        </a>
+        </Link>
       </p>
 
       <p>

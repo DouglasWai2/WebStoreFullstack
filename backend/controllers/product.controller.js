@@ -1,6 +1,6 @@
-const clothesSchema = require("../models/clothes.models");
+const clothesSchema = require("../models/product.models");
 
-exports.addClothes = async (req, res) => {
+exports.addProduct = async (req, res) => {
   const { title, description, tags, genre, features } = req.body;
 
   const newCloth = new clothesSchema({

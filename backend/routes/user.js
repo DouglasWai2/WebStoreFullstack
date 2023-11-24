@@ -7,7 +7,6 @@ require('dotenv').config()
 router.get("/:access_token", auth, async (req, res) => {
   const user = await User.findById(req.userInfo.id);
   
-
   res
     .status(200)
     .json({
@@ -16,7 +15,8 @@ router.get("/:access_token", auth, async (req, res) => {
       lastName: user.lastName,
       cpf: user.cpf,
       phone: user.phone,
-      birth: user.birth
+      birth: user.birth,
+      role: user.role
     })
 });
 

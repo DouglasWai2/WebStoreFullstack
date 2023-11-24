@@ -20,6 +20,9 @@ import AddressForm from "./Pages/User/AddressForm";
 import PaymentMethodForm from "./Pages/User/SetupForm";
 import Merchant from "./Pages/Store/Store";
 import RegisterStore from "./Pages/Store/RegisterStore";
+import MyStore from "./Pages/Store/MyStore";
+import StoreAddress from "./Pages/Store/StoreAddress";
+import NewProduct from "./Pages/Store/NewProduct";
 
 function App() {
   const router = createBrowserRouter(
@@ -28,6 +31,10 @@ function App() {
         <Route path="/" element={<Home />}>
           <Route path="store" element={<Merchant />}>
             <Route path="signup" element={<RegisterStore />} />
+            <Route path="my-store" element={<MyStore />}>
+              <Route path="address" element={<StoreAddress />} />
+            </Route>
+            <Route path="new-product" element={<NewProduct />} />
           </Route>
           <Route path="user" element={<User />}>
             <Route path="profile" element={<ProfilePage />} />

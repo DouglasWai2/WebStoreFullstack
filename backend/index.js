@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use("/api", require("./routes/clothes"));
+app.use("/api", require("./routes/catalog"));
 app.use("/api", require("./routes/rating"));
 app.use("/api", require("./routes/user"));
 app.use("/api", require("./routes/user"));

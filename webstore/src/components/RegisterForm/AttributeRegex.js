@@ -12,7 +12,11 @@ const AttributeRegex = ({ text, regex, password }) => {
     }
   }, [password]);
 
-  return <li key={regex} className={pass ? "text-green-500" : "text-red-500"}>{text}</li>;
+  return (
+    <li key={regex} className={pass ? "text-green-500" : "text-red-500"}>
+      {text}
+    </li>
+  );
 };
 
 export default AttributeRegex;
