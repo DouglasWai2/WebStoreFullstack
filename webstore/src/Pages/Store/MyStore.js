@@ -11,15 +11,16 @@ const MyStore = () => {
     storeDescription: "",
     storeImage: { link: "", name: "" },
     storeCategory: "",
-    storeAddress: {
-      cep: "",
-      street: "",
-      number: "",
-      neighborhood: "",
-      city: "",
-      state: "",
-      country: "",
-    },
+    storeAddress:
+      {
+        cep: "",
+        street: "",
+        number: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+        country: "",
+      },
   });
   const [loading, setLoading] = useState("");
 
@@ -34,6 +35,8 @@ const MyStore = () => {
       setStoreInfo(response.data);
 
       console.log(response.data);
+
+      
     } catch (error) {
       handleError(error, getStoreInfo);
     }
@@ -80,14 +83,14 @@ const MyStore = () => {
         <p>CPF: {storeInfo.cpf}</p>
       ) : (
         <>
-          <label for="cpfcnpj">
+          <label htmlFor="cpfcnpj">
             CPF/CNPJ
             <input ref={input} name="cpfcnpj" type="text" />
           </label>
           <button onClick={setCpfCnpj}>salvar</button>
         </>
       )}
-      {!storeInfo.storeAddress ? (
+      { Object.keys(storeInfo.storeAddress).length === 0 ? (
         <Link to="address">Adicione o endereço da sua loja</Link>
       ) : (
         <p>

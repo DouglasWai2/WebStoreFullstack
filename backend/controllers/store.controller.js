@@ -33,7 +33,7 @@ exports.storeInfo = async (req, res) => {
       storeDescription: store.storeDescription,
       storeCategory: store.storeCategory,
       storeName: store.storeName,
-      storeAddress: store.storeAddress,
+      storeAddress: store.storeAddress || "",
       storeId: store.id,
       cpf: store.cpf || undefined,
       cnpj: store.cnpj || undefined

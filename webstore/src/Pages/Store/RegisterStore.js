@@ -54,6 +54,8 @@ const RegisterStore = () => {
     e.preventDefault();
     const accessToken = window.localStorage.getItem("accessToken");
 
+    console.log(storeInfo)
+
     await axios
       .post(
         "http://localhost:5000/api/store/register-store/" + accessToken,

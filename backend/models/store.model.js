@@ -25,17 +25,14 @@ const StoreSchema = new mongoose.Schema({
   phone: {
     type: String,
     minlength: 11,
-    unique: true,
     trim: true,
   },
   cnpj: {
     type: String,
-    unique: true,
     trim: true,
   },
   cpf: {
     type: String,
-    unique: true,
     trim: true,
   },
   storeAddress: {
@@ -62,20 +59,20 @@ const StoreSchema = new mongoose.Schema({
     city: {
       type: String,
       trim: true,
-      required: true,
-      maxlength: 100
+      maxlength: 100,
     },
     state: {
       type: String,
       trim: true,
-      maxlength: 100
+      maxlength: 100,
     },
     country: {
       type: String,
       trim: true,
-    }
+    },
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
 });
 
-module.exports = mongoose.model("store", StoreSchema, "stores");
+module.exports = mongoose.model("Store", StoreSchema, "Stores");

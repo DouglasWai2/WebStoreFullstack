@@ -18,6 +18,18 @@ const ProfilePage = () => {
 
   const [loading, setLoading] = useState(false);
 
+  // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
+  function formatDate(date) {
+    const splitted = date.split("-"); // the date comes in string data type and it's splitted to get day, month and year
+    const newDate = new Date(
+      parseInt(splitted[0]),
+      parseInt(splitted[1]) - 1,
+      parseInt(splitted[2][0] + splitted[2][1])
+    ); // new Date object is created here with the current client OS timezone
+    return newDate.toLocaleDateString(); // then, it's converted to string again and in the current local format (DD/MM/YYYY)
+  }
+
+
   const getUserData = async () => {
     setLoading(true);
     const token = window.localStorage.getItem("accessToken");
@@ -31,32 +43,27 @@ const ProfilePage = () => {
       };
 
       const { name, lastName, email, phone, cpf, birth, address } = data.data;
-
-      // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
-      function formatDate(date) {
-        const splitted = date.split("-"); // the date comes in string data type and it's splitted to get day, month and year
-        const newDate = new Date(
-          parseInt(splitted[0]),
-          parseInt(splitted[1]) - 1,
-          parseInt(splitted[2][0] + splitted[2][1])
-        ); // new Date object is created here with the current client OS timezone
-        return newDate.toLocaleDateString(); // then, it's converted to string again and in the current local format (DD/MM/YYYY)
+      let formatedBirth
+      if(birth){
+        formatedBirth = formatDate(birth)
       }
-
-      setUserInfo([
+      
+      await setUserInfo([
         { Nome: name, value: varToString({ name }) },
         { "Ultimo Nome": lastName, value: varToString({ lastName }) },
         { Email: email, value: varToString({ email }) },
         { Celular: phone, value: varToString({ phone }) },
         { CPF: cpf || "", value: varToString({ cpf }) },
         {
-          "Data de Nascimento": formatDate(birth) || "",
+          "Data de Nascimento": formatedBirth || '',
           value: varToString({ birth }),
         },
         { Endereço: address || "", value: varToString({ address }) },
       ]);
-      setLoading(false);
+      console.log(userInfo)
+     
     } catch (error) {
+      console.log(error)
       handleError(error, getUserData);
     } finally {
       setLoading(false);

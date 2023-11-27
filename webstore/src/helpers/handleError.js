@@ -2,7 +2,6 @@ import { refreshToken } from "./getRefreshToken";
 import { logOut } from "./logOut";
 
 export async function handleError(error, cb) {
-  console.log(error)
   if (error?.response.data === "Expired access token") {
     try {
       await refreshToken();
@@ -19,5 +18,7 @@ export async function handleError(error, cb) {
     error?.response.data === 'Expired refresh token'
   ) {
     logOut();
+  } else{
+    console.log(error)
   }
 }
