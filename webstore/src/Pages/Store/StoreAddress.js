@@ -51,7 +51,7 @@ const StoreAddress = () => {
     // get address info with cep
     if (cep.length === 8 && lastCep !== cep) {
       setLoading(true);
-      fetch(`https://brasilapi.com.br/api/cep/v2/${cep}`)
+      fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
         .then((response) => {
           if (response.status === 404) {
             setError("CEP não encontrado");
