@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { handleError } from "../../helpers/handleError";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../helpers/API_URL";
 
 const NewProduct = () => {
   // initial number of features input (1)
@@ -14,7 +16,9 @@ const NewProduct = () => {
 
   const [array, setArray] = useState(featuresInput); // array to modify the number of features input
   const [tags, setTags] = useState([]);
-
+  const [success, setSuccess] = useState('');
+  
+  const navigate = useNavigate();
 
   const addFeature = () => {
     setArray((s) => {
@@ -32,7 +36,7 @@ const NewProduct = () => {
     title: "",
     description: "",
     features: [],
-    tags: "",
+    tags: [],
     files: [],
     brand: "",
     model: "",
@@ -72,8 +76,8 @@ const NewProduct = () => {
 
   const handleTags = async (e) => {
     if (e.key === ",") {
-      await setTags((s) => [...s, e.target.value]);
-      await setProductInfo((s) => ({ ...s, tags: "" }));
+      setTags((s) => [...s, e.target.value]);
+      setProductInfo((s) => ({ ...s, tags: [] }));
       e.target.value = "";
     }
   };
@@ -89,25 +93,29 @@ const NewProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const accessToken = window.localStorage.getItem("accessToken");
-    await setProductInfo((productInfo) => ({
+    setProductInfo((productInfo) => ({
       ...productInfo,
       tags,
     }));
 
     console.log(productInfo);
 
-    
     try {
-      await axios.post(
-        `http://localhost:5000/api/catalog/new-product/${accessToken}`,
-        productInfo,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      // const response = await axios.post(
+      //   `${API_URL}/api/catalog/new-product/${accessToken}`,
+      //   productInfo,
+      //   {
+      //     withCredentials: true,
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+      // if (response.data === "Product saved successfully") {
+      //   setTimeout(() => {
+      //     // navigate("/store/my-store");
+      //   }, 2000);
+      // }
     } catch (error) {
       handleError(error, function () {
         handleSubmit(e);

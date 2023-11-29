@@ -14,7 +14,8 @@ import { getUserAddressess } from "../helpers/getUserAddress";
 import { handleError } from "../helpers/handleError";
 import axios from "axios";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
-import SkeletonAddressCard from "./User/Address/SkeletonAddressCard";
+import { API_URL } from "../helpers/API_URL";
+
 
 const Navbar = () => {
   const loggedIn = window.localStorage.getItem("LoggedIn");
@@ -57,7 +58,7 @@ const Navbar = () => {
       }
     } else if (token && loggedIn) {
       try {
-        const data = await axios.get(`http://localhost:5000/api/${token}`, {
+        const data = await axios.get( API_URL + `/api/${token}`, {
           withCredentials: true,
         });
         const varToString = (varObj) => {
