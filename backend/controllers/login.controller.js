@@ -6,7 +6,6 @@ const { jwtExpiration, jwtRefreshExpiration } = require("../utils/expiration");
 
 //
 exports.login = async (req, res) => {
-  console.log(req)
   if (!req.body.email || !req.body.password) {
     res.json({ success: false, error: "missing params" });
     return;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { handleError } from "../../helpers/handleError";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { useFetchApi } from "../../helpers/useFetch";
 
 const MyStore = () => {
   const location = useLocation();
@@ -11,40 +12,25 @@ const MyStore = () => {
     storeDescription: "",
     storeImage: { link: "", name: "" },
     storeCategory: "",
-    storeAddress:
-      {
-        cep: "",
-        street: "",
-        number: "",
-        neighborhood: "",
-        city: "",
-        state: "",
-        country: "",
-      },
+    storeAddress: {
+      cep: "",
+      street: "",
+      number: "",
+      neighborhood: "",
+      city: "",
+      state: "",
+      country: "",
+    },
   });
-  const [loading, setLoading] = useState("");
+  // const [loading, setLoading] = useState("");
 
-  const getStoreInfo = async () => {
-    const accessToken = window.localStorage.getItem("accessToken");
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/store/my-store/" + accessToken,
-        { withCredentials: true }
-      );
-
-      setStoreInfo(response.data);
-
-      console.log(response.data);
-
-      
-    } catch (error) {
-      handleError(error, getStoreInfo);
-    }
-  };
+  const { data, loading, error } = useFetchApi("/api/store/my-store", "GET");
 
   useEffect(() => {
-    getStoreInfo();
-  }, []);
+    if (data) {
+      setStoreInfo(data);
+    }
+  }, [data, error]);
 
   const setCpfCnpj = async () => {
     const accessToken = window.localStorage.getItem("accessToken");
@@ -90,7 +76,7 @@ const MyStore = () => {
           <button onClick={setCpfCnpj}>salvar</button>
         </>
       )}
-      { Object.keys(storeInfo.storeAddress).length === 0 ? (
+      {Object.keys(storeInfo.storeAddress).length === 0 ? (
         <Link to="address">Adicione o endereço da sua loja</Link>
       ) : (
         <p>

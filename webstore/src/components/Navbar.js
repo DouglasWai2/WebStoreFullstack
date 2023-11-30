@@ -23,8 +23,6 @@ const Navbar = () => {
   const { data, loading, error } = useFetchApi("/api/user", "GET");
   const { data: address } = useFetchApi("/api/address", "GET");
 
-  console.log(data);
-
   function useOutsideAlerter(ref) {
     useEffect(() => {
       function handleClickOutside(event) {
@@ -44,16 +42,6 @@ const Navbar = () => {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
 
-  // const getUserData = async () => {
-
-  //   // const token = window.localStorage.getItem("accessToken");
-  //   const response = await api.get(API_URL + '/api/user')
-  //   console.log(response)
-
-  // };
-  // useEffect(() => {
-  //   getUserData();
-  // }, []);
 
   return (
     <header>
@@ -153,7 +141,7 @@ const Navbar = () => {
                   >
                     Venda seu produto
                   </Link>
-                  {window.localStorage.getItem("role") === "Seller" ? (
+                  {data?.role === "Seller" ? (
                     <>
                       <Link to="/store/my-store">
                         <p className="text-sm text-blue-600 cursor-pointer hover:underline">

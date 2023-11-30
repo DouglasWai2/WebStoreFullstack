@@ -6,7 +6,7 @@ const upload = require("../helpers/upload.helper");
 
 /* ----------------------- upload and error handling ----------------------- */
 router.post(
-  "/catalog/new-product/:access_token",
+  "/catalog/new-product",
   auth,
   upload.array('files[]', 5),
   addProduct

@@ -1,10 +1,11 @@
 import api from "./api";
 import { useEffect, useState, useCallback } from "react";
 
-export const useFetchApi = (path, method, body = null, start = true) => {
+export const useFetchApi = (path, method, body = null, config) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
 
   const fetchApi = useCallback(
     async (body) => {
@@ -12,7 +13,12 @@ export const useFetchApi = (path, method, body = null, start = true) => {
         const response =
           method === "GET"
             ? await api.get("http://localhost:5000" + path)
-            : body && (await api.post("http://localhost:5000" + path, body));
+            : body &&
+              (await api.post(
+                "http://localhost:5000" + path,
+                body,
+                config ? { headers: config } : ""
+              ));
 
         const data = await response?.data;
         setData(data);
@@ -26,11 +32,10 @@ export const useFetchApi = (path, method, body = null, start = true) => {
         return;
       }
     },
-    [error, path]
+    [error, method, path]
   );
 
   useEffect(() => {
-    console.log(data)
     fetchApi(body);
   }, [method, body]);
 
