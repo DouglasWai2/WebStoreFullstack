@@ -6,6 +6,8 @@ const { jwtExpiration,
 } = require('../utils/expiration')
 
 exports.refreshToken = async (req, res) => {
+
+  console.log(req)
   const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken) {
     return res.status(401).send("Access Denied. No refresh token provided.");
@@ -61,7 +63,7 @@ exports.refreshToken = async (req, res) => {
       httpOnly: true,
       sameSite: "strict",
     })
-    .header("Authorization", accessToken)
+    .setHeader("Authorization", accessToken)
     .json({
       accessToken
     });

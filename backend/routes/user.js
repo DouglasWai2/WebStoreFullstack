@@ -4,7 +4,7 @@ const User = require("../models/user.model");
 const auth = require("../middlewares/verifyToken");
 require('dotenv').config()
 
-router.get("/:access_token", auth, async (req, res) => {
+router.get("/user", auth, async (req, res) => {
   const user = await User.findById(req.userInfo.id);
   
   res

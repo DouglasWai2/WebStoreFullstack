@@ -4,12 +4,12 @@ const {addressController, sendAddressInfo, updateMainAddress, deleteAddress} = r
 const router = express.Router();
 
 
-router.post("/address/:access_token", auth, addressController);
+router.post("/address", auth, addressController);
 
 router.get("/address/set/:address_id/:access_token", auth, updateMainAddress);
 
 router.get("/address/delete/:address_id/:access_token", auth, deleteAddress);
 
-router.get('/address/:access_token', auth, sendAddressInfo)
+router.get('/address', auth, sendAddressInfo)
 
 module.exports = router;

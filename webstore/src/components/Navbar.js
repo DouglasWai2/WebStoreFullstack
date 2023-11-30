@@ -10,22 +10,20 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
-import { getUserAddressess } from "../helpers/getUserAddress";
-import { handleError } from "../helpers/handleError";
-import axios from "axios";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
-import { API_URL } from "../helpers/API_URL";
-
+import { useFetchApi } from "../helpers/useFetch";
 
 const Navbar = () => {
   const loggedIn = window.localStorage.getItem("LoggedIn");
-  const name = window.localStorage.getItem("name");
   const isVerified = window.localStorage.getItem("verified");
-  const accessToken = window.localStorage.getItem("accessToken");
   const [toggleCard, setToggleCard] = useState(false);
   const [yourAddress, setYourAddress] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
+  const { data, loading, error } = useFetchApi("/api/user", "GET");
+  const { data: address } = useFetchApi("/api/address", "GET");
+
+  console.log(data);
 
   function useOutsideAlerter(ref) {
     useEffect(() => {
@@ -46,45 +44,16 @@ const Navbar = () => {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
 
-  const getUserData = async () => {
-    setLoading(true);
-    const token = window.localStorage.getItem("accessToken");
+  // const getUserData = async () => {
 
-    if ((token === "" && loggedIn) || (token && !loggedIn)) {
-      try {
-        await logOut();
-      } catch (error) {
-        console.log(error);
-      }
-    } else if (token && loggedIn) {
-      try {
-        const data = await axios.get( API_URL + `/api/${token}`, {
-          withCredentials: true,
-        });
-        const varToString = (varObj) => {
-          return Object.keys(varObj)[0];
-        };
+  //   // const token = window.localStorage.getItem("accessToken");
+  //   const response = await api.get(API_URL + '/api/user')
+  //   console.log(response)
 
-        const { name, lastName, email, phone, cpf, birth, role } = data.data;
-
-        window.localStorage.setItem("role", role);
-
-        const response = await getUserAddressess();
-        const mainAddress = response.filter((item) => {
-          return item.main;
-        });
-        setYourAddress(mainAddress);
-
-      } catch (error) {
-        handleError(error, getUserData);
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-  useEffect(() => {
-    getUserData();
-  }, []);
+  // };
+  // useEffect(() => {
+  //   getUserData();
+  // }, []);
 
   return (
     <header>
@@ -94,10 +63,10 @@ const Navbar = () => {
             <img className="h-[35px]" alt="logo" src={Logo} />
           </a>
           <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt]">
-            {accessToken && loggedIn ? (
-              loading ? (
+            {loggedIn === 'true' ? (
+              !address ? (
                 <SkeletonNavAddress />
-              ) : yourAddress.length > 0 ? (
+              ) : address.length > 0 ? (
                 <>
                   <FontAwesomeIcon
                     icon={faTruck}
@@ -105,11 +74,11 @@ const Navbar = () => {
                   />
                   <p className="flex flex-col items-start text-[#94989e]">
                     Entregar para:
-                    <span className="text-white">
+                    <span className="text-white text-xs">
                       {" "}
-                      
-                      {yourAddress[0].recieverName.split(" ")[0]} em {yourAddress[0].street} - N° {yourAddress[0].number} <br></br> CEP:{" "}
-                      {yourAddress[0].cep}
+                      {address[0].recieverName.split(" ")[0]} em{" "}
+                      {address[0].street} - N° {address[0].number} <br></br>{" "}
+                      CEP: {address[0].cep}
                     </span>
                   </p>
                 </>
@@ -156,14 +125,17 @@ const Navbar = () => {
               className="flex hover-border p-2 items-center gap-1 cursor-pointer"
             >
               <img />
-              {accessToken ? <p>Olá, {name}</p> : <p>Olá, faça login</p>}
+
+              {data && <p>Olá, {data.name} </p>}
+
+              {!data ? <p>Olá, faça login</p> : ""}
               <FontAwesomeIcon
                 icon={faCaretDown}
                 style={{ color: "#94989e" }}
               />
             </div>
             {toggleCard ? (
-              accessToken ? (
+              loggedIn === 'true' ? (
                 // if user is logged in, render this
                 <div
                   ref={wrapperRef}
@@ -183,12 +155,12 @@ const Navbar = () => {
                   </Link>
                   {window.localStorage.getItem("role") === "Seller" ? (
                     <>
-                      <Link to='/store/my-store'>
+                      <Link to="/store/my-store">
                         <p className="text-sm text-blue-600 cursor-pointer hover:underline">
                           Minha loja
                         </p>
                       </Link>
-                      <Link to='/store/new-product'>
+                      <Link to="/store/new-product">
                         <p className="text-sm text-blue-600 cursor-pointer hover:underline">
                           Cadastrar produtos
                         </p>
@@ -236,7 +208,7 @@ const Navbar = () => {
         </div>
       </nav>
       {isVerified === "false" ? (
-        <h3 className="text-xl font-bold bg-red-100">
+        <h3 className="text-xl font-bold bg-yellow-100">
           Enviamos um link de verificação para seu e-mail. Por favor verifique
           sua caixa de entrada.
         </h3>

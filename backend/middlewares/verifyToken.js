@@ -3,12 +3,15 @@ require("dotenv").config();
 const UserSchema = require("../models/user.model");
 
 const verifyToken = async (req, res, next) => {
-  const accessToken = req.params.access_token;
-  const refreshToken = req.cookies["refreshToken"];
+  if (!req.headers.authorization) {
+    return res.status(403).send("Unauthorized");
+  }
 
-  if (!refreshToken)
-    return res.status(401).send("Access Denied. No token provided.");
-  if (!accessToken) return res.status(401).send("Unauthorized");
+  if (!req.cookies["refreshToken"]) {
+    return res.status(403).send("Access Denied. No token provided.");
+  }
+  const accessToken = req.headers.authorization.split(" ")[1];
+  const refreshToken = req.cookies["refreshToken"];
 
   // If there's no user from given refresh token, token is already deleted (user could been hacked)
   const foundUser = await UserSchema.findOne({ refreshTokens: refreshToken });

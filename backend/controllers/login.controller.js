@@ -6,6 +6,7 @@ const { jwtExpiration, jwtRefreshExpiration } = require("../utils/expiration");
 
 //
 exports.login = async (req, res) => {
+  console.log(req)
   if (!req.body.email || !req.body.password) {
     res.json({ success: false, error: "missing params" });
     return;
@@ -16,10 +17,10 @@ exports.login = async (req, res) => {
   try {
     const user = await UserSchema.findOne({ email: email });
     if (!user) {
-      res.status(401).json({ success: false, error: "User does not exist" });
+      res.status(400).json({ success: false, error: "User does not exist" });
     } else {
       if (!bcrypt.compareSync(password, user.password)) {
-        res.status(401).json({ success: false, error: "Wrong password" });
+        res.status(400).json({ success: false, error: "Wrong password" });
       } else {
         const accessToken = jwt.sign(
           { id: user._id, email: user.email },
@@ -39,7 +40,7 @@ exports.login = async (req, res) => {
           );
         } catch (error) {
           return res
-            .status(400)
+            .status(500)
             .json({ error, message: "Unable to reach database" });
         }
 
@@ -49,7 +50,7 @@ exports.login = async (req, res) => {
             sameSite: "strict",
             maxAge: 1000 * 60 * 60 * 24 * 365,
           })
-          .header("Authorization", accessToken)
+          .setHeader("Authorization", accessToken)
           .json({
             authorization: accessToken,
             name: user.name,
