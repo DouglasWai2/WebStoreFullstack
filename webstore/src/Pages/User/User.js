@@ -1,7 +1,9 @@
 import SideNav from "../../components/User/SideNav";
-import { Outlet } from "react-router-dom";
+import { Outlet, useOutletContext } from "react-router-dom";
 
 const User = () => {
+
+
     return (
         <>
             <main className="p-10 h-full">
@@ -9,7 +11,7 @@ const User = () => {
                 <div className="flex">
                     <SideNav />
                     <div className="w-full flex justify-center px-9">
-                        <Outlet />
+                        <Outlet context={useOutletContext()}/>
                     </div>
                 </div>
             </main>

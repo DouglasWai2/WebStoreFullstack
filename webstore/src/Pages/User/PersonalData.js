@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
-import { handleError } from "../../helpers/handleError";
 import TableData from "../../components/User/PersonalData/TableData";
+import { useOutletContext } from "react-router-dom";
+import { useFetchApi } from "../../helpers/useFetchApi";
 
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState([
@@ -12,11 +12,18 @@ const ProfilePage = () => {
     { Celular: "" },
     { CPF: "" },
     { "Data de Nascimento": "" },
-    { Endereço: "" },
   ]);
   const [editForm, setEditForm] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const { data: response, loading } = useFetchApi(
+    "/api/user/update",
+    "POST",
+    editData
+  );
 
-  const [loading, setLoading] = useState(false);
+  const { data, address } = useOutletContext();
+  
+    
 
   // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
   function formatDate(date) {
@@ -28,46 +35,8 @@ const ProfilePage = () => {
     ); // new Date object is created here with the current client OS timezone
     return newDate.toLocaleDateString(); // then, it's converted to string again and in the current local format (DD/MM/YYYY)
   }
-
-
-  const getUserData = async () => {
-    setLoading(true);
-    const token = window.localStorage.getItem("accessToken");
-
-    try {
-      const data = await axios.get(`http://localhost:5000/api/${token}`, {
-        withCredentials: true,
-      });
-      const varToString = (varObj) => {
-        return Object.keys(varObj)[0];
-      };
-
-      const { name, lastName, email, phone, cpf, birth, address } = data.data;
-      let formatedBirth
-      if(birth){
-        formatedBirth = formatDate(birth)
-      }
-      
-      await setUserInfo([
-        { Nome: name, value: varToString({ name }) },
-        { "Ultimo Nome": lastName, value: varToString({ lastName }) },
-        { Email: email, value: varToString({ email }) },
-        { Celular: phone, value: varToString({ phone }) },
-        { CPF: cpf || "", value: varToString({ cpf }) },
-        {
-          "Data de Nascimento": formatedBirth || '',
-          value: varToString({ birth }),
-        },
-        { Endereço: address || "", value: varToString({ address }) },
-      ]);
-      console.log(userInfo)
-     
-    } catch (error) {
-      console.log(error)
-      handleError(error, getUserData);
-    } finally {
-      setLoading(false);
-    }
+  const varToString = (varObj) => {
+    return Object.keys(varObj)[0];
   };
 
   const handleChange = (e, index) => {
@@ -76,31 +45,34 @@ const ProfilePage = () => {
     setUserInfo(newArr);
   };
 
-  const editUserData = async () => {
-    const token = window.localStorage.getItem("accessToken");
-
-    try {
-      const data = await axios.post(
-        `http://localhost:5000/api/user/update/${token}`,
-        userInfo,
-        {
-          withCredentials: true,
-        }
-      );
-      window.location.reload();
-    } catch (error) {
-      handleError(error, editUserData);
-    } finally {
-    }
-  };
-
   useEffect(() => {
-    getUserData();
-  }, []);
+    if (data) {
+      const { name, lastName, email, phone, cpf, birth } = data;
+      let formatedBirth;
+      if (birth) {
+        formatedBirth = formatDate(birth);
+      }
+      setUserInfo([
+        { Nome: name, value: varToString({ name }) },
+        { "Ultimo Nome": lastName, value: varToString({ lastName }) },
+        { Email: email, value: varToString({ email }) },
+        { Celular: phone, value: varToString({ phone }) },
+        { CPF: cpf || "", value: varToString({ cpf }) },
+        {
+          "Data de Nascimento": formatedBirth || "",
+          value: varToString({ birth }),
+        },
+      ]);
+    }
+
+    if (response && !loading) {
+      window.location.reload();
+    }
+  }, [data, response]);
 
   return (
     <div className="w-[80%] border-[2px] rounded-md overflow-hidden shadow-md">
-      {loading ? (
+      {!data && !address ? (
         <SkeletonData />
       ) : (
         <table className="w-full">
@@ -125,6 +97,12 @@ const ProfilePage = () => {
                 </tr>
               );
             })}
+            <tr className="flex border-b-[1px] p-10 w-full">
+              <th className="flex text-start items-center w-[20%]">Endereço</th>
+              <td className="w-full items-center flex justify-between">
+                <span className="ml-5">{address.length ? address[0].street + ' - N° '  + address[0].number : 'Adicione um endereço'}</span>
+              </td>
+            </tr>
           </tbody>
         </table>
       )}
@@ -138,7 +116,9 @@ const ProfilePage = () => {
           </button>
         ) : (
           <button
-            onClick={editUserData}
+            onClick={() => {
+              setEditData(userInfo);
+            }}
             className="bg-yellow-300 p-2 !w-full h-fit px-3 hover:bg-yellow-400"
           >
             Salvar

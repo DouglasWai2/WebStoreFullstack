@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { handleError } from "../../helpers/handleError";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useFetchApi } from "../../helpers/useFetchApi";
 
 const RegisterStore = () => {
   const [storeInfo, setStoreInfo] = useState({
@@ -11,6 +10,16 @@ const RegisterStore = () => {
     storeCategory: "",
   });
   const { storeName, storeDescription, storeImage, storeCategory } = storeInfo;
+  const headers = {
+    "Content-Type": "multipart/form-data",
+  };
+  const [body, setBody] = useState(null);
+  const { data, loading, error } = useFetchApi(
+    "/api/store/register-store",
+    "POST",
+    body,
+    headers
+  );
 
   const navigate = useNavigate();
 
@@ -50,34 +59,11 @@ const RegisterStore = () => {
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    const accessToken = window.localStorage.getItem("accessToken");
-
-    console.log(storeInfo)
-
-    await axios
-      .post(
-        "http://localhost:5000/api/store/register-store/" + accessToken,
-        storeInfo,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
-      .then((response) => {
-        if (response.data === "Store registered succesfully") {
-          window.location.pathname = '/store'
-        }
-      })
-      .catch((error) =>
-        handleError(error, function () {
-          handleSubmit(e);
-        })
-      );
-  }
+  useEffect(() => {
+    if (data === "Store registered succesfully") {
+      window.location.pathname = "/store";
+    }
+  }, [data]);
 
   return (
     <main>
@@ -131,7 +117,7 @@ const RegisterStore = () => {
             })}
           </select>
         </label>
-        <button onClick={handleSubmit}>Criar loja</button>
+        <button onClick={() => setBody(storeInfo)}>Criar loja</button>
       </form>
     </main>
   );

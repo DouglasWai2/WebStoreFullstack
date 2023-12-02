@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 import ErrorCard from "../../components/shared/ErrorCard";
-import { refreshToken } from "../../helpers/getRefreshToken";
 import SuccessCard from "../../components/shared/SuccessCard";
 import { useNavigate } from "react-router-dom";
-import { handleError } from "../../helpers/handleError";
+import { useFetchApi } from "../../helpers/useFetchApi";
 
 const AddressForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [body, setBody] = useState(null);
   const [submiting, setSubmiting] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
     cep: "",
@@ -18,18 +17,29 @@ const AddressForm = () => {
     neighborhood: "",
     city: "",
     state: "",
-    recieverName: '',
-    CPF: '',
-    nickname: '',
+    recieverName: "",
+    CPF: "",
+    nickname: "",
     country: "Brasil",
   });
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityeOptions] = useState([]);
-  const { cep, street, neighborhood, city, state, number, recieverName, CPF, nickname } = addressInfo;
+  const {
+    cep,
+    street,
+    neighborhood,
+    city,
+    state,
+    number,
+    recieverName,
+    CPF,
+    nickname,
+  } = addressInfo;
   const [lastCep, setLastCep] = useState("");
   const [lastAdress, setLastAddress] = useState("");
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const {data, loading: fetching} = useFetchApi('/api/address', 'POST', body);
 
   const getCityOptions = async () => {
     // get cities from given state
@@ -40,13 +50,17 @@ const AddressForm = () => {
       .then((response) => response.json())
       .then((data) => {
         const newData = data.map((city) => {
-          return city.nome.replace(/\(.+?\)/gi, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase();
+          return city.nome
+            .replace(/\(.+?\)/gi, "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase();
         });
         setCityeOptions(newData);
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        setLoading(false)
+        setLoading(false);
       });
   };
 
@@ -89,8 +103,7 @@ const AddressForm = () => {
   useEffect(() => {
     // get city options from api when state changes
     if (state !== "" && state) {
-      getCityOptions()    
-      
+      getCityOptions();
     }
   }, [state]);
 
@@ -113,7 +126,7 @@ const AddressForm = () => {
         });
         setStateOptions(newData);
       });
-  }, []);
+  }, [state]);
 
   const getCEPByAddress = async () => {
     // get cep with street, city and state info
@@ -152,22 +165,7 @@ const AddressForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmiting(true);
-    const accessToken = window.localStorage.getItem("accessToken");
-
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/api/address/${accessToken}`,
-        { address: addressInfo },
-        { withCredentials: true }
-      );
-      setSuccess("Endereço adicionado com sucesso...");
-      setTimeout(()=> navigate('/user/address'), 1500);
-    } catch (error) {
-      handleError(error, function(){handleSubmit(e)})
-    } finally {
-      setSubmiting(false);
-    }
+    setBody({address: addressInfo})
   };
 
   return (
@@ -198,45 +196,48 @@ const AddressForm = () => {
         <div className="flex gap-4 w-full">
           <label className="text-lg font-medium w-full" htmlFor="CEP">
             CEP
-          <input
-            required
-            className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
-            value={cep}
-            onChange={handleInputChange}
-            onBlur={getAddressByCEPData}
-            type="text"
-            name="cep"
-            placeholder="12345-678"
+            <input
+              required
+              className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+              value={cep}
+              onChange={handleInputChange}
+              onBlur={getAddressByCEPData}
+              type="text"
+              name="cep"
+              placeholder="12345-678"
             />
-            </label>
+          </label>
 
           <label className="text-lg font-medium w-2/5" htmlFor="state">
             Estado
-          <select
-            required
-            onChange={handleInputChange}
-            value={state}
-            name="state"
-            className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
-            placeholder="Selecione seu estado"
+            <select
+              required
+              onChange={handleInputChange}
+              value={state}
+              name="state"
+              className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
+              placeholder="Selecione seu estado"
             >
-            <option value="" key="placeholder">
-              Selecione seu Estado
-            </option>
-            {stateOptions.map((option) => (
-              <option key={option.sigla} value={option.sigla}>
-                {option.nome}
+              <option value="" key="placeholder">
+                Selecione seu Estado
               </option>
-            ))}
-          </select>
-            </label>
+              {stateOptions.map((option) => (
+                <option key={option.sigla} value={option.sigla}>
+                  {option.nome}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <label className="text-lg font-medium" htmlFor="city">
           Cidade
           <select
             required
             onChange={handleInputChange}
-            value={city.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase()}
+            value={city
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toUpperCase()}
             name="city"
             className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
             disabled={state === "" ? true : false}
@@ -323,16 +324,16 @@ const AddressForm = () => {
           </label>
         </div>
         <label className="text-lg font-medium w-full" htmlFor="street">
-            Apelido (opcional)
-            <input
-              className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
-              value={nickname}
-              onChange={handleInputChange}
-              type="text"
-              name="nickname"
-              placeholder="Ex: Casa, trabalho..."
-            />
-          </label>
+          Apelido (opcional)
+          <input
+            className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
+            value={nickname}
+            onChange={handleInputChange}
+            type="text"
+            name="nickname"
+            placeholder="Ex: Casa, trabalho..."
+          />
+        </label>
         <button
           type="submit"
           onClick={handleSubmit}

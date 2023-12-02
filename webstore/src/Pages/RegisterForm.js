@@ -1,12 +1,12 @@
-import axios from "axios";
 import InputMask from 'react-input-mask';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../logo-no-background-2.svg";
 import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from "../components/shared/LoadingSpinner";
+import { useFetchApi } from "../helpers/useFetchApi";
 
 const RegisterForm = () => {
   const [errMessage, setErrMessage] = useState('')
@@ -20,6 +20,7 @@ const RegisterForm = () => {
     password: '',
     confirmPassword: ''
   })
+  const [body, setBody] = useState(null)
   const navigate = useNavigate();
   let strongPassword = new RegExp(
     "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
@@ -28,12 +29,23 @@ const RegisterForm = () => {
     "((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))"
   );
 
+  const {data, loading, error} = useFetchApi('/auth/register', 'POST', body)
+
+  useEffect(()=>{
+    if(data){
+      navigate('/login')
+    } 
+
+    if(error){
+      // TODO: handle errors
+    }
+  }, [data, error])
+
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsLoading(true)
     const { name, lastName, email,confirmEmail, phone, password, confirmPassword } = registerInfo
-    const baseUrl = "http://localhost:5000";
-    e.preventDefault();
     const cleanPhone = phone.replace(/\D+/g, '')
 
     if(!strongPassword.test(password)){
@@ -52,29 +64,8 @@ const RegisterForm = () => {
       setIsLoading(false)
       return
     }
-    try {
-      const response = await axios.post(
-        baseUrl + "/auth/register",
-        { 
-          name,
-          lastName,
-          email,
-          password,
-          phone: cleanPhone
-        },
-        {
-          headers: {
-            "content-type": "application/x-www-form-urlencoded;charset=utf-8",
-          },
-        }
-      );
-      navigate("/login");
-    } catch (error) {
-      //TODO: Handle errors
-        console.log(error)
-    }finally{
-      setIsLoading(false)
-    }
+
+    setBody(registerInfo)
   };
 
   const handleInputChange = (e) =>{
@@ -206,7 +197,7 @@ const RegisterForm = () => {
             />
           </label>
           <button onClick={handleSubmit} className={"button-login flex items-center justify-center" + (isLoading ? " brightness-75 pointer-events-none" : '')} type="submit">
-          {isLoading ? <LoadingSpinner /> : 'Criar conta'}
+          {loading ? <LoadingSpinner /> : 'Criar conta'}
           </button>
         </form>
         <h5 className="!text-[8pt] mt-3 w-full text-center">

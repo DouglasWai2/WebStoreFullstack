@@ -11,18 +11,21 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
-import { useFetchApi } from "../helpers/useFetch";
 
-const Navbar = () => {
+const Navbar = ({data, address}) => {
   const loggedIn = window.localStorage.getItem("LoggedIn");
   const isVerified = window.localStorage.getItem("verified");
   const [toggleCard, setToggleCard] = useState(false);
-  const [yourAddress, setYourAddress] = useState([]);
-  // const [loading, setLoading] = useState(false);
+  const [yourAddress, setYourAddress] = useState(null);
 
-  const { data, loading, error } = useFetchApi("/api/user", "GET");
-  const { data: address } = useFetchApi("/api/address", "GET");
 
+  useEffect(()=> {
+    if(address){
+      setYourAddress(address.filter(item => item.main))
+    }
+  }, [address])
+
+  console.log(yourAddress)
   function useOutsideAlerter(ref) {
     useEffect(() => {
       function handleClickOutside(event) {
@@ -52,9 +55,9 @@ const Navbar = () => {
           </a>
           <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt]">
             {loggedIn === 'true' ? (
-              !address ? (
+              !yourAddress ? (
                 <SkeletonNavAddress />
-              ) : address.length > 0 ? (
+              ) : yourAddress.length > 0 ? (
                 <>
                   <FontAwesomeIcon
                     icon={faTruck}
@@ -64,9 +67,9 @@ const Navbar = () => {
                     Entregar para:
                     <span className="text-white text-xs">
                       {" "}
-                      {address[0].recieverName.split(" ")[0]} em{" "}
-                      {address[0].street} - N° {address[0].number} <br></br>{" "}
-                      CEP: {address[0].cep}
+                      {yourAddress[0].recieverName.split(" ")[0]} em{" "}
+                      {yourAddress[0].street} - N° {yourAddress[0].number} <br></br>{" "}
+                      CEP: {yourAddress[0].cep}
                     </span>
                   </p>
                 </>

@@ -1,32 +1,45 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 import ErrorCard from "../../components/shared/ErrorCard";
-import { refreshToken } from "../../helpers/getRefreshToken";
 import SuccessCard from "../../components/shared/SuccessCard";
 import { useNavigate } from "react-router-dom";
-import { handleError } from "../../helpers/handleError";
+import { useFetchApi } from "../../helpers/useFetchApi";
 
 const StoreAddress = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [body, setBody] = useState(null);
   const [submiting, setSubmiting] = useState(false);
-  const [storeAddress, setStoreAddress] = useState({
+  const [addressInfo, setAddressInfo] = useState({
     cep: "",
     street: "",
     number: "",
     neighborhood: "",
     city: "",
     state: "",
+    recieverName: "",
+    CPF: "",
+    nickname: "",
     country: "Brasil",
   });
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityeOptions] = useState([]);
-  const { cep, street, neighborhood, city, state, number } = storeAddress;
+  const {
+    cep,
+    street,
+    neighborhood,
+    city,
+    state,
+    number,
+    recieverName,
+    CPF,
+    nickname,
+  } = addressInfo;
   const [lastCep, setLastCep] = useState("");
   const [lastAdress, setLastAddress] = useState("");
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const {data, loading: fetching} = useFetchApi('/api/store/address', 'POST', body);
 
   const getCityOptions = async () => {
     // get cities from given state
@@ -37,13 +50,17 @@ const StoreAddress = () => {
       .then((response) => response.json())
       .then((data) => {
         const newData = data.map((city) => {
-          return city.nome.replace(/\(.+?\)/gi, "").normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase();
+          return city.nome
+            .replace(/\(.+?\)/gi, "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toUpperCase();
         });
         setCityeOptions(newData);
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        setLoading(false)
+        setLoading(false);
       });
   };
 
@@ -57,7 +74,7 @@ const StoreAddress = () => {
             setError("CEP não encontrado");
           } else {
             response.json().then((data) => {
-              setStoreAddress((addressInfo) => ({
+              setAddressInfo((addressInfo) => ({
                 ...addressInfo,
                 street: data.street,
                 neighborhood: data.neighborhood,
@@ -77,7 +94,7 @@ const StoreAddress = () => {
   };
 
   function handleInputChange(e) {
-    setStoreAddress((addressInfo) => ({
+    setAddressInfo((addressInfo) => ({
       ...addressInfo,
       [e.target.name]: e.target.value,
     }));
@@ -86,8 +103,7 @@ const StoreAddress = () => {
   useEffect(() => {
     // get city options from api when state changes
     if (state !== "" && state) {
-      getCityOptions()    
-      
+      getCityOptions();
     }
   }, [state]);
 
@@ -126,7 +142,7 @@ const StoreAddress = () => {
               setError("Endereço não encontrado");
             } else {
               const dataCep = data[0].cep.replace("-", "");
-              setStoreAddress((addressInfo) => ({
+              setAddressInfo((addressInfo) => ({
                 ...addressInfo,
                 neighborhood: data[0].bairro,
                 cep: dataCep,
@@ -149,22 +165,7 @@ const StoreAddress = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmiting(true);
-    const accessToken = window.localStorage.getItem("accessToken");
-
-    try {
-      const response = await axios.post(
-        `http://localhost:5000/api/store/address/${accessToken}`,
-        { storeAddress },
-        { withCredentials: true }
-      );
-      setSuccess("Endereço adicionado com sucesso...");
-      setTimeout(()=> navigate('/store/my-store'), 1500);
-    } catch (error) {
-      handleError(error, function(){handleSubmit(e)})
-    } finally {
-      setSubmiting(false);
-    }
+    setBody({address: addressInfo})
   };
 
   return (

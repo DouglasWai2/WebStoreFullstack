@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFetchApi } from "../../helpers/useFetch";
+import { useFetchApi } from "../../helpers/useFetchApi";
 
 const NewProduct = () => {
   // initial number of features input (1)
@@ -98,7 +98,7 @@ const NewProduct = () => {
       description,
       title,
       features,
-      tags,
+      tags: [...tagsArray, tags],
       files,
       brand,
       model,
@@ -109,10 +109,9 @@ const NewProduct = () => {
     if (error) {
       console.log(error);
     }
-    if (response) {
-      if(response === 'Product saved successfully'){
-        navigate('/store/my-store')
-      }
+
+    if (response === "Product saved successfully") {
+      navigate("/store/my-store");
     }
   }, [error, response]);
 

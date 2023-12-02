@@ -2,7 +2,6 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { handleError } from "../../helpers/handleError";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
 import SetupForm from "./SetupForm";
@@ -30,13 +29,11 @@ const PaymentMethods = () => {
       setClientSecret(response.data.client_secret);
 
     } catch (error) {
-      console.log(error)
-      handleError(error, getClientSecret);
     }
   };
 
   useEffect(() => {
-    getClientSecret();
+    // getClientSecret();
   }, []);
 
   return (

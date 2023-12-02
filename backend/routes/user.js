@@ -20,7 +20,7 @@ router.get("/user", auth, async (req, res) => {
     })
 });
 
-router.post("/user/update/:access_token", auth, async(req, res) => {
+router.post("/user/update", auth, async(req, res) => {
   const data = req.body
   const user = await User.findById(req.userInfo.id)
 

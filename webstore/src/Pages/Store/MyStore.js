@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { handleError } from "../../helpers/handleError";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { useFetchApi } from "../../helpers/useFetch";
+import { useFetchApi } from "../../helpers/useFetchApi";
 
 const MyStore = () => {
   const location = useLocation();
@@ -22,29 +20,22 @@ const MyStore = () => {
       country: "",
     },
   });
-  // const [loading, setLoading] = useState("");
+  const [body, setBody] = useState(null);
 
   const { data, loading, error } = useFetchApi("/api/store/my-store", "GET");
+  const { data: response } = useFetchApi("/api/store/set-id", "POST", body);
 
   useEffect(() => {
     if (data) {
       setStoreInfo(data);
     }
-  }, [data, error]);
-
-  const setCpfCnpj = async () => {
-    const accessToken = window.localStorage.getItem("accessToken");
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/store/set-id/" + accessToken,
-        { cpfcnpj: input.current.value },
-        { withCredentials: true }
-      );
-      window.location.reload();
-    } catch (error) {
-      handleError(error, setCpfCnpj);
+    if (response) {
+      console.log("teste");
     }
-  };
+    if (error) {
+      console.log(error);
+    }
+  }, [data, error, response]);
 
   return location.pathname === "/store/my-store" ? (
     <main>
@@ -73,7 +64,9 @@ const MyStore = () => {
             CPF/CNPJ
             <input ref={input} name="cpfcnpj" type="text" />
           </label>
-          <button onClick={setCpfCnpj}>salvar</button>
+          <button onClick={() => setBody({ cpfcnpj: input.current.value })}>
+            salvar
+          </button>
         </>
       )}
       {Object.keys(storeInfo.storeAddress).length === 0 ? (

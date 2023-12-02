@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../reducers/authSlice";
-import { useFetchApi } from "../helpers/useFetch";
+import { useFetchApi } from "../helpers/useFetchApi";
 
 const LoginForm = () => {
   const [invalid, setInvalid] = useState("");

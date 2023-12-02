@@ -6,14 +6,16 @@ export const useFetchApi = (path, method, body = null, config) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-
   const fetchApi = useCallback(
     async (body) => {
+
+      setLoading(true);
       try {
         const response =
           method === "GET"
-            ? await api.get("http://localhost:5000" + path)
-            : body &&
+            ? path && (await api.get("http://localhost:5000" + path))
+            : path &&
+              body &&
               (await api.post(
                 "http://localhost:5000" + path,
                 body,
@@ -26,8 +28,7 @@ export const useFetchApi = (path, method, body = null, config) => {
         setError(e.response.data);
       } finally {
         setLoading(false);
-      }
-
+      }    
       if (error) {
         return;
       }
@@ -36,8 +37,10 @@ export const useFetchApi = (path, method, body = null, config) => {
   );
 
   useEffect(() => {
-    fetchApi(body);
-  }, [method, body]);
+    if (path) {
+      fetchApi(body);
+    }
+  }, [method, body, path]);
 
   const refresh = () => {
     fetchApi();

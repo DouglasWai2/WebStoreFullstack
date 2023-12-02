@@ -2,31 +2,12 @@ import React, { useState } from "react";
 import AddressCard from "../../components/User/Address/AddressCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
-import { getUserAddressess } from "../../helpers/getUserAddress";
-import { handleError } from "../../helpers/handleError";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import SkeletonAddressCard from "../../components/User/Address/SkeletonAddressCard";
 
 const Address = () => {
   const navigate = useNavigate();
-  const [addressess, setAddressess] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  async function awaitAddress() {
-    setLoading(true);
-    try {
-      const data = await getUserAddressess();
-      setAddressess(data);
-    } catch (error) {
-      handleError(error, awaitAddress);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useState(() => {
-    awaitAddress();
-  }, []);
+  const { address, fetching } = useOutletContext();
 
   return (
     <div className="w-full flex gap-5 flex-wrap">
@@ -43,12 +24,12 @@ const Address = () => {
           size="2xl"
         />
       </div>
-      {loading ? (
-        <SkeletonAddressCard />
-      ) : (
-        addressess.map((address) => {
+      {address && address.length > 0 ? (
+        address.map((address) => {
           return <AddressCard key={address.nickname} address={address} />;
         })
+      ) : (
+        <SkeletonAddressCard />
       )}
     </div>
   );

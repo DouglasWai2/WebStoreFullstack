@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.post("/address", auth, addressController);
 
-router.get("/address/set/:address_id/:access_token", auth, updateMainAddress);
+router.get("/address/set/:address_id", auth, updateMainAddress);
 
-router.get("/address/delete/:address_id/:access_token", auth, deleteAddress);
+router.get("/address/delete/:address_id", auth, deleteAddress);
 
 router.get('/address', auth, sendAddressInfo)
 
