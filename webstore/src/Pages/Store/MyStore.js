@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
-import img from "../../assets/teste.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBan,
   faCloudArrowUp,
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
@@ -25,29 +23,45 @@ const MyStore = () => {
       state: "",
       country: "",
     },
+    storeBanner: {
+      link: "",
+      name: "",
+    },
   });
-  const [body, setBody] = useState(null);
   const [edit, setEdit] = useState(false);
+  const [method, setMethod] = useState(null);
   const [bannerEdit, setBannerEdit] = useState("");
-  const file = useRef(null);
+  const [bannerLink, setBannerLink] = useState("");
+  const [imageEdit, setImageEdit] = useState("");
+  const [imageLink, setImageLink] = useState("");
   const { data, loading, error } = useFetchApi("/api/store/my-store", "GET");
-  const headers =  {"content-type": "multipart/form-data"}
-  const { data: response } = useFetchApi("/api/store/change-banner", "POST", body, headers);
-
+  const headers = { "content-type": "multipart/form-data" };
+  const { data: banner } = useFetchApi(
+    "/api/store/change-banner",
+    method,
+    bannerEdit,
+    headers
+  );
+  const { data: logo } = useFetchApi(
+    "/api/store/change-image",
+    method,
+    imageEdit,
+    headers
+  );
   useEffect(() => {
     if (data) {
       setStoreInfo(data);
     }
-    if (response === "Store id updated") {
+    if (banner === "Banner updated" || logo === "Store logo updated") {
       window.location.reload();
     }
     if (error) {
       console.log(error);
     }
-  }, [data, error, response]);
+  }, [data, error, banner, logo]);
 
-  function handleSubmit(){
-      setBody({file: file.current.files})
+  function handleSubmit() {
+    setMethod("POST");
   }
 
   return location.pathname === "/store/my-store" ? (
@@ -62,10 +76,12 @@ const MyStore = () => {
               </p>
               <label className="cursor-pointer" htmlFor="store-banner">
                 <input
-                  ref={file}
-                  onChange={(e) =>
-                    setBannerEdit(URL.createObjectURL(e.target.files[0]))
-                  }
+                  onChange={(e) => {
+                    if (e.target.files[0]) {
+                      setBannerLink(URL.createObjectURL(e.target.files[0]));
+                      setBannerEdit({ file: e.target.files[0] });
+                    }
+                  }}
                   type="file"
                   id="store-banner"
                   name="file"
@@ -74,12 +90,9 @@ const MyStore = () => {
 
                 <div className="h-full flex justify-center overflow-hidden">
                   <img
-                    className="w-full object-none"
-                    src={
-                      !bannerEdit
-                        ? "https://i.pinimg.com/originals/a9/97/51/a99751ac6e165b94030b86c62fa00294.jpg"
-                        : bannerEdit
-                    }
+                    alt="store banner"
+                    className="w-full object-cover"
+                    src={!bannerLink ? storeInfo.storeBanner.link : bannerLink}
                   />
                 </div>
               </label>
@@ -87,8 +100,9 @@ const MyStore = () => {
           ) : (
             <div className="h-full flex justify-center overflow-hidden">
               <img
-                className="w-full object-none"
-                src="https://i.pinimg.com/originals/a9/97/51/a99751ac6e165b94030b86c62fa00294.jpg"
+                alt="store banner"
+                className="w-full object-cover"
+                src={storeInfo.storeBanner.link}
               />
             </div>
           )}
@@ -101,25 +115,54 @@ const MyStore = () => {
             <p className="text-red-500">Conclua seu cadastro</p>
           )}
           <div className="flex">
-            <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
-              <img
-                className="h-full w-full object-cover"
-                src={
-                  "https://marketplace.canva.com/EAFYecj_1Sc/1/0/1600w/canva-cream-and-black-simple-elegant-catering-food-logo-2LPev1tJbrg.jpg"
-                }
-                // {storeInfo.storeImage.link}
-              />
-            </div>
+            {!edit ? (
+              <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
+                <img
+                  alt="store logo"
+                  className="h-full w-full object-cover hover:brightness-75 bg-white"
+                  src={storeInfo.storeImage.link}
+                />
+              </div>
+            ) : (
+              <div
+                className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center
+                  w-[150px] overflow-hidden rounded-full border-white border-4"
+              >
+                <label className="relative h-full group" htmlFor="store-img">
+                  <input
+                    onChange={(e) => {
+                      if (e.target.files[0])
+                        setImageLink(URL.createObjectURL(e.target.files[0]));
+                      setImageEdit({ file: e.target.files[0] });
+                      console.log(imageEdit);
+                    }}
+                    name="file"
+                    type="file"
+                    id="store-img"
+                    hidden
+                  />
+                  <p className="absolute text-xs w-full top-[50%] left-[10%] pointer-events-none text-gray-400 opacity-0 transition-all duration-300 group-hover:opacity-100 z-10">
+                    <FontAwesomeIcon icon={faCloudArrowUp} /> Clique para editar
+                  </p>
+                  <img
+                    alt="store logo"
+                    className="h-full w-full object-cover bg-white hover:brightness-75 cursor-pointer"
+                    src={!imageLink ? storeInfo.storeImage.link : imageLink}
+                  />
+                </label>
+              </div>
+            )}
             <p className="text-4xl">{storeInfo.storeName}</p>
           </div>
           {edit ? (
             <div>
-              <p className="link !text-lg h-fit" onClick={handleSubmit}>Salvar</p>
+              <p className="link !text-lg h-fit" onClick={handleSubmit}>
+                Salvar
+              </p>
               <p
                 className="link !text-red-600 h-fit flex items-center"
                 onClick={() => window.location.reload()}
               >
-                <FontAwesomeIcon icon={faBan} size="xs" className="mr-1" />
                 Cancelar
               </p>
             </div>

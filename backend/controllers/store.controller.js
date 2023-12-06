@@ -10,7 +10,7 @@ exports.registerStore = async (req, res) => {
     storeName,
     storeDescription,
     storeCategory,
-    storeImage: { link: req.file.location, name: req.file.originalname },
+    storeImage: { link: req.file.location, name: req.file.key },
     user: req.userInfo.id,
   });
 
@@ -39,6 +39,7 @@ exports.storeInfo = async (req, res) => {
       storeId: store.id,
       cpf: store.cpf || undefined,
       cnpj: store.cnpj || undefined,
+      storeBanner: store.storeBanner
     });
   } catch (error) {
     console.log(error);
@@ -113,6 +114,37 @@ exports.changeBanner = async (req, res) => {
         store.storeBanner.name = req.file.key;
         await store.save();
         res.status(200).send("Banner updated");
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+exports.changeImage = async (req, res) => {
+  console.log(req);
+
+  try {
+    const store = await StoreSchema.findOne({ user: req.userInfo.id });
+
+    if (!store.storeImage.link) {
+      store.storeImage.link = req.file.location;
+      store.storeImage.name = req.file.key;
+      await store.save();
+      res.status(200).send("Banner updated");
+    } else {
+      try {
+        const command = new DeleteObjectCommand({
+          Bucket: "webstore-api-images",
+          Key: store.storeImage.name,
+        });
+        const response = await client.send(command);
+
+        store.storeImage.link = req.file.location;
+        store.storeImage.name = req.file.key;
+        await store.save();
+        res.status(200).send("Store logo updated");
       } catch (error) {
         console.log(error);
       }

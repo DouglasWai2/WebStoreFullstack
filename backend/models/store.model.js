@@ -22,7 +22,7 @@ const StoreSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  storeBanner:{
+  storeBanner: {
     link: { type: String, required: true },
     name: {
       type: String,
@@ -79,7 +79,7 @@ const StoreSchema = new mongoose.Schema({
     },
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
+  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 
 module.exports = mongoose.model("Store", StoreSchema, "Stores");

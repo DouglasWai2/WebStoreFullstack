@@ -8,27 +8,27 @@ export const useFetchApi = (path, method, body, config) => {
 
   const fetchApi = useCallback(
     async (body) => {
-
       setLoading(true);
       try {
         const response =
           method === "GET"
             ? path && (await api.get("http://localhost:5000" + path))
-            : path &&
+            : method === "POST"
+            ? path &&
               body &&
               (await api.post(
                 "http://localhost:5000" + path,
                 body,
                 config ? { headers: config } : ""
-              ));
-
+              ))
+            : null;
         const data = await response?.data;
         setData(data);
       } catch (e) {
         setError(e.response.data);
       } finally {
         setLoading(false);
-      }    
+      }
       if (error) {
         return;
       }
