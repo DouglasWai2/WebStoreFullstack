@@ -1,7 +1,7 @@
 import api from "./api";
 import { useEffect, useState, useCallback } from "react";
 
-export const useFetchApi = (path, method, body = null, config) => {
+export const useFetchApi = (path, method, body, config) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

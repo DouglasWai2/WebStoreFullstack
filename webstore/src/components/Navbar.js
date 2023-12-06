@@ -12,10 +12,10 @@ import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 
-const Navbar = ({data, address}) => {
+const Navbar = ({data, address, toggleCard, setToggleCard}) => {
   const loggedIn = window.localStorage.getItem("LoggedIn");
   const isVerified = window.localStorage.getItem("verified");
-  const [toggleCard, setToggleCard] = useState(false);
+  // const [toggleCard, setToggleCard] = useState(false);
   const [yourAddress, setYourAddress] = useState(null);
 
 
@@ -25,7 +25,6 @@ const Navbar = ({data, address}) => {
     }
   }, [address])
 
-  console.log(yourAddress)
   function useOutsideAlerter(ref) {
     useEffect(() => {
       function handleClickOutside(event) {
@@ -119,7 +118,7 @@ const Navbar = ({data, address}) => {
 
               {data && <p>Olá, {data.name} </p>}
 
-              {!data ? <p>Olá, faça login</p> : ""}
+              {!data && <p>Olá, faça login</p>}
               <FontAwesomeIcon
                 icon={faCaretDown}
                 style={{ color: "#94989e" }}
@@ -130,7 +129,7 @@ const Navbar = ({data, address}) => {
                 // if user is logged in, render this
                 <div
                   ref={wrapperRef}
-                  className="bg-white absolute bottom-[-110px] left-[-160px] h-fit w-[300px] p-6 flex flex-col gap-2 items-center"
+                  className="bg-white absolute top-[100%] left-[-160px] h-fit w-[300px] p-6 flex flex-col gap-2 items-center z-10"
                 >
                   <Link
                     to="/user/profile"
@@ -170,7 +169,7 @@ const Navbar = ({data, address}) => {
                 // if user is not logged in, render this
                 <div
                   ref={wrapperRef}
-                  className="bg-white text-black absolute bottom-[-110px] left-[-160px] w-[300px] p-6 flex flex-col gap-2 items-center"
+                  className="bg-white text-black absolute top-[100%] left-[-160px] w-[300px] p-6 flex flex-col gap-2 items-center z-10"
                 >
                   <a
                     href="/login"
@@ -199,8 +198,8 @@ const Navbar = ({data, address}) => {
         </div>
       </nav>
       {isVerified === "false" ? (
-        <h3 className="text-xl font-bold bg-yellow-100">
-          Enviamos um link de verificação para seu e-mail. Por favor verifique
+        <h3 className="text-xl font-bold bg-yellow-100 px-8">
+          Enviamos um link de verificação para seu e-mail. Por favor, verifique
           sua caixa de entrada.
         </h3>
       ) : (

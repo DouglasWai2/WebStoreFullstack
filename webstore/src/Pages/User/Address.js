@@ -24,10 +24,14 @@ const Address = () => {
           size="2xl"
         />
       </div>
-      {address && address.length > 0 ? (
-        address.map((address) => {
-          return <AddressCard key={address.nickname} address={address} />;
-        })
+      {address ? (
+        address.length === 0 ? (
+          ""
+        ) : (
+          address.map((address) => {
+            return <AddressCard key={address.nickname} address={address} />;
+          })
+        )
       ) : (
         <SkeletonAddressCard />
       )}

@@ -29,7 +29,6 @@ api.interceptors.response.use(
   
         try {
           const response = await axios.get('http://localhost:5000/auth/refresh', {withCredentials: true});
-          console.log(response)
           const { accessToken } = await response.data;
   
           window.localStorage.setItem('accessToken', accessToken);

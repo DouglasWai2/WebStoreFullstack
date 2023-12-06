@@ -22,6 +22,13 @@ const StoreSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  storeBanner:{
+    link: { type: String, required: true },
+    name: {
+      type: String,
+      required: true,
+    },
+  },
   phone: {
     type: String,
     minlength: 11,

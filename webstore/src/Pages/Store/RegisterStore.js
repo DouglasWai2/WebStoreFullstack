@@ -117,7 +117,9 @@ const RegisterStore = () => {
             })}
           </select>
         </label>
-        <button onClick={() => setBody(storeInfo)}>Criar loja</button>
+        <button onClick={(e) => {
+          e.preventDefault()
+          setBody(storeInfo)}}>Criar loja</button>
       </form>
     </main>
   );

@@ -17,29 +17,20 @@ const StoreAddress = () => {
     neighborhood: "",
     city: "",
     state: "",
-    recieverName: "",
-    CPF: "",
-    nickname: "",
     country: "Brasil",
   });
   const [stateOptions, setStateOptions] = useState([]);
   const [cityOptions, setCityeOptions] = useState([]);
-  const {
-    cep,
-    street,
-    neighborhood,
-    city,
-    state,
-    number,
-    recieverName,
-    CPF,
-    nickname,
-  } = addressInfo;
+  const { cep, street, neighborhood, city, state, number } = addressInfo;
   const [lastCep, setLastCep] = useState("");
   const [lastAdress, setLastAddress] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-  const {data, loading: fetching} = useFetchApi('/api/store/address', 'POST', body);
+  const { data, loading: fetching } = useFetchApi(
+    "/api/store/address",
+    "POST",
+    body
+  );
 
   const getCityOptions = async () => {
     // get cities from given state
@@ -128,6 +119,12 @@ const StoreAddress = () => {
       });
   }, []);
 
+  useEffect(() => {
+    if (data === "Store Address updated") {
+      navigate("/store/my-store");
+    }
+  }, [data]);
+
   const getCEPByAddress = async () => {
     // get cep with street, city and state info
     if (state !== "" && city !== "" && street !== "" && lastAdress !== street) {
@@ -165,7 +162,7 @@ const StoreAddress = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setBody({address: addressInfo})
+    setBody({ address: addressInfo });
   };
 
   return (
@@ -196,45 +193,48 @@ const StoreAddress = () => {
         <div className="flex gap-4 w-full">
           <label className="text-lg font-medium w-full" htmlFor="CEP">
             CEP
-          <input
-            required
-            className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
-            value={cep}
-            onChange={handleInputChange}
-            onBlur={getAddressByCEPData}
-            type="text"
-            name="cep"
-            placeholder="12345-678"
+            <input
+              required
+              className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+              value={cep}
+              onChange={handleInputChange}
+              onBlur={getAddressByCEPData}
+              type="text"
+              name="cep"
+              placeholder="12345-678"
             />
-            </label>
+          </label>
 
           <label className="text-lg font-medium w-2/5" htmlFor="state">
             Estado
-          <select
-            required
-            onChange={handleInputChange}
-            value={state}
-            name="state"
-            className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
-            placeholder="Selecione seu estado"
+            <select
+              required
+              onChange={handleInputChange}
+              value={state}
+              name="state"
+              className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
+              placeholder="Selecione seu estado"
             >
-            <option value="" key="placeholder">
-              Selecione seu Estado
-            </option>
-            {stateOptions.map((option) => (
-              <option key={option.sigla} value={option.sigla}>
-                {option.nome}
+              <option value="" key="placeholder">
+                Selecione seu Estado
               </option>
-            ))}
-          </select>
-            </label>
+              {stateOptions.map((option) => (
+                <option key={option.sigla} value={option.sigla}>
+                  {option.nome}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
         <label className="text-lg font-medium" htmlFor="city">
           Cidade
           <select
             required
             onChange={handleInputChange}
-            value={city.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toUpperCase()}
+            value={city
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toUpperCase()}
             name="city"
             className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
             disabled={state === "" ? true : false}

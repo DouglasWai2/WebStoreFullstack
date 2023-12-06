@@ -39,6 +39,10 @@ body{
     height: 100vh;
 }
 
+main{
+    @apply bg-white
+}
+
 #root{
     height: 100vh;
 }
