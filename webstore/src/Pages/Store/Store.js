@@ -1,10 +1,15 @@
 import React from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useOutletContext, useNavigate } from "react-router-dom";
 import { Player } from "@lottiefiles/react-lottie-player";
 import cardAnimation from "../../assets/WebSiteCardAnimaion.json";
 
 const Merchant = () => {
   const location = useLocation();
+  const navigate = useNavigate()
+  const {data, loading} = useOutletContext()
+  if(!data && !loading){
+    return navigate('/login')
+  }
 
   return location.pathname === "/store" ? (
     <main className="py-3 px-8 bg-white">

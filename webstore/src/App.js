@@ -25,7 +25,7 @@ import StoreAddress from "./Pages/Store/StoreAddress";
 import NewProduct from "./Pages/Store/NewProduct";
 
 function App() {
-  const router = createBrowserRouter(
+const router = createBrowserRouter(
     createRoutesFromElements(
       <>
         <Route path="/" element={<Home />}>

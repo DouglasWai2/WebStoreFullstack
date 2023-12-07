@@ -65,7 +65,7 @@ const MyStore = () => {
   }
 
   return location.pathname === "/store/my-store" ? (
-    <main className="flex justify-center">
+    <div className="flex justify-center">
       <div className="w-[1546px] bg-white">
         <div className="group relative w-full h-[423px] bg-white hover:brightness-75 duration-300">
           {edit ? (
@@ -107,7 +107,7 @@ const MyStore = () => {
             </div>
           )}
         </div>
-        <div className="flex relative justify-between ml-6">
+        <div className="flex relative justify-between px-6 shadow">
           {(storeInfo.cnpj && storeInfo.storeAddress) ||
           (storeInfo.cpf && storeInfo.storeAddress) ? (
             ""
@@ -128,7 +128,7 @@ const MyStore = () => {
                 className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center
                   w-[150px] overflow-hidden rounded-full border-white border-4"
               >
-                <label className="relative h-full group" htmlFor="store-img">
+                <label className="relative h-full w-full group hover:brightness-75" htmlFor="store-img">
                   <input
                     onChange={(e) => {
                       if (e.target.files[0])
@@ -146,7 +146,7 @@ const MyStore = () => {
                   </p>
                   <img
                     alt="store logo"
-                    className="h-full w-full object-cover bg-white hover:brightness-75 cursor-pointer"
+                    className="h-full w-full object-cover bg-white cursor-pointer"
                     src={!imageLink ? storeInfo.storeImage.link : imageLink}
                   />
                 </label>
@@ -176,7 +176,7 @@ const MyStore = () => {
         <div className="text-justify">
           <p className="text-gray-600">Descrição</p>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit
+            {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit
             amet tortor ac elit interdum posuere ac eu arcu. Nulla non porttitor
             leo, tempor maximus nulla. Morbi faucibus quam justo, sit amet
             auctor tellus posuere nec. Sed id nibh et leo dictum porta sit amet
@@ -186,8 +186,8 @@ const MyStore = () => {
             porttitor vulputate. Sed varius et orci eget interdum. Morbi
             tincidunt purus mi. In vitae risus elit. Duis euismod, orci et
             accumsan tincidunt, urna dolor ultrices ipsum, iaculis luctus mauris
-            sem nec lorem. Sed ullamcorper tellus sit amet elit egestas cursus.
-            {/* {storeInfo.storeDescription} */}
+            sem nec lorem. Sed ullamcorper tellus sit amet elit egestas cursus. */}
+            {storeInfo.storeDescription}
           </p>
           {Object.keys(storeInfo.storeAddress).length === 0 ? (
             <Link to="address">Adicione o endereço da sua loja</Link>
@@ -199,7 +199,7 @@ const MyStore = () => {
           )}
         </div>
       </div>
-    </main>
+    </div>
   ) : (
     <Outlet />
   );

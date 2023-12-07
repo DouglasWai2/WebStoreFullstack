@@ -1,8 +1,14 @@
 import SideNav from "../../components/User/SideNav";
-import { Outlet, useOutletContext } from "react-router-dom";
+import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
 
 const User = () => {
+    const navigate = useNavigate()
+    const { data, address, fetching, loading } = useOutletContext();
 
+
+    if(!data && !loading){
+      return navigate('/login')
+    }
 
     return (
         <>
@@ -11,7 +17,7 @@ const User = () => {
                 <div className="flex">
                     <SideNav />
                     <div className="w-full flex justify-center px-9">
-                        <Outlet context={useOutletContext()}/>
+                        <Outlet context={{data, address, fetching}}/>
                     </div>
                 </div>
             </main>

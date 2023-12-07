@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from "react";
 
 export const useFetchApi = (path, method, body, config) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const fetchApi = useCallback(

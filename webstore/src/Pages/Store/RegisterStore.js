@@ -66,62 +66,72 @@ const RegisterStore = () => {
   }, [data]);
 
   return (
-    <main>
-      <h1>Cadastre sua loja</h1>
-      <form>
-        <label htmlFor="storeName">
-          {" "}
-          Nome da loja
-          <input
-            onChange={handleInputChange}
-            value={storeName}
-            name="storeName"
-            id="storeName"
-            placeholder="Este nome será único"
-          />
-        </label>
-        <label htmlFor="storeDescription">
-          {" "}
-          Descrição
-          <input
-            onChange={handleInputChange}
-            value={storeDescription}
-            name="storeDescription"
-            id="storeDescription"
-            placeholder="Conte um pouco sobre a sua loja..."
-          />
-        </label>
-        <label htmlFor="storeImage">
-          {" "}
-          Imagem da loja
-          <input
-            onChange={handleInputChange}
-            type="file"
-            name="storeImage"
-            id="storeImage"
-          />
-        </label>
-        <label htmlFor="storeCategory">
-          Em qual categoria sua loja mais se identifica?
-          <select
-            onChange={handleInputChange}
-            value={storeCategory}
-            name="storeCategory"
+    <div className="flex justify-center items-center h-full">
+      <div className="flex flex-col shadow gap-4">
+        <h1 className="text-3xl">Cadastre sua loja</h1>
+        <form className="flex flex-col">
+          <label htmlFor="storeName"> Nome da loja</label>
+          <div>
+            <input
+              className="effect-7"
+              onChange={handleInputChange}
+              value={storeName}
+              name="storeName"
+              id="storeName"
+              placeholder="Este nome será único"
+            />
+            <span className="focus-border">
+              <i></i>
+            </span>
+          </div>
+          <label htmlFor="storeDescription">
+            {" "}
+            Descrição
+            <input
+              onChange={handleInputChange}
+              value={storeDescription}
+              name="storeDescription"
+              id="storeDescription"
+              placeholder="Conte um pouco sobre a sua loja..."
+            />
+          </label>
+          <label htmlFor="storeImage">
+            {" "}
+            Imagem da loja
+            <input
+              onChange={handleInputChange}
+              type="file"
+              name="storeImage"
+              id="storeImage"
+            />
+          </label>
+          <label htmlFor="storeCategory">
+            Em qual categoria sua loja mais se identifica?
+            <select
+              onChange={handleInputChange}
+              value={storeCategory}
+              name="storeCategory"
+            >
+              {options.map((item) => {
+                return (
+                  <option key={item.value} value={item.value}>
+                    {item.option}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              setBody(storeInfo);
+            }}
           >
-            {options.map((item) => {
-              return (
-                <option key={item.value} value={item.value}>
-                  {item.option}
-                </option>
-              );
-            })}
-          </select>
-        </label>
-        <button onClick={(e) => {
-          e.preventDefault()
-          setBody(storeInfo)}}>Criar loja</button>
-      </form>
-    </main>
+            Criar loja
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 
