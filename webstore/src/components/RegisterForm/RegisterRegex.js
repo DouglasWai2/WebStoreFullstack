@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import AttributeRegex from "./AttributeRegex";
 
 const RegisterRegex = ({ password }) => {

@@ -7,7 +7,7 @@ import TopBarProgress from "react-topbar-progress-indicator";
 
 const Home = () => {
   const isVerified = window.localStorage.getItem("verified");
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [toggleCard, setToggleCard] = useState(false);
   const { data, loading, error } = useFetchApi("/api/user", "GET");
   const { data: address, loading: fetching } = useFetchApi(
@@ -15,11 +15,20 @@ const Home = () => {
     "GET"
   );
 
-  console.log({loading})
+  TopBarProgress.config({
+    barColors: {
+      0: "#9dbbae",
+      "1.0": "#9dbbae",
+    },
+    barThickness: 2,
+    shadowBlur: 5,
+  });
+
+  console.log({ loading });
 
   return (
     <>
-    {navigation.state === "loading" && <TopBarProgress />}
+      {(loading || fetching) && <TopBarProgress />}
       <Navbar
         toggleCard={toggleCard}
         setToggleCard={setToggleCard}

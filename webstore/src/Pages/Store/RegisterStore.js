@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
+import TextEditor from "../../components/Store/TextEditor";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const RegisterStore = () => {
   const [storeInfo, setStoreInfo] = useState({
@@ -9,6 +12,10 @@ const RegisterStore = () => {
     storeImage: "",
     storeCategory: "",
   });
+
+  const [dropZone, setDropZone] = useState(false);
+  const [imageLink, setImageLink] = useState("");
+
   const { storeName, storeDescription, storeImage, storeCategory } = storeInfo;
   const headers = {
     "Content-Type": "multipart/form-data",
@@ -51,12 +58,24 @@ const RegisterStore = () => {
         ...storeInfo,
         [e.target.name]: e.target.files[0],
       }));
+      if(e.target.files[0]) setImageLink(URL.createObjectURL(e.target.files[0]));    
     } else {
       setStoreInfo((storeInfo) => ({
         ...storeInfo,
         [e.target.name]: e.target.value,
       }));
     }
+  }
+
+  function handleOnDrop(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    setStoreInfo((storeInfo) => ({
+      ...storeInfo,
+      storeImage: e.dataTransfer.files[0],
+    }));
+    setImageLink(URL.createObjectURL(e.dataTransfer.files[0]));
+    setDropZone(false);
   }
 
   useEffect(() => {
@@ -66,48 +85,122 @@ const RegisterStore = () => {
   }, [data]);
 
   return (
-    <div className="flex justify-center items-center h-full">
-      <div className="flex flex-col shadow gap-4">
+    <div className="flex justify-center items-center h-full py-10">
+      <div className="flex flex-col shadow gap-8 px-5 py-9 w-[500px]">
         <h1 className="text-3xl">Cadastre sua loja</h1>
-        <form className="flex flex-col">
-          <label htmlFor="storeName"> Nome da loja</label>
-          <div>
+        <form className="flex flex-col gap-3">
+          <div className="relative mx-4 my-2 z-0">
             <input
-              className="effect-7"
+              className="border-[1px] border-gray-300 p-2 peer placeholder-shown:focus:brightness-[0.9] duration-200"
+              type="text"
               onChange={handleInputChange}
               value={storeName}
               name="storeName"
               id="storeName"
-              placeholder="Este nome será único"
+              placeholder=""
             />
-            <span className="focus-border">
-              <i></i>
-            </span>
+            <label
+              className="absolute left-2 !z-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 
+              scale-100 top-3 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+              peer-focus:scale-100 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto cursor-text"
+              htmlFor="storeName"
+            >
+              Nome da loja
+            </label>
           </div>
-          <label htmlFor="storeDescription">
-            {" "}
-            Descrição
-            <input
-              onChange={handleInputChange}
-              value={storeDescription}
-              name="storeDescription"
+          <div className="relative mx-4 my-2 z-0">
+            <textarea
               id="storeDescription"
-              placeholder="Conte um pouco sobre a sua loja..."
-            />
-          </label>
-          <label htmlFor="storeImage">
-            {" "}
-            Imagem da loja
-            <input
+              name="storeDescription"
+              value={storeDescription}
               onChange={handleInputChange}
-              type="file"
-              name="storeImage"
-              id="storeImage"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  console.log(storeDescription);
+                }
+              }}
+              placeholder=""
+              className="w-full min-h-[100px] max-h-72 border-[1px] border-gray-300 p-2 peer placeholder-shown:focus:brightness-[0.9] transition-[filter] duration-200"
             />
-          </label>
-          <label htmlFor="storeCategory">
-            Em qual categoria sua loja mais se identifica?
+            <label
+              className="absolute left-2 !z-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 
+               scale-100 top-3 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
+               peer-focus:scale-100 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto cursor-text"
+              htmlFor="storeDescription"
+            >
+              Descrição
+            </label>
+          </div>
+          <div className="mx-4 my-2 z-0 flex h-40">
+            <label
+              className={
+                "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer" +
+                (dropZone ? " brightness-75" : "")
+              }
+              htmlFor="storeImage"
+              name="storeImage"
+              onDragOver={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setDropZone(true);
+              }}
+              onDragLeave={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setDropZone(false);
+              }}
+              onDrop={handleOnDrop}
+            >
+              {" "}
+              <FontAwesomeIcon
+                icon={faCloudArrowUp}
+                className={dropZone ? "animate-bounce" : ""}
+              />{" "}
+              {dropZone ? (
+                "Solte o arquivo para fazer upload"
+              ) : (
+                <>
+                  Imagem da loja
+                  <span className="text-xs">
+                    Clique aqui ou arraste a imagem até esta área
+                  </span>
+                </>
+              )}
+              <input
+                onChange={handleInputChange}
+                hidden
+                type="file"
+                name="storeImage"
+                id="storeImage"
+                accept="image/*"
+              />
+            </label>
+          </div>
+          <div className="px-4">
+            <h3>Previsualização</h3>
+            <div className="flex items-center border-[1px] border-gray-300 px-4 py-6">
+              <div
+                className="h-[150px] flex items-center justify-center
+                  w-[150px] overflow-hidden rounded-full border-gray-300 border-[1px] border-dashed"
+              >
+                <img
+                  alt={imageLink ? "Store Logo" : ""}
+                  className="h-full w-full object-cover bg-gray-100"
+                  src={imageLink}
+                />
+              </div>
+              <p className="text-2xl ml-4">{storeInfo.storeName}</p>
+            </div>
+          </div>
+          <div className="mx-4 my-2 z-0 flex flex-col">
+            <label
+              className="w-full left-2 !z-10 text-sm text-gray-500"
+              htmlFor="storeCategory"
+            >
+              Em qual categoria sua loja mais se identifica?
+            </label>
             <select
+              className="border-[1px] w-full border-gray-300 p-2 peer placeholder-shown:focus:brightness-[0.9] duration-200"
               onChange={handleInputChange}
               value={storeCategory}
               name="storeCategory"
@@ -120,15 +213,18 @@ const RegisterStore = () => {
                 );
               })}
             </select>
-          </label>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              setBody(storeInfo);
-            }}
-          >
-            Criar loja
-          </button>
+          </div>
+          <div className="px-4">
+            <button
+              className="button-login"
+              onClick={(e) => {
+                e.preventDefault();
+                setBody(storeInfo);
+              }}
+            >
+              Criar loja
+            </button>
+          </div>
         </form>
       </div>
     </div>
