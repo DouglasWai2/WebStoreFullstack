@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
-import TextEditor from "../../components/Store/TextEditor";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useMousePosition from "../../helpers/useMousePosition";
 
 const RegisterStore = () => {
   const [storeInfo, setStoreInfo] = useState({
@@ -58,7 +58,8 @@ const RegisterStore = () => {
         ...storeInfo,
         [e.target.name]: e.target.files[0],
       }));
-      if(e.target.files[0]) setImageLink(URL.createObjectURL(e.target.files[0]));    
+      if (e.target.files[0])
+        setImageLink(URL.createObjectURL(e.target.files[0]));
     } else {
       setStoreInfo((storeInfo) => ({
         ...storeInfo,
@@ -91,7 +92,7 @@ const RegisterStore = () => {
         <form className="flex flex-col gap-3">
           <div className="relative mx-4 my-2 z-0">
             <input
-              className="border-[1px] border-gray-300 p-2 peer placeholder-shown:focus:brightness-[0.9] duration-200"
+              className="floating-input-effect peer"
               type="text"
               onChange={handleInputChange}
               value={storeName}
@@ -100,9 +101,7 @@ const RegisterStore = () => {
               placeholder=""
             />
             <label
-              className="absolute left-2 !z-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 
-              scale-100 top-3 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-              peer-focus:scale-100 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto cursor-text"
+              className="floating-label"
               htmlFor="storeName"
             >
               Nome da loja
@@ -120,12 +119,10 @@ const RegisterStore = () => {
                 }
               }}
               placeholder=""
-              className="w-full min-h-[100px] max-h-72 border-[1px] border-gray-300 p-2 peer placeholder-shown:focus:brightness-[0.9] transition-[filter] duration-200"
+              className="floating-input-effect peer !transition-[filter] w-full min-h-[200px] max-h-[500px]"
             />
             <label
-              className="absolute left-2 !z-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 
-               scale-100 top-3 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
-               peer-focus:scale-100 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto cursor-text"
+              className="floating-label"
               htmlFor="storeDescription"
             >
               Descrição
