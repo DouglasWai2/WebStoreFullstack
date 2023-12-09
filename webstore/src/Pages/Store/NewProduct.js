@@ -4,6 +4,7 @@ import { useFetchApi } from "../../helpers/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp, faTag } from "@fortawesome/free-solid-svg-icons";
 import useMousePosition from "../../helpers/useMousePosition";
+import ProductPreview from "../../components/Store/ProductPreview";
 
 const NewProduct = () => {
   // initial number of features input (1)
@@ -43,15 +44,6 @@ const NewProduct = () => {
   const [body, setBody] = useState(null);
   const [dropZone, setDropZone] = useState(false);
   const [imageLink, setImageLink] = useState("");
-  const [mainImage, setMainImage] = useState("");
-
-  const mousePosition = useMousePosition();
-
-  const [style, setStyle] = useState({
-    left:"0px",
-    top: "0px",
-  });
-
 
   const headers = {
     "content-type": "multipart/form-data",
@@ -110,8 +102,7 @@ const NewProduct = () => {
   function handleOnDrop(e) {
     e.stopPropagation();
     e.preventDefault();
-    handleFiles(e);
-    setImageLink(URL.createObjectURL(e.dataTransfer.files[0]));
+    setFiles(e.dataTransfer.files)
     setDropZone(false);
   }
 
@@ -295,100 +286,9 @@ const NewProduct = () => {
             />
           </label>
         </div>
-        {/* <label htmlFor="files">
-          Imagens
-          <input
-            onChange={handleFiles}
-            name="files"
-            type="file"
-            multiple="multiple"
-          />
-        </label> */}
         <button onClick={handleSubmit}>submit</button>
       </form>
-      <div className="shadow p-4 flex">
-        <div id="images-container" className="">
-          {files.length ? (
-            <div
-            onMouseOver={() => 
-              setStyle({
-              left: mousePosition.x - 150 + "px",
-              top: mousePosition.y - 150 + "px",
-            })}
-            className="bg-white h-[433px] w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
-              <div
-              style={style}
-              
-                id="image-zoom"
-                className={
-                  "absolute h-[300px] w-[300px] bg-white opacity-60 z-10 left-[100px]"
-                }
-              ></div>
-              <img     
-                className="object-contain h-full w-full"
-                src={
-                  mainImage
-                    ? mainImage
-                    : URL.createObjectURL(Object.values(files)[0])
-                }
-              />
-            </div>
-          ) : (
-            <div className="bg-gray-200 h-[433px] text-gray-400 text-3xl flex justify-center items-center w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
-              <p>1</p>
-            </div>
-          )}
-          <div className="flex w-[578px] h-[] overflow-x-scroll gap-3 my-4 product-images">
-            {files.length ? (
-              Object.values(files).map((item) => {
-                return (
-                  <div
-                    onMouseOver={() => {
-                      setMainImage(URL.createObjectURL(item));
-                    }}
-                    className="w-[106px] h-[130px] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
-                  >
-                    <img
-                      className="!object-contain h-full w-full"
-                      src={URL.createObjectURL(item)}
-                    />
-                  </div>
-                );
-              })
-            ) : (
-              <>
-                {" "}
-                <div className="min-w-[106px] flex items-center justify-center text-gray-400 min-h-[130px] overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  1
-                </div>
-                <div className="min-w-[106px] flex items-center justify-center text-gray-400 min-h-[130px] overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  2
-                </div>
-                <div className="min-w-[106px] flex items-center justify-center text-gray-400 min-h-[130px] overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  3
-                </div>
-                <div className="min-w-[106px] flex items-center justify-center text-gray-400 min-h-[130px] overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  4
-                </div>
-                <div className="min-w-[106px] flex items-center justify-center text-gray-400 min-h-[130px] overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  5
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-        <div className="w-[578px] flex flex-col gap-3">
-          <h1 className="text-3xl">Samsung Galaxy S8</h1>
-          <h3 className="text-xl">Características</h3>
-          <ul className="list-disc ml-7">
-            <li className="text-sm">
-              Dispositivo desbloqueado para que você escolha a companhia
-              telefônica de sua preferência.
-            </li>
-            <li className="text-sm">Tela Super AMOLED de 5.8".</li>
-          </ul>
-        </div>
-      </div>
+      <ProductPreview files={files} />
     </div>
   );
 };
