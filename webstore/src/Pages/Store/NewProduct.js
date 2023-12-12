@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp, faTag } from "@fortawesome/free-solid-svg-icons";
-import useMousePosition from "../../helpers/useMousePosition";
 import ProductPreview from "../../components/Store/ProductPreview";
 
 const NewProduct = () => {
@@ -102,7 +101,7 @@ const NewProduct = () => {
   function handleOnDrop(e) {
     e.stopPropagation();
     e.preventDefault();
-    setFiles(e.dataTransfer.files)
+    setFiles(e.dataTransfer.files);
     setDropZone(false);
   }
 
@@ -270,7 +269,7 @@ const NewProduct = () => {
             ) : (
               <>
                 Imagens do produto
-                <span className="text-xs">
+                <span className="text-xs text-center">
                   Clique aqui ou arraste a imagem até esta área
                 </span>
               </>

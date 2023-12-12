@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import useMousePosition from "../../helpers/useMousePosition";
 
 const RegisterStore = () => {
   const [storeInfo, setStoreInfo] = useState({

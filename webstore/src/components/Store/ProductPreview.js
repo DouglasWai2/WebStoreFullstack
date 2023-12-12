@@ -1,53 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
+import ImageMagnifier from "./ImageMagnifier";
 
-const ProductPreview = ({files}) => {
-    const zoomImage = useRef(null);
-    const [mainImage, setMainImage] = useState("");
-
-    const imagePosition = useRef(null)
-
-    useEffect(() => {
-      if (zoomImage.current) {
-        document.addEventListener("mousemove", (event) => {    
-          const { clientX, clientY } = event;
-          zoomImage.current.style.transform = `translate3d(${
-            clientX - zoomImage.current.clientWidth / 2
-          }px, ${clientY - zoomImage.current.clientHeight / 2}px, 0)`;
-        });
-      }
-
-      
-    }, []);
-
-    useEffect(()=>{
-        if(imagePosition.current){
-            console.log(imagePosition.current.clientX)
-          }
-    },[imagePosition])
+const ProductPreview = ({ files }) => {
+  const [mainImage, setMainImage] = useState("");
 
 
   return (
     <div className="shadow p-4 flex">
-      <div
-        ref={zoomImage}
-        id="image-zoom"
-        className={
-          "absolute h-[300px] w-[300px] bg-white opacity-60 z-10 left-0 top-0 pointer-events-none"
-        }
-      ></div>
       <div id="images-container" className="">
         {files.length ? (
-          <div 
-          ref={imagePosition}
-          className="bg-white h-[433px] w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
-            <img
-              className="object-contain h-full w-full"
-              src={
-                mainImage
-                  ? mainImage
-                  : URL.createObjectURL(Object.values(files)[0])
-              }
-            />
+          <div className="w-auto h-[432px] aspect-[4/3] object-contain">
+           <ImageMagnifier image={mainImage}/>
           </div>
         ) : (
           <div className="bg-gray-200 h-[433px] text-gray-400 text-3xl flex justify-center items-center w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
@@ -62,7 +25,7 @@ const ProductPreview = ({files}) => {
                   onMouseOver={() => {
                     setMainImage(URL.createObjectURL(item));
                   }}
-                  className="w-[106px] h-[130px] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
+                  className="min-w-[106px] h-[130px] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
                 >
                   <img
                     className="!object-contain h-full w-full"
