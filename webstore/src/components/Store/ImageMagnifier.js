@@ -3,57 +3,89 @@ import React, { useRef, useState } from "react";
 const ImageMagnifier = ({ image }) => {
   const displayImage = useRef(null);
   const imagePosition = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [showMagnifier, setShowMagnifier] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const result = useRef(null);
+  const lens = useRef(null);
 
   const handleMouseHover = (e) => {
-    const { left, top, width, height } =
-      displayImage.current.getBoundingClientRect();
+    const imgWrapper = displayImage.current
+    const zoomedImage = result.current
+    const img = imagePosition.current
+    var x, y;
 
-    const x = ((e.pageX - left) / width) * 100;
-    const y = ((e.pageY - top) / height) * 100;
+    const cx = zoomedImage?.offsetWidth / lens.current.offsetWidth;
+    const cy = zoomedImage?.offsetHeight / lens.current.offsetHeight;
+    zoomedImage.style.backgroundSize = `${
+      imgWrapper?.width * cx
+    }px ${imgWrapper?.height * cy}px`;
 
-    setPosition({ x, y });
+    x =
+      e.pageX -
+      img.getBoundingClientRect().left -
+      window.scrollX -
+      lens.current.offsetWidth / 2;
+    y =
+      e.pageY -
+      img.getBoundingClientRect().top -
+      window.scrollY -
+      lens.current.offsetHeight / 2;
+
+    if (x > imgWrapper?.width - lens.current.offsetWidth)
+      x = imgWrapper?.width - lens.current.offsetWidth;
+    if (x < 0) x = 0;
+    if (y > imgWrapper?.height - lens.current.offsetHeight)
+      y = imgWrapper?.height - lens.current.offsetHeight;
+    if (y < 0) y = 0;
+
     setCursorPosition({
-      x: e.pageX - imagePosition.current.getBoundingClientRect().left,
-      y: e.pageY - imagePosition.current.getBoundingClientRect().top,
+      x,
+      y,
     });
+
+    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${
+      cursorPosition.y * cy
+    }px`;
   };
   return (
     <div
       onMouseEnter={() => {
-        setShowMagnifier(true);
+        lens.current.style.visibility = 'visible'
+        result.current.style.visibility = 'visible'
       }}
       onMouseLeave={() => {
-        setShowMagnifier(false);
+        lens.current.style.visibility = 'hidden'
+        result.current.style.visibility = 'hidden'
       }}
       onMouseMove={handleMouseHover}
       ref={imagePosition}
-      className="transition-[filter] flex items-center justify-center w-full h-full duration-100 relative z-40"
+      className="h-full relative z-40"
     >
-      <img ref={displayImage} className="object-fit h-full" src={image} />
+      <img ref={displayImage} className="object-contain h-full" src={image} />
 
-      {showMagnifier && (
-        <div
-          style={{
-            position: "absolute",
-            left: `${cursorPosition.x - 100}px`,
-            top: `${cursorPosition.y - 100}px`,
-            pointerEvents: "none",
-          }}
-        >
+      {
+        <>
           <div
+            ref={lens}
+            style={{
+              position: "absolute",
+              left: `${cursorPosition.x}px`,
+              top: `${cursorPosition.y}px`,
+              pointerEvents: "none",
+              visibility: 'hidden'
+            }}
+            className="bg-white opacity-60 w-[100px] h-[100px] z-10"
+          ></div>
+          <div
+            ref={result}
             style={{
               backgroundImage: `url(${image})`,
               backgroundRepeat: "no-repeat",
-              backgroundSize: `${displayImage.current.width * 2}px auto`,
-              backgroundPosition: `${position.x}% ${position.y}%`,
+              visibility: 'hidden'
             }}
-            className="w-[200px] h-[200px] border-[2px] border-white bg-center"
+            className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[100%] top-0"
           ></div>
-        </div>
-      )}
+        </>
+      }
     </div>
   );
 };

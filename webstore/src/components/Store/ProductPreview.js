@@ -43,7 +43,7 @@ const ProductPreview = ({ files }) => {
     <div className="shadow p-4 flex">
       <div id="images-container" className="">
         {files.length ? (
-          <div className="w-auto h-[432px] aspect-[4/3] object-contain">
+          <div className="w-auto h-[432px] aspect-[4/3] object-contain flex items-center justify-center">
             <ImageMagnifier image={mainImage} />
           </div>
         ) : (
