@@ -42,7 +42,6 @@ const NewProduct = () => {
   const [model, setModel] = useState("");
   const [body, setBody] = useState(null);
   const [dropZone, setDropZone] = useState(false);
-  const [imageLink, setImageLink] = useState("");
 
   const headers = {
     "content-type": "multipart/form-data",
@@ -242,7 +241,7 @@ const NewProduct = () => {
         <div className="mx-4 my-2 z-0 flex h-40">
           <label
             className={
-              "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer" +
+              "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
               (dropZone ? " brightness-75" : "")
             }
             htmlFor="storeImage"

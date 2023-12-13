@@ -1,39 +1,100 @@
 import React, { useEffect, useRef, useState } from "react";
 import ImageMagnifier from "./ImageMagnifier";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
 const ProductPreview = ({ files }) => {
   const [mainImage, setMainImage] = useState("");
+  const [y, setY] = useState(4);
+  const images = useRef(null);
 
+  useEffect(() => {
+    if (files.length) setMainImage(URL.createObjectURL(files[0]));
+  }, [files]);
+
+  function handleScrollFoward(e) {
+    var name = e.target.getAttribute("name");
+    if (name === "foward") {
+      if (y + 5 > images.current.children.length - 1) {
+        images.current?.children[
+          images.current.children.length - 2
+        ].scrollIntoView({ behavior: "smooth" });
+      } else {
+        images.current.children[y + 5].scrollIntoView({ behavior: "smooth" });
+        setY(y + 5);
+      }
+    }
+
+    if (name === "backward") {
+      if (y - 5 < 0) {
+        images.current?.firstElementChild.scrollIntoView({
+          behavior: "smooth",
+        });
+        setY(4);
+      } else {
+        setY(y - 5);
+        images.current.children[y - 5].scrollIntoView({ behavior: "smooth" });
+        setY(y - 5);
+      }
+    }
+  }
 
   return (
     <div className="shadow p-4 flex">
       <div id="images-container" className="">
         {files.length ? (
           <div className="w-auto h-[432px] aspect-[4/3] object-contain">
-           <ImageMagnifier image={mainImage}/>
+            <ImageMagnifier image={mainImage} />
           </div>
         ) : (
           <div className="bg-gray-200 h-[433px] text-gray-400 text-3xl flex justify-center items-center w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
             <p>1</p>
           </div>
         )}
-        <div className="flex w-[578px] overflow-x-scroll gap-3 my-4 product-images">
+        <div
+          ref={images}
+          className="flex w-[578px] overflow-x-scroll gap-3 my-4 product-images relative"
+        >
           {files.length ? (
-            Object.values(files).map((item) => {
-              return (
-                <div
-                  onMouseOver={() => {
-                    setMainImage(URL.createObjectURL(item));
-                  }}
-                  className="min-w-[106px] h-[130px] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
-                >
-                  <img
-                    className="!object-contain h-full w-full"
-                    src={URL.createObjectURL(item)}
-                  />
-                </div>
-              );
-            })
+            <>
+              {Object.values(files).map((item, index) => {
+                return (
+                  <div
+                    onMouseOver={() => {
+                      setMainImage(URL.createObjectURL(item));
+                    }}
+                    className="min-w-[106px] h-[130px] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
+                  >
+                    <img
+                      className="!object-contain h-full w-full"
+                      src={URL.createObjectURL(item)}
+                    />
+                  </div>
+                );
+              })}
+              {files.length > 5 && (
+                <>
+                  <div className="fixed w-[578px] bg-gray-200">
+                    <div
+                      className="absolute flex items-center justify-center text-transparent text-2xl 
+                      bg-transparent text-white h-[130px] cursor-pointer w-[50px]
+                       hover:bg-gray-200/20  hover:text-white/100 duration-200"
+                      name="backward"
+                      onClick={handleScrollFoward}
+                    ><FontAwesomeIcon className="rotate-180 pointer-events-none" icon={faAngleRight} /></div>
+                    <div
+                      name="foward"
+                      className="absolute flex items-center justify-center text-transparent text-2xl 
+                      bg-transparent text-white h-[130px] cursor-pointer w-[50px] right-0
+                       hover:bg-gray-200/20  hover:text-white/100 duration-200"
+                      onClick={handleScrollFoward}
+                    >
+                      <FontAwesomeIcon className="pointer-events-none" icon={faAngleRight} />
+                    </div>
+                  </div>
+                </>
+              )}
+            </>
           ) : (
             <>
               {" "}
