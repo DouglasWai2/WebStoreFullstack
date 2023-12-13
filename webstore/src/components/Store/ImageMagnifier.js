@@ -8,16 +8,14 @@ const ImageMagnifier = ({ image }) => {
   const lens = useRef(null);
 
   const handleMouseHover = (e) => {
-    const imgWrapper = displayImage.current
-    const zoomedImage = result.current
-    const img = imagePosition.current
+    const imgWrapper = displayImage.current;
+    const zoomedImage = result.current;
+    const img = imagePosition.current;
     var x, y;
 
     const cx = zoomedImage?.offsetWidth / lens.current.offsetWidth;
     const cy = zoomedImage?.offsetHeight / lens.current.offsetHeight;
-    zoomedImage.style.backgroundSize = `${
-      imgWrapper?.width * cx
-    }px ${imgWrapper?.height * cy}px`;
+    zoomedImage.style.backgroundSize = `${imgWrapper?.width * cx}px ${imgWrapper?.height * cy}px`;
 
     x =
       e.pageX -
@@ -49,18 +47,18 @@ const ImageMagnifier = ({ image }) => {
   return (
     <div
       onMouseEnter={() => {
-        lens.current.style.visibility = 'visible'
-        result.current.style.visibility = 'visible'
+        lens.current.style.visibility = "visible";
+        result.current.style.visibility = "visible";
       }}
       onMouseLeave={() => {
-        lens.current.style.visibility = 'hidden'
-        result.current.style.visibility = 'hidden'
+        lens.current.style.visibility = "hidden";
+        result.current.style.visibility = "hidden";
       }}
       onMouseMove={handleMouseHover}
       ref={imagePosition}
-      className="h-full relative z-40"
+      className="relative h-fit z-40"
     >
-      <img ref={displayImage} className="object-contain h-full" src={image} />
+      <img ref={displayImage} className="object-contain max-h-[432px]" src={image} />
 
       {
         <>
@@ -71,18 +69,18 @@ const ImageMagnifier = ({ image }) => {
               left: `${cursorPosition.x}px`,
               top: `${cursorPosition.y}px`,
               pointerEvents: "none",
-              visibility: 'hidden'
+              visibility: "hidden",
             }}
-            className="bg-white opacity-60 w-[100px] h-[100px] z-10"
+            className="bg-black opacity-60 w-[100px] h-[100px] z-10"
           ></div>
           <div
             ref={result}
             style={{
               backgroundImage: `url(${image})`,
               backgroundRepeat: "no-repeat",
-              visibility: 'hidden'
+              visibility: "hidden",
             }}
-            className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[100%] top-0"
+            className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[150%] top-0"
           ></div>
         </>
       }
