@@ -12,6 +12,8 @@ const ProductPreview = ({ files, title, features, description }) => {
     if (files.length) setMainImage(URL.createObjectURL(files[0]));
   }, [files]);
 
+
+
   function handleScrollFoward(e) {
     var name = e.target.getAttribute("name");
     if (name === "foward") {
@@ -138,7 +140,7 @@ const ProductPreview = ({ files, title, features, description }) => {
       </section>
       <section className="w-[1000px]" id="Product-description">
         <h1 className="text-2xl">Descrição</h1>
-        <p>{description}</p>
+        <p className="whitespace-pre-line">{description}</p>
       </section>
     </article>
   );

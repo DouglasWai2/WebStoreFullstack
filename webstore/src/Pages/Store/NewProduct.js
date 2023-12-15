@@ -157,6 +157,7 @@ const NewProduct = () => {
               value={description}
               name="description"
               type="text"
+              aria-multiline={true}
             />
             <label className="floating-label" htmlFor="description">
               Descrição do produto
