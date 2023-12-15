@@ -47,11 +47,11 @@ const NewProduct = () => {
     "content-type": "multipart/form-data",
   };
 
-  const {
-    data: response,
-    loading,
-    error,
-  } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
+  // const {
+  //   data: response,
+  //   loading,
+  //   error,
+  // } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
 
   function handleTitle(e) {
     setTitle(e.target.value);
@@ -67,7 +67,8 @@ const NewProduct = () => {
 
       return newArr;
     });
-    setFeatures(array.map((item) => item.value));
+    setFeatures(array);
+    console.log(features)
   }
   function handleTags(e) {
     setTags(e.target.value);
@@ -115,22 +116,23 @@ const NewProduct = () => {
       brand,
       model,
     });
+    console.log(body)
   };
 
-  useEffect(() => {
-    if (error) {
-      console.log(error);
-    }
+  // useEffect(() => {
+  //   if (error) {
+  //     console.log(error);
+  //   }
 
-    if (response === "Product saved successfully") {
-      navigate("/store/my-store");
-    }
-  }, [error, response]);
+  //   if (response === "Product saved successfully") {
+  //     navigate("/store/my-store");
+  //   }
+  // }, [error, response]);
 
   return (
-    <div className="flex justify-center items-center py-10 gap-8">
-      <form className="flex shadow">
-        <div className="flex flex-col gap-3">
+    <div className="flex justify-center py-10 gap-8">
+      <form className="flex shadow w-[500px]">
+        <div className="flex flex-col gap-3 w-full">
           <div className="relative mx-4 my-2 z-0">
             <input
               className="floating-input-effect peer"
@@ -237,56 +239,61 @@ const NewProduct = () => {
               Etiquetas (para encontrarem seu produto)
             </label>
           </div>
-        </div>
-        <div className="mx-4 my-2 z-0 flex h-40">
-          <label
-            className={
-              "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
-              (dropZone ? " brightness-75" : "")
-            }
-            htmlFor="storeImage"
-            name="storeImage"
-            onDragOver={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setDropZone(true);
-            }}
-            onDragLeave={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              setDropZone(false);
-            }}
-            onDrop={handleOnDrop}
-          >
-            {" "}
-            <FontAwesomeIcon
-              icon={faCloudArrowUp}
-              className={dropZone ? "animate-bounce" : ""}
-            />{" "}
-            {dropZone ? (
-              "Solte o arquivo para fazer upload"
-            ) : (
-              <>
-                Imagens do produto
-                <span className="text-xs text-center">
-                  Clique aqui ou arraste a imagem até esta área
-                </span>
-              </>
-            )}
-            <input
-              onChange={handleFiles}
-              hidden
-              multiple="multiple"
-              type="file"
+          <div className="mx-4 my-2 z-0 flex h-40">
+            <label
+              className={
+                "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
+                (dropZone ? " brightness-75" : "")
+              }
+              htmlFor="storeImage"
               name="storeImage"
-              id="storeImage"
-              accept="image/*"
-            />
-          </label>
+              onDragOver={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setDropZone(true);
+              }}
+              onDragLeave={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setDropZone(false);
+              }}
+              onDrop={handleOnDrop}
+            >
+              {" "}
+              <FontAwesomeIcon
+                icon={faCloudArrowUp}
+                className={dropZone ? "animate-bounce" : ""}
+              />{" "}
+              {dropZone ? (
+                "Solte o arquivo para fazer upload"
+              ) : (
+                <>
+                  Imagens do produto
+                  <span className="text-xs text-center">
+                    Clique aqui ou arraste a imagem até esta área
+                  </span>
+                </>
+              )}
+              <input
+                onChange={handleFiles}
+                hidden
+                multiple="multiple"
+                type="file"
+                name="storeImage"
+                id="storeImage"
+                accept="image/*"
+              />
+            </label>
+          </div>
+          <button onClick={handleSubmit}>submit</button>
         </div>
-        <button onClick={handleSubmit}>submit</button>
       </form>
-      <ProductPreview files={files} />
+      <ProductPreview
+        description={description}
+        features={features}
+        title={title}
+        files={files}
+      />
     </div>
   );
 };

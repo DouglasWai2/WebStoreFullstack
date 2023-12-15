@@ -58,7 +58,7 @@ const ImageMagnifier = ({ image }) => {
       ref={imagePosition}
       className="relative h-fit z-40"
     >
-      <img ref={displayImage} className="object-contain max-h-[432px]" src={image} />
+      <img ref={displayImage} className="object-contain max-w-[578px] max-h-[432px]" src={image} />
 
       {
         <>
@@ -71,7 +71,7 @@ const ImageMagnifier = ({ image }) => {
               pointerEvents: "none",
               visibility: "hidden",
             }}
-            className="bg-black opacity-60 w-[100px] h-[100px] z-10"
+            className="bg-white opacity-60 w-[100px] h-[100px] z-10"
           ></div>
           <div
             ref={result}
@@ -80,7 +80,7 @@ const ImageMagnifier = ({ image }) => {
               backgroundRepeat: "no-repeat",
               visibility: "hidden",
             }}
-            className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[150%] top-0"
+            className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
           ></div>
         </>
       }
