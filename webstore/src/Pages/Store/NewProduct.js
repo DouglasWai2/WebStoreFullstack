@@ -47,11 +47,17 @@ const NewProduct = () => {
     "content-type": "multipart/form-data",
   };
 
-  // const {
-  //   data: response,
-  //   loading,
-  //   error,
-  // } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
+  const {
+    data: response,
+    loading,
+    error,
+  } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
+
+  useEffect(() => {
+    setFeatures(array.map(item => {
+      return item.value
+    }));
+  }, [array]); // Use effect needded to handle async behavior of usestate callback
 
   function handleTitle(e) {
     setTitle(e.target.value);
@@ -64,11 +70,8 @@ const NewProduct = () => {
     setArray((s) => {
       const newArr = s.slice();
       newArr[index].value = e.target.value;
-
       return newArr;
-    });
-    setFeatures(array);
-    console.log(features)
+    });   
   }
   function handleTags(e) {
     setTags(e.target.value);
@@ -111,23 +114,23 @@ const NewProduct = () => {
       description,
       title,
       features,
-      tags: [...tagsArray, tags],
+      tags: [...tagsArray, ...tags],
       files,
       brand,
       model,
     });
-    console.log(body)
+    console.log(body);
   };
 
-  // useEffect(() => {
-  //   if (error) {
-  //     console.log(error);
-  //   }
+  useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
 
-  //   if (response === "Product saved successfully") {
-  //     navigate("/store/my-store");
-  //   }
-  // }, [error, response]);
+    if (response === "Product saved successfully") {
+      navigate("/store/my-store");
+    }
+  }, [error, response]);
 
   return (
     <div className="flex justify-center py-10 gap-8">

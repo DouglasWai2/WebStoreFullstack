@@ -76,7 +76,7 @@ const ProductPreview = ({ files, title, features, description }) => {
                 })}
                 {files.length > 4 && (
                   <>
-                    <div className="fixed w-[578px]  bg-gray-200">
+                    <div className="fixed w-[578px] z-20 bg-gray-200">
                       <div
                         className="absolute flex items-center justify-center text-transparent text-2xl 
                       bg-transparent text-white h-[102px] bottom-[16px] cursor-pointer w-[50px]
@@ -128,11 +128,11 @@ const ProductPreview = ({ files, title, features, description }) => {
           <h1 className="text-3xl">{title ? title : "Título"}</h1>
           <h3 className="text-xl">Características</h3>
           <ul className="list-disc ml-7">
-            {/* {features.length
+            {features.length
               ? features.map((item) => {
                   return <li className="text-sm mt-2">{item}</li>;
                 })
-              : ""} */}
+              : ""}
           </ul>
         </div>
       </section>
