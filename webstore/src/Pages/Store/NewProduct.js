@@ -6,6 +6,19 @@ import { faCloudArrowUp, faTag } from "@fortawesome/free-solid-svg-icons";
 import ProductPreview from "../../components/Store/ProductPreview";
 
 const NewProduct = () => {
+  
+  const [tagsArray, setTagsArray] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [features, setFeatures] = useState([]);
+  const [tags, setTags] = useState("");
+  const [files, setFiles] = useState([]);
+  const [brand, setBrand] = useState("");
+  const [model, setModel] = useState("");
+  const [body, setBody] = useState(null);
+  const [dropZone, setDropZone] = useState(false);
+  const navigate = useNavigate();
+
   // initial number of features input (1)
   const featuresInput = [
     {
@@ -14,11 +27,7 @@ const NewProduct = () => {
       value: "",
     },
   ];
-
   const [array, setArray] = useState(featuresInput); // array to modify the number of features input
-  const [tagsArray, setTagsArray] = useState([]);
-
-  const navigate = useNavigate();
 
   const addFeature = (e) => {
     e.preventDefault();
@@ -33,16 +42,6 @@ const NewProduct = () => {
     });
   };
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState([]);
-  const [tags, setTags] = useState("");
-  const [files, setFiles] = useState([]);
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
-  const [body, setBody] = useState(null);
-  const [dropZone, setDropZone] = useState(false);
-
   const headers = {
     "content-type": "multipart/form-data",
   };
@@ -54,10 +53,12 @@ const NewProduct = () => {
   } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
 
   useEffect(() => {
-    setFeatures(array.map(item => {
-      return item.value
-    }));
-  }, [array]); // Use effect needded to handle async behavior of usestate callback
+    setFeatures(
+      array.map((item) => {
+        return item.value;
+      })
+    );
+  }, [array]); // Use effect necessary to handle async behavior of usestate callback
 
   function handleTitle(e) {
     setTitle(e.target.value);
@@ -71,7 +72,7 @@ const NewProduct = () => {
       const newArr = s.slice();
       newArr[index].value = e.target.value;
       return newArr;
-    });   
+    });
   }
   function handleTags(e) {
     setTags(e.target.value);
@@ -119,7 +120,6 @@ const NewProduct = () => {
       brand,
       model,
     });
-    console.log(body);
   };
 
   useEffect(() => {
@@ -134,7 +134,7 @@ const NewProduct = () => {
 
   return (
     <div className="flex justify-center py-10 gap-8">
-      <form className="flex shadow w-[500px]">
+      <form className="flex shadow w-[500px] px-4 ">
         <div className="flex flex-col gap-3 w-full">
           <div className="relative mx-4 my-2 z-0">
             <input
@@ -192,7 +192,7 @@ const NewProduct = () => {
           Escreva caracteríscas marcantes do seu produto
           {array.map((item, i) => {
             return (
-              <div className="relative mx-4 my-2 z-0">
+              <div key={i} className="relative mx-4 my-2 z-0">
                 <input
                   placeholder=""
                   className="floating-input-effect peer"
@@ -201,11 +201,10 @@ const NewProduct = () => {
                   value={item.value}
                   id={i}
                   type={item.type}
-                  size="40"
-                  key={i}
+                  size="40"             
                 />
                 <label className="floating-label" htmlFor="features">
-                  Característica
+                  Característica {i + 1}
                 </label>
               </div>
             );
@@ -289,7 +288,9 @@ const NewProduct = () => {
               />
             </label>
           </div>
-          <button onClick={handleSubmit}>submit</button>
+          <button className="button-login my-4" onClick={handleSubmit}>
+            submit
+          </button>
         </div>
       </form>
       <ProductPreview

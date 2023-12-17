@@ -132,7 +132,7 @@ const ProductPreview = ({ files, title, features, description }) => {
           <ul className="list-disc ml-7">
             {features.length
               ? features.map((item) => {
-                  return <li className="text-sm mt-2">{item}</li>;
+                  return <li key={item} className="text-sm mt-2">{item}</li>;
                 })
               : ""}
           </ul>
