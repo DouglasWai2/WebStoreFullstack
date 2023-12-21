@@ -7,10 +7,29 @@ const ProductPreview = ({ files, title, features, description }) => {
   const [mainImage, setMainImage] = useState("");
   const [y, setY] = useState(3);
   const images = useRef(null);
+  const buttonsWrapper = useRef(null)
 
   useEffect(() => {
     if (files.length) setMainImage(URL.createObjectURL(files[0]));
   }, [files]);
+
+
+  function fixButtonsInsideDiv() {
+    const rect = images.current.getBoundingClientRect()
+    console.log(images.current.style['margin-top'])
+    buttonsWrapper.current.style.top = `${rect.top + images.current.style['margin-top']}px`
+  }
+
+  useEffect(() => {
+    if (buttonsWrapper.current) {
+
+      window.addEventListener('scroll', fixButtonsInsideDiv)
+
+      return () => {
+        window.removeEventListener('scroll', fixButtonsInsideDiv)
+      }
+    }
+  }, [buttonsWrapper.current])
 
 
 
@@ -77,34 +96,33 @@ const ProductPreview = ({ files, title, features, description }) => {
                   );
                 })}
                 {files.length > 4 && (
-                  <>
-                    <div className="fixed w-[578px] z-20 bg-gray-200">
-                      <div
-                        className="absolute flex items-center justify-center text-transparent text-2xl 
-                      bg-transparent text-white h-[102px] bottom-[16px] cursor-pointer w-[50px]
-                       hover:bg-gray-200/20  hover:text-white/100 duration-200"
-                        name="backward"
-                        onClick={handleScrollFoward}
-                      >
-                        <FontAwesomeIcon
-                          className="rotate-180 pointer-events-none"
-                          icon={faAngleRight}
-                        />
-                      </div>
-                      <div
-                        name="foward"
-                        className="absolute flex items-center justify-center text-transparent text-2xl 
-                      bg-transparent text-white h-[102px] bottom-[16px] cursor-pointer w-[50px] right-0
-                       hover:bg-gray-200/20  hover:text-white/100 duration-200"
-                        onClick={handleScrollFoward}
-                      >
-                        <FontAwesomeIcon
-                          className="pointer-events-none"
-                          icon={faAngleRight}
-                        />
-                      </div>
+                  <div ref={buttonsWrapper} className="fixed w-[578px]">
+                    <div
+                      className="absolute flex items-center justify-center text-transparent text-2xl 
+                      bg-transparent text-white h-[102px] cursor-pointer w-[50px]
+                       hover:bg-gray-200/20  hover:text-white/100 duration-200 z-10"
+                      name="backward"
+                      onClick={handleScrollFoward}
+                    >
+                      <FontAwesomeIcon
+                        className="rotate-180 pointer-events-none"
+                        icon={faAngleRight}
+                      />
                     </div>
-                  </>
+                    <div
+                      name="foward"
+                      className="absolute flex items-center justify-center text-transparent text-2xl 
+                      bg-transparent text-white h-[102px] cursor-pointer w-[50px] right-0
+                       hover:bg-gray-200/20  hover:text-white/100 duration-200"
+                      onClick={handleScrollFoward}
+                    >
+                      <FontAwesomeIcon
+                        className="pointer-events-none"
+                        icon={faAngleRight}
+                      />
+                    </div>
+                  </div>
+
                 )}
               </>
             ) : (
@@ -132,8 +150,8 @@ const ProductPreview = ({ files, title, features, description }) => {
           <ul className="list-disc ml-7">
             {features.length
               ? features.map((item) => {
-                  return <li key={item} className="text-sm mt-2">{item}</li>;
-                })
+                return <li key={item} className="text-sm mt-2">{item}</li>;
+              })
               : ""}
           </ul>
         </div>
