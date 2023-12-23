@@ -4,12 +4,10 @@ import {
   faCircleExclamation,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
-import api from "../helpers/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { setCredentials } from "../reducers/authSlice";
 import { useFetchApi } from "../helpers/useFetchApi";
+import SubmitButton from '../components/shared/SubmitButton'
 
 const LoginForm = () => {
   const [invalid, setInvalid] = useState("");
@@ -26,7 +24,7 @@ const LoginForm = () => {
     refresh,
   } = useFetchApi("/auth/login", "POST", body, toggle);
 
-  // console.log('userData: '+ Object.keys(userData).length);
+
 
   useEffect(() => {
     if (error) {
@@ -37,7 +35,6 @@ const LoginForm = () => {
       }
     }
     if (userData?.authorization) {
-      console.log(userData)
       window.localStorage.setItem("accessToken", userData.authorization);
       window.localStorage.setItem("LoggedIn", true);
       window.localStorage.setItem("name", userData.name);
@@ -106,9 +103,7 @@ const LoginForm = () => {
               value={password}
             />
           </label>
-          <button className="button-login" type="submit">
-            Fazer login
-          </button>
+          <SubmitButton onClick={handleSubmit} loading={loading} text='Fazer Login' />
         </form>
       </div>
       <div className="mt-6 text-center w-full box-shadow-bottom">
