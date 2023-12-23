@@ -11,6 +11,7 @@ const productSchema = new mongoose.Schema({
   features: [{ type: String }],
   thumbnail: { type: String, required: true },
   images: [{ type: String, required: true }],
+  price: { type: Number, required: true },
   store: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Stores",

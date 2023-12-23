@@ -24,8 +24,6 @@ const Home = () => {
     shadowBlur: 5,
   });
 
-  console.log({ loading });
-
   return (
     <>
       {(loading || fetching) && <TopBarProgress />}

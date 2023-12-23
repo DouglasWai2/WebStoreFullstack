@@ -3,9 +3,9 @@ import ImageMagnifier from "./ImageMagnifier";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
-const ProductPreview = ({ files, title, features, description }) => {
+const ProductPreview = ({ files, title, features, description, price }) => {
   const [mainImage, setMainImage] = useState("");
-  const [y, setY] = useState(3);
+  const [y, setY] = useState(4);
   const images = useRef(null);
   const buttonsWrapper = useRef(null)
 
@@ -16,8 +16,7 @@ const ProductPreview = ({ files, title, features, description }) => {
 
   function fixButtonsInsideDiv() {
     const rect = images.current.getBoundingClientRect()
-    console.log(images.current.style['margin-top'])
-    buttonsWrapper.current.style.top = `${rect.top + images.current.style['margin-top']}px`
+    buttonsWrapper.current.style.top = `${rect.top}px`
   }
 
   useEffect(() => {
@@ -29,7 +28,7 @@ const ProductPreview = ({ files, title, features, description }) => {
         window.removeEventListener('scroll', fixButtonsInsideDiv)
       }
     }
-  }, [buttonsWrapper.current])
+  }, [files])
 
 
 
@@ -39,29 +38,29 @@ const ProductPreview = ({ files, title, features, description }) => {
       if (y + 4 > images.current.children.length - 1) {
         images.current?.children[
           images.current.children.length - 2
-        ].scrollIntoView({ behavior: "smooth" });
+        ].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
       } else {
-        images.current.children[y + 4].scrollIntoView({ behavior: "smooth" });
         setY(y + 4);
+        console.log(y)
+        images.current.children[y + 4].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
       }
     }
 
     if (name === "backward") {
       if (y - 4 < 0) {
         images.current?.firstElementChild.scrollIntoView({
-          behavior: "smooth",
+          behavior: "smooth", block: "nearest", inline: "nearest"
         });
-        setY(3);
+        setY(4);
       } else {
         setY(y - 4);
-        images.current.children[y - 4].scrollIntoView({ behavior: "smooth" });
-        setY(y - 4);
+        images.current.children[y - 4].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
       }
     }
   }
 
   return (
-    <article>
+    <article className="w-2/3">
       <h1 className="font-bold">Previsualização do produto:</h1>
       <section id="product" className="shadow p-4 flex gap-10">
         <div id="images-container" className="">
@@ -86,7 +85,7 @@ const ProductPreview = ({ files, title, features, description }) => {
                       onMouseOver={() => {
                         setMainImage(URL.createObjectURL(item));
                       }}
-                      className="min-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
+                      className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
                     >
                       <img
                         className="!object-contain h-full w-full"
@@ -100,7 +99,7 @@ const ProductPreview = ({ files, title, features, description }) => {
                     <div
                       className="absolute flex items-center justify-center text-transparent text-2xl 
                       bg-transparent text-white h-[102px] cursor-pointer w-[50px]
-                       hover:bg-gray-200/20  hover:text-white/100 duration-200 z-10"
+                       hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
                       name="backward"
                       onClick={handleScrollFoward}
                     >
@@ -113,7 +112,7 @@ const ProductPreview = ({ files, title, features, description }) => {
                       name="foward"
                       className="absolute flex items-center justify-center text-transparent text-2xl 
                       bg-transparent text-white h-[102px] cursor-pointer w-[50px] right-0
-                       hover:bg-gray-200/20  hover:text-white/100 duration-200"
+                       hover:bg-gray-300/20  hover:text-white/100 duration-200"
                       onClick={handleScrollFoward}
                     >
                       <FontAwesomeIcon
@@ -144,15 +143,16 @@ const ProductPreview = ({ files, title, features, description }) => {
             )}
           </div>
         </div>
-        <div className="w-[400px] flex flex-col gap-3">
+        <div className="w-1/2 flex flex-col gap-3">
           <h1 className="text-3xl">{title ? title : "Título"}</h1>
+          <h1 className="text-xl">{price}</h1>
           <h3 className="text-xl">Características</h3>
           <ul className="list-disc ml-7">
-            {features.length
-              ? features.map((item) => {
+            {!!features.length &&
+              features.map((item) => {
                 return <li key={item} className="text-sm mt-2">{item}</li>;
               })
-              : ""}
+            }
           </ul>
         </div>
       </section>

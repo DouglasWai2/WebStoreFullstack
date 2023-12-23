@@ -8,7 +8,7 @@ const upload = require("../helpers/upload.helper");
 router.post(
   "/catalog/new-product",
   auth,
-  upload.array('files[]', 5),
+  upload.array('files[]', 20),
   addProduct
 );
 

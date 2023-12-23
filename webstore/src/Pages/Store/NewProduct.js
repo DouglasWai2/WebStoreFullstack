@@ -2,16 +2,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudArrowUp, faTag } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faCloudArrowUp, faQuestion, faTag } from "@fortawesome/free-solid-svg-icons";
 import ProductPreview from "../../components/Store/ProductPreview";
+import InputMask from "react-input-mask";
+import { moneyMask } from "../../helpers/moneyMask";
+import SubmitButton from "../../components/shared/SubmitButton";
 
 const NewProduct = () => {
-  
+
   const [tagsArray, setTagsArray] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [features, setFeatures] = useState([]);
   const [tags, setTags] = useState("");
+  const [price, setPrice] = useState('');
   const [files, setFiles] = useState([]);
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -52,6 +56,8 @@ const NewProduct = () => {
     error,
   } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
 
+
+
   useEffect(() => {
     setFeatures(
       array.map((item) => {
@@ -76,6 +82,9 @@ const NewProduct = () => {
   }
   function handleTags(e) {
     setTags(e.target.value);
+  }
+  function handlePrice(e) {
+    setPrice(moneyMask(e.target.value));
   }
   function handleFiles(e) {
     setFiles(e.target.files);
@@ -111,6 +120,7 @@ const NewProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(parseFloat(price.replace('R$ ', '').replace(',', '.')))
     setBody({
       description,
       title,
@@ -119,6 +129,7 @@ const NewProduct = () => {
       files,
       brand,
       model,
+      price: parseFloat(price.replace('R$ ', '').replace(',', '.'))
     });
   };
 
@@ -134,7 +145,7 @@ const NewProduct = () => {
 
   return (
     <div className="flex justify-center py-10 gap-8">
-      <form className="flex shadow w-[500px] px-4 ">
+      <form className="flex shadow w-1/2 py-5 px-4 ">
         <div className="flex flex-col gap-3 w-full">
           <div className="relative mx-4 my-2 z-0">
             <input
@@ -150,6 +161,12 @@ const NewProduct = () => {
             </label>
           </div>
           <div className="relative mx-4 my-2 z-0">
+            <FontAwesomeIcon
+              className="absolute right-0 m-2 peer"
+              icon={faCircleInfo} />
+            <div className="bg-white shadow-sm absolute z-40 left-[100%] w-max py-1 px-3 invisible opacity-0 peer-hover:visible peer-hover:opacity-100 duration-300">
+              Especificações técnicas do produto, conteúdo da embalagem, etc...
+            </div>
             <textarea
               placeholder=""
               className="floating-input-effect peer !transition-[filter] w-full min-h-[200px] max-h-[500px]"
@@ -159,7 +176,7 @@ const NewProduct = () => {
               type="text"
               aria-multiline={true}
             />
-            <label className="floating-label" htmlFor="description">
+            <label className="floating-label flex w-max gap-3" htmlFor="description">
               Descrição do produto
             </label>
           </div>
@@ -201,7 +218,7 @@ const NewProduct = () => {
                   value={item.value}
                   id={i}
                   type={item.type}
-                  size="40"             
+                  size="40"
                 />
                 <label className="floating-label" htmlFor="features">
                   Característica {i + 1}
@@ -242,11 +259,24 @@ const NewProduct = () => {
               Etiquetas (para encontrarem seu produto)
             </label>
           </div>
+          <div className="relative mx-4 my-2 z-0">
+            <input
+              placeholder=""
+              className="floating-input-effect peer"
+              onChange={handlePrice}
+              value={price}
+              name="price"
+              type="text"
+            />
+            <label className="floating-label" htmlFor="price">
+              Preço base
+            </label>
+          </div>
           <div className="mx-4 my-2 z-0 flex h-40">
             <label
               className={
                 "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
-                (dropZone ? " brightness-75" : "")
+                (dropZone && " brightness-75")
               }
               htmlFor="storeImage"
               name="storeImage"
@@ -288,9 +318,7 @@ const NewProduct = () => {
               />
             </label>
           </div>
-          <button className="button-login my-4" onClick={handleSubmit}>
-            submit
-          </button>
+          <SubmitButton loading={loading} text='Cadastrar Produto' onClick={handleSubmit} />
         </div>
       </form>
       <ProductPreview
@@ -298,6 +326,7 @@ const NewProduct = () => {
         features={features}
         title={title}
         files={files}
+        price={price}
       />
     </div>
   );

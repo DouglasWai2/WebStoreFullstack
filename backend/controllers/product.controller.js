@@ -4,9 +4,7 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 
 exports.addProduct = async (req, res) => {
-  const { title, description, brand, model, tags, genre, features } = req.body;
-
-  console.log(req.files);
+  const { title, description, brand, model, tags, genre, features, price } = req.body;
 
   const newProduct = new productSchema({
     title,
@@ -16,6 +14,7 @@ exports.addProduct = async (req, res) => {
     brand,
     model,
     features,
+    price
   });
   if (req.files.length) {
     newProduct.thumbnail = req.files[0].location;
