@@ -40,9 +40,8 @@ const ImageMagnifier = ({ image }) => {
       y,
     });
 
-    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${
-      cursorPosition.y * cy
-    }px`;
+    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${cursorPosition.y * cy
+      }px`;
   };
   return (
     <div
@@ -56,7 +55,7 @@ const ImageMagnifier = ({ image }) => {
       }}
       onMouseMove={handleMouseHover}
       ref={imagePosition}
-      className="relative h-fit z-40"
+      className="relative h-fit"
     >
       <img ref={displayImage} className="object-contain max-w-[578px] max-h-[432px]" src={image} />
 
@@ -71,7 +70,7 @@ const ImageMagnifier = ({ image }) => {
               pointerEvents: "none",
               visibility: "hidden",
             }}
-            className="bg-white opacity-60 w-[100px] h-[100px] z-10"
+            className="bg-white opacity-60 w-[100px] h-[100px]"
           ></div>
           <div
             ref={result}
