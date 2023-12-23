@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo, faCloudArrowUp, faQuestion, faTag } from "@fortawesome/free-solid-svg-icons";
 import ProductPreview from "../../components/Store/ProductPreview";
-import InputMask from "react-input-mask";
 import { moneyMask } from "../../helpers/moneyMask";
 import SubmitButton from "../../components/shared/SubmitButton";
 
@@ -40,11 +39,18 @@ const NewProduct = () => {
         ...s,
         {
           type: "text",
+          id: array.length + 1,
           value: "",
         },
       ];
     });
   };
+
+  const deleteFeature= (id)=> {
+    const newArray = array.filter(item => item.id !== id)
+    console.log(array)
+    setArray(newArray);
+  }
 
   const headers = {
     "content-type": "multipart/form-data",
@@ -120,7 +126,6 @@ const NewProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(parseFloat(price.replace('R$ ', '').replace(',', '.')))
     setBody({
       description,
       title,
@@ -210,13 +215,17 @@ const NewProduct = () => {
           {array.map((item, i) => {
             return (
               <div key={i} className="relative mx-4 my-2 z-0">
+                <button onClick={(e) => {
+                  e.preventDefault()
+                  deleteFeature(item.id)
+                  }} className="absolute right-0">X</button>
                 <input
                   placeholder=""
                   className="floating-input-effect peer"
                   name="features"
                   onChange={handleFeatures}
                   value={item.value}
-                  id={i}
+                  id={item.id}
                   type={item.type}
                   size="40"
                 />
