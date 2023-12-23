@@ -1,6 +1,6 @@
 const LoadingSpinner = () => {
   return (
-    <div className="brightness-105" aria-label="Loading..." role="status">
+    <div className="brightness-105 text-center w-fit" aria-label="Loading..." role="status">
       <svg className="animate-spin w-6 h-6 fill-[#188FA7]" viewBox="3 3 18 18">
         <path
           className="opacity-20"
