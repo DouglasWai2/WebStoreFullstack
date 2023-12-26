@@ -79,10 +79,13 @@ const NewProduct = () => {
     setDescription(e.target.value);
   }
   function handleFeatures(e) {
-    const index = e.target.id;
     setArray((s) => {
       const newArr = s.slice();
-      newArr[index].value = e.target.value;
+      newArr.forEach(item => {
+        if(item.id == e.target.id){
+          item.value = e.target.value
+        }
+      })
       return newArr;
     });
   }
