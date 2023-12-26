@@ -3,10 +3,6 @@ import LoadingSpinner from './LoadingSpinner'
 
 const SubmitButton = ({loading, text, onClick}) => {
 
-    useEffect(() => {
-        console.log(loading)
-
-    }, [])
   return (
     <button
     onClick={onClick}

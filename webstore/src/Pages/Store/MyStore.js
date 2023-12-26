@@ -7,6 +7,7 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import TopBarProgress from "react-topbar-progress-indicator";
+import LoadingSpinner from "../../components/shared/LoadingSpinner";
 
 const MyStore = () => {
   const location = useLocation();
@@ -65,6 +66,8 @@ const MyStore = () => {
     setMethod("POST");
   }
 
+  console.log(loading)
+
   return location.pathname === "/store/my-store" ? (
     <>
       {loading && <TopBarProgress />}
@@ -93,6 +96,7 @@ const MyStore = () => {
                   />
 
                   <div className="h-full flex justify-center overflow-hidden">
+
                     <img
                       alt="store banner"
                       className="w-full object-cover"
@@ -100,34 +104,40 @@ const MyStore = () => {
                         !bannerLink ? storeInfo.storeBanner.link : bannerLink
                       }
                     />
+
                   </div>
                 </label>
               </>
             ) : (
               <div className="h-full flex justify-center overflow-hidden">
-                <img
-                  alt="store banner"
-                  className="w-full object-cover"
-                  src={storeInfo.storeBanner.link}
-                />
+                {!storeInfo.storeBanner.link ? 
+                <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
+                  <LoadingSpinner />
+                </div> :
+                  <img
+                    alt="store banner"
+                    className="w-full object-cover"
+                    src={storeInfo.storeBanner.link}
+                  />
+                }
               </div>
             )}
           </div>
           <div className="flex relative justify-between px-6 shadow">
-            {(storeInfo.cnpj && storeInfo.storeAddress) ||
-            (storeInfo.cpf && storeInfo.storeAddress) ? (
-              ""
-            ) : (
-              <p className="text-red-500">Conclua seu cadastro</p>
-            )}
+
             <div className="flex">
               {!edit ? (
                 <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
+                  {!storeInfo.storeImage.link ? 
+                    <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
+                  <LoadingSpinner />
+                </div>
+                :
                   <img
                     alt="store logo"
                     className="h-full w-full object-cover hover:brightness-75 bg-white"
                     src={storeInfo.storeImage.link}
-                  />
+                  />}
                 </div>
               ) : (
                 <div
@@ -143,7 +153,6 @@ const MyStore = () => {
                         if (e.target.files[0])
                           setImageLink(URL.createObjectURL(e.target.files[0]));
                         setImageEdit({ file: e.target.files[0] });
-                        console.log(imageEdit);
                       }}
                       name="file"
                       type="file"
@@ -184,6 +193,12 @@ const MyStore = () => {
             )}
           </div>
           <div className="text-justify">
+            {!loading && ((storeInfo.cnpj && storeInfo.storeAddress) ||
+              (storeInfo.cpf && storeInfo.storeAddress)) ? (
+              ""
+            ) : (
+              <p className="text-red-500">Conclua seu cadastro</p>
+            )}
             <p className="text-gray-600">Descrição</p>
             <p>
               {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit
@@ -201,7 +216,7 @@ const MyStore = () => {
             </p>
             {Object.keys(storeInfo.storeAddress).length === 0 ? (
               <Link to="address">Adicione o endereço da sua loja</Link>
-            ) : (
+            ) : (!loading &&
               <p className="">
                 {storeInfo.storeAddress.street} -{" "}
                 {storeInfo.storeAddress.number} - {storeInfo.storeAddress.city}{" "}
