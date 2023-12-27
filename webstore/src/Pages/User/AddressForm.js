@@ -4,6 +4,8 @@ import ErrorCard from "../../components/shared/ErrorCard";
 import SuccessCard from "../../components/shared/SuccessCard";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
+import { CEPMask } from "../../helpers/CEPMask";
+import { CPFMask } from "../../helpers/CPFMask";
 
 const AddressForm = () => {
   const [error, setError] = useState("");
@@ -66,7 +68,7 @@ const AddressForm = () => {
 
   const getAddressByCEPData = async () => {
     // get address info with cep
-    if (cep.length === 8 && lastCep !== cep) {
+    if (cep.length === 9 && lastCep !== cep) {
       setLoading(true);
       fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
         .then((response) => {
@@ -199,11 +201,12 @@ const AddressForm = () => {
             <input
               required
               className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
-              value={cep}
+              value={CEPMask(cep)}
               onChange={handleInputChange}
               onBlur={getAddressByCEPData}
               type="text"
               name="cep"
+              maxLength={9}
               placeholder="12345-678"
             />
           </label>
@@ -315,10 +318,11 @@ const AddressForm = () => {
             <input
               required
               className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
-              value={CPF}
+              value={CPFMask(CPF)}
               onChange={handleInputChange}
               type="text"
               name="CPF"
+              maxLength={14}
               placeholder="CPF do destinatário"
             />
           </label>

@@ -201,17 +201,6 @@ const MyStore = () => {
             )}
             <p className="text-gray-600">Descrição</p>
             <p>
-              {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla sit
-            amet tortor ac elit interdum posuere ac eu arcu. Nulla non porttitor
-            leo, tempor maximus nulla. Morbi faucibus quam justo, sit amet
-            auctor tellus posuere nec. Sed id nibh et leo dictum porta sit amet
-            et nisl. Ut eget nulla a ipsum aliquet faucibus egestas quis nisi.
-            Proin molestie placerat tellus in pulvinar. Nulla maximus sed libero
-            eu mollis. Fusce sed nulla odio. Vestibulum tempor porta lectus
-            porttitor vulputate. Sed varius et orci eget interdum. Morbi
-            tincidunt purus mi. In vitae risus elit. Duis euismod, orci et
-            accumsan tincidunt, urna dolor ultrices ipsum, iaculis luctus mauris
-            sem nec lorem. Sed ullamcorper tellus sit amet elit egestas cursus. */}
               {storeInfo.storeDescription}
             </p>
             {Object.keys(storeInfo.storeAddress).length === 0 ? (
