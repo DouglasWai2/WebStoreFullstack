@@ -3,6 +3,7 @@ import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalDat
 import TableData from "../../components/User/PersonalData/TableData";
 import { useOutletContext } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
+import { CPFMask } from "../../helpers/CPFMask";
 
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState([
@@ -22,8 +23,8 @@ const ProfilePage = () => {
   );
 
   const { data, address } = useOutletContext();
-  
-    
+
+
 
   // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
   function formatDate(date) {
@@ -70,6 +71,12 @@ const ProfilePage = () => {
     }
   }, [data, response]);
 
+  function handleSubmit() {
+    const { CPF } = userInfo[4]
+    parseInt(CPF)
+    
+  }
+
   return (
     <div className="w-[80%] border-[2px] rounded-md overflow-hidden shadow-md">
       {!data && !address ? (
@@ -100,7 +107,7 @@ const ProfilePage = () => {
             <tr className="flex border-b-[1px] p-10 w-full">
               <th className="flex text-start items-center w-[20%]">Endereço</th>
               <td className="w-full items-center flex justify-between">
-                <span className="ml-5">{address.length ? address[0].street + ' - N° '  + address[0].number : 'Adicione um endereço'}</span>
+                <span className="ml-5">{address.length ? address[0].street + ' - N° ' + address[0].number : 'Adicione um endereço'}</span>
               </td>
             </tr>
           </tbody>
@@ -116,9 +123,7 @@ const ProfilePage = () => {
           </button>
         ) : (
           <button
-            onClick={() => {
-              setEditData(userInfo);
-            }}
+            onClick={handleSubmit}
             className="bg-yellow-300 p-2 !w-full h-fit px-3 hover:bg-yellow-400"
           >
             Salvar
