@@ -52,13 +52,13 @@ main {
   position: relative;
 }
 /* necessary to give position: relative to parent. */
-input[type="text"] {
+/* input[type="text"] {
   font: 15px/24px "Muli", sans-serif;
   color: #333;
   width: 100%;
   box-sizing: border-box;
   letter-spacing: 1px;
-}
+} */
 :focus {
   outline: none;
 }
@@ -72,6 +72,22 @@ input[type="text"] {
   scale-100 top-3 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
   peer-focus:scale-100 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto cursor-text
   pointer-events-none
+}
+
+.floating-select:focus ~ label, .floating-select:not([value=""]):valid ~ label {
+  @apply -translate-y-8 rtl:translate-x-1/4
+}
+
+.floating-select:disabled ~ label{
+  @apply -translate-y-8 rtl:translate-x-1/4
+}
+
+.floating-select{
+  @apply border-[1px] border-gray-300 p-2
+}
+
+.label {
+  @apply text-gray-500 text-sm absolute pointer-events-none left-2 top-3 transition-all duration-300 origin-[0]
 }
 
 .product-images::-webkit-scrollbar {

@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { CEPMask } from "../../helpers/CEPMask";
 import { CPFMask } from "../../helpers/CPFMask";
+import SubmitButton from "../../components/shared/SubmitButton";
 
 const AddressForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [body, setBody] = useState(null);
-  const [submiting, setSubmiting] = useState(false);
   const [addressInfo, setAddressInfo] = useState({
     cep: "",
     street: "",
@@ -41,7 +41,24 @@ const AddressForm = () => {
   const [lastAdress, setLastAddress] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-  const {data, loading: fetching} = useFetchApi('/api/address', 'POST', body);
+  const {
+    data,
+    loading: fetching,
+    error: badRequest,
+  } = useFetchApi("/api/address", "POST", body);
+
+  useEffect(() => {
+    if (data === "Address saved successfully") {
+      setSuccess("Endereço adicionado com sucesso. Redirecionando...");
+      setTimeout(() => {
+        navigate(-1);
+      }, 600);
+    }
+
+    if (badRequest) {
+      console.log(badRequest);
+    }
+  }, [data]);
 
   const getCityOptions = async () => {
     // get cities from given state
@@ -68,7 +85,7 @@ const AddressForm = () => {
 
   const getAddressByCEPData = async () => {
     // get address info with cep
-    if (cep.length === 9 && lastCep !== cep) {
+    if (cep.length >= 8 && lastCep !== cep) {
       setLoading(true);
       fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
         .then((response) => {
@@ -139,7 +156,6 @@ const AddressForm = () => {
       fetch(`https://viacep.com.br/ws/${state}/${city}/${newStreet}/json/`)
         .then((response) => {
           response.json().then((data) => {
-            console.log(data);
             if (data.length === 0) {
               setError("Endereço não encontrado");
             } else {
@@ -167,7 +183,11 @@ const AddressForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setBody({address: addressInfo})
+    cep.replace(/\D/g, "");
+    CPF.replace(/\D/g, "");
+
+    console.log(addressInfo);
+    // setBody({ address: addressInfo });
   };
 
   return (
@@ -196,44 +216,42 @@ const AddressForm = () => {
       )}
       <form className="flex flex-col gap-8 address-form">
         <div className="flex gap-4 w-full">
-          <label className="text-lg font-medium w-full" htmlFor="CEP">
-            CEP
+          <div className="relative">
             <input
               required
-              className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+              className="floating-input-effect peer !w-full border-[1px] rounded-sm"
               value={CEPMask(cep)}
               onChange={handleInputChange}
               onBlur={getAddressByCEPData}
               type="text"
               name="cep"
-              maxLength={9}
-              placeholder="12345-678"
+              placeholder=""
             />
-          </label>
-
-          <label className="text-lg font-medium w-2/5" htmlFor="state">
-            Estado
+            <label className="floating-label text-lg font-medium" htmlFor="CEP">
+              CEP
+            </label>
+          </div>
+          <div className="relative">
             <select
               required
               onChange={handleInputChange}
               value={state}
               name="state"
-              className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
-              placeholder="Selecione seu estado"
+              className="floating-select peer w-full h-full border-[1px] rounded-sm"
             >
-              <option value="" key="placeholder">
-                Selecione seu Estado
-              </option>
+              <option value="" key="placeholder"></option>
               {stateOptions.map((option) => (
                 <option key={option.sigla} value={option.sigla}>
                   {option.nome}
                 </option>
               ))}
             </select>
-          </label>
+            <label className="label text-lg font-medium w-2/5" htmlFor="state">
+              Estado
+            </label>
+          </div>
         </div>
-        <label className="text-lg font-medium" htmlFor="city">
-          Cidade
+        <div className="relative">
           <select
             required
             onChange={handleInputChange}
@@ -242,16 +260,15 @@ const AddressForm = () => {
               .replace(/[\u0300-\u036f]/g, "")
               .toUpperCase()}
             name="city"
-            className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+            className="floating-select h-full w-full border-[1px] rounded-sm"
             disabled={state === "" ? true : false}
           >
             {state === "" ? (
-              <option value="" key="placeholder">
+              <option value="Selecione estado primeiro" key="placeholder">
                 Selecione seu estado primeiro...
               </option>
             ) : (
               <option value="" key="placeholder">
-                Selecione sua cidade
               </option>
             )}
             {cityOptions.map((option) => (
@@ -260,91 +277,122 @@ const AddressForm = () => {
               </option>
             ))}
           </select>
+        <label className="label text-lg font-medium" htmlFor="city">
+          Cidade
         </label>
-        <label className="text-lg font-medium" htmlFor="neighborhood">
-          Bairro
+        </div>
+        <div className="relative">
           <input
             required
-            className="border-[#152128] w-full h-[2em] border-[1px] rounded-sm"
+            className="floating-input-effect peer  w-full border-[1px] rounded-sm"
             value={neighborhood}
             onChange={handleInputChange}
             type="text"
             name="neighborhood"
-            placeholder="Digite seu bairro aqui"
+            placeholder=""
           />
-        </label>
+          <label
+            className="floating-label text-lg font-medium"
+            htmlFor="neighborhood"
+          >
+            Bairro
+          </label>
+        </div>
         <div className="flex w-full gap-10">
-          <label className="text-lg font-medium w-3/4 " htmlFor="street">
-            Lougradouro
+          <div className="relative w-3/4">
             <input
               required
-              className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+              className="floating-input-effect peer  w-full border-[1px] rounded-sm"
               value={street}
               onChange={handleInputChange}
               onBlur={getCEPByAddress}
               type="text"
               name="street"
-              placeholder="Digite o nome da sua rua aqui"
+              placeholder=""
             />
-          </label>
-          <label className="text-lg font-medium w-1/4" htmlFor="street">
-            Número
+            <label
+              className="floating-label text-lg font-medium"
+              htmlFor="street"
+            >
+              Lougradouro
+            </label>
+          </div>
+          <div className="relative w-1/4">
             <input
               required
-              className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
+              className="floating-input-effect peer  w-full  border-[1px] rounded-sm"
               value={number}
               onChange={handleInputChange}
               type="text"
               name="number"
-              placeholder="Número da casa"
+              placeholder=""
             />
-          </label>
+            <label
+              className="floating-label text-lg font-medium"
+              htmlFor="street"
+            >
+              Número
+            </label>
+          </div>
         </div>
         <div className="flex w-full gap-10">
-          <label className="text-lg font-medium w-3/4 " htmlFor="street">
-            Nome do destinatário
+          <div className="relative w-3/4">
             <input
               required
-              className="border-[#152128] h-[2em] w-full border-[1px] rounded-sm"
+              className=" floating-input-effect peer w-full border-[1px] rounded-sm"
               value={recieverName}
               onChange={handleInputChange}
               type="text"
               name="recieverName"
-              placeholder="Digite o nome do destinatário aqui"
+              placeholder=""
             />
-          </label>
-          <label className="text-lg font-medium w-2/5" htmlFor="street">
-            CPF
+            <label
+              className="floating-label text-lg font-medium"
+              htmlFor="street"
+            >
+              Nome do destinatário
+            </label>
+          </div>
+          <div className="relative w-2/5">
             <input
               required
-              className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
+              className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
               value={CPFMask(CPF)}
               onChange={handleInputChange}
               type="text"
               name="CPF"
               maxLength={14}
-              placeholder="CPF do destinatário"
+              placeholder=""
             />
-          </label>
+            <label
+              className="floating-label text-lg font-medium"
+              htmlFor="street"
+            >
+              CPF
+            </label>
+          </div>
         </div>
-        <label className="text-lg font-medium w-full" htmlFor="street">
-          Apelido (opcional)
+        <div className="relative w-full">
           <input
-            className="border-[#152128] h-[2em] w-full  border-[1px] rounded-sm"
+            className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
             value={nickname}
             onChange={handleInputChange}
             type="text"
             name="nickname"
-            placeholder="Ex: Casa, trabalho..."
+            placeholder=""
           />
-        </label>
-        <button
-          type="submit"
+          <label
+            className="floating-label text-lg font-medium"
+            htmlFor="street"
+          >
+            Apelido (opcional)
+          </label>
+        </div>
+        <SubmitButton
           onClick={handleSubmit}
-          className={"button-login" + (submiting ? " brightness-75" : "")}
-        >
-          {submiting ? <LoadingSpinner /> : "Adicionar Endereço"}
-        </button>
+          loading={fetching}
+          text="Adicionar Endereço"
+        />
       </form>
     </div>
   );
