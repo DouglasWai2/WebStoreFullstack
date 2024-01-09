@@ -2,19 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo, faCloudArrowUp, faQuestion, faTag } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleInfo,
+  faCloudArrowUp,
+  faQuestion,
+  faTag,
+} from "@fortawesome/free-solid-svg-icons";
 import ProductPreview from "../../components/Store/ProductPreview";
 import { moneyMask } from "../../helpers/moneyMask";
 import SubmitButton from "../../components/shared/SubmitButton";
 
 const NewProduct = () => {
-
   const [tagsArray, setTagsArray] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [features, setFeatures] = useState([]);
   const [tags, setTags] = useState("");
-  const [price, setPrice] = useState('');
+  const [price, setPrice] = useState("");
   const [files, setFiles] = useState([]);
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
@@ -46,11 +50,11 @@ const NewProduct = () => {
     });
   };
 
-  const deleteFeature= (id)=> {
-    const newArray = array.filter(item => item.id !== id)
-    console.log(array)
+  const deleteFeature = (id) => {
+    const newArray = array.filter((item) => item.id !== id);
+    console.log(array);
     setArray(newArray);
-  }
+  };
 
   const headers = {
     "content-type": "multipart/form-data",
@@ -61,8 +65,6 @@ const NewProduct = () => {
     loading,
     error,
   } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
-
-
 
   useEffect(() => {
     setFeatures(
@@ -81,11 +83,11 @@ const NewProduct = () => {
   function handleFeatures(e) {
     setArray((s) => {
       const newArr = s.slice();
-      newArr.forEach(item => {
-        if(item.id == e.target.id){
-          item.value = e.target.value
+      newArr.forEach((item) => {
+        if (item.id == e.target.id) {
+          item.value = e.target.value;
         }
-      })
+      });
       return newArr;
     });
   }
@@ -137,7 +139,7 @@ const NewProduct = () => {
       files,
       brand,
       model,
-      price: parseFloat(price.replace('R$ ', '').replace(',', '.'))
+      price: parseFloat(price.replace("R$ ", "").replace(",", ".")),
     });
   };
 
@@ -157,7 +159,7 @@ const NewProduct = () => {
         <div className="flex flex-col gap-3 w-full">
           <div className="relative mx-4 my-2 z-0">
             <input
-              className="floating-input-effect peer"
+              className="floating-input-effect w-full peer"
               onChange={handleTitle}
               value={title}
               name="title"
@@ -171,27 +173,31 @@ const NewProduct = () => {
           <div className="relative mx-4 my-2 z-0">
             <FontAwesomeIcon
               className="absolute right-0 m-2 peer"
-              icon={faCircleInfo} />
+              icon={faCircleInfo}
+            />
             <div className="bg-white shadow-sm absolute z-40 left-[100%] w-max py-1 px-3 invisible opacity-0 peer-hover:visible peer-hover:opacity-100 duration-300">
               Especificações técnicas do produto, conteúdo da embalagem, etc...
             </div>
             <textarea
               placeholder=""
-              className="floating-input-effect peer !transition-[filter] w-full min-h-[200px] max-h-[500px]"
+              className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
               onChange={handleDescription}
               value={description}
               name="description"
               type="text"
               aria-multiline={true}
             />
-            <label className="floating-label flex w-max gap-3" htmlFor="description">
+            <label
+              className="floating-label flex w-max gap-3"
+              htmlFor="description"
+            >
               Descrição do produto
             </label>
           </div>
           <div className="relative mx-4 my-2 z-0">
             <input
               placeholder=""
-              className="floating-input-effect peer"
+              className="floating-input-effect w-full peer"
               onChange={handleBrand}
               value={brand}
               name="brand"
@@ -204,7 +210,7 @@ const NewProduct = () => {
           <div className="relative mx-4 my-2 z-0">
             <input
               placeholder=""
-              className="floating-input-effect peer"
+              className="floating-input-effect w-full peer"
               onChange={handleModel}
               value={model}
               name="model"
@@ -218,13 +224,18 @@ const NewProduct = () => {
           {array.map((item, i) => {
             return (
               <div key={i} className="relative mx-4 my-2 z-0">
-                <button onClick={(e) => {
-                  e.preventDefault()
-                  deleteFeature(item.id)
-                  }} className="absolute right-0">X</button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    deleteFeature(item.id);
+                  }}
+                  className="absolute right-0"
+                >
+                  X
+                </button>
                 <input
                   placeholder=""
-                  className="floating-input-effect peer"
+                  className="floating-input-effect w-full peer"
                   name="features"
                   onChange={handleFeatures}
                   value={item.value}
@@ -259,7 +270,7 @@ const NewProduct = () => {
           <div className="relative mx-4 my-2 z-0">
             <input
               placeholder=""
-              className="floating-input-effect peer"
+              className="floating-input-effect w-full peer"
               onKeyDown={handleTagsArray}
               onChange={handleTags}
               value={tags.replace(",", "")}
@@ -274,7 +285,7 @@ const NewProduct = () => {
           <div className="relative mx-4 my-2 z-0">
             <input
               placeholder=""
-              className="floating-input-effect peer"
+              className="floating-input-effect w-full peer"
               onChange={handlePrice}
               value={price}
               name="price"
@@ -330,7 +341,13 @@ const NewProduct = () => {
               />
             </label>
           </div>
-          <SubmitButton loading={loading} text='Cadastrar Produto' onClick={handleSubmit} />
+          <div className="h-[30px]">
+            <SubmitButton
+              loading={loading}
+              text="Cadastrar Produto"
+              onClick={handleSubmit}
+            />
+          </div>
         </div>
       </form>
       <ProductPreview

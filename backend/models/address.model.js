@@ -5,7 +5,7 @@ const AddressSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    maxlength: 8,
+    length: 9,
   },
   street: {
     type: String,
@@ -29,19 +29,19 @@ const AddressSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    maxlength: 100
+    maxlength: 100,
   },
   state: {
     type: String,
     trim: true,
     required: true,
-    maxlength: 100
+    maxlength: 100,
   },
   CPF: {
     type: String,
     trim: true,
     required: true,
-    maxlength: 11,
+    length: 14,
   },
   nickname: {
     type: String,
@@ -52,7 +52,7 @@ const AddressSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    maxlength: 100
+    maxlength: 100,
   },
   country: {
     type: String,
@@ -60,12 +60,11 @@ const AddressSchema = new mongoose.Schema({
     required: true,
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-  main:{
+  main: {
     type: Boolean,
     default: false,
-    required: true
-  }
+    required: true,
+  },
 });
-
 
 module.exports = mongoose.model("address", AddressSchema, "Adressess");

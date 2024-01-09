@@ -1,11 +1,8 @@
 export function formatPhoneNumber(numero) {
-  var telefoneFormatado;
-    telefoneFormatado =
-      "(" +
-      numero.substring(0, 2) +
-      ")" +
-      numero.substring(2, 7) +
-      "-" +
-      numero.substring(7, 11);
-    return telefoneFormatado;
+  if (!numero) return "";
+  if (typeof numero !== "string") return;
+  numero = numero.replace(/\D/g, "");
+  numero = numero.replace(/(\d{2})(\d)/, "($1)$2");
+  numero = numero.replace(/(\d{5})(\d)/, "$1-$2");
+  return numero;
 }

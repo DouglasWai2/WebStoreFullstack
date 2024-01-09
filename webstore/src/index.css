@@ -11,7 +11,7 @@
 }
 
 .button-login {
-  @apply bg-yellow-300 border-[1px] shadow-sm shadow-yellow-400 rounded-md h-[30px] w-full cursor-pointer hover:bg-yellow-400;
+  @apply bg-yellow-300 border-[1px] shadow-sm shadow-yellow-400 rounded-md h-full w-full cursor-pointer hover:bg-yellow-400;
 }
 
 .box-shadow-bottom {

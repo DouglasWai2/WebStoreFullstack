@@ -183,11 +183,10 @@ const AddressForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    cep.replace(/\D/g, "");
-    CPF.replace(/\D/g, "");
+    addressInfo.cep = cep.replace(/\D/g, "");
+    addressInfo.CPF = CPF.replace(/\D/g, "");
 
-    console.log(addressInfo);
-    // setBody({ address: addressInfo });
+    setBody({ address: addressInfo });
   };
 
   return (

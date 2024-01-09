@@ -32,8 +32,8 @@ exports.addressController = async (req, res) => {
   });
 
   try {
-    const addressess = await UserSchema.find({ _id: userid }, { address: 1 });
-    if (addressess[0].address.length === 0) {
+    const user = await UserSchema.find({ _id: userid }, { address: 1 });
+    if (user[0].address.length === 0) {
       newAddress.main = true;
     }
     await newAddress.save();
@@ -68,7 +68,9 @@ exports.sendAddressInfo = async (req, res) => {
       main,
     } = item;
 
-    let lastCPFDigits = CPF.substr(CPF.length - 4);
+    let lastCPFDigits = CPF.toString().slice(7, 11);
+
+    console.log(lastCPFDigits)
     return {
       id,
       cep,
@@ -76,7 +78,7 @@ exports.sendAddressInfo = async (req, res) => {
       number,
       neighborhood,
       city,
-      CPF: "*******" + lastCPFDigits,
+      CPF: '******' + lastCPFDigits,
       recieverName,
       nickname,
       state,

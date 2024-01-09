@@ -4,7 +4,7 @@ const UserSchema = require("../models/user.model");
 
 const verifyToken = async (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(403).send("Unauthorized");
+    return res.status(401).send("Unauthorized");
   }
 
   if (!req.cookies["refreshToken"]) {
@@ -14,8 +14,13 @@ const verifyToken = async (req, res, next) => {
   const refreshToken = req.cookies["refreshToken"];
 
   // If there's no user from given refresh token, token is already deleted (user could been hacked)
-  const foundUser = await UserSchema.findOne({ refreshTokens: refreshToken });
-  if (!foundUser) return res.status(403).send("Invalid Refresh Token");
+  try {
+    const foundUser = await UserSchema.findOne({ refreshTokens: refreshToken });
+    console.log(foundUser)
+    if (!foundUser) return
+  } catch (error) {
+    console.log(error);
+  }
 
   try {
     const refreshDecoded = jwt.verify(

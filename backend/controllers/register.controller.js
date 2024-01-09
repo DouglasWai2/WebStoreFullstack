@@ -57,7 +57,6 @@ exports.register = async (req, res) => {
 };
 
 exports.verifyEmail = async (req, res) => {
-  console.log(req.params.id )
   try {
     const user = await UserSchema.findOne({ _id: req.params.id });
     if (!user) return res.status(400).send("Invalid link");

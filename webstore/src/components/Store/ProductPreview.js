@@ -7,30 +7,26 @@ const ProductPreview = ({ files, title, features, description, price }) => {
   const [mainImage, setMainImage] = useState("");
   const [y, setY] = useState(4);
   const images = useRef(null);
-  const buttonsWrapper = useRef(null)
+  const buttonsWrapper = useRef(null);
 
   useEffect(() => {
     if (files.length) setMainImage(URL.createObjectURL(files[0]));
   }, [files]);
 
-
   function fixButtonsInsideDiv() {
-    const rect = images.current.getBoundingClientRect()
-    buttonsWrapper.current.style.top = `${rect.top}px`
+    const rect = images.current.getBoundingClientRect();
+    buttonsWrapper.current.style.top = `${rect.top}px`;
   }
 
   useEffect(() => {
     if (buttonsWrapper.current) {
-
-      window.addEventListener('scroll', fixButtonsInsideDiv)
+      window.addEventListener("scroll", fixButtonsInsideDiv);
 
       return () => {
-        window.removeEventListener('scroll', fixButtonsInsideDiv)
-      }
+        window.removeEventListener("scroll", fixButtonsInsideDiv);
+      };
     }
-  }, [files])
-
-
+  }, [files]);
 
   function handleScrollFoward(e) {
     var name = e.target.getAttribute("name");
@@ -38,23 +34,36 @@ const ProductPreview = ({ files, title, features, description, price }) => {
       if (y + 4 > images.current.children.length - 1) {
         images.current?.children[
           images.current.children.length - 2
-        ].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+        ].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
       } else {
         setY(y + 4);
-        console.log(y)
-        images.current.children[y + 4].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+        images.current.children[y + 4].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
       }
     }
 
     if (name === "backward") {
       if (y - 4 < 0) {
         images.current?.firstElementChild.scrollIntoView({
-          behavior: "smooth", block: "nearest", inline: "nearest"
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
         });
         setY(4);
       } else {
         setY(y - 4);
-        images.current.children[y - 4].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
+        images.current.children[y - 4].scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "nearest",
+        });
       }
     }
   }
@@ -121,7 +130,6 @@ const ProductPreview = ({ files, title, features, description, price }) => {
                       />
                     </div>
                   </div>
-
                 )}
               </>
             ) : (
@@ -150,9 +158,12 @@ const ProductPreview = ({ files, title, features, description, price }) => {
           <ul className="list-disc ml-7">
             {!!features.length &&
               features.map((item) => {
-                return <li key={item.id} className="text-sm mt-2">{item}</li>;
-              })
-            }
+                return (
+                  <li key={item.id} className="text-sm mt-2">
+                    {item}
+                  </li>
+                );
+              })}
           </ul>
         </div>
       </section>

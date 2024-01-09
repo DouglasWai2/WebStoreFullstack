@@ -1,15 +1,20 @@
-import React, { useEffect } from 'react'
-import LoadingSpinner from './LoadingSpinner'
+import React, { useEffect } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
-const SubmitButton = ({loading, text, onClick}) => {
+const SubmitButton = ({ loading, text, onClick }) => {
 
   return (
     <button
-    onClick={onClick}
-    className={"button-login flex justify-center items-center" + (loading && ' brightness-75')} type="submit">
-            {loading ? <LoadingSpinner /> : text}
-          </button>
-  )
-}
+      onClick={onClick}
+      className={
+        "button-login flex justify-center items-center " +
+        (loading && "brightness-75")
+      }
+      type="submit"
+    >
+      {loading ? <LoadingSpinner /> : text}
+    </button>
+  );
+};
 
-export default SubmitButton
+export default SubmitButton;

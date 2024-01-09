@@ -7,7 +7,6 @@ const { jwtExpiration,
 
 exports.refreshToken = async (req, res) => {
 
-  console.log(req)
   const refreshToken = req.cookies["refreshToken"];
   if (!refreshToken) {
     return res.status(401).send("Access Denied. No refresh token provided.");

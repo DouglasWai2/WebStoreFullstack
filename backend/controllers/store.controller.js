@@ -92,7 +92,6 @@ exports.setCpfCnpj = async (req, res) => {
 };
 
 exports.changeBanner = async (req, res) => {
-  console.log(req);
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
@@ -123,7 +122,6 @@ exports.changeBanner = async (req, res) => {
   }
 };
 exports.changeImage = async (req, res) => {
-  console.log(req);
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
