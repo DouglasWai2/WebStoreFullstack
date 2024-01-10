@@ -53,7 +53,6 @@ const NewProduct = () => {
 
   const deleteFeature = (id) => {
     const newArray = array.filter((item) => item.id !== id);
-    console.log(array);
     setArray(newArray);
   };
 
@@ -260,7 +259,7 @@ const NewProduct = () => {
             Adicionar característca
             <button
               className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-black group-hover:scale-110 
-        group-hover:rotate-180 group-hover:rounded-none transition-transform duration-200 ease-out"
+        group-hover:rotate-180 group-hover:rounded-sm transition-transform duration-200 ease-out"
             >
               <FontAwesomeIcon className="text-white" icon={faPlus} />
             </button>

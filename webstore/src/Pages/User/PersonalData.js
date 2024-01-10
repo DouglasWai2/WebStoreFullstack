@@ -48,7 +48,7 @@ const ProfilePage = () => {
     let newArr = [...editData];
     newArr[index][e.target.name] = e.target.value;
     setEditData(newArr);
-    console.log(editData)
+    console.log(editData);
   };
 
   useEffect(() => {
@@ -139,12 +139,22 @@ const ProfilePage = () => {
             Editar perfil
           </button>
         ) : (
-          <div className="h-[42px]">
-            <SubmitButton
-              onClick={handleSubmit}
-              loading={submiting}
-              text="Salvar"
-            />
+          <div className="flex flex-col items-center gap-1">
+            <div className="h-[42px] w-full">
+              <SubmitButton
+                onClick={handleSubmit}
+                loading={submiting}
+                text="Salvar"
+              />
+            </div>
+            <div
+              className="cursor-pointer text-red-600 hover:underline"
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              Cancelar
+            </div>
           </div>
         )}
       </div>
