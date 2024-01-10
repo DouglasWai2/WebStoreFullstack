@@ -58,7 +58,7 @@ const ImageMagnifier = ({ image }) => {
       }}
       onMouseMove={handleMouseHover}
       ref={imagePosition}
-      className="relative h-fit"
+      className="relative h-fit z-10"
     >
       <img
         ref={displayImage}
