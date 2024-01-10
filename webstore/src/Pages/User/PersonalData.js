@@ -30,8 +30,6 @@ const ProfilePage = () => {
 
   const { data, address, loading } = useOutletContext();
 
-  console.log(loading);
-
   // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
   function formatDate(date) {
     const splitted = date.split("-"); // the date comes in string data type and it's splitted to get day, month and year
@@ -50,7 +48,7 @@ const ProfilePage = () => {
     let newArr = [...editData];
     newArr[index][e.target.name] = e.target.value;
     setEditData(newArr);
-    console.log(editData);
+    console.log(editData)
   };
 
   useEffect(() => {
@@ -61,14 +59,15 @@ const ProfilePage = () => {
         formatedBirth = formatDate(birth);
       }
       setUserInfo([
-        { Nome: name, info: "name" },
-        { "Ultimo Nome": lastName, info: "lastName" },
-        { Email: email, info: "email" },
-        { Celular: formatPhoneNumber(phone), info: "phone" },
-        { CPF: CPFMask(cpf) || "", info: "cpf" },
+        { Nome: name, info: "name", type: "text" },
+        { "Ultimo Nome": lastName, info: "lastName", type: "text" },
+        { Email: email, info: "email", type: "email" },
+        { Celular: formatPhoneNumber(phone), info: "phone", type: "text" },
+        { CPF: CPFMask(cpf) || "", info: "cpf", type: "text" },
         {
           "Data de Nascimento": formatedBirth || "",
           info: "birth",
+          type: "date",
         },
       ]);
     }
@@ -76,10 +75,7 @@ const ProfilePage = () => {
     if (response && !loading) {
       window.location.reload();
     }
-  }, [
-    data,
-    response
-  ]);
+  }, [data, response]);
 
   function handleSubmit() {
     const cpf = userInfo.find((element) => element.info === "cpf");
@@ -89,14 +85,13 @@ const ProfilePage = () => {
     let newArr = [...editData];
     newArr[indexCPF].CPF = newArr[indexCPF].CPF.replace(/\D/g, "");
     newArr[indexPhone].Celular = newArr[indexPhone].Celular.replace(/\D/g, "");
-    console.log(newArr);
     setEditData(newArr);
     setMethod("POST");
   }
 
   return (
     <div className="w-[80%] border-[2px] rounded-md overflow-hidden shadow-md">
-      {!data && !address ? (
+      {!data || !address ? (
         <SkeletonData />
       ) : (
         <table className="w-full">

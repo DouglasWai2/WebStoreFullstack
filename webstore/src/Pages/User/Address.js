@@ -10,7 +10,18 @@ const Address = () => {
   const { address, fetching } = useOutletContext();
 
   return (
-    <div className="w-full flex gap-5 flex-wrap">
+    <div className="w-full flex gap-5 flex-wrap px-20">
+      {address ? (
+        address.length === 0 ? (
+          ""
+        ) : (
+          address.map((address) => {
+            return <AddressCard key={address.nickname} address={address} />;
+          })
+        )
+      ) : (
+        <SkeletonAddressCard />
+      )}
       <div
         onClick={() => navigate("/user/new-address")}
         className="
@@ -24,17 +35,6 @@ const Address = () => {
           size="2xl"
         />
       </div>
-      {address ? (
-        address.length === 0 ? (
-          ""
-        ) : (
-          address.map((address) => {
-            return <AddressCard key={address.nickname} address={address} />;
-          })
-        )
-      ) : (
-        <SkeletonAddressCard />
-      )}
     </div>
   );
 };

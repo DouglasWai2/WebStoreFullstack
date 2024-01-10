@@ -2,8 +2,8 @@ import { NavLink } from "react-router-dom";
 
 const SideNav = () => {
   return (
-    <aside>
-      <ul className="flex flex-col gap-4 text-lg w-full">
+    <aside className="">
+      <ul className="flex flex-col gap-4 text-lg w-full border-r-2 border-gray-200">
         <NavLink
           className={({ isActive }) => (isActive ? "active-li" : "unactive-li")}
           to="profile"

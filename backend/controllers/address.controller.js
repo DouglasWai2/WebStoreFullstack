@@ -70,7 +70,7 @@ exports.sendAddressInfo = async (req, res) => {
 
     let lastCPFDigits = CPF.toString().slice(7, 11);
 
-    console.log(lastCPFDigits)
+    console.log(lastCPFDigits);
     return {
       id,
       cep,
@@ -78,7 +78,7 @@ exports.sendAddressInfo = async (req, res) => {
       number,
       neighborhood,
       city,
-      CPF: '******' + lastCPFDigits,
+      CPF: "******" + lastCPFDigits,
       recieverName,
       nickname,
       state,
@@ -95,28 +95,33 @@ exports.sendAddressInfo = async (req, res) => {
 };
 
 exports.updateMainAddress = async (req, res) => {
-    const addressId = req.params.address_id
-    const userId = req.userInfo.id
-try {
-    const foundUserAddressess =  await AddressSchema.findOneAndUpdate({user: userId, main: true}, {main: false} )
-    const alteredAddress = await AddressSchema.findOneAndUpdate({_id: addressId}, {main: true})
-    res.status(200).send("Main address altered successfully")
-
-} catch (error) {
-    console.log(error)
-}
-
+  const addressId = req.params.address_id;
+  const userId = req.userInfo.id;
+  try {
+    const foundUserAddressess = await AddressSchema.findOneAndUpdate(
+      { user: userId, main: true },
+      { main: false }
+    );
+    const alteredAddress = await AddressSchema.findOneAndUpdate(
+      { _id: addressId },
+      { main: true }
+    );
+    res.status(200).send("Main address altered successfully");
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.deleteAddress = async (req, res) => {
-    const addressId = req.params.address_id
-    const userId = req.userInfo.id
-    try {
-        await UserSchema.findByIdAndUpdate(userId, {$pull: {address:{ $in: [addressId]}}})
-        const alteredAddress = await AddressSchema.findByIdAndDelete(addressId)
-        res.status(200).send("Address deleted successfully")
-    
-    } catch (error) {
-        console.log(error)
-    }
-}
+  const addressId = req.params.address_id;
+  const userId = req.userInfo.id;
+  try {
+    await UserSchema.findByIdAndUpdate(userId, {
+      $pull: { address: { $in: [addressId] } },
+    });
+    const alteredAddress = await AddressSchema.findByIdAndDelete(addressId);
+    res.status(200).send("Address deleted successfully");
+  } catch (error) {
+    console.log(error);
+  }
+};

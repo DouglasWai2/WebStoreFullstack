@@ -17,7 +17,7 @@ const User = () => {
                 <div className="flex">
                     <SideNav />
                     <div className="w-full flex justify-center px-9">
-                        <Outlet context={{data, address, fetching}}/>
+                        <Outlet context={{data, address, loading, fetching}}/>
                     </div>
                 </div>
             </main>

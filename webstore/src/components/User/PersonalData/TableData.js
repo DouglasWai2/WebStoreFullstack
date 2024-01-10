@@ -17,23 +17,15 @@ const TableData = ({ item, editData, editForm, handleChange, index }) => {
           name={Object.keys(item)[0]}
           onChange={(e) => handleChange(e, index)}
           value={
-            Object.keys(item)[0] === "Celular"
-              ? formatPhoneNumber(Object.values(editData)[0])
-              : Object.keys(item)[0] === "CPF"
-              ? CPFMask(Object.values(editData)[0])
-              : Object.values(editData)[0]
+            (item.Celular && formatPhoneNumber(editData.Celular)) ||
+            (item.CPF && CPFMask(editData.CPF))
           }
-          type={
-            Object.keys(item)[0] === "Data de Nascimento"
-              ? "date"
-              : Object.keys(item)[0] === "Email"
-              ? "email"
-              : "text"
-          }
+          type={item.type}
+          className="border-[1px] border-gray-400 focus:bg-gray-200 transition-colors duration-200 p-1 ml-5"
         />
       ) : (
         <>
-          <span className="ml-5">
+          <span className="ml-5 p-1">
             {!Object.values(item)[0]
               ? (Object.keys(item)[0] === "Data de Nascimento"
                   ? "Insira uma "
