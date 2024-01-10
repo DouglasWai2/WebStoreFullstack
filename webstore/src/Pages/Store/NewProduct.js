@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleInfo,
   faCloudArrowUp,
+  faPlus,
   faQuestion,
   faTag,
 } from "@fortawesome/free-solid-svg-icons";
@@ -154,200 +155,211 @@ const NewProduct = () => {
   }, [error, response]);
 
   return (
-    <div className="flex justify-center py-10 gap-8">
-      <form className="flex shadow w-1/2 py-5 px-4 ">
-        <div className="flex flex-col gap-3 w-full">
-          <div className="relative mx-4 my-2 z-0">
-            <input
-              className="floating-input-effect w-full peer"
-              onChange={handleTitle}
-              value={title}
-              name="title"
-              type="text"
-              placeholder=""
-            />
-            <label className="floating-label" htmlFor="title">
-              Título
-            </label>
+    <div className="flex justify-center py-10 px-10 gap-8">
+      <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 ">
+        <div className="relative  my-2 z-0">
+          <input
+            className="floating-input-effect w-full peer"
+            onChange={handleTitle}
+            value={title}
+            name="title"
+            type="text"
+            placeholder=""
+          />
+          <label className="floating-label" htmlFor="title">
+            Título
+          </label>
+        </div>
+        <div className="relative  my-2 z-10">
+          <FontAwesomeIcon
+            className="absolute right-0 m-2 peer"
+            icon={faCircleInfo}
+          />
+          <div className="bg-white shadow-sm absolute left-[100%] w-[200px] py-1 px-3 invisible opacity-0 peer-hover:visible peer-hover:opacity-100 duration-300">
+            Especificações técnicas do produto, conteúdo da embalagem, guia de
+            tamanhos, etc...
           </div>
-          <div className="relative mx-4 my-2 z-0">
-            <FontAwesomeIcon
-              className="absolute right-0 m-2 peer"
-              icon={faCircleInfo}
-            />
-            <div className="bg-white shadow-sm absolute z-40 left-[100%] w-max py-1 px-3 invisible opacity-0 peer-hover:visible peer-hover:opacity-100 duration-300">
-              Especificações técnicas do produto, conteúdo da embalagem, etc...
-            </div>
-            <textarea
-              placeholder=""
-              className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
-              onChange={handleDescription}
-              value={description}
-              name="description"
-              type="text"
-              aria-multiline={true}
-            />
-            <label
-              className="floating-label flex w-max gap-3"
-              htmlFor="description"
-            >
-              Descrição do produto
-            </label>
-          </div>
-          <div className="relative mx-4 my-2 z-0">
-            <input
-              placeholder=""
-              className="floating-input-effect w-full peer"
-              onChange={handleBrand}
-              value={brand}
-              name="brand"
-              type="text"
-            />
-            <label className="floating-label" htmlFor="brand">
-              Marca
-            </label>
-          </div>
-          <div className="relative mx-4 my-2 z-0">
-            <input
-              placeholder=""
-              className="floating-input-effect w-full peer"
-              onChange={handleModel}
-              value={model}
-              name="model"
-              type="text"
-            />
-            <label className="floating-label" htmlFor="model">
-              Modelo
-            </label>
-          </div>
+          <textarea
+            placeholder=""
+            className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
+            onChange={handleDescription}
+            value={description}
+            name="description"
+            type="text"
+            aria-multiline={true}
+          />
+          <label
+            className="floating-label flex w-max gap-3"
+            htmlFor="description"
+          >
+            Descrição do produto
+          </label>
+        </div>
+        <div className="relative  my-2 z-0">
+          <input
+            placeholder=""
+            className="floating-input-effect w-full peer"
+            onChange={handleBrand}
+            value={brand}
+            name="brand"
+            type="text"
+          />
+          <label className="floating-label" htmlFor="brand">
+            Marca
+          </label>
+        </div>
+        <div className="relative  my-2 z-0">
+          <input
+            placeholder=""
+            className="floating-input-effect w-full peer"
+            onChange={handleModel}
+            value={model}
+            name="model"
+            type="text"
+          />
+          <label className="floating-label" htmlFor="model">
+            Modelo
+          </label>
+        </div>
+        <span className="text-sm">
           Escreva caracteríscas marcantes do seu produto
-          {array.map((item, i) => {
-            return (
-              <div key={i} className="relative mx-4 my-2 z-0">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    deleteFeature(item.id);
-                  }}
-                  className="absolute right-0"
-                >
-                  X
-                </button>
-                <input
-                  placeholder=""
-                  className="floating-input-effect w-full peer"
-                  name="features"
-                  onChange={handleFeatures}
-                  value={item.value}
-                  id={item.id}
-                  type={item.type}
-                  size="40"
-                />
-                <label className="floating-label" htmlFor="features">
-                  Característica {i + 1}
-                </label>
-              </div>
-            );
-          })}
-          <button onClick={addFeature}>+</button>
-          {tagsArray.map((item) => {
-            return (
-              <div
-                className="bg-gray-300 text-white w-fit rounded-full px-4 py-1 flex gap-2 items-center "
-                key={item}
+        </span>
+        {array.map((item, i) => {
+          return (
+            <div key={i} className="relative my-2 z-0">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  deleteFeature(item.id);
+                }}
+                className="absolute h-full px-2 right-0"
               >
-                <FontAwesomeIcon className="text-white" icon={faTag} />
-                {item}
-                <button
-                  className="text-white"
-                  onClick={() => handleClick(item)}
-                >
-                  X
-                </button>
-              </div>
-            );
-          })}
-          <div className="relative mx-4 my-2 z-0">
-            <input
-              placeholder=""
-              className="floating-input-effect w-full peer"
-              onKeyDown={handleTagsArray}
-              onChange={handleTags}
-              value={tags.replace(",", "")}
-              name="tags"
-              // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
-              type="text"
-            />
-            <label className="floating-label" htmlFor="tags">
-              Etiquetas (para encontrarem seu produto)
-            </label>
-          </div>
-          <div className="relative mx-4 my-2 z-0">
-            <input
-              placeholder=""
-              className="floating-input-effect w-full peer"
-              onChange={handlePrice}
-              value={price}
-              name="price"
-              type="text"
-            />
-            <label className="floating-label" htmlFor="price">
-              Preço base
-            </label>
-          </div>
-          <div className="mx-4 my-2 z-0 flex h-40">
-            <label
-              className={
-                "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
-                (dropZone && " brightness-75")
-              }
-              htmlFor="storeImage"
-              name="storeImage"
-              onDragOver={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setDropZone(true);
-              }}
-              onDragLeave={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setDropZone(false);
-              }}
-              onDrop={handleOnDrop}
-            >
-              {" "}
-              <FontAwesomeIcon
-                icon={faCloudArrowUp}
-                className={dropZone ? "animate-bounce" : ""}
-              />{" "}
-              {dropZone ? (
-                "Solte o arquivo para fazer upload"
-              ) : (
-                <>
-                  Imagens do produto
-                  <span className="text-xs text-center">
-                    Clique aqui ou arraste a imagem até esta área
-                  </span>
-                </>
-              )}
+                X
+              </button>
               <input
-                onChange={handleFiles}
-                hidden
-                multiple="multiple"
-                type="file"
-                name="storeImage"
-                id="storeImage"
-                accept="image/*"
+                placeholder=""
+                className="floating-input-effect w-full peer"
+                name="features"
+                onChange={handleFeatures}
+                value={item.value}
+                id={item.id}
+                type={item.type}
+                size="40"
               />
-            </label>
+              <label className="floating-label" htmlFor="features">
+                Característica {i + 1}
+              </label>
+            </div>
+          );
+        })}
+        <div className="flex items-center justify-center text-sm">
+          <div
+            className="flex items-center justify-center group cursor-pointer gap-2"
+            onClick={addFeature}
+          >
+            Adicionar característca
+            <button
+              className="w-[24px] h-[24px] flex items-center justify-center rounded-full bg-black group-hover:scale-110 
+        group-hover:rotate-180 group-hover:rounded-none transition-transform duration-200 ease-out"
+            >
+              <FontAwesomeIcon className="text-white" icon={faPlus} />
+            </button>
           </div>
-          <div className="h-[30px]">
-            <SubmitButton
-              loading={loading}
-              text="Cadastrar Produto"
-              onClick={handleSubmit}
+        </div>
+        {tagsArray.map((item) => {
+          return (
+            <div
+              className="bg-gray-300 text-white w-fit rounded-full px-4 py-1 flex gap-2 items-center "
+              key={item}
+            >
+              <FontAwesomeIcon className="text-white" icon={faTag} />
+              {item}
+              <button className="text-white" onClick={() => handleClick(item)}>
+                X
+              </button>
+            </div>
+          );
+        })}
+        <div className="relative  my-2 z-0">
+          <input
+            placeholder=""
+            className="floating-input-effect w-full peer"
+            onKeyDown={handleTagsArray}
+            onChange={handleTags}
+            value={tags.replace(",", "")}
+            name="tags"
+            // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
+            type="text"
+          />
+          <label className="floating-label" htmlFor="tags">
+            Etiquetas (para encontrarem seu produto)
+          </label>
+        </div>
+        <div className="relative  my-2 z-0">
+          <input
+            placeholder=""
+            className="floating-input-effect w-full peer"
+            onChange={handlePrice}
+            value={price}
+            name="price"
+            type="text"
+          />
+          <label className="floating-label" htmlFor="price">
+            Preço base
+          </label>
+        </div>
+        <div className=" my-2 z-0 flex h-40">
+          <label
+            className={
+              "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
+              (dropZone && " brightness-75")
+            }
+            htmlFor="storeImage"
+            name="storeImage"
+            onDragOver={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setDropZone(true);
+            }}
+            onDragLeave={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              setDropZone(false);
+            }}
+            onDrop={handleOnDrop}
+          >
+            {" "}
+            <FontAwesomeIcon
+              icon={faCloudArrowUp}
+              className={dropZone ? "animate-bounce" : ""}
+            />{" "}
+            {dropZone ? (
+              "Solte o arquivo para fazer upload"
+            ) : (
+              <>
+                Imagens do produto
+                <span className="text-xs text-center">
+                  Clique aqui ou arraste a imagem até esta área
+                </span>
+              </>
+            )}
+            <input
+              onChange={handleFiles}
+              hidden
+              multiple="multiple"
+              type="file"
+              name="storeImage"
+              id="storeImage"
+              accept="image/*"
             />
-          </div>
+          </label>
+        </div>
+        <div className="h-[30px]">
+          <SubmitButton
+            loading={loading}
+            text="Cadastrar Produto"
+            onClick={handleSubmit}
+          />
         </div>
       </form>
       <ProductPreview

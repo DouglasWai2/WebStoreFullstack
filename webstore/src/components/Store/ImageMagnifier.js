@@ -15,7 +15,9 @@ const ImageMagnifier = ({ image }) => {
 
     const cx = zoomedImage?.offsetWidth / lens.current.offsetWidth;
     const cy = zoomedImage?.offsetHeight / lens.current.offsetHeight;
-    zoomedImage.style.backgroundSize = `${imgWrapper?.width * cx}px ${imgWrapper?.height * cy}px`;
+    zoomedImage.style.backgroundSize = `${imgWrapper?.width * cx}px ${
+      imgWrapper?.height * cy
+    }px`;
 
     x =
       e.pageX -
@@ -40,8 +42,9 @@ const ImageMagnifier = ({ image }) => {
       y,
     });
 
-    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${cursorPosition.y * cy
-      }px`;
+    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${
+      cursorPosition.y * cy
+    }px`;
   };
   return (
     <div
@@ -57,7 +60,11 @@ const ImageMagnifier = ({ image }) => {
       ref={imagePosition}
       className="relative h-fit"
     >
-      <img ref={displayImage} className="object-contain max-w-[578px] max-h-[432px]" src={image} />
+      <img
+        ref={displayImage}
+        className="object-contain max-w-[578px] max-h-[432px]"
+        src={image}
+      />
 
       {
         <>
