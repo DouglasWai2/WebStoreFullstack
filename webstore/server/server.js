@@ -8,26 +8,26 @@ import ReactDOMServer from "react-dom/server";
 import App from "../src/App";
 
 const app = express();
-const PORT = 8000
+const PORT = 8000;
 
-app.use("^/$", (req, res, next) => {
-  fs.readFile(path.resolve("./build/index.html"), "utf-8", (err, data) => {
+app.get('/', (req, res) => {
+  const app = ReactDOMServer.renderToString(<App />);
+  const indexFile = path.resolve('./dist/index.html');
+
+  fs.readFile(indexFile, 'utf8', (err, data) => {
     if (err) {
-      console.log(err);
-      return res.status(500).send("error");
+      console.error('Something went wrong:', err);
+      return res.status(500).send('Oops, better luck next time!');
     }
 
     return res.send(
-      data.replace(
-        '<div id="root"></div>',
-        `<div id="root">${ReactDOMServer.renderToString(<App />)}</div>`
-      )
+      data.replace('<div id="root"></div>', `<div id="root">${app}</div>`)
     );
   });
 });
 
-app.use(express.static(path.resolve(__dirname, '..', 'build')))
+app.use(express.static('./dist'));
 
 app.listen(PORT, () => {
-    console.log("App listening on port " + PORT + "...")
-})
+  console.log(`Server is listening on port ${PORT}`);
+});

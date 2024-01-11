@@ -1,4 +1,4 @@
-import Logo from "../logo-no-background-2.svg";
+// import Logo from "../logo-no-background-2.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleExclamation,
@@ -77,7 +77,7 @@ const LoginForm = () => {
       )}
       <div className="w-[500px] rounded-lg shadow-md p-8 py-24">
         <a href="/">
-          <img src={Logo} />
+          {/* <img src={Logo} /> */}
           {/* <Logo /> */}
         </a>
         <form

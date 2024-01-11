@@ -1,4 +1,4 @@
-import logo from "../logo-no-background.svg?url";
+import logo from "../logo-no-background.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,
@@ -14,9 +14,11 @@ import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 import React from "react";
 
 const Navbar = ({ data, address, toggleCard, setToggleCard }) => {
-  const loggedIn = window.localStorage.getItem("LoggedIn");
-  const isVerified = window.localStorage.getItem("verified");
+  // const loggedIn = window.localStorage.getItem("LoggedIn");
+  // const isVerified = window.localStorage.getItem("verified");
   // const [toggleCard, setToggleCard] = useState(false);
+  const loggedIn = false
+  const isVerified = false
   const [yourAddress, setYourAddress] = useState(null);
 
   useEffect(() => {

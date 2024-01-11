@@ -1,7 +1,7 @@
 import InputMask from "react-input-mask";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../logo-no-background-2.svg";
+// import Logo from "../logo-no-background-2.svg";
 import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
@@ -101,7 +101,7 @@ const RegisterForm = () => {
         )}
         <a href="/">
           {/* <Logo /> */}
-          <img className="w-[200px] absolute top-5" src={Logo} alt="logo" />
+          {/* <img className="w-[200px] absolute top-5" src={Logo} alt="logo" /> */}
         </a>
         <form
           onSubmit={handleInputChange}
