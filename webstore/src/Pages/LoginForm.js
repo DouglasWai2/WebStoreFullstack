@@ -4,7 +4,7 @@ import {
   faCircleExclamation,
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../helpers/useFetchApi";
 import SubmitButton from '../components/shared/SubmitButton'
@@ -78,6 +78,7 @@ const LoginForm = () => {
       <div className="w-[500px] rounded-lg shadow-md p-8 py-24">
         <a href="/">
           <img src={Logo} />
+          {/* <Logo /> */}
         </a>
         <form
           className="flex flex-col justify-center gap-8 relative"

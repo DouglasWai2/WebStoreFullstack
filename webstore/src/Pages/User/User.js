@@ -1,5 +1,6 @@
 import SideNav from "../../components/User/SideNav";
 import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
+import React from "react";
 
 const User = () => {
     const navigate = useNavigate()

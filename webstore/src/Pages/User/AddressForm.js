@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 import ErrorCard from "../../components/shared/ErrorCard";
 import SuccessCard from "../../components/shared/SuccessCard";
@@ -267,8 +267,7 @@ const AddressForm = () => {
                 Selecione seu estado primeiro...
               </option>
             ) : (
-              <option value="" key="placeholder">
-              </option>
+              <option value="" key="placeholder"></option>
             )}
             {cityOptions.map((option) => (
               <option key={option} value={option}>
@@ -276,9 +275,9 @@ const AddressForm = () => {
               </option>
             ))}
           </select>
-        <label className="label text-lg font-medium" htmlFor="city">
-          Cidade
-        </label>
+          <label className="label text-lg font-medium" htmlFor="city">
+            Cidade
+          </label>
         </div>
         <div className="relative">
           <input

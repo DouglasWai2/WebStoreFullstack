@@ -1,3 +1,5 @@
+import React from "react";
+
 const LoadingSpinner = () => {
   return (
     <div className="brightness-105 text-center w-fit" aria-label="Loading..." role="status">

@@ -1,4 +1,4 @@
-import "./App.css";
+import React from "react";
 import Home from "./Pages/Home";
 import LoginForm from "./Pages/LoginForm";
 import RegisterForm from "./Pages/RegisterForm";
@@ -25,10 +25,10 @@ import StoreAddress from "./Pages/Store/StoreAddress";
 import NewProduct from "./Pages/Store/NewProduct";
 
 function App() {
-const router = createBrowserRouter(
+  const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<Home />}>
+        <Route exact path="/" element={<Home />}>
           <Route path="store" element={<Merchant />}>
             <Route path="signup" element={<RegisterStore />} />
             <Route path="my-store" element={<MyStore />}>

@@ -1,5 +1,5 @@
 import InputMask from "react-input-mask";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../logo-no-background-2.svg";
 import RegisterRegex from "../components/RegisterForm/RegisterRegex";
@@ -100,6 +100,7 @@ const RegisterForm = () => {
           </div>
         )}
         <a href="/">
+          {/* <Logo /> */}
           <img className="w-[200px] absolute top-5" src={Logo} alt="logo" />
         </a>
         <form

@@ -1,3 +1,5 @@
+import React from "react";
+
 const Terms = () => {
     return(
         <main className="bg-[#F9F7F1] w-screen flex flex-col justify-center p-10 px-[150px] gap-7">

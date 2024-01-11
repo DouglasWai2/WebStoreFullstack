@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
 import TableData from "../../components/User/PersonalData/TableData";

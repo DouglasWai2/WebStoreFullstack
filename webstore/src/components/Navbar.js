@@ -1,4 +1,4 @@
-import Logo from "../logo-no-background.svg";
+import logo from "../logo-no-background.svg?url";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLocationDot,
@@ -11,19 +11,19 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
+import React from "react";
 
-const Navbar = ({data, address, toggleCard, setToggleCard}) => {
+const Navbar = ({ data, address, toggleCard, setToggleCard }) => {
   const loggedIn = window.localStorage.getItem("LoggedIn");
   const isVerified = window.localStorage.getItem("verified");
   // const [toggleCard, setToggleCard] = useState(false);
   const [yourAddress, setYourAddress] = useState(null);
 
-
-  useEffect(()=> {
-    if(address){
-      setYourAddress(address.filter(item => item.main))
+  useEffect(() => {
+    if (address) {
+      setYourAddress(address.filter((item) => item.main));
     }
-  }, [address])
+  }, [address]);
 
   function useOutsideAlerter(ref) {
     useEffect(() => {
@@ -44,16 +44,16 @@ const Navbar = ({data, address, toggleCard, setToggleCard}) => {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
 
-
   return (
     <header>
       <nav>
         <div className="w-full h-[9vh] bg-[#152128] py-2 px-4 flex items-center justify-between text-white">
           <a href="/">
-            <img className="h-[35px]" alt="logo" src={Logo} />
+            {/* <Logo /> */}
+            <img className="h-[35px]" alt="logo" src={logo} />
           </a>
           <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt]">
-            {loggedIn === 'true' ? (
+            {loggedIn === "true" ? (
               !yourAddress ? (
                 <SkeletonNavAddress />
               ) : yourAddress.length > 0 ? (
@@ -67,8 +67,8 @@ const Navbar = ({data, address, toggleCard, setToggleCard}) => {
                     <span className="text-white text-xs">
                       {" "}
                       {yourAddress[0].recieverName.split(" ")[0]} em{" "}
-                      {yourAddress[0].street} - N° {yourAddress[0].number} <br></br>{" "}
-                      CEP: {yourAddress[0].cep}
+                      {yourAddress[0].street} - N° {yourAddress[0].number}{" "}
+                      <br></br> CEP: {yourAddress[0].cep}
                     </span>
                   </p>
                 </>
@@ -125,7 +125,7 @@ const Navbar = ({data, address, toggleCard, setToggleCard}) => {
               />
             </div>
             {toggleCard ? (
-              loggedIn === 'true' ? (
+              loggedIn === "true" ? (
                 // if user is logged in, render this
                 <div
                   ref={wrapperRef}
