@@ -12,8 +12,7 @@ import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 
-const Navbar = ({data, address, toggleCard, setToggleCard}) => {
-  const loggedIn = window.localStorage.getItem("LoggedIn");
+const Navbar = ({data, address, toggleCard, setToggleCard }) => {
   const isVerified = window.localStorage.getItem("verified");
   // const [toggleCard, setToggleCard] = useState(false);
   const [yourAddress, setYourAddress] = useState(null);
@@ -53,7 +52,7 @@ const Navbar = ({data, address, toggleCard, setToggleCard}) => {
             <img className="h-[35px]" alt="logo" src={Logo} />
           </a>
           <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt]">
-            {loggedIn === 'true' ? (
+            {data ? (
               !yourAddress ? (
                 <SkeletonNavAddress />
               ) : yourAddress.length > 0 ? (
@@ -125,7 +124,7 @@ const Navbar = ({data, address, toggleCard, setToggleCard}) => {
               />
             </div>
             {toggleCard ? (
-              loggedIn === 'true' ? (
+              data ? (
                 // if user is logged in, render this
                 <div
                   ref={wrapperRef}

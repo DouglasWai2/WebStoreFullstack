@@ -1,19 +1,12 @@
 import Navbar from "../components/Navbar";
 import { Outlet } from "react-router-dom";
 import { useFetchApi } from "../helpers/useFetchApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "react-router-dom";
 import TopBarProgress from "react-topbar-progress-indicator";
 
-const Home = () => {
-  const isVerified = window.localStorage.getItem("verified");
-  const navigation = useNavigation();
+const Home = ({user, address, loading, fetching, loggedIn}) => {
   const [toggleCard, setToggleCard] = useState(false);
-  const { data, loading, error } = useFetchApi("/api/user", "GET");
-  const { data: address, loading: fetching } = useFetchApi(
-    "/api/address",
-    "GET"
-  );
 
   TopBarProgress.config({
     barColors: {
@@ -30,11 +23,12 @@ const Home = () => {
       <Navbar
         toggleCard={toggleCard}
         setToggleCard={setToggleCard}
-        data={data}
+        data={user}
         address={address}
+        loggedIn={loggedIn}
       />
       <main className={"w-full h-full" + (toggleCard ? " brightness-50" : "")}>
-        <Outlet context={{ data, address, fetching, loading }} />
+        <Outlet context={{ user, address, fetching, loading }} />
       </main>
     </>
   );

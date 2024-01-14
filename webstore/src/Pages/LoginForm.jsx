@@ -5,7 +5,7 @@ import {
   faTriangleExclamation,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useHistory } from "react-router-dom";
 import { useFetchApi } from "../helpers/useFetchApi";
 import SubmitButton from '../components/shared/SubmitButton'
 
@@ -36,16 +36,14 @@ const LoginForm = () => {
     }
     if (userData?.authorization) {
       window.localStorage.setItem("accessToken", userData.authorization);
-      window.localStorage.setItem("LoggedIn", true);
-      window.localStorage.setItem("name", userData.name);
-      window.localStorage.setItem("lastName", userData.lastName);
-      if (userData.isVerfied) {
-        window.localStorage.setItem("verified", "true");
-      } else {
-        window.localStorage.setItem("verified", "false");
-      }
+      document.cookie = "loggedin=True; path=/"
+      // if (userData.isVerfied) {
+      //   window.localStorage.setItem("verified", "true");
+      // } else {
+      //   window.localStorage.setItem("verified", "false");
+      // }
 
-      navigate("/");
+      navigate(-1, {replace: true});
     }
   }, [error, userData]);
 

@@ -6,10 +6,7 @@ export async function logOut() {
         withCredentials: true,
       });
       window.localStorage.removeItem("accessToken");
-      window.localStorage.removeItem("name");
-      window.localStorage.removeItem("lastName");
-      window.localStorage.setItem("LoggedIn", false);
-      window.localStorage.removeItem("verified");
+      document.cookie = 'loggedin=True; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
       window.localStorage.removeItem("role");
       window.location.href = "/";
     } catch (error) {

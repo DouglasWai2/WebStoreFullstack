@@ -23,14 +23,56 @@ import RegisterStore from "./Pages/Store/RegisterStore";
 import MyStore from "./Pages/Store/MyStore";
 import StoreAddress from "./Pages/Store/StoreAddress";
 import NewProduct from "./Pages/Store/NewProduct";
+import { useFetchApi } from "./helpers/useFetchApi";
+import { useEffect, useState } from "react";
 
 function App() {
-const router = createBrowserRouter(
+  const [userUrl, setUserUrl] = useState(null);
+  const [addressUrl, setAddressUrl] = useState(null);
+
+  //Use this function to retrieve cookies by their names
+  function getCookie(name) {
+    var re = new RegExp(name + "=([^;]+)");
+    var value = re.exec(document.cookie);
+    return value != null ? unescape(value[1]) : null;
+  }
+  const loggedIn = getCookie("loggedin");
+  
+ useEffect(() => {
+
+    if (!loggedIn) {
+      return ;
+    } else {
+      setUserUrl("/api/user");
+      setAddressUrl("/api/address");
+    }
+  }, []);
+  const { data, loading, error } = useFetchApi(userUrl, "GET");
+  const { data: address, loading: fetching } = useFetchApi(addressUrl, "GET");
+
+  console.log("User: " + data)
+  console.log(loading)
+
+
+  const router = createBrowserRouter(
     createRoutesFromElements(
       <>
-        <Route path="/" element={<Home />}>
+        <Route
+          path="/"
+          element={
+            <Home
+              user={data}
+              address={address}
+              loading={loading}
+              fetching={fetching}
+              loggedIn={loggedIn}
+            />
+          }
+        >
+          <Route path="store/:storeName/:storeId" element={<MyStore />} />
           <Route path="store" element={<Merchant />}>
             <Route path="signup" element={<RegisterStore />} />
+
             <Route path="my-store" element={<MyStore />}>
               <Route path="address" element={<StoreAddress />} />
             </Route>

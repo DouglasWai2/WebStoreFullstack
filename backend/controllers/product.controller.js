@@ -43,3 +43,7 @@ exports.addProduct = async (req, res) => {
     });
   }
 };
+
+exports.allProducts = async (req, res) => {
+  console.log('teste')
+}

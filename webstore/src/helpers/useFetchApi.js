@@ -1,9 +1,11 @@
 import api from "./api";
 import { useEffect, useState, useCallback } from "react";
 
+
+// Custom hook for API calls
 export const useFetchApi = (path, method, body, config) => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
 
   const fetchApi = useCallback(
@@ -12,24 +14,24 @@ export const useFetchApi = (path, method, body, config) => {
       try {
         const response =
           method === "GET"
-            ? path && (await api.get("http://localhost:5000" + path))
-            : method === "POST"
+            ? path && (await api.get("http://localhost:5000" + path)) // If method is GET, body isn't needed
+            : method === "POST" // If method is POST and body isn't undefined, API can be requested with POST method
             ? path &&
-              body &&
+              body && 
               (await api.post(
                 "http://localhost:5000" + path,
                 body,
-                config ? { headers: config } : ""
-              ))
+                config ? { headers: config } : "" // In case there is headers setted it will be passed in this hook params 
+                ))                                //If there's no config setted, default headers will be used        
             : null;
         const data = await response?.data;
         setData(data);
       } catch (e) {
-        setError(e.response.data);
+        setError(e.response.data); // Return error
       } finally {
         setLoading(false);
       }
-      if (error) {
+      if (error) { // To avoid infinite api call loop, return if error
         return;
       }
     },

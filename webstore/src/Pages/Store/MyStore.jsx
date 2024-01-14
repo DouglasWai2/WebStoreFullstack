@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,6 +16,9 @@ import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 
 const MyStore = () => {
+  const { user } = useOutletContext();
+  const { storeName, storeId } = useParams();
+
   const location = useLocation();
   const [storeInfo, setStoreInfo] = useState({
     storeName: "",
@@ -36,7 +45,20 @@ const MyStore = () => {
   const [bannerLink, setBannerLink] = useState("");
   const [imageEdit, setImageEdit] = useState("");
   const [imageLink, setImageLink] = useState("");
-  const { data, loading, error } = useFetchApi("/api/store/my-store", "GET");
+  const [url, setUrl] = useState(null);
+  const [productsUrl, setProductsUrl] = useState(null);
+
+  useEffect(() => {
+    if (!user && !loading) {
+      setUrl(`/api/store/${storeName}/${storeId}`);
+      setProductsUrl(`/api/catalog/all-products/${storeId}`)
+    } else if(user && loading === false) {
+      console.log("User existe");
+      setUrl(`/api/store/my-store`);
+    }
+  }, [user]);
+
+  const { data, loading, error } = useFetchApi(url, "GET");
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
     "/api/store/change-banner",
@@ -66,10 +88,8 @@ const MyStore = () => {
     setMethod("POST");
   }
 
-  console.log(loading)
-
-  return location.pathname === "/store/my-store" ? (
-    <>
+  return location.pathname !== "/store/address" ? (
+    <div className="px-[10%]">
       {loading && <TopBarProgress />}
       <div className="flex justify-center">
         <div className="w-[1546px] bg-white">
@@ -96,7 +116,6 @@ const MyStore = () => {
                   />
 
                   <div className="h-full flex justify-center overflow-hidden">
-
                     <img
                       alt="store banner"
                       className="w-full object-cover"
@@ -104,40 +123,40 @@ const MyStore = () => {
                         !bannerLink ? storeInfo.storeBanner.link : bannerLink
                       }
                     />
-
                   </div>
                 </label>
               </>
             ) : (
               <div className="h-full flex justify-center overflow-hidden">
-                {!storeInfo.storeBanner.link ? 
-                <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
-                  <LoadingSpinner />
-                </div> :
+                {!storeInfo.storeBanner.link ? (
+                  <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
+                    <LoadingSpinner />
+                  </div>
+                ) : (
                   <img
                     alt="store banner"
                     className="w-full object-cover"
                     src={storeInfo.storeBanner.link}
                   />
-                }
+                )}
               </div>
             )}
           </div>
           <div className="flex relative justify-between px-6 shadow">
-
             <div className="flex">
               {!edit ? (
                 <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
-                  {!storeInfo.storeImage.link ? 
+                  {!storeInfo.storeImage.link ? (
                     <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
-                  <LoadingSpinner />
-                </div>
-                :
-                  <img
-                    alt="store logo"
-                    className="h-full w-full object-cover hover:brightness-75 bg-white"
-                    src={storeInfo.storeImage.link}
-                  />}
+                      <LoadingSpinner />
+                    </div>
+                  ) : (
+                    <img
+                      alt="store logo"
+                      className="h-full w-full object-cover hover:brightness-75 bg-white"
+                      src={storeInfo.storeImage.link}
+                    />
+                  )}
                 </div>
               ) : (
                 <div
@@ -159,10 +178,12 @@ const MyStore = () => {
                       id="store-img"
                       hidden
                     />
+
                     <p className="absolute text-xs w-full top-[50%] left-[10%] pointer-events-none text-gray-400 opacity-0 transition-all duration-300 group-hover:opacity-100 z-10">
                       <FontAwesomeIcon icon={faCloudArrowUp} /> Clique para
                       editar
                     </p>
+
                     <img
                       alt="store logo"
                       className="h-full w-full object-cover bg-white cursor-pointer"
@@ -186,36 +207,50 @@ const MyStore = () => {
                 </p>
               </div>
             ) : (
-              <p className="link h-fit mt-3" onClick={() => setEdit(true)}>
-                <FontAwesomeIcon icon={faPenToSquare} />
-                Editar
-              </p>
+              user && (
+                <p className="link h-fit mt-3" onClick={() => setEdit(true)}>
+                  <FontAwesomeIcon icon={faPenToSquare} />
+                  Editar
+                </p>
+              )
             )}
           </div>
           <div className="text-justify">
-            {!loading && ((storeInfo.cnpj && storeInfo.storeAddress) ||
+            {!loading &&
+            ((storeInfo.cnpj && storeInfo.storeAddress) ||
               (storeInfo.cpf && storeInfo.storeAddress)) ? (
               ""
             ) : (
               <p className="text-red-500">Conclua seu cadastro</p>
             )}
             <p className="text-gray-600">Descrição</p>
-            <p>
-              {storeInfo.storeDescription}
-            </p>
+            <p>{storeInfo.storeDescription}</p>
             {Object.keys(storeInfo.storeAddress).length === 0 ? (
               <Link to="address">Adicione o endereço da sua loja</Link>
-            ) : (!loading &&
-              <p className="">
-                {storeInfo.storeAddress.street} -{" "}
-                {storeInfo.storeAddress.number} - {storeInfo.storeAddress.city}{" "}
-                / {storeInfo.storeAddress.state}
-              </p>
+            ) : (
+              !loading && (
+                <p className="">
+                  {storeInfo.storeAddress.street} -{" "}
+                  {storeInfo.storeAddress.number} -{" "}
+                  {storeInfo.storeAddress.city} / {storeInfo.storeAddress.state}
+                </p>
+              )
             )}
           </div>
         </div>
       </div>
-    </>
+      <div className="mt-[100px]">
+        <h1 className="text-2xl">Nossos produtos</h1>
+        <div className="py-5 flex flex-wrap">
+          <div id="product-card" className="w-[200px] h-[300px] p-3 shadow-md">
+            <img src="https://webstore-api-images.s3.sa-east-1.amazonaws.com/1702680375149_9362820.webp" />
+            <div className="">
+              <p>Samsung Galaxy S8+ Dual SIM 64 GB prata-ártico 4 GB RAM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   ) : (
     <Outlet />
   );

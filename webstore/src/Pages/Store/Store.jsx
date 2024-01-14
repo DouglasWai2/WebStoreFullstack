@@ -1,15 +1,28 @@
-import React from "react";
-import { Link, Outlet, useLocation, useOutletContext, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useOutletContext,
+  useNavigate,
+} from "react-router-dom";
 import { Player } from "@lottiefiles/react-lottie-player";
 import cardAnimation from "../../assets/WebSiteCardAnimaion.json";
 
 const Merchant = () => {
   const location = useLocation();
-  const navigate = useNavigate()
-  const {data, loading} = useOutletContext()
-  if(!data && !loading){
-    return navigate('/login')
-  }
+  const navigate = useNavigate();
+  const { user, loading } = useOutletContext();
+
+  useEffect(() => {
+    if(loading === null && user === false){
+      return
+    } else if((user && loading === false) || (!user && loading === true)){
+      return
+    } else{
+      return navigate('/login')
+    }
+  }, [user, loading]);
 
   return location.pathname === "/store" ? (
     <main className="py-3 px-8 bg-white">
@@ -38,8 +51,12 @@ const Merchant = () => {
         colocar as informações da sua loja
         <br></br>
         <span className="text-sm">
-          Você pode fazer isso clicando <Link className="link" to="my-store">neste link</Link> ou na barra de navegação
-          clicando no seu nome e "Minha loja".</span>
+          Você pode fazer isso clicando{" "}
+          <Link className="link" to="my-store">
+            neste link
+          </Link>{" "}
+          ou na barra de navegação clicando no seu nome e "Minha loja".
+        </span>
       </p>
 
       <p>
@@ -47,13 +64,17 @@ const Merchant = () => {
         cadastrar seu(s) produto(s).
         <br></br>
         <span className="text-sm">
-          Você pode fazer isso clicando <Link className="link" to="new-product">neste link</Link> ou na barra de navegação
-          clicando no seu nome e "Cadastrar novo produto"{" "}
+          Você pode fazer isso clicando{" "}
+          <Link className="link" to="new-product">
+            neste link
+          </Link>{" "}
+          ou na barra de navegação clicando no seu nome e "Cadastrar novo
+          produto"{" "}
         </span>
       </p>
     </main>
   ) : (
-    <Outlet />
+    <Outlet context={{ user, loading }} />
   );
 };
 

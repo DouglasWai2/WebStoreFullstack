@@ -28,21 +28,36 @@ exports.registerStore = async (req, res) => {
 };
 
 exports.storeInfo = async (req, res) => {
+  console.log(req.params);
+
+  const storeId = req.userInfo?.id || req.params.storeid;
+
   try {
-    const store = await StoreSchema.findOne({ user: req.userInfo.id });
-    res.status(200).json({
-      storeImage: store.storeImage,
-      storeDescription: store.storeDescription,
-      storeCategory: store.storeCategory,
-      storeName: store.storeName,
-      storeAddress: store.storeAddress || "",
-      storeId: store.id,
-      cpf: store.cpf || undefined,
-      cnpj: store.cnpj || undefined,
-      storeBanner: store.storeBanner
+    const store = await StoreSchema.findOne({
+      $or: [
+        { user: storeId },
+        { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
+      ],
     });
+    if (!store) {
+      res.status(404).send("No store found, wrong link")
+    } else {
+      res.status(200).json({
+        storeImage: store.storeImage,
+        storeDescription: store.storeDescription,
+        storeCategory: store.storeCategory,
+        storeName: store.storeName,
+        storeAddress: store.storeAddress || "",
+        storeId: store.id,
+        cpf: store.cpf || undefined,
+        cnpj: store.cnpj || undefined,
+        storeBanner: store.storeBanner,
+      });
+    }
   } catch (error) {
-    console.log(error);
+    if(error.kind === 'ObjectId'){
+      res.status(400).send("Broken link")
+    }
   }
 };
 
@@ -57,7 +72,6 @@ exports.addStoreAddress = async (req, res) => {
       },
       { new: true }
     );
-    console.log(store);
 
     res.status(200).send("Store Address updated");
   } catch (error) {
@@ -76,11 +90,9 @@ exports.setCpfCnpj = async (req, res) => {
     } else if (cpfcnpj.length === 14) {
       store.cnpj = cpfcnpj;
     } else {
-      res
-        .status(400)
-        .send({
-          "Bad Request": "Your id must have 11 for cpf or 14 digits for cnpj",
-        });
+      res.status(400).send({
+        "Bad Request": "Your id must have 11 for cpf or 14 digits for cnpj",
+      });
       return;
     }
 
@@ -92,7 +104,6 @@ exports.setCpfCnpj = async (req, res) => {
 };
 
 exports.changeBanner = async (req, res) => {
-
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
@@ -122,7 +133,6 @@ exports.changeBanner = async (req, res) => {
   }
 };
 exports.changeImage = async (req, res) => {
-
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
