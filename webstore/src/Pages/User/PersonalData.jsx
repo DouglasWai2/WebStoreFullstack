@@ -28,7 +28,7 @@ const ProfilePage = () => {
     editData
   );
 
-  const { data, address, loading } = useOutletContext();
+  const { user, address, loading } = useOutletContext();
 
   // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
   function formatDate(date) {
@@ -52,8 +52,8 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    if (data) {
-      const { name, lastName, email, phone, cpf, birth } = data;
+    if (user) {
+      const { name, lastName, email, phone, cpf, birth } = user;
       let formatedBirth;
       if (birth) {
         formatedBirth = formatDate(birth);
@@ -75,7 +75,7 @@ const ProfilePage = () => {
     if (response && !loading) {
       window.location.reload();
     }
-  }, [data, response]);
+  }, [user, response]);
 
   function handleSubmit() {
     const cpf = userInfo.find((element) => element.info === "cpf");
@@ -91,7 +91,7 @@ const ProfilePage = () => {
 
   return (
     <div className="w-[80%] border-[2px] rounded-md overflow-hidden shadow-md">
-      {!data || !address ? (
+      {!user || !address ? (
         <SkeletonData />
       ) : (
         <table className="w-full">
