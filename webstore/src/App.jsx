@@ -3,7 +3,7 @@ import Home from "./Pages/Home";
 import LoginForm from "./Pages/LoginForm";
 import RegisterForm from "./Pages/RegisterForm";
 import Terms from "./Pages/Terms";
-import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import PrivacyPolicy from "./Pages/PrivacyPolicy"; 
 import {
   createBrowserRouter,
   RouterProvider,
@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import api from "./helpers/api";
+import NotFoundError from "./Pages/NotFoundError";
 
 function App() {
   const [userUrl, setUserUrl] = useState(null);
@@ -55,6 +56,7 @@ function App() {
     { path: "/signup", element: <RegisterForm /> },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },
+    { path: "*", element: <NotFoundError /> },
   ]);
 
   return <RouterProvider router={router} />;

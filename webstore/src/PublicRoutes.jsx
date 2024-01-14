@@ -4,10 +4,10 @@ import {
 } from "react-router-dom";
 import MyStore from "./Pages/Store/MyStore";
 
+
 const PublicRoutes = () => {
   return [
     { path: "store/:storeName/:storeId", element: <MyStore /> },
-    { path: "*", element: <Navigate to="/login" replace /> },
   ];
 };
 
