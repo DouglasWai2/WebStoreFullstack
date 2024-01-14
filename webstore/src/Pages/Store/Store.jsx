@@ -9,20 +9,11 @@ import {
 import { Player } from "@lottiefiles/react-lottie-player";
 import cardAnimation from "../../assets/WebSiteCardAnimaion.json";
 
-const Merchant = () => {
+const Store = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, loading } = useOutletContext();
 
-  useEffect(() => {
-    if(loading === null && user === false){
-      return
-    } else if((user && loading === false) || (!user && loading === true)){
-      return
-    } else{
-      return navigate('/login')
-    }
-  }, [user, loading]);
 
   return location.pathname === "/store" ? (
     <main className="py-3 px-8 bg-white">
@@ -78,4 +69,4 @@ const Merchant = () => {
   );
 };
 
-export default Merchant;
+export default Store;

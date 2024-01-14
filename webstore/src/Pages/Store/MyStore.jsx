@@ -49,13 +49,14 @@ const MyStore = () => {
   const [productsUrl, setProductsUrl] = useState(null);
 
   useEffect(() => {
-    if (!user && !loading) {
+    if(location.pathname !== '/store/my-store'){
       setUrl(`/api/store/${storeName}/${storeId}`);
       setProductsUrl(`/api/catalog/all-products/${storeId}`)
-    } else if(user && loading === false) {
-      console.log("User existe");
+    }
+    else{
       setUrl(`/api/store/my-store`);
     }
+    
   }, [user]);
 
   const { data, loading, error } = useFetchApi(url, "GET");
@@ -207,7 +208,7 @@ const MyStore = () => {
                 </p>
               </div>
             ) : (
-              user && (
+              user && location.pathname === '/store/my-store' && (
                 <p className="link h-fit mt-3" onClick={() => setEdit(true)}>
                   <FontAwesomeIcon icon={faPenToSquare} />
                   Editar

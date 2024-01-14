@@ -5,11 +5,6 @@ const User = () => {
     const navigate = useNavigate()
     const { user, address, fetching, loading } = useOutletContext();
 
-
-    if(!user && !loading){
-      return navigate('/login')
-    }
-
     return (
         <>
             <main className="p-10 h-full">

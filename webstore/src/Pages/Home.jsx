@@ -1,8 +1,6 @@
 import Navbar from "../components/Navbar";
-import { Outlet } from "react-router-dom";
-import { useFetchApi } from "../helpers/useFetchApi";
-import { useEffect, useState } from "react";
-import { useNavigation } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
+import { useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
 
 const Home = ({user, address, loading, fetching, loggedIn}) => {
