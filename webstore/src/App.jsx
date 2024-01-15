@@ -3,22 +3,19 @@ import Home from "./Pages/Home";
 import LoginForm from "./Pages/LoginForm";
 import RegisterForm from "./Pages/RegisterForm";
 import Terms from "./Pages/Terms";
-import PrivacyPolicy from "./Pages/PrivacyPolicy"; 
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useFetchApi } from "./helpers/useFetchApi";
 import { useEffect, useState } from "react";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
-import api from "./helpers/api";
 import NotFoundError from "./Pages/NotFoundError";
+import UnexpectedError from "./Pages/UnexpectedError";
 
 function App() {
   const [userUrl, setUserUrl] = useState(null);
   const [addressUrl, setAddressUrl] = useState(null);
-  const { data, loading, error } = useFetchApi(userUrl, "GET");
+  const { data: user, loading, error } = useFetchApi(userUrl, "GET");
   const { data: address, loading: fetching } = useFetchApi(addressUrl, "GET");
 
   //Use this function to retrieve cookies by their names
@@ -37,21 +34,29 @@ function App() {
       setAddressUrl("/api/address");
     }
   }, []);
+  useEffect(() => {
+  }, [error]);
 
   const router = createBrowserRouter([
-    {
-      path: "/",
-      element: 
-        <Home
-          user={data}
-          address={address}
-          loading={loading}
-          fetching={fetching}
-          loggedIn={loggedIn}
-        />,
-        
-        children: [...PrivateRoutes(data, loggedIn), ...PublicRoutes()]
-    },
+    error
+      ? { path: "*", element: <UnexpectedError /> }
+      : {
+          path: "/",
+          element: (
+            <Home
+              user={user}
+              address={address}
+              loading={loading}
+              fetching={fetching}
+              loggedIn={loggedIn}
+            />
+          ),
+
+          children: [
+            ...PrivateRoutes(user, loggedIn, loading),
+            ...PublicRoutes(),
+          ],
+        },
     { path: "/login", element: <LoginForm /> },
     { path: "/signup", element: <RegisterForm /> },
     { path: "/termsandconditions", element: <Terms /> },

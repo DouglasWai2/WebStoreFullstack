@@ -14,8 +14,13 @@ import MyStore from "./Pages/Store/MyStore";
 import StoreAddress from "./Pages/Store/StoreAddress";
 import NewProduct from "./Pages/Store/NewProduct";
 
-const PrivateRoutes = (data, loggedIn) => {
-  if (loggedIn) {
+const PrivateRoutes = (user, loggedIn, loading) => {
+  if (!loggedIn || (loading === false && !user)) {
+    return [
+      { path: "/user/*", element: <Navigate to="/login" replace /> },
+      { path: "/store/*", element: <Navigate to="/login" replace /> },
+    ];
+  } else {
     return [
       {
         path: "store",
@@ -39,11 +44,7 @@ const PrivateRoutes = (data, loggedIn) => {
         ],
       },
     ];
-  } else {
-    return [
-      { path: "/user", element: <Navigate to="/login" replace /> },
-      { path: "/store", element: <Navigate to="/login" replace /> },
-    ];
+
   }
 };
 
