@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import icon from "../../assets/2099077-200.png";
 import {
   Link,
   Outlet,
@@ -14,6 +15,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import ProductCard from "../../components/Store/ProductCard";
 
 const MyStore = () => {
   const { user } = useOutletContext();
@@ -49,17 +51,20 @@ const MyStore = () => {
   const [productsUrl, setProductsUrl] = useState(null);
 
   useEffect(() => {
-    if(location.pathname !== '/store/my-store'){
+    if (location.pathname !== "/store/my-store") {
       setUrl(`/api/store/${storeName}/${storeId}`);
-      setProductsUrl(`/api/catalog/all-products/${storeId}`)
-    }
-    else{
+      setProductsUrl(`/api/catalog/all-products/${storeId}`);
+    } else {
       setUrl(`/api/store/my-store`);
     }
-    
   }, [user]);
 
   const { data, loading, error } = useFetchApi(url, "GET");
+  const {
+    data: products,
+    loading: fetching,
+    e,
+  } = useFetchApi(productsUrl, "GET");
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
     "/api/store/change-banner",
@@ -73,6 +78,7 @@ const MyStore = () => {
     imageEdit,
     headers
   );
+
   useEffect(() => {
     if (data) {
       setStoreInfo(data);
@@ -81,7 +87,6 @@ const MyStore = () => {
       window.location.reload();
     }
     if (error) {
-      console.log(error);
     }
   }, [data, error, banner, logo]);
 
@@ -90,8 +95,16 @@ const MyStore = () => {
   }
 
   return location.pathname !== "/store/address" ? (
-    <div className="px-[10%]">
+    <div className="px-[10%] relative">
       {loading && <TopBarProgress />}
+      {error?.response.status === 404 && (
+        <div className="absolute top-0 right-0 h-full w-full bg-white z-10 flex items-center justify-center">
+          <img src={icon} />
+          <div className="text-2xl">
+            Loja não encontrada, verifique se digitou o link corretamente
+          </div>
+        </div>
+      )}
       <div className="flex justify-center">
         <div className="w-[1546px] bg-white">
           <div className="group relative w-full h-[423px] bg-white hover:brightness-75 duration-300">
@@ -208,7 +221,8 @@ const MyStore = () => {
                 </p>
               </div>
             ) : (
-              user && location.pathname === '/store/my-store' && (
+              user &&
+              location.pathname === "/store/my-store" && (
                 <p className="link h-fit mt-3" onClick={() => setEdit(true)}>
                   <FontAwesomeIcon icon={faPenToSquare} />
                   Editar
@@ -242,13 +256,36 @@ const MyStore = () => {
       </div>
       <div className="mt-[100px]">
         <h1 className="text-2xl">Nossos produtos</h1>
-        <div className="py-5 flex flex-wrap">
-          <div id="product-card" className="w-[200px] h-[300px] p-3 shadow-md">
-            <img src="https://webstore-api-images.s3.sa-east-1.amazonaws.com/1702680375149_9362820.webp" />
-            <div className="">
-              <p>Samsung Galaxy S8+ Dual SIM 64 GB prata-ártico 4 GB RAM</p>
-            </div>
-          </div>
+        <div className="py-5 flex flex-wrap gap-6">
+          {products && !fetching
+            ? products.map((item, index) => {
+                return (
+                  <ProductCard
+                    key={index}
+                    img={item.thumbnail}
+                    title={item.title}
+                    rating={item.rating}
+                    price={item.price}
+                  />
+                );
+              })
+            : ""}
+        </div>
+        <h1 className="text-2xl mt-10">Mais vendidos</h1>
+        <div className="py-5 flex flex-wrap gap-6">
+          {products && !fetching
+            ? products.map((item, index) => {
+                return (
+                  <ProductCard
+                    key={index}
+                    img={item.thumbnail}
+                    title={item.title}
+                    rating={item.rating}
+                    price={item.price}
+                  />
+                );
+              })
+            : ""}
         </div>
       </div>
     </div>

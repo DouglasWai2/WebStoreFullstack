@@ -1,10 +1,18 @@
 export const moneyMask = (value) => {
+    let newValue = value
 
-    value = value.replace('.', '').replace(',', '').replace(/\D/g, '')
+    if(typeof value === 'number'){
+        newValue = value.toString()
+    }
+
+    if(typeof value === 'number' && newValue.split('.')[1].length === 1){ //if there's only one digit in the decimals, add a 0
+        newValue += '0'
+    }
+    newValue = newValue.replace('.', '').replace(',', '').replace(/\D/g, '')
 
     const options = { minimumFractionDigits: 2 }
     const result = new Intl.NumberFormat('pt-BR', options).format(
-        parseFloat(value) / 100
+        parseFloat(newValue) / 100
     )
 
 

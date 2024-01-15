@@ -34,8 +34,6 @@ function App() {
       setAddressUrl("/api/address");
     }
   }, []);
-  useEffect(() => {
-  }, [error]);
 
   const router = createBrowserRouter([
     error

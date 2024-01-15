@@ -105,3 +105,7 @@ main {
 .product-images::-webkit-scrollbar-thumb:hover{
   filter: brightness(0.5);
 }
+
+svg.star-svg {
+  display: inline;
+}
