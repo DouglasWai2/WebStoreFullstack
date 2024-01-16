@@ -6,11 +6,11 @@ const ProductCard = ({ img, title, rating, price }) => {
   return (
     <div
       id="product-card"
-      className="w-[250px] h-[325px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200"
+      className="w-[250px] h-[350px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200"
     >
       <img className="aspect-[4/3] object-contain" src={img} />
       <div className="mt-3 group-hover:text-yellow-500 duration-100">
-        <p className="truncate text-wrap line-clamp-3">{title}</p>
+        <p className="truncate text-wrap min-h-[5em] line-clamp-3">{title}</p>
       </div>
       <div className="flex items-center justify-between">
         <Rating

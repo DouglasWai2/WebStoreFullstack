@@ -16,31 +16,13 @@ import {
 import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 import ProductCard from "../../components/Store/ProductCard";
+import ProductCategory from "../../components/Store/ProductCategory";
 
 const MyStore = () => {
   const { user } = useOutletContext();
   const { storeName, storeId } = useParams();
 
   const location = useLocation();
-  const [storeInfo, setStoreInfo] = useState({
-    storeName: "",
-    storeDescription: "",
-    storeImage: { link: "", name: "" },
-    storeCategory: "",
-    storeAddress: {
-      cep: "",
-      street: "",
-      number: "",
-      neighborhood: "",
-      city: "",
-      state: "",
-      country: "",
-    },
-    storeBanner: {
-      link: "",
-      name: "",
-    },
-  });
   const [edit, setEdit] = useState(false);
   const [method, setMethod] = useState(null);
   const [bannerEdit, setBannerEdit] = useState("");
@@ -48,23 +30,16 @@ const MyStore = () => {
   const [imageEdit, setImageEdit] = useState("");
   const [imageLink, setImageLink] = useState("");
   const [url, setUrl] = useState(null);
-  const [productsUrl, setProductsUrl] = useState(null);
 
   useEffect(() => {
     if (location.pathname !== "/store/my-store") {
       setUrl(`/api/store/${storeName}/${storeId}`);
-      setProductsUrl(`/api/catalog/all-products/${storeId}`);
     } else {
       setUrl(`/api/store/my-store`);
     }
   }, [user]);
 
   const { data, loading, error } = useFetchApi(url, "GET");
-  const {
-    data: products,
-    loading: fetching,
-    e,
-  } = useFetchApi(productsUrl, "GET");
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
     "/api/store/change-banner",
@@ -80,15 +55,12 @@ const MyStore = () => {
   );
 
   useEffect(() => {
-    if (data) {
-      setStoreInfo(data);
-    }
     if (banner === "Banner updated" || logo === "Store logo updated") {
       window.location.reload();
     }
     if (error) {
     }
-  }, [data, error, banner, logo]);
+  }, [error, banner, logo]);
 
   function handleSubmit() {
     setMethod("POST");
@@ -133,16 +105,14 @@ const MyStore = () => {
                     <img
                       alt="store banner"
                       className="w-full object-cover"
-                      src={
-                        !bannerLink ? storeInfo.storeBanner.link : bannerLink
-                      }
+                      src={!bannerLink ? data.storeBanner.link : bannerLink}
                     />
                   </div>
                 </label>
               </>
             ) : (
               <div className="h-full flex justify-center overflow-hidden">
-                {!storeInfo.storeBanner.link ? (
+                {!data?.storeBanner.link ? (
                   <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
                     <LoadingSpinner />
                   </div>
@@ -150,7 +120,7 @@ const MyStore = () => {
                   <img
                     alt="store banner"
                     className="w-full object-cover"
-                    src={storeInfo.storeBanner.link}
+                    src={data.storeBanner.link}
                   />
                 )}
               </div>
@@ -160,7 +130,7 @@ const MyStore = () => {
             <div className="flex">
               {!edit ? (
                 <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
-                  {!storeInfo.storeImage.link ? (
+                  {!data ? (
                     <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
                       <LoadingSpinner />
                     </div>
@@ -168,7 +138,7 @@ const MyStore = () => {
                     <img
                       alt="store logo"
                       className="h-full w-full object-cover hover:brightness-75 bg-white"
-                      src={storeInfo.storeImage.link}
+                      src={data.storeImage.link}
                     />
                   )}
                 </div>
@@ -201,12 +171,12 @@ const MyStore = () => {
                     <img
                       alt="store logo"
                       className="h-full w-full object-cover bg-white cursor-pointer"
-                      src={!imageLink ? storeInfo.storeImage.link : imageLink}
+                      src={!imageLink ? data.storeImage.link : imageLink}
                     />
                   </label>
                 </div>
               )}
-              <p className="text-4xl">{storeInfo.storeName}</p>
+              <p className="text-4xl">{data?.storeName}</p>
             </div>
             {edit ? (
               <div>
@@ -231,23 +201,22 @@ const MyStore = () => {
             )}
           </div>
           <div className="text-justify">
-            {!loading &&
-            ((storeInfo.cnpj && storeInfo.storeAddress) ||
-              (storeInfo.cpf && storeInfo.storeAddress)) ? (
+            {data &&
+            ((data?.cnpj && data?.storeAddress) ||
+              (data?.cpf && data?.storeAddress)) ? (
               ""
             ) : (
               <p className="text-red-500">Conclua seu cadastro</p>
             )}
             <p className="text-gray-600">Descrição</p>
-            <p>{storeInfo.storeDescription}</p>
-            {Object.keys(storeInfo.storeAddress).length === 0 ? (
+            <p>{data?.storeDescription}</p>
+            {data && Object.keys(data?.storeAddress).length === 0 ? (
               <Link to="address">Adicione o endereço da sua loja</Link>
             ) : (
-              !loading && (
+              data && (
                 <p className="">
-                  {storeInfo.storeAddress.street} -{" "}
-                  {storeInfo.storeAddress.number} -{" "}
-                  {storeInfo.storeAddress.city} / {storeInfo.storeAddress.state}
+                  {data?.storeAddress.street} - {data?.storeAddress.number} -{" "}
+                  {data?.storeAddress.city} / {data?.storeAddress.state}
                 </p>
               )
             )}
@@ -255,38 +224,8 @@ const MyStore = () => {
         </div>
       </div>
       <div className="mt-[100px]">
-        <h1 className="text-2xl">Nossos produtos</h1>
-        <div className="py-5 flex flex-wrap gap-6">
-          {products && !fetching
-            ? products.map((item, index) => {
-                return (
-                  <ProductCard
-                    key={index}
-                    img={item.thumbnail}
-                    title={item.title}
-                    rating={item.rating}
-                    price={item.price}
-                  />
-                );
-              })
-            : ""}
-        </div>
-        <h1 className="text-2xl mt-10">Mais vendidos</h1>
-        <div className="py-5 flex flex-wrap gap-6">
-          {products && !fetching
-            ? products.map((item, index) => {
-                return (
-                  <ProductCard
-                    key={index}
-                    img={item.thumbnail}
-                    title={item.title}
-                    rating={item.rating}
-                    price={item.price}
-                  />
-                );
-              })
-            : ""}
-        </div>
+        <ProductCategory />
+        <ProductCategory />
       </div>
     </div>
   ) : (

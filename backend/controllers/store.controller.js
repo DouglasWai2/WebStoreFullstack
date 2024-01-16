@@ -33,30 +33,25 @@ exports.storeInfo = async (req, res) => {
   const storeId = req.userInfo?.id || req.params.storeid;
 
   try {
-    const store = await StoreSchema.findOne({
-      $or: [
-        { user: storeId },
-        { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
-      ],
-    });
+    const store = await StoreSchema.findOne(
+      {
+        $or: [
+          { user: storeId },
+          { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
+        ],
+      },
+      "storeImage storeDesciption storeName storeAddress storeId cpf cnpj storeBanner"
+    );
+
+    console.log(store);
     if (!store) {
-      res.status(404).send("No store found, wrong link")
+      res.status(404).send("No store found, wrong link");
     } else {
-      res.status(200).json({
-        storeImage: store.storeImage,
-        storeDescription: store.storeDescription,
-        storeCategory: store.storeCategory,
-        storeName: store.storeName,
-        storeAddress: store.storeAddress || "",
-        storeId: store.id,
-        cpf: store.cpf || undefined,
-        cnpj: store.cnpj || undefined,
-        storeBanner: store.storeBanner,
-      });
+      res.status(200).json(store);
     }
   } catch (error) {
-    if(error.kind === 'ObjectId'){
-      res.status(400).send("Broken link")
+    if (error.kind === "ObjectId") {
+      res.status(400).send("Broken link");
     }
   }
 };

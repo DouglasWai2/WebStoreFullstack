@@ -47,14 +47,21 @@ exports.addProduct = async (req, res) => {
 
 exports.allProducts = async (req, res) => {
   const storeId = req.params.storeid;
+  const from = req.query.from;
+  const to = parseInt(req.query.to);
+  const sortBy = req.query.sortby;
+  const order = req.query.order
+
 
   try {
-    const { products } = await StoreSchema.findById(storeId).populate(
+    var { products } = await StoreSchema.findById(storeId).populate(
       "products",
-      "title thumbnail brand price rating"
+      "title thumbnail brand price rating sells",
+      null,
+      { sort: { [sortBy]: order }, skip: from, limit: to }
     );
 
-    res.status(200).send(products);
+    return res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }
