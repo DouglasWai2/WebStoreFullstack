@@ -25,6 +25,7 @@ const NewProduct = () => {
   const [model, setModel] = useState("");
   const [body, setBody] = useState(null);
   const [dropZone, setDropZone] = useState(false);
+  const [dragging, setDragging] = useState(null);
   const navigate = useNavigate();
 
   // initial number of features input (1)
@@ -98,7 +99,7 @@ const NewProduct = () => {
     setPrice(moneyMask(e.target.value));
   }
   function handleFiles(e) {
-    setFiles(e.target.files);
+    setFiles(Array.from(e.target.files));
   }
   function handleBrand(e) {
     setBrand(e.target.value);
@@ -142,6 +143,16 @@ const NewProduct = () => {
       price: parseFloat(price.replace("R$ ", "").replace(",", ".")),
     });
   };
+
+  function handleDrop(result) {
+    if (!result.destination) return;
+
+    const items = files;
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    setFiles(items);
+  }
 
   useEffect(() => {
     if (error) {
@@ -367,6 +378,9 @@ const NewProduct = () => {
         title={title}
         files={files}
         price={price}
+        setDragging={setDragging}
+        handleDrop={handleDrop}
+        dragging={dragging}
       />
     </div>
   );

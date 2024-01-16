@@ -2,8 +2,17 @@ import React, { useEffect, useRef, useState } from "react";
 import ImageMagnifier from "./ImageMagnifier";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const ProductPreview = ({ files, title, features, description, price }) => {
+const ProductPreview = ({
+  files,
+  title,
+  features,
+  description,
+  price,
+  handleDrop,
+  dragging,
+}) => {
   const [mainImage, setMainImage] = useState("");
   const [y, setY] = useState(4);
   const images = useRef(null);
@@ -82,74 +91,95 @@ const ProductPreview = ({ files, title, features, description, price }) => {
               <p>1</p>
             </div>
           )}
-          <div
-            ref={images}
-            className="flex w-[578px] overflow-x-scroll gap-3 my-4 product-images relative"
-          >
-            {files.length ? (
-              <>
-                {Object.values(files).map((item, index) => {
-                  return (
-                    <div
-                      onMouseOver={() => {
-                        setMainImage(URL.createObjectURL(item));
-                      }}
-                      className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 transition-[filter] duration-100"
-                    >
-                      <img
-                        className="!object-contain h-full w-full"
-                        src={URL.createObjectURL(item)}
-                      />
-                    </div>
-                  );
-                })}
-                {files.length > 4 && (
-                  <div ref={buttonsWrapper} className="fixed w-[578px]">
-                    <div
-                      className="absolute flex items-center justify-center text-transparent text-2xl 
+          <DragDropContext onDragEnd={handleDrop}>
+            <Droppable direction={"horizontal"} droppableId={"files"}>
+              {(provided) => (
+                <div
+                  ref={(e) => {
+                    images.current = e;
+                    provided.innerRef(e);
+                  }}
+                  className="flex w-[578px] overflow-x-scroll my-4 product-images relative"
+                >
+                  {files.length ? (
+                    <>
+                      {files.map((item, index) => {
+                        return (
+                          <Draggable
+                            key={item.name}
+                            draggableId={item.name}
+                            index={index}
+                          >
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                onMouseOver={() => {
+                                  setMainImage(URL.createObjectURL(item));
+                                }}
+                                className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 mx-"
+                              >
+                                <img
+                                  className="!object-contain h-full w-full pointer-events-none"
+                                  src={URL.createObjectURL(item)}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        );
+                      })}
+                      {files.length > 4 && !dragging && (
+                        <div ref={buttonsWrapper} className="fixed w-[578px]">
+                          <div
+                            className="absolute flex items-center justify-center text-transparent text-2xl 
                       bg-transparent text-white h-[102px] cursor-pointer w-[50px]
                        hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
-                      name="backward"
-                      onClick={handleScrollFoward}
-                    >
-                      <FontAwesomeIcon
-                        className="rotate-180 pointer-events-none"
-                        icon={faAngleRight}
-                      />
-                    </div>
-                    <div
-                      name="foward"
-                      className="absolute flex items-center justify-center text-transparent text-2xl 
+                            name="backward"
+                            onClick={handleScrollFoward}
+                          >
+                            <FontAwesomeIcon
+                              className="rotate-180 pointer-events-none"
+                              icon={faAngleRight}
+                            />
+                          </div>
+                          <div
+                            name="foward"
+                            className="absolute flex items-center justify-center text-transparent text-2xl 
                       bg-transparent text-white h-[102px] cursor-pointer w-[50px] right-0
                        hover:bg-gray-300/20  hover:text-white/100 duration-200"
-                      onClick={handleScrollFoward}
-                    >
-                      <FontAwesomeIcon
-                        className="pointer-events-none"
-                        icon={faAngleRight}
-                      />
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                {" "}
-                <div className="w-[136px] aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  1
+                            onClick={handleScrollFoward}
+                          >
+                            <FontAwesomeIcon
+                              className="pointer-events-none"
+                              icon={faAngleRight}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        1
+                      </div>
+                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        2
+                      </div>
+                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        3
+                      </div>
+                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        4
+                      </div>
+                    </>
+                  )}
+                  {provided.placeholder}
                 </div>
-                <div className="w-[136px] aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  2
-                </div>
-                <div className="w-[136px] aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  3
-                </div>
-                <div className="w-[136px] aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                  4
-                </div>
-              </>
-            )}
-          </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
         <div className="w-1/2 flex flex-col gap-3">
           <h1 className="text-3xl">{title ? title : "Título"}</h1>

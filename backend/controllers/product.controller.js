@@ -4,7 +4,8 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 
 exports.addProduct = async (req, res) => {
-  const { title, description, brand, model, tags, genre, features, price } = req.body;
+  const { title, description, brand, model, tags, genre, features, price } =
+    req.body;
 
   const newProduct = new productSchema({
     title,
@@ -14,7 +15,7 @@ exports.addProduct = async (req, res) => {
     brand,
     model,
     features,
-    price
+    price,
   });
   if (req.files.length) {
     newProduct.thumbnail = req.files[0].location;
@@ -45,5 +46,16 @@ exports.addProduct = async (req, res) => {
 };
 
 exports.allProducts = async (req, res) => {
-  console.log('teste')
-}
+  const storeId = req.params.storeid;
+
+  try {
+    const { products } = await StoreSchema.findById(storeId).populate(
+      "products",
+      "title thumbnail brand price rating"
+    );
+
+    res.status(200).send(products);
+  } catch (error) {
+    console.log(error);
+  }
+};

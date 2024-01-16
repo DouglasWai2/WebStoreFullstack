@@ -12,6 +12,6 @@ router.post(
   addProduct
 );
 
-router.post("/catalog/all-products/:storeid", allProducts)
+router.get("/catalog/all-products/:storeid", allProducts)
 
 module.exports = router;

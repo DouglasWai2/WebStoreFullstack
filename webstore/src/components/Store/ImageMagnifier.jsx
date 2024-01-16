@@ -77,7 +77,7 @@ const ImageMagnifier = ({ image }) => {
               pointerEvents: "none",
               visibility: "hidden",
             }}
-            className="bg-white opacity-60 w-[100px] h-[100px]"
+            className="bg-white opacity-60 w-[200px] h-[200px]"
           ></div>
           <div
             ref={result}

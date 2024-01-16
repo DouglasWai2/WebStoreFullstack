@@ -16,7 +16,10 @@ const productSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Stores",
   },
-  rating: {type: Number}
+  rating: {type: Number, default: 0.0},
+  sells: {type: Number, default: 0}
+
+
 });
 
 module.exports = mongoose.model("Product", productSchema, "Catalog");
