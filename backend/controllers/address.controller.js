@@ -70,7 +70,7 @@ exports.sendAddressInfo = async (req, res) => {
 
     let lastCPFDigits = CPF.toString().slice(7, 11);
 
-    console.log(lastCPFDigits);
+
     return {
       id,
       cep,

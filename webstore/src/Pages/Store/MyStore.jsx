@@ -15,13 +15,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
-import ProductCard from "../../components/Store/ProductCard";
 import ProductCategory from "../../components/Store/ProductCategory";
 
 const MyStore = () => {
   const { user } = useOutletContext();
-  const { storeName, storeId } = useParams();
-
   const location = useLocation();
   const [edit, setEdit] = useState(false);
   const [method, setMethod] = useState(null);
@@ -30,16 +27,14 @@ const MyStore = () => {
   const [imageEdit, setImageEdit] = useState("");
   const [imageLink, setImageLink] = useState("");
   const [url, setUrl] = useState(null);
+  const {storeName, storeId} = useParams()
 
   useEffect(() => {
-    if (location.pathname !== "/store/my-store") {
-      setUrl(`/api/store/${storeName}/${storeId}`);
-    } else {
-      setUrl(`/api/store/my-store`);
-    }
-  }, [user]);
-
+    setUrl(`/api${location.pathname}`);
+  }, []);
   const { data, loading, error } = useFetchApi(url, "GET");
+  useFetchApi(`/api/store/categories/${storeName}/${storeId}`, "GET");
+
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
     "/api/store/change-banner",
@@ -224,8 +219,20 @@ const MyStore = () => {
         </div>
       </div>
       <div className="mt-[100px]">
-        <ProductCategory />
-        <ProductCategory />
+        <ProductCategory
+          text="Mais vendidos"
+          queries="sortby=sells&order=desc"
+          from={0}
+          to={2}
+          storeId={data && data._id}
+        />
+        <ProductCategory
+          text="Melhores avaliados"
+          queries="sortby=rating&order=desc"
+          from={0}
+          to={3}
+          storeId={data && data._id}
+        />
       </div>
     </div>
   ) : (

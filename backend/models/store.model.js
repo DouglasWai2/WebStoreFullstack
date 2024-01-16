@@ -80,6 +80,7 @@ const StoreSchema = new mongoose.Schema({
   },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  categories: [{ type: String }],
 });
 
 module.exports = mongoose.model("Store", StoreSchema, "Stores");

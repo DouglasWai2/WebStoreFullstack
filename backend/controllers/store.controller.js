@@ -40,10 +40,9 @@ exports.storeInfo = async (req, res) => {
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDesciption storeName storeAddress storeId cpf cnpj storeBanner"
+      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner"
     );
 
-    console.log(store);
     if (!store) {
       res.status(404).send("No store found, wrong link");
     } else {
@@ -156,3 +155,5 @@ exports.changeImage = async (req, res) => {
     console.log(error);
   }
 };
+
+

@@ -2,35 +2,42 @@ const productSchema = require("../models/product.models");
 const StoreSchema = require("../models/store.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
+const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 
 exports.addProduct = async (req, res) => {
-  const { title, description, brand, model, tags, genre, features, price } =
-    req.body;
+  // const { title, description, brand, model, tags, genre, features, price } =
+  //   req.body;
 
-  const newProduct = new productSchema({
-    title,
-    description,
-    tags,
-    genre,
-    brand,
-    model,
-    features,
-    price,
-  });
-  if (req.files.length) {
-    newProduct.thumbnail = req.files[0].location;
-    newProduct.images = req.files.map((file) => {
-      return file.location;
-    });
-  }
+  // const newProduct = new productSchema({
+  //   title,
+  //   description,
+  //   tags,
+  //   genre,
+  //   brand,
+  //   model,
+  //   features,
+  //   price,
+  // });
+  // if (req.files.length) {
+  //   newProduct.thumbnail = req.files[0].location;
+  //   newProduct.images = req.files.map((file) => {
+  //     return file.location;
+  //   });
+  // }
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
-    newProduct.store = store.id;
-    await newProduct.save().then((response) => {
-      store.products.push(newProduct.id);
-      store.save();
-    });
+    // newProduct.store = store.id;
+    // await newProduct.save().then((response) => {
+    //   store.products.push(newProduct.id);
+    //   store.save();
+    // });
+
+    
+
+    store.categories = await autoGenerateCategory(store.id);
+
+    await store.save();
 
     res.status(200).send("Product saved successfully");
   } catch (error) {
@@ -50,8 +57,7 @@ exports.allProducts = async (req, res) => {
   const from = req.query.from;
   const to = parseInt(req.query.to);
   const sortBy = req.query.sortby;
-  const order = req.query.order
-
+  const order = req.query.order;
 
   try {
     var { products } = await StoreSchema.findById(storeId).populate(
@@ -61,7 +67,7 @@ exports.allProducts = async (req, res) => {
       { sort: { [sortBy]: order }, skip: from, limit: to }
     );
 
-    return res.status(200).send(products);
+    setTimeout(() => res.status(200).send(products), 1000);
   } catch (error) {
     console.log(error);
   }

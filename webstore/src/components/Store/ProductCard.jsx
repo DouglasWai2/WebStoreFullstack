@@ -2,7 +2,7 @@ import React from "react";
 import { Rating } from "react-simple-star-rating";
 import { moneyMask } from "../../helpers/moneyMask";
 
-const ProductCard = ({ img, title, rating, price }) => {
+const ProductCard = ({ img, title, rating, price, sells }) => {
   return (
     <div
       id="product-card"
@@ -10,7 +10,7 @@ const ProductCard = ({ img, title, rating, price }) => {
     >
       <img className="aspect-[4/3] object-contain" src={img} />
       <div className="mt-3 group-hover:text-yellow-500 duration-100">
-        <p className="truncate text-wrap min-h-[5em] line-clamp-3">{title}</p>
+        <p className="truncate text-wrap min-h-[4.5em] line-clamp-3">{title}</p>
       </div>
       <div className="flex items-center justify-between">
         <Rating
@@ -23,6 +23,7 @@ const ProductCard = ({ img, title, rating, price }) => {
         />
         <span className="text-xs">({rating})</span>
       </div>
+      <span className="text-sm">{sells} vendidos</span>
       <div className="font-semibold text-lg mt-2 text-right">
         {moneyMask(price)}
       </div>

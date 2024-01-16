@@ -24,8 +24,6 @@ router.post("/user/update", auth, async(req, res) => {
   const data = req.body
   const user = await User.findById(req.userInfo.id)
 
-  console.log(req.body)
-
   data.map(item => {
     if(Object.values(item)[0]){
       user[item.value] = Object.values(item)[0]
