@@ -44,9 +44,9 @@ exports.storeInfo = async (req, res) => {
     );
 
     if (!store) {
-      res.status(404).send("No store found, wrong link");
+      res.status(404).send("No store found, wrong link!");
     } else {
-      res.status(200).json(store);
+      setTimeout(()=> res.status(200).json(store), 1000);
     }
   } catch (error) {
     if (error.kind === "ObjectId") {
@@ -101,21 +101,25 @@ exports.changeBanner = async (req, res) => {
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
-    if (!store.storeBanner.link) {
-      store.storeBanner.link = req.file.location;
-      store.storeBanner.name = req.file.key;
+    if (store.storeBanner.length === 0) {
+      store.storeBanner = req.files.map((item) => item.location);
       await store.save();
       res.status(200).send("Banner updated");
     } else {
       try {
-        const command = new DeleteObjectCommand({
-          Bucket: "webstore-api-images",
-          Key: store.storeBanner.name,
-        });
-        const response = await client.send(command);
+        if (!req.files.length) return;
+        const regex = /([^/]+(\.\w+))$/;
+        store.storeBanner.forEach(async (item) => {
+          const match = item.match(regex);
 
-        store.storeBanner.link = req.file.location;
-        store.storeBanner.name = req.file.key;
+          const command = new DeleteObjectCommand({
+            Bucket: "webstore-api-images",
+            Key: match[0],
+          });
+          const response = await client.send(command);
+        });
+        const array = req.files.map((item) => item.location);
+        store.storeBanner = array;
         await store.save();
         res.status(200).send("Banner updated");
       } catch (error) {
@@ -130,21 +134,22 @@ exports.changeImage = async (req, res) => {
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
-    if (!store.storeImage.link) {
-      store.storeImage.link = req.file.location;
-      store.storeImage.name = req.file.key;
+    if (!store.storeImage) {
+      store.storeImage = req.file.location;
       await store.save();
       res.status(200).send("Banner updated");
     } else {
       try {
+        if (!req.file) return;
+        const regex = /([^/]+(\.\w+))$/;
+        const match = store.storeImage.match(regex);
         const command = new DeleteObjectCommand({
           Bucket: "webstore-api-images",
-          Key: store.storeImage.name,
+          Key: match[0],
         });
         const response = await client.send(command);
 
-        store.storeImage.link = req.file.location;
-        store.storeImage.name = req.file.key;
+        store.storeImage = req.file.location;
         await store.save();
         res.status(200).send("Store logo updated");
       } catch (error) {
@@ -155,5 +160,3 @@ exports.changeImage = async (req, res) => {
     console.log(error);
   }
 };
-
-

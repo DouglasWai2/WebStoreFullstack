@@ -12,23 +12,17 @@ const StoreSchema = new mongoose.Schema({
     required: true,
   },
   storeImage: {
-    link: { type: String, required: true },
-    name: {
-      type: String,
-      required: true,
-    },
+    type: String,
   },
   storeCategory: {
     type: String,
     required: true,
   },
-  storeBanner: {
-    link: { type: String, required: true },
-    name: {
+  storeBanner: [
+    {
       type: String,
-      required: true,
     },
-  },
+  ],
   phone: {
     type: String,
     minlength: 11,

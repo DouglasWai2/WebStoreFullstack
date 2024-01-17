@@ -5,35 +5,33 @@ const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 
 exports.addProduct = async (req, res) => {
-  // const { title, description, brand, model, tags, genre, features, price } =
-  //   req.body;
+  const { title, description, brand, model, tags, genre, features, price } =
+    req.body;
 
-  // const newProduct = new productSchema({
-  //   title,
-  //   description,
-  //   tags,
-  //   genre,
-  //   brand,
-  //   model,
-  //   features,
-  //   price,
-  // });
-  // if (req.files.length) {
-  //   newProduct.thumbnail = req.files[0].location;
-  //   newProduct.images = req.files.map((file) => {
-  //     return file.location;
-  //   });
-  // }
+  const newProduct = new productSchema({
+    title,
+    description,
+    tags,
+    genre,
+    brand,
+    model,
+    features,
+    price,
+  });
+  if (req.files.length) {
+    newProduct.thumbnail = req.files[0].location;
+    newProduct.images = req.files.map((file) => {
+      return file.location;
+    });
+  }
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
-    // newProduct.store = store.id;
-    // await newProduct.save().then((response) => {
-    //   store.products.push(newProduct.id);
-    //   store.save();
-    // });
-
-    
+    newProduct.store = store.id;
+    await newProduct.save().then((response) => {
+      store.products.push(newProduct.id);
+      store.save();
+    });
 
     store.categories = await autoGenerateCategory(store.id);
 
@@ -67,7 +65,7 @@ exports.allProducts = async (req, res) => {
       { sort: { [sortBy]: order }, skip: from, limit: to }
     );
 
-    setTimeout(() => res.status(200).send(products), 1000);
+    return res.status(200).send(products)
   } catch (error) {
     console.log(error);
   }

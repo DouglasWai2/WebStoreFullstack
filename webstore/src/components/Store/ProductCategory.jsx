@@ -6,9 +6,6 @@ import { useFetchApi } from "../../helpers/useFetchApi";
 const ProductCategory = ({ text, queries, from, to, storeId }) => {
   const [productsUrl, setProductsUrl] = useState(null);
   const [toT, setToT] = useState(to)
-
-  console.log('TESTE')
-
   useEffect(() => {
     if (storeId) {
       setProductsUrl(`/api/catalog/all-products/${storeId}?${queries}&from=${from}&to=${toT}`);
