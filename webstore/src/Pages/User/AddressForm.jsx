@@ -8,7 +8,7 @@ import { CEPMask } from "../../helpers/CEPMask";
 import { CPFMask } from "../../helpers/CPFMask";
 import SubmitButton from "../../components/shared/SubmitButton";
 
-const AddressForm = () => {
+const AddressForm = ({ url, type }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [body, setBody] = useState(null);
@@ -45,13 +45,13 @@ const AddressForm = () => {
     data,
     loading: fetching,
     error: badRequest,
-  } = useFetchApi("/api/address", "POST", body);
+  } = useFetchApi(url, "POST", body);
 
   useEffect(() => {
-    if (data === "Address saved successfully") {
+    if (data === "Address saved successfully" || data === "Store Address updated") {
       setSuccess("Endereço adicionado com sucesso. Redirecionando...");
       setTimeout(() => {
-        navigate(-1);
+        navigate(-1, {replace: true});
       }, 600);
     }
 
@@ -195,6 +195,7 @@ const AddressForm = () => {
         "flex flex-col border-[1px] relative shadow-md w-3/4 py-10 px-6 rounded-sm"
       }
     >
+      {type && <h1 className="text-xl mb-8">Coloque as informações do endereço da sua loja</h1>}
       {error !== "" ? (
         <div className="absolute top-[-75px] left-[50%] translate-x-[-50%]">
           <ErrorCard invalid={error} handleClick={handleClick} />
@@ -267,8 +268,7 @@ const AddressForm = () => {
                 Selecione seu estado primeiro...
               </option>
             ) : (
-              <option value="" key="placeholder">
-              </option>
+              <option value="" key="placeholder"></option>
             )}
             {cityOptions.map((option) => (
               <option key={option} value={option}>
@@ -276,9 +276,9 @@ const AddressForm = () => {
               </option>
             ))}
           </select>
-        <label className="label text-lg font-medium" htmlFor="city">
-          Cidade
-        </label>
+          <label className="label text-lg font-medium" htmlFor="city">
+            Cidade
+          </label>
         </div>
         <div className="relative">
           <input
@@ -334,59 +334,64 @@ const AddressForm = () => {
             </label>
           </div>
         </div>
-        <div className="flex w-full gap-10">
-          <div className="relative w-3/4">
-            <input
-              required
-              className=" floating-input-effect peer w-full border-[1px] rounded-sm"
-              value={recieverName}
-              onChange={handleInputChange}
-              type="text"
-              name="recieverName"
-              placeholder=""
-            />
-            <label
-              className="floating-label text-lg font-medium"
-              htmlFor="street"
-            >
-              Nome do destinatário
-            </label>
-          </div>
-          <div className="relative w-2/5">
-            <input
-              required
-              className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
-              value={CPFMask(CPF)}
-              onChange={handleInputChange}
-              type="text"
-              name="CPF"
-              maxLength={14}
-              placeholder=""
-            />
-            <label
-              className="floating-label text-lg font-medium"
-              htmlFor="street"
-            >
-              CPF
-            </label>
-          </div>
-        </div>
-        <div className="relative w-full">
-          <input
-            className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
-            value={nickname}
-            onChange={handleInputChange}
-            type="text"
-            name="nickname"
-            placeholder=""
-          />
-          <label
-            className="floating-label text-lg font-medium"
-            htmlFor="street"
-          >
-            Apelido (opcional)
-          </label>
-        </div>
+        {!type && (
+          <>
+            <div className="flex w-full gap-10">
+              <div className="relative w-3/4">
+                <input
+                  required
+                  className=" floating-input-effect peer w-full border-[1px] rounded-sm"
+                  value={recieverName}
+                  onChange={handleInputChange}
+                  type="text"
+                  name="recieverName"
+                  placeholder=""
+                />
+                <label
+                  className="floating-label text-lg font-medium"
+                  htmlFor="street"
+                >
+                  Nome do destinatário
+                </label>
+              </div>
+              <div className="relative w-2/5">
+                <input
+                  required
+                  className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
+                  value={CPFMask(CPF)}
+                  onChange={handleInputChange}
+                  type="text"
+                  name="CPF"
+                  maxLength={14}
+                  placeholder=""
+                />
+                <label
+                  className="floating-label text-lg font-medium"
+                  htmlFor="street"
+                >
+                  CPF
+                </label>
+              </div>
+            </div>
+            <div className="relative w-full">
+              <input
+                className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
+                value={nickname}
+                onChange={handleInputChange}
+                type="text"
+                name="nickname"
+                placeholder=""
+              />
+              <label
+                className="floating-label text-lg font-medium"
+                htmlFor="street"
+              >
+                Apelido (opcional)
+              </label>
+            </div>
+          </>
+        )}
+
         <SubmitButton
           onClick={handleSubmit}
           loading={fetching}

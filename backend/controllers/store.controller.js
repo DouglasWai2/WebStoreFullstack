@@ -10,7 +10,7 @@ exports.registerStore = async (req, res) => {
     storeName,
     storeDescription,
     storeCategory,
-    storeImage: { link: req.file.location, name: req.file.key },
+    storeImage: req.file.location,
     user: req.userInfo.id,
   });
 
@@ -40,7 +40,7 @@ exports.storeInfo = async (req, res) => {
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner"
+      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products"
     );
 
     if (!store) {
@@ -56,12 +56,13 @@ exports.storeInfo = async (req, res) => {
 };
 
 exports.addStoreAddress = async (req, res) => {
+  console.log(req.body)
   try {
     const store = await StoreSchema.findOneAndUpdate(
       { user: req.userInfo.id },
       {
         $set: {
-          storeAddress: req.body.storeAddress,
+          storeAddress: req.body.address,
         },
       },
       { new: true }

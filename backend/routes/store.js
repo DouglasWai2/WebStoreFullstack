@@ -12,6 +12,7 @@ const router = express.Router();
 const upload = require("../helpers/upload.helper");
 
 router.get("/store/my-store", auth, storeInfo);
+router.get("/store/my-products", auth, storeInfo);
 router.get("/store/:storename/:storeid", storeInfo);
 router.post("/store/register-store", auth, upload.single("storeImage"), registerStore);
 router.post("/store/address", auth, addStoreAddress);

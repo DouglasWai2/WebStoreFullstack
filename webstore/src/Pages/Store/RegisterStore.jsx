@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../../helpers/useFetchApi";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import AddressForm from "../User/AddressForm";
+import SubmitButton from "../../components/shared/SubmitButton";
 
 const RegisterStore = () => {
   const [storeInfo, setStoreInfo] = useState({
@@ -86,6 +88,7 @@ const RegisterStore = () => {
 
   return (
     <div className="flex justify-center items-center h-full py-10">
+      
       <div className="flex flex-col shadow gap-8 px-5 py-9 w-[500px]">
         <h1 className="text-3xl">Cadastre sua loja</h1>
         <form className="flex flex-col gap-3">
@@ -172,22 +175,7 @@ const RegisterStore = () => {
               />
             </label>
           </div>
-          <div className="px-4">
-            <h3>Previsualização</h3>
-            <div className="flex items-center border-[1px] border-gray-300 px-4 py-6">
-              <div
-                className="h-[150px] flex items-center justify-center
-                  w-[150px] overflow-hidden rounded-full border-gray-300 border-[1px] border-dashed"
-              >
-                <img
-                  alt={imageLink ? "Store Logo" : ""}
-                  className="h-full w-full object-cover bg-gray-100"
-                  src={imageLink}
-                />
-              </div>
-              <p className="text-2xl ml-4">{storeInfo.storeName}</p>
-            </div>
-          </div>
+        
           <div className="mx-4 my-2 z-0 flex flex-col">
             <label
               className="w-full left-2 !z-10 text-sm text-gray-500"
@@ -211,15 +199,26 @@ const RegisterStore = () => {
             </select>
           </div>
           <div className="px-4">
-            <button
-              className="button-login"
-              onClick={(e) => {
+            <h3>Previsualização</h3>
+            <div className="flex items-center border-[1px] border-gray-300 px-4 py-6">
+              <div
+                className="h-[150px] flex items-center justify-center
+                  w-[150px] overflow-hidden rounded-full border-gray-300 border-[1px] border-dashed"
+              >
+                <img
+                  alt={imageLink ? "Store Logo" : ""}
+                  className="h-full w-full object-cover bg-gray-100"
+                  src={imageLink}
+                />
+              </div>
+              <p className="text-2xl ml-4">{storeInfo.storeName}</p>
+            </div>
+          </div>
+          <div className="px-4">
+             <SubmitButton loading={loading} text="Criar loja" onClick={(e) => {
                 e.preventDefault();
                 setBody(storeInfo);
-              }}
-            >
-              Criar loja
-            </button>
+              }} />
           </div>
         </form>
       </div>

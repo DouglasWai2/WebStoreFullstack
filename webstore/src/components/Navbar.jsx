@@ -154,6 +154,11 @@ const Navbar = ({data, address, toggleCard, setToggleCard }) => {
                           Cadastrar produtos
                         </p>
                       </Link>
+                      <Link to="/store/my-products">
+                        <p className="text-sm text-blue-600 cursor-pointer hover:underline">
+                          Meus produtos
+                        </p>
+                      </Link>
                     </>
                   ) : (
                     ""

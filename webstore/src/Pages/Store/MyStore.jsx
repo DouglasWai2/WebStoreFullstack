@@ -17,6 +17,9 @@ import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 import ProductCategory from "../../components/Store/ProductCategory";
 import CarouselStore from "../../components/Store/Carousel";
+import CarouselPlaceholder1 from "../../assets/carouselplaceholder1.jpg";
+import CarouselPlaceholder2 from "../../assets/carouselplaceholder2.png";
+import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";
 
 const MyStore = () => {
   const { user } = useOutletContext();
@@ -29,6 +32,11 @@ const MyStore = () => {
   const [imageLink, setImageLink] = useState("");
   const [url, setUrl] = useState(null);
   const { storeName, storeId } = useParams();
+  const placeholders = [
+    CarouselPlaceholder1,
+    CarouselPlaceholder2,
+    CarouselPlaceholder3,
+  ];
   useEffect(() => {
     setUrl(`/api${location.pathname}`);
   }, []);
@@ -74,7 +82,7 @@ const MyStore = () => {
     setMethod("POST");
   }
 
-  return location.pathname !== "/store/address" ? (
+  return location.pathname !== "/store/my-store/address" ? (
     <div className="flex flex-col items-center">
       <>
         {edit ? (
@@ -107,7 +115,11 @@ const MyStore = () => {
                 <LoadingSpinner />
               </div>
             ) : (
-              <CarouselStore images={data.storeBanner} />
+              <CarouselStore
+                images={
+                  !data.storeBanner.length ? placeholders : data.storeBanner
+                }
+              />
             )}
           </div>
         )}
@@ -127,7 +139,7 @@ const MyStore = () => {
               <div className="flex relative justify-between px-6 shadow bg-white">
                 <div className="flex">
                   <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
-                  {!edit ? (
+                    {!edit ? (
                       !data ? (
                         <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
                           <LoadingSpinner />
@@ -139,9 +151,7 @@ const MyStore = () => {
                           src={data.storeImage}
                         />
                       )
-  
-                  ) : (
-
+                    ) : (
                       <label
                         className="relative h-full w-full group hover:brightness-75"
                         htmlFor="store-img"
@@ -171,7 +181,7 @@ const MyStore = () => {
                           src={!imageLink ? data.storeImage : imageLink}
                         />
                       </label>
-                  )}
+                    )}
                   </div>
                   <p className="text-4xl">{data?.storeName}</p>
                 </div>
@@ -201,49 +211,57 @@ const MyStore = () => {
                 )}
               </div>
               <div className="text-justify bg-white z-10 px-10">
-                {data &&
-                ((data?.cnpj && data?.storeAddress) ||
-                  (data?.cpf && data?.storeAddress)) ? (
-                  ""
-                ) : (
-                  <p className="text-red-500">Conclua seu cadastro</p>
-                )}
                 <p className="text-gray-600">Descrição</p>
                 <p>{data?.storeDescription}</p>
-                {data && Object.keys(data?.storeAddress).length === 0 ? (
-                  <Link to="address">Adicione o endereço da sua loja</Link>
+                {data && data?.storeAddress ? (
+                  <p className="">
+                    {data?.storeAddress.street} - {data?.storeAddress.number} -{" "}
+                    {data?.storeAddress.city} / {data?.storeAddress.state}
+                  </p>
                 ) : (
-                  data && (
-                    <p className="">
-                      {data?.storeAddress.street} - {data?.storeAddress.number}{" "}
-                      - {data?.storeAddress.city} / {data?.storeAddress.state}
-                    </p>
+                  !loading && (
+                    <>
+                      <p className="text-red-500">Conclua seu cadastro</p>
+                      <Link to="address" className="link">
+                        Adicione o endereço da sua loja
+                      </Link>
+                    </>
                   )
                 )}
               </div>
             </div>
           </div>
           <div className="mt-[100px] px-6">
-            <ProductCategory
-              text="Mais vendidos"
-              queries="sortby=sells&order=desc"
-              from={0}
-              to={10}
-              storeId={data && data._id}
-            />
-            <ProductCategory
-              text="Melhores avaliados"
-              queries="sortby=rating&order=desc"
-              from={0}
-              to={10}
-              storeId={data && data._id}
-            />
+            {data && data.products.length ? (
+              <>
+                <ProductCategory
+                  text="Mais vendidos"
+                  queries="sortby=sells&order=desc"
+                  from={0}
+                  to={10}
+                  storeId={data && data._id}
+                />
+                <ProductCategory
+                  text="Melhores avaliados"
+                  queries="sortby=rating&order=desc"
+                  from={0}
+                  to={10}
+                  storeId={data && data._id}
+                />
+              </>
+            ) : (
+              !loading && (
+                <h1 className="text-3xl">Adicione produtos à sua loja</h1>
+              )
+            )}
           </div>
         </div>
       </>
     </div>
   ) : (
-    <Outlet />
+    <div className="w-full h-[70vh] py-28 flex justify-center items-center">
+      <Outlet />
+    </div>
   );
 };
 

@@ -11,8 +11,8 @@ import PaymentMethodForm from "./Pages/User/SetupForm";
 import Store from "./Pages/Store/Store";
 import RegisterStore from "./Pages/Store/RegisterStore";
 import MyStore from "./Pages/Store/MyStore";
-import StoreAddress from "./Pages/Store/StoreAddress";
 import NewProduct from "./Pages/Store/NewProduct";
+import MyProducts from "./Pages/Store/MyProducts";
 
 const PrivateRoutes = (user, loggedIn, loading) => {
   if (!loggedIn || (loading === false && !user)) {
@@ -26,9 +26,14 @@ const PrivateRoutes = (user, loggedIn, loading) => {
         path: "store",
         element: <Store />,
         children: [
-          { path: "my-store", element: <MyStore /> },
+          {
+            path: "my-store",
+            element: <MyStore />,
+            children: [{ path: "address", element: <AddressForm url="/api/store/address" type='store' /> }],
+          },
           { path: "signup", element: <RegisterStore /> },
           { path: "new-product", element: <NewProduct /> },
+          { path: "my-products", element: <MyProducts /> },
         ],
       },
       {
@@ -38,13 +43,12 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           { path: "profile", element: <ProfilePage /> },
           { path: "address", element: <Address /> },
           { path: "security", element: <Security /> },
-          { path: "new-address", element: <AddressForm /> },
+          { path: "new-address", element: <AddressForm url='/api/address' /> },
           { path: "payment-methods", element: <PaymentMethods /> },
           { path: "your-purchases", element: <YourPurchases /> },
         ],
       },
     ];
-
   }
 };
 
