@@ -1,7 +1,9 @@
 const StoreSchema = require("../models/store.model");
 const UserSchema = require("../models/user.model");
+const productSchema = require("../models/product.models");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
+const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
@@ -46,7 +48,7 @@ exports.storeInfo = async (req, res) => {
     if (!store) {
       res.status(404).send("No store found, wrong link!");
     } else {
-      setTimeout(()=> res.status(200).json(store), 1000);
+      setTimeout(() => res.status(200).json(store), 1000);
     }
   } catch (error) {
     if (error.kind === "ObjectId") {
@@ -56,7 +58,7 @@ exports.storeInfo = async (req, res) => {
 };
 
 exports.addStoreAddress = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const store = await StoreSchema.findOneAndUpdate(
       { user: req.userInfo.id },
@@ -160,4 +162,61 @@ exports.changeImage = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+exports.myProducts = async (req, res) => {
+  const userId = req.userInfo.id;
+  const from = req.query.from;
+  const to = parseInt(req.query.to);
+  const sortBy = req.query.sortby;
+  const order = req.query.order;
+
+  try {
+    var { products } = await StoreSchema.findOne({ user: userId }).populate(
+      "products",
+      "title thumbnail brand price rating sells",
+      null,
+      { sort: { [sortBy]: order }, skip: from, limit: to }
+    );
+
+    return res.status(200).send(products);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.deleteProducts = async (req, res) => {
+  const { productIDs } = req.body;
+
+  if (!Array.isArray(productIDs)) return res.status(400).send("No id provided");
+
+  productIDs.forEach(async (item) => {
+    try {
+      const store = await StoreSchema.findOneAndUpdate(
+        { user: req.userInfo.id },
+        { $pull: { products: item } }
+      );
+      const product = await productSchema.findById(item);
+      product.images.forEach(async (item) => {
+        const regex = /([^/]+(\.\w+))$/;
+        const match = item.match(regex);
+        try {
+          const command = new DeleteObjectCommand({
+            Bucket: "webstore-api-images",
+            Key: match[0],
+          });
+          const response = await client.send(command);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+      await productSchema.findByIdAndDelete(product.id);
+      store.categories = await autoGenerateCategory(store.id);
+      await store.save()
+    } catch (error) {
+      return console.log(error);
+    }
+  });
+
+  return res.status(200).send("Products deleted successfully");
 };

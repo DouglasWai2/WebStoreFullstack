@@ -23,7 +23,7 @@ const ProductPreview = ({
   }, [files]);
 
   function fixButtonsInsideDiv() {
-    const rect = images.current.getBoundingClientRect();
+    const rect = images?.current.getBoundingClientRect();
     buttonsWrapper.current.style.top = `${rect.top}px`;
   }
 

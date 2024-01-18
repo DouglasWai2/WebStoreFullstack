@@ -8,6 +8,7 @@ exports.autoGenerateCategory = async (storeId) => {
         "products",
         "tags -_id"
       );
+      if(!products.length) return []
   
       products.forEach(item => {
         for(let index in item.tags){

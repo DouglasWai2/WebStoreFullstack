@@ -29,7 +29,12 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           {
             path: "my-store",
             element: <MyStore />,
-            children: [{ path: "address", element: <AddressForm url="/api/store/address" type='store' /> }],
+            children: [
+              {
+                path: "address",
+                element: <AddressForm url="/api/store/address" type="store" />,
+              },
+            ],
           },
           { path: "signup", element: <RegisterStore /> },
           { path: "new-product", element: <NewProduct /> },
@@ -43,7 +48,7 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           { path: "profile", element: <ProfilePage /> },
           { path: "address", element: <Address /> },
           { path: "security", element: <Security /> },
-          { path: "new-address", element: <AddressForm url='/api/address' /> },
+          { path: "new-address", element: <AddressForm url="/api/address" /> },
           { path: "payment-methods", element: <PaymentMethods /> },
           { path: "your-purchases", element: <YourPurchases /> },
         ],

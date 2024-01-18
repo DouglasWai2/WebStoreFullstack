@@ -7,7 +7,7 @@ const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 exports.addProduct = async (req, res) => {
   const { title, description, brand, model, tags, genre, features, price } =
     req.body;
-
+    console.log(req.body)
   const newProduct = new productSchema({
     title,
     description,
@@ -28,17 +28,13 @@ exports.addProduct = async (req, res) => {
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
     newProduct.store = store.id;
-    await newProduct.save().then((response) => {
-      store.products.push(newProduct.id);
-      store.save();
-    });
-
-    store.categories = await autoGenerateCategory(store.id);
-
+    await newProduct.save();
+    store.products.push(newProduct.id);
     await store.save();
-
-    res.status(200).send("Product saved successfully");
-  } catch (error) {
+    store.categories = await autoGenerateCategory(store.id);
+    await store.save();
+    return res.status(200).send("Product saved successfully");
+    } catch (error) {
     console.log(error);
     req.files.map(async (file) => {
       const command = new DeleteObjectCommand({
@@ -60,7 +56,7 @@ exports.allProducts = async (req, res) => {
   try {
     var { products } = await StoreSchema.findById(storeId).populate(
       "products",
-      "title thumbnail brand price rating sells",
+      "title thumbnail brand price rating sells -_id",
       null,
       { sort: { [sortBy]: order }, skip: from, limit: to }
     );

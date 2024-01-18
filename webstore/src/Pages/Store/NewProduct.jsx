@@ -126,7 +126,7 @@ const NewProduct = () => {
   function handleOnDrop(e) {
     e.stopPropagation();
     e.preventDefault();
-    setFiles(e.dataTransfer.files);
+    setFiles(Array.from(e.dataTransfer.files));
     setDropZone(false);
   }
 

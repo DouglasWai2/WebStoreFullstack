@@ -13,7 +13,7 @@ exports.refreshToken = async (req, res) => {
   }
   res.clearCookie('refreshToken', {httpOnly: true, sameSite: 'strict'})
   try {
-    const foundUser = await User.findOne({refreshTokens: refreshToken}).exec()
+    const foundUser = await User.findOne({refreshTokens: refreshToken})
     if (!foundUser){
       try {
         const user = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
