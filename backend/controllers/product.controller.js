@@ -7,6 +7,7 @@ const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 exports.addProduct = async (req, res) => {
   const { title, description, brand, model, tags, genre, features, price } =
     req.body;
+
     console.log(req.body)
   const newProduct = new productSchema({
     title,
@@ -43,6 +44,7 @@ exports.addProduct = async (req, res) => {
       });
       const response = await client.send(command);
     });
+    return res.status(400).send(error)
   }
 };
 

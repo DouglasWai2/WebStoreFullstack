@@ -71,7 +71,7 @@ main {
   @apply absolute left-2 !z-10 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 
   scale-100 top-3 origin-[0] peer-focus:start-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 
   peer-focus:scale-100 peer-focus:-translate-y-8 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto cursor-text
-  pointer-events-none
+  pointer-events-none peer-[.invalid]:text-red-400
 }
 
 .floating-select:focus ~ label, .floating-select:not([value=""]):valid ~ label {

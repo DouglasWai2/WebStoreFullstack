@@ -6,12 +6,12 @@ import {
   faCircleInfo,
   faCloudArrowUp,
   faPlus,
-  faQuestion,
   faTag,
 } from "@fortawesome/free-solid-svg-icons";
 import ProductPreview from "../../components/Store/ProductPreview";
 import { moneyMask } from "../../helpers/moneyMask";
 import SubmitButton from "../../components/shared/SubmitButton";
+import ErrorCard from "../../components/shared/ErrorCard";
 
 const NewProduct = () => {
   const [tagsArray, setTagsArray] = useState([]);
@@ -24,6 +24,7 @@ const NewProduct = () => {
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [body, setBody] = useState(null);
+  const [invalid, setInvalid] = useState(null);
   const [dropZone, setDropZone] = useState(false);
   const [dragging, setDragging] = useState(null);
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const NewProduct = () => {
         return item.value;
       })
     );
-  }, [array]); // Use effect necessary to handle async behavior of usestate callback
+  }, [array, tagsArray]); // Use effect necessary to handle async behavior of usestate callback
 
   function handleTitle(e) {
     setTitle(e.target.value);
@@ -136,11 +137,13 @@ const NewProduct = () => {
       description,
       title,
       features,
-      tags: [...tagsArray, ...tags],
+      tags: tagsArray,
       files,
       brand,
       model,
-      price: parseFloat(price.replace("R$ ", "").replace(",", ".")),
+      price: parseFloat(
+        price.replace("R$ ", "").replace(".", "").replace(",", ".")
+      ),
     });
   };
 
@@ -156,7 +159,13 @@ const NewProduct = () => {
 
   useEffect(() => {
     if (error) {
-      console.log(error);
+      setInvalid("Preencha todos os campos corretamente");
+      Object.keys(error.response.data.errors).forEach((item) => {
+        const element = document.getElementsByName(item);
+        if (element[0]) {
+          element[0].className += " invalid !border-red-400";
+        }
+      });
     }
 
     if (response === "Product saved successfully") {
@@ -166,6 +175,11 @@ const NewProduct = () => {
 
   return (
     <div className="flex justify-center py-10 px-10 gap-8">
+      {invalid && (
+        <div className="absolute z-20 translate-y-4">
+          <ErrorCard invalid={invalid} handleClick={() => setInvalid("")} />
+        </div>
+      )}
       <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 ">
         <div className="relative  my-2 z-0">
           <input
@@ -175,6 +189,7 @@ const NewProduct = () => {
             name="title"
             type="text"
             placeholder=""
+            required={true}
           />
           <label className="floating-label" htmlFor="title">
             Título
@@ -197,6 +212,7 @@ const NewProduct = () => {
             name="description"
             type="text"
             aria-multiline={true}
+            required
           />
           <label
             className="floating-label flex w-max gap-3"
@@ -205,20 +221,21 @@ const NewProduct = () => {
             Descrição do produto
           </label>
         </div>
-        <div className="relative  my-2 z-0">
+        <div className="relative my-2 z-0">
           <input
             placeholder=""
-            className="floating-input-effect w-full peer"
+            className={"floating-input-effect w-full peer "}
             onChange={handleBrand}
             value={brand}
             name="brand"
             type="text"
+            required
           />
           <label className="floating-label" htmlFor="brand">
             Marca
           </label>
         </div>
-        <div className="relative  my-2 z-0">
+        <div className="relative my-2 z-0">
           <input
             placeholder=""
             className="floating-input-effect w-full peer"
@@ -249,12 +266,13 @@ const NewProduct = () => {
               <input
                 placeholder=""
                 className="floating-input-effect w-full peer"
-                name="features"
+                name={"features." + i}
                 onChange={handleFeatures}
                 value={item.value}
                 id={item.id}
                 type={item.type}
                 size="40"
+                required
               />
               <label className="floating-label" htmlFor="features">
                 Característica {i + 1}
@@ -304,6 +322,10 @@ const NewProduct = () => {
           <label className="floating-label" htmlFor="tags">
             Etiquetas (para encontrarem seu produto)
           </label>
+          <div className="text-xs text-right w-full text-gray-400">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-1" />
+            Separe cada etiqueta por vírgula (',') para adicionar
+          </div>
         </div>
         <div className="relative  my-2 z-0">
           <input
@@ -313,6 +335,7 @@ const NewProduct = () => {
             value={price}
             name="price"
             type="text"
+            required
           />
           <label className="floating-label" htmlFor="price">
             Preço base

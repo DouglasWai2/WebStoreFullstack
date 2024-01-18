@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ImageMagnifier from "./ImageMagnifier";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import { faAngleRight, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const ProductPreview = ({
@@ -23,12 +23,12 @@ const ProductPreview = ({
   }, [files]);
 
   function fixButtonsInsideDiv() {
-    const rect = images?.current.getBoundingClientRect();
+    const rect = images.current.getBoundingClientRect();
     buttonsWrapper.current.style.top = `${rect.top}px`;
   }
 
   useEffect(() => {
-    if (buttonsWrapper.current) {
+    if (buttonsWrapper.current && images.current) {
       window.addEventListener("scroll", fixButtonsInsideDiv);
 
       return () => {
@@ -133,8 +133,8 @@ const ProductPreview = ({
                         <div ref={buttonsWrapper} className="fixed w-[578px]">
                           <div
                             className="absolute flex items-center justify-center text-transparent text-2xl 
-                      bg-transparent text-white h-[102px] cursor-pointer w-[50px]
-                       hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
+                                      bg-transparent text-white h-[102px] cursor-pointer w-[50px]
+                                    hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
                             name="backward"
                             onClick={handleScrollFoward}
                           >
@@ -180,6 +180,11 @@ const ProductPreview = ({
               )}
             </Droppable>
           </DragDropContext>
+          <div className="text-xs text-right w-full text-gray-400">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-1" />
+            Você pode arrastar as imagens para reordernar. A primeira será a
+            foto de capa do produto.
+          </div>
         </div>
         <div className="w-1/2 flex flex-col gap-3">
           <h1 className="text-3xl">{title ? title : "Título"}</h1>
@@ -187,9 +192,9 @@ const ProductPreview = ({
           <h3 className="text-xl">Características</h3>
           <ul className="list-disc ml-7">
             {!!features.length &&
-              features.map((item) => {
+              features.map((item, index) => {
                 return (
-                  <li key={item.id} className="text-sm mt-2">
+                  <li key={item + index} className="text-sm mt-2">
                     {item}
                   </li>
                 );
