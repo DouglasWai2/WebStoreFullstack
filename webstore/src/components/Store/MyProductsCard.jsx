@@ -14,6 +14,7 @@ const MyProductsCard = ({ item, checked, handleCheck, setBody }) => {
           checked={checked.includes(item._id)}
           value={item._id}
           onClick={(e) => handleCheck(e.target.value)}
+          onChange={e => {}}
         />
         <div className="h-[100px] aspect-[4/3] px-3">
           <img className="object-contain h-full" src={item.thumbnail} />

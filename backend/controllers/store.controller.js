@@ -42,7 +42,7 @@ exports.storeInfo = async (req, res) => {
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products"
+      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products categories"
     );
 
     if (!store) {
@@ -100,7 +100,7 @@ exports.setCpfCnpj = async (req, res) => {
   }
 };
 
-exports.changeBanner = async (req, res) => {
+exports.changeBanner = async ({req, res}) => {
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
@@ -170,8 +170,23 @@ exports.myProducts = async (req, res) => {
   const to = parseInt(req.query.to);
   const sortBy = req.query.sortby;
   const order = req.query.order;
+  const category = 'Samsung';
+  const maxPrice = req.query.maxPrice;
+  const minPrice = req.query.minPrice;
+
+  const filters = {}
 
   try {
+
+    // let result = await StoreSchema.aggregate([
+    //   { "$lookup": {
+    //     "from": 'Stores',
+    //     "let": { "products": "$products" },
+    //   }}
+    // ])
+    
+    // console.log(products)
+
     var { products } = await StoreSchema.findOne({ user: userId }).populate(
       "products",
       "title thumbnail brand price rating sells",
@@ -212,7 +227,7 @@ exports.deleteProducts = async (req, res) => {
       });
       await productSchema.findByIdAndDelete(product.id);
       store.categories = await autoGenerateCategory(store.id);
-      await store.save()
+      await store.save();
     } catch (error) {
       return console.log(error);
     }

@@ -9,6 +9,8 @@ const MyProducts = () => {
     "/api/store/my-products",
     "GET"
   );
+  const { data: store } = useFetchApi("/api/store/my-store", "GET");
+  console.log(store);
   const [body, setBody] = useState(null);
   const {
     data: response,
@@ -18,9 +20,9 @@ const MyProducts = () => {
   const [checked, setChecked] = useState([]);
 
   useEffect(() => {
-    if (response === 'Products deleted successfully') {
-        console.log(response)
-      refresh()
+    if (response === "Products deleted successfully") {
+      console.log(response);
+      refresh();
     }
   }, [response]);
 
@@ -38,7 +40,7 @@ const MyProducts = () => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <h1 className="text-2xl">Meus produtos</h1>
-      <div className="border-2 border-gray-200 py-4 px-2 rounded-sm">
+      <div className="border-2 border-gray-200 py-4 px-2 rounded-sm max-w-[1440px]">
         <div className="w-full h-[3em] bg-gray-400 flex items-center justify-between px-2">
           <label
             htmlFor="select-all"
@@ -50,8 +52,20 @@ const MyProducts = () => {
               type="checkbox"
               onClick={checkUncheckAll}
               checked={checked.length}
+              onChange={(e) => {}}
             />
             Selecionar todos
+          </label>
+          <label htmlFor="categories">
+            Filtrar por categoria
+            <select className="min-w-[250px]" id="categories">
+              {store &&
+                store.categories.map((item, index) => {
+                  return <option key={item + "-" + index} value={item}>
+                    {item}
+                  </option>;
+                })}
+            </select>
           </label>
           <button
             className="bg-yellow-400 px-3 py-1 hover:bg-yellow-500"
