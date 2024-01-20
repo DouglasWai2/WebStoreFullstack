@@ -2,7 +2,6 @@ export const moneyMask = (value) => {
   let newValue = value;
   if (typeof value === "number") newValue = value.toString();
   if (!newValue.split(".")[1]) newValue += "00";
-  console.log(newValue.split('.')[1])
 //   if (newValue.split(".")[1].length === 1) newValue += "0";
   newValue = newValue.replace(".", "").replace(",", "").replace(/\D/g, "");
 

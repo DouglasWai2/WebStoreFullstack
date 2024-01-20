@@ -4,6 +4,9 @@ const productSchema = require("../models/product.models");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
+const db = require("../utils/db");
+const ObjectId = require("mongodb").ObjectId;
+const stores = db.collection("Stores");
 
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
@@ -48,7 +51,7 @@ exports.storeInfo = async (req, res) => {
     if (!store) {
       res.status(404).send("No store found, wrong link!");
     } else {
-      setTimeout(() => res.status(200).json(store), 1000);
+      return res.status(200).json(store);
     }
   } catch (error) {
     if (error.kind === "ObjectId") {
@@ -100,7 +103,7 @@ exports.setCpfCnpj = async (req, res) => {
   }
 };
 
-exports.changeBanner = async ({req, res}) => {
+exports.changeBanner = async ({ req, res }) => {
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
@@ -170,29 +173,32 @@ exports.myProducts = async (req, res) => {
   const to = parseInt(req.query.to);
   const sortBy = req.query.sortby;
   const order = req.query.order;
-  const category = 'Samsung';
+  const category = req.query.category;
+  const title = req.query.title
   const maxPrice = req.query.maxPrice;
   const minPrice = req.query.minPrice;
+  let match = {};
 
-  const filters = {}
+  if (category) {
+    match.tags = category
+  } 
+  if(title){
+    match.title = title
+  }
 
   try {
+    var { products } = await StoreSchema.findOne({ user: userId }).populate({
+      path: "products",
+      select: "title thumbnail brand price rating sells",
+      match,
+      options: {
+        sort: { [sortBy]: order },
+        skip: from,
+        limit: to,
+      },
+    });
 
-    // let result = await StoreSchema.aggregate([
-    //   { "$lookup": {
-    //     "from": 'Stores',
-    //     "let": { "products": "$products" },
-    //   }}
-    // ])
-    
-    // console.log(products)
-
-    var { products } = await StoreSchema.findOne({ user: userId }).populate(
-      "products",
-      "title thumbnail brand price rating sells",
-      null,
-      { sort: { [sortBy]: order }, skip: from, limit: to }
-    );
+    console.log(products);
 
     return res.status(200).send(products);
   } catch (error) {

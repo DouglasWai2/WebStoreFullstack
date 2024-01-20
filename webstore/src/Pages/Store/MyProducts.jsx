@@ -4,13 +4,11 @@ import { useOutletContext } from "react-router-dom";
 import MyProductsCard from "../../components/Store/MyProductsCard";
 
 const MyProducts = () => {
+  const [url, setUrl] = useState("/api/store/my-products");
+  const [option, setOption] = useState('');
   const { user } = useOutletContext();
-  const { data, loading, error, refresh } = useFetchApi(
-    "/api/store/my-products",
-    "GET"
-  );
+  const { data, refresh } = useFetchApi(url, "GET");
   const { data: store } = useFetchApi("/api/store/my-store", "GET");
-  console.log(store);
   const [body, setBody] = useState(null);
   const {
     data: response,
@@ -21,15 +19,17 @@ const MyProducts = () => {
 
   useEffect(() => {
     if (response === "Products deleted successfully") {
-      console.log(response);
       refresh();
     }
   }, [response]);
 
+  useEffect(() => {
+    setUrl("/api/store/my-products?category=" + option);
+  }, [option]);
+
   function checkUncheckAll() {
     if (!checked.length) setChecked(data.map((item) => item._id));
     else setChecked([]);
-    console.log(checked);
   }
 
   function checkOne(value) {
@@ -42,6 +42,7 @@ const MyProducts = () => {
       <h1 className="text-2xl">Meus produtos</h1>
       <div className="border-2 border-gray-200 py-4 px-2 rounded-sm max-w-[1440px]">
         <div className="w-full h-[3em] bg-gray-400 flex items-center justify-between px-2">
+          
           <label
             htmlFor="select-all"
             className="cursor-pointer has-[:checked]:text-blue-500 select-none"
@@ -56,14 +57,30 @@ const MyProducts = () => {
             />
             Selecionar todos
           </label>
+          <label htmlFor="name-search">
+            Procurar por nome
+          <input type='text' id="name-search" onBlur={(e)=>{
+
+          }}/>
+          </label>
           <label htmlFor="categories">
             Filtrar por categoria
-            <select className="min-w-[250px]" id="categories">
+            <select
+              className="min-w-[250px]"
+              id="categories"
+              value={option}
+              onChange={(e) => {
+                setOption(e.target.value)
+              }}
+            >
+              <option value=''>Selecione uma opção</option>
               {store &&
                 store.categories.map((item, index) => {
-                  return <option key={item + "-" + index} value={item}>
-                    {item}
-                  </option>;
+                  return (
+                    <option key={item + "-" + index} value={item}>
+                      {item}
+                    </option>
+                  );
                 })}
             </select>
           </label>
