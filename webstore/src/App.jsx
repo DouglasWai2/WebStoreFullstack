@@ -5,7 +5,7 @@ import RegisterForm from "./Pages/RegisterForm";
 import Terms from "./Pages/Terms";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { useFetchApi } from "./helpers/useFetchApi";
+import { useFetchApi } from "./hooks/useFetchApi";
 import { useEffect, useState } from "react";
 import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
@@ -27,12 +27,10 @@ function App() {
   const loggedIn = getCookie("loggedin");
 
   useEffect(() => {
-    if (!loggedIn) {
-      return;
-    } else {
-      setUserUrl("/api/user");
-      setAddressUrl("/api/address");
-    }
+    if (!loggedIn) return;
+    console.log('Logado')
+    setUserUrl("/api/user");
+    setAddressUrl("/api/address");
   }, []);
 
   const router = createBrowserRouter([

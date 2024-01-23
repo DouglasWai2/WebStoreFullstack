@@ -7,7 +7,7 @@ import {
   useOutletContext,
   useParams,
 } from "react-router-dom";
-import { useFetchApi } from "../../helpers/useFetchApi";
+import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCloudArrowUp,

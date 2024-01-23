@@ -1,65 +1,50 @@
 import Logo from "../logo-no-background-2.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleExclamation,
-  faTriangleExclamation,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { useNavigate, useHistory } from "react-router-dom";
-import { useFetchApi } from "../helpers/useFetchApi";
-import SubmitButton from '../components/shared/SubmitButton'
+import { useNavigate } from "react-router-dom";
+import { useFetchApi } from "../hooks/useFetchApi";
+import SubmitButton from "../components/shared/SubmitButton";
 
 const LoginForm = () => {
   const [invalid, setInvalid] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [body, setBody] = useState(null);
-  const [toggle, setToggle] = useState(false);
   const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setBody({ email, password });
+  };
+  const handleEmailInput = (e) => setEmail(e.target.value);
+  const handlePasswordInput = (e) => setPassword(e.target.value);
 
   const {
     data: userData,
     loading,
-    error,
-    refresh,
-  } = useFetchApi("/auth/login", "POST", body, toggle);
+    error
+  } = useFetchApi("/auth/login", "POST", body);
 
-
-
+  
   useEffect(() => {
-    if (error) {
-      if (error.error === "User does not exist") {
-        setInvalid("E-mail ou senha incorretos");
-      } else if (error.error === "Wrong password") {
-        setInvalid("Senha incorreta");
-      }
+    if (!loading && error === "User does not exist") {
+      setInvalid("E-mail ou senha incorretos");
+    } else if (!loading && error === "Wrong password") {
+      setInvalid("Senha incorreta");
     }
+
     if (userData?.authorization) {
       window.localStorage.setItem("accessToken", userData.authorization);
-      document.cookie = "loggedin=True; path=/"
-      // if (userData.isVerfied) {
-      //   window.localStorage.setItem("verified", "true");
-      // } else {
-      //   window.localStorage.setItem("verified", "false");
-      // }
-
-      navigate(-1, {replace: true});
+      document.cookie = "loggedin=True; path=/";
+      navigate(-1, { replace: true });
     }
-  }, [error, userData]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setToggle(!toggle);
-    setBody({ email, password });
-  };
-
-  const handleEmailInput = (e) => setEmail(e.target.value);
-
-  const handlePasswordInput = (e) => setPassword(e.target.value);
+  }, [error, userData, loading]);
 
   return (
     <main className="flex flex-col z-[-1] justify-center items-center w-screen h-screen bg-[#F9F7F1]">
-      {invalid && (
+      {
+      invalid && (
         <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4">
           <FontAwesomeIcon icon={faTriangleExclamation} />
           {invalid}
@@ -72,7 +57,8 @@ const LoginForm = () => {
             X
           </button>
         </div>
-      )}
+      )
+      }
       <div className="w-[500px] rounded-lg shadow-md p-8 py-24">
         <a href="/">
           <img src={Logo} />
@@ -101,7 +87,11 @@ const LoginForm = () => {
               value={password}
             />
           </label>
-          <SubmitButton onClick={handleSubmit} loading={loading} text='Fazer Login' />
+          <SubmitButton
+            onClick={handleSubmit}
+            loading={loading}
+            text="Fazer Login"
+          />
         </form>
       </div>
       <div className="mt-6 text-center w-full box-shadow-bottom">

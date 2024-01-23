@@ -6,7 +6,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useFetchApi } from "../../../helpers/useFetchApi";
+import { useFetchApi } from "../../../hooks/useFetchApi";
 
 const AddressCard = ({ address }) => {
   const [url, setUrl] = useState(null);

@@ -4,9 +4,9 @@ const productSchema = require("../models/product.models");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
+const diacriticSensitiveRegex = require("../helpers/diacriticSensitiveRegex");
 const db = require("../utils/db");
-const ObjectId = require("mongodb").ObjectId;
-const stores = db.collection("Stores");
+const { ObjectId } = require("mongodb");
 
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
@@ -171,20 +171,42 @@ exports.myProducts = async (req, res) => {
   const userId = req.userInfo.id;
   const from = req.query.from;
   const to = parseInt(req.query.to);
+  const fromDate = req.query.fromDate;
+  const toDate = req.query.toDate;
   const sortBy = req.query.sortby;
   const order = req.query.order;
   const category = req.query.category;
-  const title = req.query.title
+  const title = req.query.title;
   const maxPrice = req.query.maxPrice;
   const minPrice = req.query.minPrice;
+
   let match = {};
 
   if (category) {
-    match.tags = category
-  } 
-  if(title){
-    match.title = title
+    match.tags = category;
   }
+  if (title) {
+    match.title = { $regex: diacriticSensitiveRegex(title), $options: "i" };
+  }
+
+  if (fromDate) {
+    match.$or = [
+      {
+        $and: [
+          { createdAt: { $gt: fromDate } },
+          { createdAt: { $lt: toDate } },
+        ],
+      },
+      {
+        $and: [
+          { legacyCreatedAt: { $gt: fromDate } },
+          { legacyCreatedAt: { $lt: toDate } },
+        ],
+      },
+    ];
+  }
+
+  console.log(match);
 
   try {
     var { products } = await StoreSchema.findOne({ user: userId }).populate({

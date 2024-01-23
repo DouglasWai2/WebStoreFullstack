@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useFetchApi } from "../../helpers/useFetchApi";
+import { useFetchApi } from "../../hooks/useFetchApi";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AddressForm from "../User/AddressForm";
+import AddressForm from "../../components/shared/AddressForm";
 import SubmitButton from "../../components/shared/SubmitButton";
 
 const RegisterStore = () => {

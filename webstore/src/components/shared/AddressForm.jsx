@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import LoadingSpinner from "../../components/shared/LoadingSpinner";
-import ErrorCard from "../../components/shared/ErrorCard";
-import SuccessCard from "../../components/shared/SuccessCard";
+import LoadingSpinner from "./LoadingSpinner";
+import ErrorCard from "./ErrorCard";
+import SuccessCard from "./SuccessCard";
 import { useNavigate } from "react-router-dom";
-import { useFetchApi } from "../../helpers/useFetchApi";
+import { useFetchApi } from "../../hooks/useFetchApi";
 import { CEPMask } from "../../helpers/CEPMask";
 import { CPFMask } from "../../helpers/CPFMask";
-import SubmitButton from "../../components/shared/SubmitButton";
+import SubmitButton from "./SubmitButton";
 
 const AddressForm = ({ url, type }) => {
   const [error, setError] = useState("");

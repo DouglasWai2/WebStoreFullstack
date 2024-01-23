@@ -6,7 +6,7 @@ import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
-import { useFetchApi } from "../helpers/useFetchApi";
+import { useFetchApi } from "../hooks/useFetchApi";
 
 const RegisterForm = () => {
   const [errMessage, setErrMessage] = useState("");
@@ -28,6 +28,8 @@ const RegisterForm = () => {
   let mediumPassword = new RegExp(
     "((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))"
   );
+
+  console.log('SIGNUP')
 
   const { data, loading, error } = useFetchApi("/auth/register", "POST", body);
 

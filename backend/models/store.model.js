@@ -1,80 +1,83 @@
 const mongoose = require("mongoose");
 
-const StoreSchema = new mongoose.Schema({
-  storeName: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true,
-  },
-  storeDescription: {
-    type: String,
-    required: true,
-  },
-  storeImage: {
-    type: String,
-  },
-  storeCategory: {
-    type: String,
-    required: true,
-  },
-  storeBanner: [
-    {
+const StoreSchema = new mongoose.Schema(
+  {
+    storeName: {
       type: String,
-    },
-  ],
-  phone: {
-    type: String,
-    minlength: 11,
-    trim: true,
-  },
-  cnpj: {
-    type: String,
-    trim: true,
-  },
-  cpf: {
-    type: String,
-    trim: true,
-  },
-  storeAddress: {
-    cep: {
-      type: String,
+      unique: true,
+      required: true,
       trim: true,
-      maxlength: 8,
     },
-    street: {
+    storeDescription: {
       type: String,
-      trim: true,
-      maxlength: 100,
+      required: true,
     },
-    number: {
+    storeImage: {
       type: String,
-      trim: true,
-      maxlength: 10,
     },
-    neighborhood: {
+    storeCategory: {
       type: String,
-      trim: true,
-      maxlength: 100,
+      required: true,
     },
-    city: {
+    storeBanner: [
+      {
+        type: String,
+      },
+    ],
+    phone: {
       type: String,
+      minlength: 11,
       trim: true,
-      maxlength: 100,
     },
-    state: {
-      type: String,
-      trim: true,
-      maxlength: 100,
-    },
-    country: {
+    cnpj: {
       type: String,
       trim: true,
     },
+    cpf: {
+      type: String,
+      trim: true,
+    },
+    storeAddress: {
+      cep: {
+        type: String,
+        trim: true,
+        maxlength: 8,
+      },
+      street: {
+        type: String,
+        trim: true,
+        maxlength: 100,
+      },
+      number: {
+        type: String,
+        trim: true,
+        maxlength: 10,
+      },
+      neighborhood: {
+        type: String,
+        trim: true,
+        maxlength: 100,
+      },
+      city: {
+        type: String,
+        trim: true,
+        maxlength: 100,
+      },
+      state: {
+        type: String,
+        trim: true,
+        maxlength: 100,
+      },
+      country: {
+        type: String,
+        trim: true,
+      },
+    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
+    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    categories: [{ type: String }],
   },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
-  products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
-  categories: [{ type: String }],
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("Store", StoreSchema, "Stores");

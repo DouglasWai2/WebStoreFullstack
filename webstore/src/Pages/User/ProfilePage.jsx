@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
 import TableData from "../../components/User/PersonalData/TableData";
 import { useOutletContext } from "react-router-dom";
-import { useFetchApi } from "../../helpers/useFetchApi";
+import { useFetchApi } from "../../hooks/useFetchApi";
 import SubmitButton from "../../components/shared/SubmitButton";
 import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
 import { CPFMask } from "../../helpers/CPFMask";
