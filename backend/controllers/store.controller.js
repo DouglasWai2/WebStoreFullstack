@@ -5,8 +5,6 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 const diacriticSensitiveRegex = require("../helpers/diacriticSensitiveRegex");
-const db = require("../utils/db");
-const { ObjectId } = require("mongodb");
 
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
@@ -215,11 +213,10 @@ exports.myProducts = async (req, res) => {
     ];
   }
 
-
   try {
     var { products } = await StoreSchema.findOne({ user: userId }).populate({
       path: "products",
-      select: "title thumbnail brand price rating sells",
+      select: "title thumbnail brand price rating sells discount",
       match,
       options: {
         sort: { [sortBy]: order },
@@ -270,4 +267,21 @@ exports.deleteProducts = async (req, res) => {
   });
 
   return res.status(200).send("Products deleted successfully");
+};
+
+exports.discountProducts = async (req, res) => {
+  const { productIDs } = req.body;
+  const { discount } = req.body;
+
+  if (!Array.isArray(productIDs)) return res.status(400).send("No id provided");
+
+  try {
+    productIDs.forEach(async (item) => {
+      await productSchema.findByIdAndUpdate(item, { discount });
+    });
+
+    res.status(200).send("Discount added");
+  } catch (error) {
+    console.log(error);
+  }
 };

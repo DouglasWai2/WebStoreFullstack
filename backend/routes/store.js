@@ -8,6 +8,7 @@ const {
   changeImage,
   myProducts,
   deleteProducts,
+  discountProducts,
 } = require("../controllers/store.controller");
 const auth = require("../middlewares/verifyToken");
 const router = express.Router();
@@ -22,5 +23,6 @@ router.post("/store/set-id", auth, setCpfCnpj);
 router.post("/store/change-banner", auth, upload.array("files[]", 3), changeBanner);
 router.post("/store/change-image", auth, upload.single("file"), changeImage);
 router.post("/store/my-store/delete-products", auth, deleteProducts);
+router.post("/store/my-store/discount-products", auth, discountProducts);
 
 module.exports = router;

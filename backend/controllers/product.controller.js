@@ -58,7 +58,7 @@ exports.allProducts = async (req, res) => {
   try {
     var { products } = await StoreSchema.findById(storeId).populate(
       "products",
-      "title thumbnail brand price rating sells -_id",
+      "title thumbnail brand price rating sells discount -_id",
       null,
       { sort: { [sortBy]: order }, skip: from, limit: to }
     );
