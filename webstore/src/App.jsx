@@ -4,7 +4,11 @@ import LoginForm from "./Pages/LoginForm";
 import RegisterForm from "./Pages/RegisterForm";
 import Terms from "./Pages/Terms";
 import PrivacyPolicy from "./Pages/PrivacyPolicy";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
 import { useFetchApi } from "./hooks/useFetchApi";
 import { useEffect, useState } from "react";
 import PrivateRoutes from "./PrivateRoutes";
@@ -28,7 +32,7 @@ function App() {
 
   useEffect(() => {
     if (!loggedIn) return;
-    console.log('Logado')
+    console.log("Logado");
     setUserUrl("/api/user");
     setAddressUrl("/api/address");
   }, []);
@@ -53,8 +57,24 @@ function App() {
             ...PublicRoutes(),
           ],
         },
-    { path: "/login", element: <LoginForm /> },
-    { path: "/signup", element: <RegisterForm /> },
+    {
+      path: "/login",
+      element: <LoginForm />,
+      loader: () => {
+        if (loggedIn) {
+          return redirect("/");
+        }
+      },
+    },
+    {
+      path: "/signup",
+      element: <RegisterForm loggedIn={loggedIn} />,
+      loader: () => {
+        if (loggedIn) {
+          return redirect("/");
+        }
+      },
+    },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },
     { path: "*", element: <NotFoundError /> },

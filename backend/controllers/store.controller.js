@@ -173,6 +173,8 @@ exports.myProducts = async (req, res) => {
   const to = parseInt(req.query.to);
   const fromDate = req.query.fromDate;
   const toDate = req.query.toDate;
+  const fromRating = req.query.fromRating;
+  const toRating = req.query.toRating;
   const sortBy = req.query.sortby;
   const order = req.query.order;
   const category = req.query.category;
@@ -206,7 +208,13 @@ exports.myProducts = async (req, res) => {
     ];
   }
 
-  console.log(match);
+  if (fromRating) {
+    match.$and = [
+      { rating: { $gte: parseFloat(fromRating) } },
+      { rating: { $lte: parseFloat(toRating) } },
+    ];
+  }
+
 
   try {
     var { products } = await StoreSchema.findOne({ user: userId }).populate({

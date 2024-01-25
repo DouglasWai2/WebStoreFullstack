@@ -9,6 +9,7 @@ import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { useFetchApi } from "../hooks/useFetchApi";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [errMessage, setErrMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
@@ -21,7 +22,8 @@ const RegisterForm = () => {
     confirmPassword: "",
   });
   const [body, setBody] = useState(null);
-  const navigate = useNavigate();
+
+
   let strongPassword = new RegExp(
     "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
   );
@@ -29,7 +31,6 @@ const RegisterForm = () => {
     "((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))"
   );
 
-  console.log('SIGNUP')
 
   const { data, loading, error } = useFetchApi("/auth/register", "POST", body);
 
@@ -85,7 +86,6 @@ const RegisterForm = () => {
       [e.target.name]: e.target.value,
     }));
   };
-
   return (
     <main className="flex flex-col z-[-1] p-10 justify-center items-center w-screen bg-[#F9F7F1]">
       <div className="w-[500px] relative rounded-lg shadow-md p-8 py-20">

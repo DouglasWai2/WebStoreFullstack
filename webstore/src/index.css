@@ -124,3 +124,20 @@ svg.star-svg {
   background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 90%, rgba(255,255,255,1) 100%);
 }
 
+input[type="date"]{
+  background-color: #188fa7;
+  padding: 1px;
+  font-family: "Roboto Mono",monospace;
+  color: #ffffff;
+  font-size: 13px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+::-webkit-calendar-picker-indicator{
+  background-color: #ffffff;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
