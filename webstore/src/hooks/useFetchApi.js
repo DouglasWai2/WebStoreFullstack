@@ -34,6 +34,9 @@ export const useFetchApi = (path, method, body, config) => {
   );
 
   const refresh = () => {
+    setData(null)
+    setError(null)
+    setLoading(null)
     fetchApi(body);
   };
   useEffect(() => {

@@ -280,7 +280,7 @@ exports.discountProducts = async (req, res) => {
       await productSchema.findByIdAndUpdate(item, { discount });
     });
 
-    res.status(200).send("Discount added");
+    return res.status(200).send("Discount added");
   } catch (error) {
     console.log(error);
   }

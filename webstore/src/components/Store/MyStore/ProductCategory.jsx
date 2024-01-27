@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { useLocation, useParams } from "react-router-dom";
-import { useFetchApi } from "../../hooks/useFetchApi";
+import { useFetchApi } from "../../../hooks/useFetchApi";
 
 const ProductCategory = ({ text, queries, from, to, storeId }) => {
   const [productsUrl, setProductsUrl] = useState(null);

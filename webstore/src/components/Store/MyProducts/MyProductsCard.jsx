@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { moneyMask } from "../../helpers/moneyMask";
+import { moneyMask } from "../../../helpers/moneyMask";
 import { Rating } from "react-simple-star-rating";
 import {
   faCheck,
@@ -8,7 +8,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useFetchApi } from "../../hooks/useFetchApi";
+import { useFetchApi } from "../../../hooks/useFetchApi";
 import ConfirmDelete from "./ConfirmDelete";
 
 const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {

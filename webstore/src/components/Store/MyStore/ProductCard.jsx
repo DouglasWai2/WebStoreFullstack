@@ -1,6 +1,6 @@
 import React from "react";
 import { Rating } from "react-simple-star-rating";
-import { moneyMask } from "../../helpers/moneyMask";
+import { moneyMask } from "../../../helpers/moneyMask";
 
 const ProductCard = ({ img, title, rating, price, sells }) => {
   return (

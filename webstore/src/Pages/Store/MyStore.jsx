@@ -15,8 +15,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
-import ProductCategory from "../../components/Store/ProductCategory";
-import CarouselStore from "../../components/Store/Carousel";
+import ProductCategory from "../../components/Store/MyStore/ProductCategory";
+import CarouselStore from "../../components/Store/MyStore/Carousel";
 import CarouselPlaceholder1 from "../../assets/carouselplaceholder1.jpg";
 import CarouselPlaceholder2 from "../../assets/carouselplaceholder2.png";
 import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";

@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useFetchApi } from "../../hooks/useFetchApi";
-import MyProductsCard from "../../components/Store/MyProductsCard";
-import { formatDate } from "../../helpers/formatDate";
+import MyProductsCard from "../../components/Store/MyProducts/MyProductsCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretDown,
   faChevronDown,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import ConfirmDelete from "../../components/Store/ConfirmDelete";
-import Menu from "../../components/Store/Menu";
-import Filters from "../../components/Store/Filters";
+import ConfirmDelete from "../../components/Store/MyProducts/ConfirmDelete";
+import Filters from "../../components/Store/MyProducts/Filters";
+import DiscountBox from "../../components/Store/MyProducts/DiscountBox";
 
 const MyProducts = () => {
   const [filter, setFilter] = useState(false);
   const [confirm, setConfirm] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState(formatDate(new Date()));
-  const [fromRating, setFromRating] = useState(0);
-  const [toRating, setToRating] = useState(5);
-  const [url, setUrl] = useState("/api/store/my-products");
-  const [option, setOption] = useState("");
+  const [postUrl, setPostUrl] = useState("");
+  const [url, setUrl] = useState(
+    "/api/store/my-products?&category=&fromRating=&toRating=&title=&fromDate=&toDate="
+  );
   const [title, setTitle] = useState("");
+  const [discount, setDiscount] = useState(false);
+  const [discountValue, setDiscountValue] = useState(0);
   const [menu, setMenu] = useState(false);
   const [checked, setChecked] = useState([]);
   const { data, refresh } = useFetchApi(url, "GET");
@@ -31,7 +30,7 @@ const MyProducts = () => {
     data: response,
     loading: submiting,
     error: invalid,
-  } = useFetchApi("/api/store/my-store/delete-products", "POST", body);
+  } = useFetchApi(postUrl, "POST", body);
 
   function checkUncheckAll() {
     if (!checked.length) setChecked(data.map((item) => item._id));
@@ -47,12 +46,31 @@ const MyProducts = () => {
 
   function deleteSelected() {
     setBody({ productIDs: checked });
+    setPostUrl("/api/store/my-store/delete-products");
   }
 
-  function discountSelected() {}
+  function discountSelected() {
+    setBody({ productIDs: checked, discount: discountValue / 100 });
+    setPostUrl("/api/store/my-store/discount-products");
+  }
+
+  useEffect(() => {
+    if (response === "Discount added") {
+      setDiscount(false);
+      refresh();
+    }
+  }, [response, submiting]);
 
   return (
     <>
+      {discount && (
+        <DiscountBox
+          handleClick={discountSelected}
+          setDiscount={setDiscount}
+          discountValue={discountValue}
+          setDiscountValue={setDiscountValue}
+        />
+      )}
       {confirm && (
         <ConfirmDelete handleClick={deleteSelected} setConfirm={setConfirm} />
       )}
@@ -109,7 +127,7 @@ const MyProducts = () => {
                   <FontAwesomeIcon icon={faCaretDown} />
                 </button>
                 {menu && (
-                  <div className="absolute bg-white shadow-md right-0 px-3 py-5 flex flex-col gap-2 animate-appear">
+                  <div className="absolute bg-white shadow-md right-0 px-3 py-5 flex flex-col gap-2 animate-appear z-20">
                     <button
                       onClick={() => {
                         if (!checked.length)
@@ -121,7 +139,11 @@ const MyProducts = () => {
                       Excluir selecionados
                     </button>
                     <button
-                      onClick={() => {}}
+                      onClick={() => {
+                        if (!checked.length)
+                          return alert("Nenhum produto selecionado");
+                        setDiscount(true);
+                      }}
                       className="text-left rounded-sm bg-[#9dbbae] px-3 py-1 hover:underline"
                     >
                       Aplicar desconto em selecionados
@@ -130,10 +152,21 @@ const MyProducts = () => {
                 )}
               </div>
             </div>
-            <div className={"overflow-hidden max-h-0 transition-[max-height]" +  (filter ? ' !max-h-[600px]' : '')}>
-            {filter && (
-              <Filters filter={filter} categories={store && store.categories} />
-            )}
+            <div
+              className={
+                "overflow-hidden max-h-0 transition-all !duration-400" +
+                (filter ? " !max-h-[600px]" : "")
+              }
+            >
+              {filter && (
+                <Filters
+                  filter={filter}
+                  categories={store && store.categories}
+                  setUrl={setUrl}
+                  url={url}
+                  title={title}
+                />
+              )}
             </div>
             <div
               aria-label="More filters"
@@ -141,7 +174,7 @@ const MyProducts = () => {
               onClick={() => {
                 setFilter(!filter);
               }}
-              className="w-full text-center bg-gray-300 group cursor-pointer"
+              className="w-full text-center bg-gray-300 group cursor-pointer hover:brightness-90 duration-100"
             >
               <FontAwesomeIcon
                 className={"group-hover:animate-bounce"}
