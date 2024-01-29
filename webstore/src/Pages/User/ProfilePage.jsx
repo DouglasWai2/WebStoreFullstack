@@ -48,7 +48,6 @@ const ProfilePage = () => {
     let newArr = [...editData];
     newArr[index][e.target.name] = e.target.value;
     setEditData(newArr);
-    console.log(editData);
   };
 
   useEffect(() => {

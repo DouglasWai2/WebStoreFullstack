@@ -27,11 +27,7 @@ const ProductCategory = ({ text, queries, from, to, storeId }) => {
               return (
                 <ProductCard
                   key={index}
-                  img={item.thumbnail}
-                  title={item.title}
-                  rating={item.rating}
-                  price={item.price}
-                  sells={item.sells}
+                  item={item}
                 />
               );
             })

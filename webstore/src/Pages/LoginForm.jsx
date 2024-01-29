@@ -28,9 +28,9 @@ const LoginForm = () => {
 
   
   useEffect(() => {
-    if (!loading && error === "User does not exist") {
+    if (!loading && error?.data.error === "User does not exist") {
       setInvalid("E-mail ou senha incorretos");
-    } else if (!loading && error === "Wrong password") {
+    } else if (!loading && error?.data.error === "Wrong password") {
       setInvalid("Senha incorreta");
     }
 

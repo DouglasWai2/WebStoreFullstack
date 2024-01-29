@@ -7,7 +7,7 @@ const User = () => {
 
     return (
         <>
-            <main className="p-10 h-full">
+            <div className="p-10 h-full">
                 <h1 className="text-3xl mb-4">Seu perfil</h1>
                 <div className="flex">
                     <SideNav />
@@ -15,7 +15,7 @@ const User = () => {
                         <Outlet context={{user, address, loading, fetching}}/>
                     </div>
                 </div>
-            </main>
+            </div>
         </>
     );
 };

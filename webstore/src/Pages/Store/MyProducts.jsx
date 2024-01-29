@@ -10,6 +10,8 @@ import {
 import ConfirmDelete from "../../components/Store/MyProducts/ConfirmDelete";
 import Filters from "../../components/Store/MyProducts/Filters";
 import DiscountBox from "../../components/Store/MyProducts/DiscountBox";
+import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import { Link } from "react-router-dom";
 
 const MyProducts = () => {
   const [filter, setFilter] = useState(false);
@@ -23,7 +25,7 @@ const MyProducts = () => {
   const [discountValue, setDiscountValue] = useState(0);
   const [menu, setMenu] = useState(false);
   const [checked, setChecked] = useState([]);
-  const { data, refresh } = useFetchApi(url, "GET");
+  const { data, loading, refresh } = useFetchApi(url, "GET");
   const { data: store } = useFetchApi("/api/store/my-store", "GET");
   const [body, setBody] = useState(null);
   const {
@@ -31,6 +33,7 @@ const MyProducts = () => {
     loading: submiting,
     error: invalid,
   } = useFetchApi(postUrl, "POST", body);
+
 
   function checkUncheckAll() {
     if (!checked.length) setChecked(data.map((item) => item._id));
@@ -182,6 +185,11 @@ const MyProducts = () => {
               />
             </div>
           </div>
+          {loading && (
+            <div className="w-full py-6 flex justify-center">
+              <LoadingSpinner />
+            </div>
+          )}
           {data &&
             data.map((item, index) => {
               return (
@@ -194,6 +202,14 @@ const MyProducts = () => {
                 />
               );
             })}
+          {!loading && !data && (
+            <div className="w-full py-6 flex flex-col items-center">
+              <h1 className="text-lg">
+                Você ainda não adicionou nenhum produto
+              </h1>
+              <Link to="/store/new-product">Adicionar produtos</Link>
+            </div>
+          )}
         </div>
       </div>
     </>

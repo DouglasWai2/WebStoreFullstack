@@ -1,5 +1,5 @@
 const express = require("express");
-const { addProduct, allProducts } = require("../controllers/product.controller");
+const { addProduct, allProducts, sendProduct } = require("../controllers/product.controller");
 const auth = require("../middlewares/verifyToken");
 const router = express.Router();
 const upload = require("../helpers/upload.helper");
@@ -13,5 +13,6 @@ router.post(
 );
 
 router.get("/catalog/all-products/:storeid", allProducts)
+router.get("/catalog/:productId", sendProduct)
 
 module.exports = router;

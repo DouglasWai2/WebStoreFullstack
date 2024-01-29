@@ -15,6 +15,7 @@ import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import NotFoundError from "./Pages/NotFoundError";
 import UnexpectedError from "./Pages/UnexpectedError";
+import { logOut } from "./helpers/logOut";
 
 function App() {
   const [userUrl, setUserUrl] = useState(null);
@@ -30,9 +31,20 @@ function App() {
   }
   const loggedIn = getCookie("loggedin");
 
+  function redirectLoader() {
+    if (loggedIn) {
+      return redirect("/");
+    } else {
+      return null;
+    }
+  }
+
+  useEffect(() => {
+    if (error?.data === "Access Denied. No token provided.") logOut();
+  }, [error]);
+
   useEffect(() => {
     if (!loggedIn) return;
-    console.log("Logado");
     setUserUrl("/api/user");
     setAddressUrl("/api/address");
   }, []);
@@ -60,20 +72,12 @@ function App() {
     {
       path: "/login",
       element: <LoginForm />,
-      loader: () => {
-        if (loggedIn) {
-          return redirect("/");
-        }
-      },
+      loader: redirectLoader(),
     },
     {
       path: "/signup",
       element: <RegisterForm loggedIn={loggedIn} />,
-      loader: () => {
-        if (loggedIn) {
-          return redirect("/");
-        }
-      },
+      loader: redirectLoader(),
     },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },

@@ -25,7 +25,7 @@ export const useFetchApi = (path, method, body, config) => {
         const data = await response?.data;
         setData(data);
       } catch (e) {
-        setError(e.response.data.error);
+        setError(e.response);
       } finally {
         setLoading(false);
       }

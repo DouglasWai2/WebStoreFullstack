@@ -1,33 +1,61 @@
 import React from "react";
 import { Rating } from "react-simple-star-rating";
 import { moneyMask } from "../../../helpers/moneyMask";
+import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ img, title, rating, price, sells }) => {
+const ProductCard = ({ item }) => {
+  const navigate = useNavigate()
+
+
   return (
-    <div
+    <article
       id="product-card"
-      className="w-[250px] h-[350px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200"
+      className="w-[250px]  bg-white p-3 px-5 shadow-md group cursor-pointer duration-200"
+      onClick={()=> {
+        navigate('/catalog/'+ item.title + '/' + item._id)
+      }}
     >
-      <img className="aspect-[4/3] object-contain" src={img} />
+      <img className="aspect-[4/3] object-contain" src={item.thumbnail} />
       <div className="mt-3 group-hover:text-yellow-500 duration-100">
-        <p className="truncate text-wrap min-h-[4.5em] line-clamp-3">{title}</p>
+        <legend className="truncate text-wrap min-h-[4.5em] line-clamp-3">
+          {item.title}
+        </legend>
       </div>
       <div className="flex items-center justify-between">
         <Rating
           size={25}
           readonly={true}
-          initialValue={rating}
+          initialValue={item.rating}
           allowFraction={true}
           emptyColor="rgb(209 213 219)"
           fillColor="#facc15"
         />
-        <span className="text-xs">({rating})</span>
+        <span className="text-xs">({item.rating})</span>
       </div>
-      <span className="text-sm">{sells} vendidos</span>
+      <span className="text-sm">{item.sells} vendidos</span>
       <div className="font-semibold text-lg mt-2 text-right">
-        {moneyMask(price)}
+        {item.discount > 0 ? (
+          <div className="flex justify-between gap-10">
+            <p className="text-lg text-[#188fa7] text-end">
+              {item.discount * 100}% OFF
+            </p>
+
+            <div className="text-end">
+              <p className="strikethrough text-xs text-center h-min w-fit">
+                {moneyMask(item.price)}
+              </p>
+              <p>
+                {moneyMask(
+                  Number(item.price - item.price * item.discount).toFixed(2)
+                )}
+              </p>
+            </div>
+          </div>
+        ) : (
+          moneyMask(item.price)
+        )}
       </div>
-    </div>
+    </article>
   );
 };
 

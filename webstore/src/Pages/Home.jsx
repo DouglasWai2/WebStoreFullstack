@@ -25,7 +25,7 @@ const Home = ({user, address, loading, fetching, loggedIn}) => {
         address={address}
         loggedIn={loggedIn}
       />
-      <main className={"w-full h-full" + (toggleCard ? " brightness-50" : "")}>
+      <main className={"w-full h-full" + (toggleCard && " brightness-50")}>
         <Outlet context={{ user, address, fetching, loading }} />
       </main>
     </>
