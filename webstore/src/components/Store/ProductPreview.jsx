@@ -19,7 +19,7 @@ const ProductPreview = ({
   const buttonsWrapper = useRef(null);
 
   useEffect(() => {
-    if (files.length) setMainImage(URL.createObjectURL(files[0]));
+    if (files?.length) setMainImage(URL.createObjectURL(files[0]));
   }, [files]);
 
   function fixButtonsInsideDiv() {
@@ -82,12 +82,14 @@ const ProductPreview = ({
       <h1 className="font-bold">Previsualização do produto:</h1>
       <section id="product" className="shadow p-4 flex gap-10">
         <div id="images-container" className="">
-          {files.length ? (
-            <div className="w-auto h-[432px] aspect-[4/3] flex items-center justify-center">
+          {files?.length ? (
+            <div className="w-auto h-[432px] aspect-[4/3]">
               <ImageMagnifier image={mainImage} />
             </div>
           ) : (
-            <div className="bg-gray-200 h-[433px] text-gray-400 text-3xl flex justify-center items-center w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
+            <div className="bg-gray-200 h-[433px] text-gray-400 text-3xl
+             flex justify-center items-center w-[578px] overflow-hidden 
+             hover:brightness-75 transition-[filter] duration-100">
               <p>1</p>
             </div>
           )}
@@ -101,7 +103,7 @@ const ProductPreview = ({
                   }}
                   className="flex w-[578px] overflow-x-scroll my-4 product-images relative"
                 >
-                  {files.length ? (
+                  {files?.length ? (
                     <>
                       {files.map((item, index) => {
                         return (
@@ -129,7 +131,7 @@ const ProductPreview = ({
                           </Draggable>
                         );
                       })}
-                      {files.length > 4 && !dragging && (
+                      {files?.length > 4 && !dragging && (
                         <div ref={buttonsWrapper} className="fixed w-[578px]">
                           <div
                             className="absolute flex items-center justify-center text-transparent text-2xl 
@@ -191,7 +193,7 @@ const ProductPreview = ({
           <h1 className="text-xl">{price}</h1>
           <h3 className="text-xl">Características</h3>
           <ul className="list-disc ml-7">
-            {!!features.length &&
+            {!!features?.length &&
               features.map((item, index) => {
                 return (
                   <li key={item + index} className="text-sm mt-2">

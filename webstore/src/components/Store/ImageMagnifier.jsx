@@ -1,40 +1,54 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const ImageMagnifier = ({ image }) => {
-  const displayImage = useRef(null);
-  const imagePosition = useRef(null);
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const result = useRef(null);
+  const imageRef = useRef(null);
+  const imageContainerRef = useRef(null);
+  const resultRef = useRef(null);
   const lens = useRef(null);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+
+  // function resizeImage(image){
+  //   let canvas = imageContainerRef.current
+  //   let ctx = new CanvasRenderingContext2D('2d')
+  //   ctx.fillStyle = '#fff';
+  //   ctx.fillRect(0,0,759,759);
+  //   ctx.drawImage(image, 0, 250);
+  // }
+
+  // useEffect(()=> {
+  //   resizeImage(image)
+  // }, [image])
 
   const handleMouseHover = (e) => {
-    const imgWrapper = displayImage.current;
-    const zoomedImage = result.current;
-    const img = imagePosition.current;
+    const image = imageRef.current;
+    const result = resultRef.current;
+    const imageContainer = imageContainerRef.current;
     var x, y;
 
-    const cx = zoomedImage?.offsetWidth / lens.current.offsetWidth;
-    const cy = zoomedImage?.offsetHeight / lens.current.offsetHeight;
-    zoomedImage.style.backgroundSize = `${imgWrapper?.width * cx}px ${
-      imgWrapper?.height * cy
+    //get the ratio between the zoomed in image and the lens
+    const cx = result?.offsetWidth / lens.current.offsetWidth;
+    const cy = result?.offsetHeight / lens.current.offsetHeight;
+
+    result.style.backgroundSize = `${image?.width * cx}px ${
+      image?.height * cy
     }px`;
 
+    // get current mouse position
     x =
       e.pageX -
-      img.getBoundingClientRect().left -
-      window.scrollX -
+      imageContainer.getBoundingClientRect().left-
       lens.current.offsetWidth / 2;
     y =
       e.pageY -
-      img.getBoundingClientRect().top -
-      window.scrollY -
+      imageContainer.getBoundingClientRect().top -
       lens.current.offsetHeight / 2;
 
-    if (x > imgWrapper?.width - lens.current.offsetWidth)
-      x = imgWrapper?.width - lens.current.offsetWidth;
-    if (x < 0) x = 0;
-    if (y > imgWrapper?.height - lens.current.offsetHeight)
-      y = imgWrapper?.height - lens.current.offsetHeight;
+    //stop the lens following the cursor if it's outside of the image
+    if (x > imageContainer.getBoundingClientRect().width - lens.current.offsetWidth)
+      x = imageContainer.getBoundingClientRect().width - lens.current.offsetWidth;
+    // if (x < 0) x = 0;
+    if (y > imageContainer.getBoundingClientRect().height - lens.current.offsetHeight)
+      y = imageContainer.getBoundingClientRect().height - lens.current.offsetHeight;
     if (y < 0) y = 0;
 
     setCursorPosition({
@@ -42,27 +56,37 @@ const ImageMagnifier = ({ image }) => {
       y,
     });
 
-    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${
-      cursorPosition.y * cy
+    console.log( x)
+    
+    if(x * cx < 0) result.style.backgroundPosition = `-${ x * cx}px -${
+      y * cy
+    }px`;
+    else result.style.backgroundPosition = `-${ x * cx}px -${
+      y * cy
     }px`;
   };
   return (
     <div
       onMouseEnter={() => {
-        lens.current.style.visibility = "visible";
-        result.current.style.visibility = "visible";
+        lens.current.style.display = "inline";
+        resultRef.current.style.display = "inline";
       }}
       onMouseLeave={() => {
-        lens.current.style.visibility = "hidden";
-        result.current.style.visibility = "hidden";
+        lens.current.style.display = "none";
+        resultRef.current.style.display = "none";
       }}
       onMouseMove={handleMouseHover}
-      ref={imagePosition}
-      className="relative h-fit z-10"
+      ref={imageContainerRef}
+      className="relative h-full w-full z-10 flex items-center justify-center"
+      style={{
+        backgroundImage: `url(${image})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "contain",
+      }}
     >
       <img
-        ref={displayImage}
-        className="object-contain max-w-[578px] max-h-[432px]"
+        ref={imageRef}
+        className="object-cover max-w-[578px] max-h-[432px]"
         src={image}
       />
 
@@ -75,16 +99,18 @@ const ImageMagnifier = ({ image }) => {
               left: `${cursorPosition.x}px`,
               top: `${cursorPosition.y}px`,
               pointerEvents: "none",
-              visibility: "hidden",
+              display: "none",
             }}
-            className="bg-white opacity-60 w-[200px] h-[200px]"
+            className="bg-black opacity-60 w-[200px] h-[200px]"
           ></div>
           <div
-            ref={result}
+            ref={resultRef}
             style={{
+              backgroundColor: 'white',
               backgroundImage: `url(${image})`,
               backgroundRepeat: "no-repeat",
-              visibility: "hidden",
+              backgroundPosition: 'center',
+              display: "none",
             }}
             className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
           ></div>

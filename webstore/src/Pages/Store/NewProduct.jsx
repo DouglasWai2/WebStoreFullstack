@@ -66,6 +66,7 @@ const NewProduct = () => {
     data: response,
     loading,
     error,
+    refresh,
   } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
 
   useEffect(() => {
@@ -145,6 +146,7 @@ const NewProduct = () => {
         price.replace("R$ ", "").replace(".", "").replace(",", ".")
       ),
     });
+    if (error) refresh(body);
   };
 
   function handleDrop(result) {
@@ -160,7 +162,7 @@ const NewProduct = () => {
   useEffect(() => {
     if (error) {
       setInvalid("Preencha todos os campos corretamente");
-      Object.keys(error.response.data.errors).forEach((item) => {
+      Object.keys(error.data.errors).forEach((item) => {
         const element = document.getElementsByName(item);
         if (element[0]) {
           element[0].className += " invalid !border-red-400";
@@ -171,12 +173,12 @@ const NewProduct = () => {
     if (response === "Product saved successfully") {
       navigate("/store/my-store");
     }
-  }, [error, response]);
+  }, [error, loading, response]);
 
   return (
     <div className="flex justify-center py-10 px-10 gap-8">
       {invalid && (
-        <div className="absolute z-20 translate-y-4">
+        <div className="absolute z-20 translate-y-4 animate-expand">
           <ErrorCard invalid={invalid} handleClick={() => setInvalid("")} />
         </div>
       )}
