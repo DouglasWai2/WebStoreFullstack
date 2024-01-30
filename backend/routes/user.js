@@ -6,6 +6,7 @@ require('dotenv').config()
 
 router.get("/user", auth, async (req, res) => {
   const user = await User.findById(req.userInfo.id);
+  console.log('teste')
   
   res
     .status(200)

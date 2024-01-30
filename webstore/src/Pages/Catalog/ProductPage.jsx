@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useFetchApi } from "../../hooks/useFetchApi";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ImageMagnifier from "../../components/Store/ImageMagnifier";
 import { moneyMask } from "../../helpers/moneyMask";
 import { Rating } from "react-simple-star-rating";
+import api from "../../helpers/api";
 
 const ProductPage = () => {
   const { productId } = useParams();
+  const navigate = useNavigate()
   const [mainImage, setMainImage] = useState("");
   const {
     data: product,
@@ -18,8 +20,10 @@ const ProductPage = () => {
     if (product) setMainImage(product.thumbnail);
   }, [product]);
 
-  async function getPaymentIntent(){
-    fetch('http://localhost')
+  function getPaymentIntent(productId) {
+    api
+      .get(process.env.REACT_APP_API_URL + "/payment_intents/" + productId)
+      .then((response) => navigate(`/checkout/${product.title}/${product._id}/${response.data.client_secret}`));
   }
 
   return (
@@ -32,9 +36,10 @@ const ProductPage = () => {
                 <ImageMagnifier image={mainImage} />
               </div>
               <div className="flex w-[578px] overflow-x-scroll my-4 product-images relative">
-                {product.images.map((item) => {
+                {product.images.map((item, index) => {
                   return (
                     <div
+                      key={index}
                       onMouseOver={() => {
                         setMainImage(item);
                       }}
@@ -60,7 +65,7 @@ const ProductPage = () => {
                 <span>({product.rating})</span>
               </div>
               <h3 className="text-xl">Características</h3>
-              <div className="flex flex-col justify-between">
+              <div className="flex flex-col justify-between h-full">
                 <ul className="list-disc ml-7">
                   {product.features.map((item, index) => {
                     return (
@@ -73,6 +78,7 @@ const ProductPage = () => {
                 <div className="flex justify-end px-4">
                   <div className="flex flex-col gap-2 items-center w-1/2">
                     <button
+                      onClick={() => getPaymentIntent(product._id)}
                       className="bg-[#188fa7] w-full px-16 py-2 text-lg
                                     rounded-md text-white shadow 
                                     hover:brightness-75

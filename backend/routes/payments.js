@@ -14,12 +14,14 @@ router.get("/payment_intents/:productId", auth, async (req, res) => {
     const user = await UserSchema.findById(req.userInfo.id);
     const product = await productSchema.findById(req.params.productId);
 
-    const amount = product.price - (product.price * product.discount);
+    const amount = Number(product.price - (product.price * product.discount)).toFixed(2);
 
-    const paymentIntent = await stripe.paymentIntent.create({
-      amount,
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: parseInt(amount.toString().replace('.', '')),
       currency: "brl",
     });
+
+    console.log(paymentIntent)
     return res.status(200).json({ client_secret: paymentIntent.client_secret });
   } catch (error) {
     throw new Error(error);

@@ -16,6 +16,8 @@ import PublicRoutes from "./PublicRoutes";
 import NotFoundError from "./Pages/NotFoundError";
 import UnexpectedError from "./Pages/UnexpectedError";
 import { logOut } from "./helpers/logOut";
+import Checkout from "./Pages/Checkout/Checkout";
+import PostCheckout from "./Pages/Checkout/PostCheckout";
 
 function App() {
   const [userUrl, setUserUrl] = useState(null);
@@ -78,6 +80,22 @@ function App() {
       path: "/signup",
       element: <RegisterForm loggedIn={loggedIn} />,
       loader: redirectLoader(),
+    },
+    {
+      path: "/checkout/:productName/:productId/:client_secret",
+      element: <Checkout />,
+      loader: () => {
+        if (!loggedIn) redirect("/login");
+        else return null
+      },
+    },
+    {
+      path: "/checkout/post-checkout",
+      element: <PostCheckout />,
+      loader: () => {
+        if (!loggedIn) redirect("/login");
+        else return null
+      },
     },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },

@@ -14,10 +14,10 @@ export const useFetchApi = (path, method, body, config) => {
       try {
         const response =
           method === "GET"
-            ? path && (await api.get("http://localhost:5000/api/v1/" + path))
+            ? path && (await api.get(process.env.REACT_APP_API_URL + path))
             : method === "POST"
             ? await api.post(
-                "http://localhost:5000/api/v1/" + path,
+                process.env.REACT_APP_API_URL + path,
                 body,
                 config ? { headers: config } : "" // In case there is headers setted it will be passed in this hook params
               ) //If there's no config setted, default headers will be used
@@ -30,13 +30,13 @@ export const useFetchApi = (path, method, body, config) => {
         setLoading(false);
       }
     },
-    [ method, path, config]
+    [method, path, config]
   );
 
   const refresh = () => {
-    setData(null)
-    setError(null)
-    setLoading(null)
+    setData(null);
+    setError(null);
+    setLoading(null);
     fetchApi(body);
   };
   useEffect(() => {
