@@ -45,8 +45,8 @@ function App() {
 
   useEffect(() => {
     if (!loggedIn) return;
-    setUserUrl("/api/user");
-    setAddressUrl("/api/address");
+    setUserUrl("/user");
+    setAddressUrl("/address");
   }, []);
 
   const router = createBrowserRouter([

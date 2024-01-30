@@ -66,7 +66,7 @@ const NewProduct = () => {
     data: response,
     loading,
     error,
-  } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
+  } = useFetchApi("/catalog/new-product", "POST", body, headers);
 
   useEffect(() => {
     setFeatures(

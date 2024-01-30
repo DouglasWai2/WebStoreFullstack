@@ -29,7 +29,7 @@ exports.register = async (req, res) => {
   const {id} = customer
   newUser.customerId = id
   const message = `Este é seu e-mail de verificação, não compartilhe com ninguem: 
-  http://localhost:5000/auth/register/user/verify/${newUser.id}/${token.token}`;
+  http://localhost:5000/api/v1/auth/register/user/verify/${newUser.id}/${token.token}`;
   try {
     await newUser.save();
     await token.save();

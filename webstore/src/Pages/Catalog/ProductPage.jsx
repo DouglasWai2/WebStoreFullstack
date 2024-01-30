@@ -12,11 +12,15 @@ const ProductPage = () => {
     data: product,
     loading,
     error,
-  } = useFetchApi("/api/catalog/" + productId, "GET");
+  } = useFetchApi("/catalog/" + productId, "GET");
 
   useEffect(() => {
     if (product) setMainImage(product.thumbnail);
   }, [product]);
+
+  async function getPaymentIntent(){
+    fetch('http://localhost')
+  }
 
   return (
     product && (
@@ -70,9 +74,10 @@ const ProductPage = () => {
                   <div className="flex flex-col gap-2 items-center w-1/2">
                     <button
                       className="bg-[#188fa7] w-full px-16 py-2 text-lg
-                                    rounded-md text-white shadow-md 
-                                    hover:shadow-none hover:brightness-75 hover:text-black 
-                                    duration-200"
+                                    rounded-md text-white shadow 
+                                    hover:brightness-75
+                                    active:shadow-none active:text-black
+                                    duration-100"
                     >
                       Comprar
                     </button>

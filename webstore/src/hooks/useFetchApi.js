@@ -14,10 +14,10 @@ export const useFetchApi = (path, method, body, config) => {
       try {
         const response =
           method === "GET"
-            ? path && (await api.get("http://localhost:5000" + path))
+            ? path && (await api.get("http://localhost:5000/api/v1/" + path))
             : method === "POST"
             ? await api.post(
-                "http://localhost:5000" + path,
+                "http://localhost:5000/api/v1/" + path,
                 body,
                 config ? { headers: config } : "" // In case there is headers setted it will be passed in this hook params
               ) //If there's no config setted, default headers will be used

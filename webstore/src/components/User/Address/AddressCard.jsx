@@ -55,14 +55,14 @@ const AddressCard = ({ address }) => {
           <p>Endereço selecionado</p>
         ) : (
           <button
-            onClick={() => setUrl("/api/address/set/" + address.id)}
+            onClick={() => setUrl("/address/set/" + address.id)}
             className="bg-yellow-300 w-full h-fit px-3 hover:bg-yellow-400"
           >
             Definir como principal
           </button>
         )}
         <button
-          onClick={() => setUrl("/api/address/delete/" + address.id)}
+          onClick={() => setUrl("/address/delete/" + address.id)}
           className="w-max text-red-500 px-2"
         >
           <FontAwesomeIcon icon={faTrash} />

@@ -38,20 +38,20 @@ const MyStore = () => {
     CarouselPlaceholder3,
   ];
   useEffect(() => {
-    setUrl(`/api${location.pathname}`);
+    setUrl(`${location.pathname}`);
   }, []);
   const { data, loading, error } = useFetchApi(url, "GET");
-  useFetchApi(`/api/store/categories/${storeName}/${storeId}`, "GET");
+  useFetchApi(`/store/categories/${storeName}/${storeId}`, "GET");
 
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
-    "/api/store/change-banner",
+    "/store/change-banner",
     method,
     bannerEdit,
     headers
   );
   const { data: logo } = useFetchApi(
-    "/api/store/change-image",
+    "/store/change-image",
     method,
     imageEdit,
     headers

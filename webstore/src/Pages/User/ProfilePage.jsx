@@ -23,7 +23,7 @@ const ProfilePage = () => {
     },
   ]);
   const { data: response, loading: submiting } = useFetchApi(
-    "/api/user/update",
+    "/user/update",
     method,
     editData
   );
