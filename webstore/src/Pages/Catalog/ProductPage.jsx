@@ -5,10 +5,11 @@ import ImageMagnifier from "../../components/Store/ImageMagnifier";
 import { moneyMask } from "../../helpers/moneyMask";
 import { Rating } from "react-simple-star-rating";
 import api from "../../helpers/api";
+import { addToCart } from "../../helpers/addToCart";
 
 const ProductPage = () => {
   const { productId } = useParams();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [mainImage, setMainImage] = useState("");
   const {
     data: product,
@@ -23,7 +24,11 @@ const ProductPage = () => {
   function getPaymentIntent(productId) {
     api
       .get(process.env.REACT_APP_API_URL + "/payment_intents/" + productId)
-      .then((response) => navigate(`/checkout/${product.title}/${product._id}/${response.data.client_secret}`));
+      .then((response) =>
+        navigate(
+          `/checkout/${product.title}/${product._id}/${response.data.client_secret}`
+        )
+      );
   }
 
   return (
@@ -87,7 +92,18 @@ const ProductPage = () => {
                     >
                       Comprar
                     </button>
-                    <button className="px-6 bg-[#ade6f1] w-full rounded-md hover:brightness-95">
+                    <button
+                      onClick={() => {
+                        addToCart(
+                          product._id,
+                          product.price,
+                          product.discount,
+                          product.title,
+                          product.thumbnail,
+                        );
+                      }}
+                      className="px-6 bg-[#ade6f1] w-full rounded-md hover:brightness-95"
+                    >
                       adicionar ao carrinho
                     </button>
                   </div>

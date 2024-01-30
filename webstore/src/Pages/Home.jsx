@@ -2,9 +2,11 @@ import Navbar from "../components/Navbar";
 import { Outlet, useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
+import CartSideMenu from "../components/CartSideMenu";
 
-const Home = ({user, address, loading, fetching, loggedIn}) => {
+const Home = ({ user, address, loading, fetching, loggedIn }) => {
   const [toggleCard, setToggleCard] = useState(false);
+  const [toggleCart, setToggleCart] = useState(false);
 
   TopBarProgress.config({
     barColors: {
@@ -24,8 +26,11 @@ const Home = ({user, address, loading, fetching, loggedIn}) => {
         data={user}
         address={address}
         loggedIn={loggedIn}
+        cart={toggleCart}
+        setCart={setToggleCart}
       />
       <main className={"w-full h-full" + (toggleCard && " brightness-50")}>
+        {toggleCart && <CartSideMenu setCart={setToggleCart}/>}
         <Outlet context={{ user, address, fetching, loading }} />
       </main>
     </>

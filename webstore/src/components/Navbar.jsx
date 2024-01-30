@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { logOut } from "../helpers/logOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 
-const Navbar = ({ data, address, toggleCard, setToggleCard }) => {
+const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
   const isVerified = window.localStorage.getItem("verified");
   // const [toggleCard, setToggleCard] = useState(false);
   const [yourAddress, setYourAddress] = useState(null);
@@ -188,7 +188,11 @@ const Navbar = ({ data, address, toggleCard, setToggleCard }) => {
               </div>
             )}
           </div>
-          <div className="cursor-pointer p-2 hover-border">
+          <div
+          onClick={()=> {
+            setCart(true)
+          }}
+          className="cursor-pointer p-2 hover-border">
             Seu carrinho{" "}
             <FontAwesomeIcon
               icon={faCartShopping}
