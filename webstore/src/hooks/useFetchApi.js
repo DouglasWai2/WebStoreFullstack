@@ -43,7 +43,7 @@ export const useFetchApi = (path, method, body, config) => {
     if (!path) return;
     if (method === "POST" && !body) return;
     fetchApi(body);
-  }, [method, body, path, fetchApi]);
+  }, [method, body, path]);
 
   return { data, loading, error, refresh };
 };
