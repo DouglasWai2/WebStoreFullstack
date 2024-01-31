@@ -96,7 +96,6 @@ const NewProduct = () => {
         files: Array.from(e.target.files),
       }));
     } else if (e.target.name === "price") {
-      console.log(e.target.value);
       setProduct((productInfo) => ({
         ...productInfo,
         price: moneyMask(e.target.value),

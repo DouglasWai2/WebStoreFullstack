@@ -4,11 +4,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import ImageMagnifier from "../../components/Store/ImageMagnifier";
 import { moneyMask } from "../../helpers/moneyMask";
 import { Rating } from "react-simple-star-rating";
-import {useWebstoreApi} from "../../hooks/useWebstoreApi";
+import {useApi} from "../../hooks/useApi";
 import { addToCart } from "../../helpers/addToCart";
 
 const ProductPage = () => {
-  const api = useWebstoreApi()
+  const api = useApi()
   const { productId } = useParams();
   const navigate = useNavigate();
   const [mainImage, setMainImage] = useState("");

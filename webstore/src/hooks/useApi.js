@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useLogOut } from "./useLogOut";
 
-function useWebstoreApi() {
+function useApi() {
   const logOut = useLogOut();
   const api = axios.create({
     withCredentials: true,
@@ -56,4 +56,4 @@ function useWebstoreApi() {
 
   return api
 }
-export { useWebstoreApi };
+export { useApi };
