@@ -15,11 +15,13 @@ import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import NotFoundError from "./Pages/NotFoundError";
 import UnexpectedError from "./Pages/UnexpectedError";
-import { logOut } from "./helpers/logOut";
+import { useLogOut } from "./hooks/useLogOut";
 import Checkout from "./Pages/Checkout/Checkout";
 import PostCheckout from "./Pages/Checkout/PostCheckout";
+import ReviewCart from "./Pages/Checkout/ReviewCart";
 
 function App() {
+  const logOut = useLogOut();
   const [userUrl, setUserUrl] = useState(null);
   const [addressUrl, setAddressUrl] = useState(null);
   const { data: user, loading, error } = useFetchApi(userUrl, "GET");
@@ -86,7 +88,7 @@ function App() {
       element: <Checkout />,
       loader: () => {
         if (!loggedIn) redirect("/login");
-        else return null
+        else return null;
       },
     },
     {
@@ -94,7 +96,15 @@ function App() {
       element: <PostCheckout />,
       loader: () => {
         if (!loggedIn) redirect("/login");
-        else return null
+        else return null;
+      },
+    },
+    {
+      path: "/checkout/review-cart",
+      element: <ReviewCart />,
+      loader: () => {
+        if (!loggedIn) redirect("/login");
+        else return null;
       },
     },
     { path: "/termsandconditions", element: <Terms /> },

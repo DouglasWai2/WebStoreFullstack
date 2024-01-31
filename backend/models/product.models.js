@@ -20,7 +20,13 @@ const productSchema = new mongoose.Schema(
     rating: { type: Number, default: 0.0, min: 0, max: 5 },
     sells: { type: Number, default: 0, min: 0 },
     discount: { type: Number, min: 0, max: 1 },
-    legacyCreatedAt: {type: Date}
+    dimensions: {
+      weight: { type: Number, required: true },
+      height: { type: Number, required: true },
+      length: { type: Number, required: true },
+      width: { type: Number, required: true },
+    },
+    legacyCreatedAt: { type: Date },
   },
   { timestamps: true }
 );

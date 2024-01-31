@@ -9,12 +9,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { logOut } from "../helpers/logOut";
+import {useLogOut} from "../hooks/useLogOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 
 const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
+  const logOut = useLogOut() 
   const isVerified = window.localStorage.getItem("verified");
-  // const [toggleCard, setToggleCard] = useState(false);
   const [yourAddress, setYourAddress] = useState(null);
 
   useEffect(() => {

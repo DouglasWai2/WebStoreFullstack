@@ -15,19 +15,31 @@ import ErrorCard from "../../components/shared/ErrorCard";
 
 const NewProduct = () => {
   const [tagsArray, setTagsArray] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState([]);
-  const [tags, setTags] = useState("");
-  const [price, setPrice] = useState("");
-  const [files, setFiles] = useState([]);
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
   const [body, setBody] = useState(null);
   const [invalid, setInvalid] = useState(null);
   const [dropZone, setDropZone] = useState(false);
   const [dragging, setDragging] = useState(null);
   const navigate = useNavigate();
+
+  const [product, setProduct] = useState({
+    title: "",
+    description: "",
+    features: [],
+    price: "",
+    tags: "",
+    files: [],
+    brand: "",
+    model: "",
+    dimensions: {
+      weight: 0,
+      length: 0,
+      width: 0,
+      height: 0,
+    },
+  });
+
+  const { title, description, features, price, tags, files, brand, model } =
+    product;
 
   // initial number of features input (1)
   const featuresInput = [
@@ -69,50 +81,57 @@ const NewProduct = () => {
   } = useFetchApi("/catalog/new-product", "POST", body, headers);
 
   useEffect(() => {
-    setFeatures(
-      array.map((item) => {
+    setProduct((productInfo) => ({
+      ...productInfo,
+      features: array.map((item) => {
         return item.value;
-      })
-    );
+      }),
+    }));
   }, [array, tagsArray]); // Use effect necessary to handle async behavior of usestate callback
 
-  function handleTitle(e) {
-    setTitle(e.target.value);
-  }
-  function handleDescription(e) {
-    setDescription(e.target.value);
-  }
-  function handleFeatures(e) {
-    setArray((s) => {
-      const newArr = s.slice();
-      newArr.forEach((item) => {
-        if (item.id == e.target.id) {
-          item.value = e.target.value;
-        }
+  function handleChange(e) {
+    if (e.target.name === "files") {
+      setProduct((productInfo) => ({
+        ...productInfo,
+        files: Array.from(e.target.files),
+      }));
+    } else if (e.target.name === "price") {
+      console.log(e.target.value);
+      setProduct((productInfo) => ({
+        ...productInfo,
+        price: moneyMask(e.target.value),
+      }));
+    } else if (e.target.name.includes("features")) {
+      setArray((s) => {
+        const newArr = s.slice();
+        newArr.forEach((item) => {
+          if (item.id == e.target.id) {
+            item.value = e.target.value;
+          }
+        });
+        return newArr;
       });
-      return newArr;
-    });
+    } else {
+      setProduct((productInfo) => ({
+        ...productInfo,
+        [e.target.name]: e.target.value,
+      }));
+    }
   }
-  function handleTags(e) {
-    setTags(e.target.value);
-  }
-  function handlePrice(e) {
-    setPrice(moneyMask(e.target.value));
-  }
-  function handleFiles(e) {
-    setFiles(Array.from(e.target.files));
-  }
-  function handleBrand(e) {
-    setBrand(e.target.value);
-  }
-  function handleModel(e) {
-    setModel(e.target.value);
-  }
+
+  useEffect(() => {
+    setProduct((productInfo) => ({
+      ...productInfo,
+      features: array.map((item) => {
+        return item.value;
+      }),
+    }));
+  }, [array, tagsArray]); // Use effect necessary to handle async behavior of usestate callback
 
   const handleTagsArray = (e) => {
     if (e.key === ",") {
       setTagsArray([...tagsArray, e.target.value]);
-      setTags("");
+      product.tags = "";
       e.target.value = "";
     }
   };
@@ -127,7 +146,10 @@ const NewProduct = () => {
   function handleOnDrop(e) {
     e.stopPropagation();
     e.preventDefault();
-    setFiles(Array.from(e.dataTransfer.files));
+    setProduct((productInfo) => ({
+      ...productInfo,
+      [e.target.name]: Array.from(e.target.files),
+    }));
     setDropZone(false);
   }
 
@@ -154,7 +176,10 @@ const NewProduct = () => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    setFiles(items);
+    setProduct((productInfo) => ({
+      ...productInfo,
+      files: items,
+    }));
   }
 
   useEffect(() => {
@@ -184,7 +209,7 @@ const NewProduct = () => {
         <div className="relative  my-2 z-0">
           <input
             className="floating-input-effect w-full peer"
-            onChange={handleTitle}
+            onChange={handleChange}
             value={title}
             name="title"
             type="text"
@@ -207,7 +232,7 @@ const NewProduct = () => {
           <textarea
             placeholder=""
             className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
-            onChange={handleDescription}
+            onChange={handleChange}
             value={description}
             name="description"
             type="text"
@@ -225,7 +250,7 @@ const NewProduct = () => {
           <input
             placeholder=""
             className={"floating-input-effect w-full peer "}
-            onChange={handleBrand}
+            onChange={handleChange}
             value={brand}
             name="brand"
             type="text"
@@ -239,7 +264,7 @@ const NewProduct = () => {
           <input
             placeholder=""
             className="floating-input-effect w-full peer"
-            onChange={handleModel}
+            onChange={handleChange}
             value={model}
             name="model"
             type="text"
@@ -267,7 +292,7 @@ const NewProduct = () => {
                 placeholder=""
                 className="floating-input-effect w-full peer"
                 name={"features." + i}
-                onChange={handleFeatures}
+                onChange={handleChange}
                 value={item.value}
                 id={item.id}
                 type={item.type}
@@ -313,7 +338,7 @@ const NewProduct = () => {
             placeholder=""
             className="floating-input-effect w-full peer"
             onKeyDown={handleTagsArray}
-            onChange={handleTags}
+            onChange={handleChange}
             value={tags.replace(",", "")}
             name="tags"
             // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
@@ -331,7 +356,7 @@ const NewProduct = () => {
           <input
             placeholder=""
             className="floating-input-effect w-full peer"
-            onChange={handlePrice}
+            onChange={handleChange}
             value={price}
             name="price"
             type="text"
@@ -347,8 +372,8 @@ const NewProduct = () => {
               "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
               (dropZone && " brightness-75")
             }
-            htmlFor="storeImage"
-            name="storeImage"
+            htmlFor="files"
+            name="files"
             onDragOver={(e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -377,12 +402,12 @@ const NewProduct = () => {
               </>
             )}
             <input
-              onChange={handleFiles}
+              onChange={handleChange}
               hidden
               multiple="multiple"
               type="file"
-              name="storeImage"
-              id="storeImage"
+              name="files"
+              id="files"
               accept="image/*"
             />
           </label>

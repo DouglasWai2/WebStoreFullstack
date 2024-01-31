@@ -1,8 +1,9 @@
-import api from "../helpers/api";
+import {useWebstoreApi} from "./useWebstoreApi";
 import { useEffect, useState, useCallback } from "react";
 
 // Custom hook for API calls
 export const useFetchApi = (path, method, body, config) => {
+  const api = useWebstoreApi()
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
