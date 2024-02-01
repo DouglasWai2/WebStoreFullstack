@@ -10,19 +10,21 @@ const CartSideMenu = ({ setCart }) => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
+  
   function totalSum(items) {
     var total = 0;
     items.forEach((item) => {
-      total += (item.price - item.price * item.discount) * item.quantity;
+      console.log(item.price)
+      total += (item.price - (item.price * item.discount)) * item.quantity;
     });
-
+    
     return total;
   }
-
+  
   useEffect(() => {
     setCartItems(JSON.parse(window.localStorage.getItem("cart")));
   }, []);
-
+  
   return (
     <aside className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] h-screen animate-appear py-8 px-3 z-30">
       <div className="flex flex-col">

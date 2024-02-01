@@ -14,9 +14,9 @@ const CarouselStore = ({ images }) => {
       showThumbs={false}
       showArrows={false}
     >
-      {images.map((item) => {
+      {images.map((item, i) => {
         return (
-          <div className="w-full h-[40vh] pickgradient">
+          <div key={item + i} className="w-full h-[40vh] pickgradient">
             <img
               alt="store banner"
               className="object-cover max-w-[1440px] h-full block"

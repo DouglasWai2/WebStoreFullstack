@@ -29,6 +29,7 @@ const NewProduct = () => {
     data: response,
     loading,
     error,
+    refresh,
   } = useFetchApi("/catalog/new-product", "POST", body, headers);
   const [product, setProduct] = useState({
     title: "",
@@ -40,10 +41,10 @@ const NewProduct = () => {
     brand: "",
     model: "",
     dimensions: {
-      weight: 0,
-      length: 0,
-      width: 0,
-      height: 0,
+      weight: null,
+      length: null,
+      width: null,
+      height: null,
     },
   });
 
@@ -54,7 +55,7 @@ const NewProduct = () => {
   const featuresInput = [
     {
       type: "text",
-      id: 1,
+      id: 'features.' + 0,
       value: "",
     },
   ];
@@ -67,7 +68,7 @@ const NewProduct = () => {
         ...s,
         {
           type: "text",
-          id: array.length + 1,
+          id: 'features.' + array.length,
           value: "",
         },
       ];
@@ -80,17 +81,16 @@ const NewProduct = () => {
   };
 
   function handleChange(e) {
-    if (e.target.name === "files") {
-      setProduct((productInfo) => ({
-        ...productInfo,
-        files: Array.from(e.target.files),
-      }));
-    } else if (e.target.name === "price") {
-      setProduct((productInfo) => ({
-        ...productInfo,
-        price: moneyMask(e.target.value),
-      }));
-    } else if (e.target.name.includes("features")) {
+    let changeName = e.target.name;
+    let changeValue = e.target.value;
+    let changeId = e.target.id;
+    let dimensions;
+
+    if(error) e.target.classList.remove('invalid'); e.target.classList.remove('!border-red-400');
+    if (changeName === "files") changeValue = Array.from(e.target.files);
+    if (changeName === "price") changeValue = moneyMask(e.target.value);
+
+    if (changeName.includes("features")) {
       setArray((s) => {
         const newArr = s.slice();
         newArr.forEach((item) => {
@@ -100,21 +100,27 @@ const NewProduct = () => {
         });
         return newArr;
       });
-    } else if (e.target.id === "dimensions") {
-      setProduct((productInfo) => ({
-        ...productInfo,
-        dimensions: {
-          ...productInfo.dimensions,
-          [e.target.name]: e.target.value,
-        },
-      }));
-    } else {
-      setProduct((productInfo) => ({
-        ...productInfo,
-        [e.target.name]: e.target.value,
-      }));
+      changeName = null;
     }
+
+    if (changeId.includes("dimensions")) {
+      dimensions = {
+        ...product.dimensions,
+        [e.target.name]: parseFloat(e.target.value),
+      };
+      changeName = null;
+    }
+
+    setProduct((productInfo) =>
+      changeName
+        ? {
+            ...productInfo,
+            [changeName]: changeValue,
+          }
+        : { ...productInfo, dimensions: { ...dimensions } }
+    );
   }
+
   useEffect(() => {
     setProduct((productInfo) => ({
       ...productInfo,
@@ -122,12 +128,12 @@ const NewProduct = () => {
         return item.value;
       }),
     }));
-  }, [array, tagsArray]); // Use effect necessary to handle async behavior of usestate callback
+  }, [array]); // Use effect necessary to handle async behavior of usestate callback
 
   const handleTagsArray = (e) => {
     if (e.key === ",") {
       setTagsArray([...tagsArray, e.target.value]);
-      product.tags = "";
+      if (typeof tags === "string") product.tags = "";
       e.target.value = "";
     }
   };
@@ -152,15 +158,15 @@ const NewProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    product.price = parseFloat(
-      price.replace("R$ ", "").replace(".", "").replace(",", ".")
-    );
+    setBody({
+      ...product,
+      tags: tagsArray,
+      price: parseFloat(
+        price.replace("R$ ", "").replace(".", "").replace(",", ".")
+      ),
+    });
 
-    product.tags = tagsArray;
-
-    console.log(product);
-
-    setBody({ ...product });
+    if (error) refresh();
   };
 
   function handleDrop(result) {
@@ -178,11 +184,12 @@ const NewProduct = () => {
 
   useEffect(() => {
     if (error) {
-      setInvalid("Preencha todos os campos corretamente");
-      Object.keys(error.response.data.errors).forEach((item) => {
-        const element = document.getElementsByName(item);
-        if (element[0]) {
-          element[0].className += " invalid !border-red-400";
+      setInvalid(error.data._message + ". Preencha os campos corretamente");
+      Object.keys(error.data.errors).forEach((item) => {
+        const element = document.getElementById(item);
+        if (element) {
+          element.classList.add("invalid");
+          element.classList.add("!border-red-400");
         }
       });
     }
@@ -201,6 +208,7 @@ const NewProduct = () => {
       )}
       <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 ">
         <FormInput
+          props={{ id: "title" }}
           value={title}
           name="title"
           label="Título"
@@ -217,6 +225,7 @@ const NewProduct = () => {
           </div>
           <textarea
             placeholder=""
+            id="description"
             className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
             onChange={handleChange}
             value={description}
@@ -233,12 +242,14 @@ const NewProduct = () => {
           </label>
         </div>
         <FormInput
+          props={{ id: "brand" }}
           value={brand}
           name="brand"
           label="Marca"
           handleChange={handleChange}
         />
         <FormInput
+          props={{ id: "model" }}
           value={model}
           name="model"
           label="Modelo"
@@ -249,7 +260,7 @@ const NewProduct = () => {
         </span>
         {array.map((item, i) => {
           const props = { item, i, deleteFeature, handleChange };
-          return <FeaturesInput {...props} />;
+          return <FeaturesInput key={i} {...props} />;
         })}
         <div className="flex items-center justify-center text-sm">
           <div
@@ -299,6 +310,7 @@ const NewProduct = () => {
           </div>
         </div>
         <FormInput
+          props={{ id: "price" }}
           value={price}
           name="price"
           label="Preço base"
@@ -361,29 +373,33 @@ const NewProduct = () => {
           value={product.dimensions.height}
           name="height"
           label="Altura (cm)"
+          type="number"
           handleChange={handleChange}
-          props={{ id: "dimensions" }}
+          props={{ id: "dimensions.height" }}
         />
         <FormInput
           value={product.dimensions.length}
           name="length"
           label="Comprimento (cm)"
+          type="number"
           handleChange={handleChange}
-          props={{ id: "dimensions" }}
+          props={{ id: "dimensions.length" }}
         />
         <FormInput
           value={product.dimensions.width}
           name="width"
           label="Largura (cm)"
+          type="number"
           handleChange={handleChange}
-          props={{ id: "dimensions" }}
+          props={{ id: "dimensions.width" }}
         />
         <FormInput
           value={product.dimensions.weight}
           name="weight"
-          label="Peso (cm)"
+          label="Peso (kg)"
+          type="number"
           handleChange={handleChange}
-          props={{ id: "dimensions" }}
+          props={{ id: "dimensions.weight" }}
         />
         <div className="h-[30px]">
           <SubmitButton

@@ -58,38 +58,29 @@ const ImageMagnifier = ({ image }) => {
       }}
       onMouseMove={handleMouseHover}
       ref={imagePosition}
-      className="relative h-fit z-10"
+      className="relative flex z-10 w-fit h-fit max-h-[433px] max-w-[578px]"  
     >
-      <img
-        ref={displayImage}
-        className="object-contain max-w-[578px] max-h-[432px]"
-        src={image}
-      />
-
-      {
-        <>
-          <div
-            ref={lens}
-            style={{
-              position: "absolute",
-              left: `${cursorPosition.x}px`,
-              top: `${cursorPosition.y}px`,
-              pointerEvents: "none",
-              visibility: "hidden",
-            }}
-            className="bg-white opacity-60 w-[200px] h-[200px]"
-          ></div>
-          <div
-            ref={result}
-            style={{
-              backgroundImage: `url(${image})`,
-              backgroundRepeat: "no-repeat",
-              visibility: "hidden",
-            }}
-            className="w-[500px] h-[500px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
-          ></div>
-        </>
-      }
+      <img ref={displayImage} className="object-contain" src={image} />
+      <div
+        ref={lens}
+        style={{
+          position: "absolute",
+          left: `${cursorPosition.x}px`,
+          top: `${cursorPosition.y}px`,
+          pointerEvents: "none",
+          visibility: "hidden",
+        }}
+        className="bg-white opacity-60 w-[300px] h-[225px]"
+      ></div>
+      <div
+        ref={result}
+        style={{
+          backgroundImage: `url(${image})`,
+          backgroundRepeat: "no-repeat",
+          visibility: "hidden",
+        }}
+        className="w-[578px] h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
+      ></div>
     </div>
   );
 };

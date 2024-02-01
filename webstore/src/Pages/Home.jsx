@@ -29,7 +29,7 @@ const Home = ({ user, address, loading, fetching, loggedIn }) => {
         cart={toggleCart}
         setCart={setToggleCart}
       />
-      <main className={"w-full h-full" + (toggleCard && " brightness-50")}>
+      <main className={"w-full h-full " + (toggleCard && "brightness-50")}>
         {toggleCart && <CartSideMenu setCart={setToggleCart}/>}
         <Outlet context={{ user, address, fetching, loading }} />
       </main>

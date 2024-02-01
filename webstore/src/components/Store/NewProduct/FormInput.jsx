@@ -1,6 +1,13 @@
 import React from "react";
 
-const FormInput = ({ value, name, handleChange, label, props }) => {
+const FormInput = ({
+  value,
+  name,
+  handleChange,
+  label,
+  type = "text",
+  props,
+}) => {
   return (
     <div className="relative my-2 z-0">
       <input
@@ -9,7 +16,7 @@ const FormInput = ({ value, name, handleChange, label, props }) => {
         onChange={handleChange}
         value={value}
         name={name}
-        type="text"
+        type={type}
         required
         {...props}
       />
