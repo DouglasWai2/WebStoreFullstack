@@ -91,7 +91,8 @@ const CartSideMenu = ({ setCart }) => {
                       </div>
                     </div>
                     <button
-                      onClick={() => {
+                      onClick={(e) => {
+                        e.stopPropagation()
                         removeFromCart(item.productId);
                         setCartItems(
                           JSON.parse(window.localStorage.getItem("cart"))
@@ -118,6 +119,9 @@ const CartSideMenu = ({ setCart }) => {
             Total: {moneyMask(Number(totalSum(cartItems)).toFixed(2))}
           </p>
           <button
+            onClick={()=>{
+              navigate('/checkout/review-cart')
+            }}
             className="bg-[#188fa7] w-full px-16 py-2 text-lg
                                     rounded-md text-white shadow 
                                     hover:brightness-75

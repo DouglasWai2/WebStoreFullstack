@@ -39,7 +39,7 @@ app.use(function (req, res, next) {
 app.use("/api/v1", require("./routes/catalog"));
 app.use("/api/v1", require("./routes/rating"));
 app.use("/api/v1", require("./routes/user"));
-app.use("/api/v1", require("./routes/user"));
+app.use("/api/v1", require("./routes/frete"));
 app.use("/api/v1", require("./routes/address"));
 app.use("/api/v1", require("./routes/store"));
 app.use("/api/v1", require("./routes/payments"));

@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
+import { useFetchApi } from "../../hooks/useFetchApi";
 
 const ReviewCart = () => {
+  const {data} = useFetchApi('/frete', 'GET')
   const navigate = useNavigate();
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
+
+ function getFretePrice(){
+    
+ }
+
+  useEffect(() => {
+
+  }, []);
 
   return (
     <main className="w-screen h-screen flex items-center justify-center">
