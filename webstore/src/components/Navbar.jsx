@@ -9,12 +9,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import {useLogOut} from "../hooks/useLogOut";
+import { useLogOut } from "../hooks/useLogOut";
 import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 
 const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
-  const logOut = useLogOut() 
-  const [yourAddress, setYourAddress] = useState(null);
+  const logOut = useLogOut();
+  const [yourAddress, setYourAddress] = useState([]);
 
   useEffect(() => {
     if (address) {
@@ -44,20 +44,24 @@ const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
   return (
     <header>
       <nav>
-        <div className={"w-full h-[9vh] bg-[#152128] py-2 px-4 flex items-center justify-between text-white"}>
+        <div
+          className={
+            "w-full h-[9vh] bg-[#152128] py-2 px-4 flex items-center justify-between text-white"
+          }
+        >
           <a href="/">
             <img className="h-[35px]" alt="logo" src={Logo} />
           </a>
           <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt]">
-            {data ? (
-              !yourAddress ? (
-                <SkeletonNavAddress />
-              ) : yourAddress.length > 0 ? (
-                <>
-                  <FontAwesomeIcon
-                    icon={faTruck}
-                    style={{ color: "#94989e" }}
-                  />
+            {address ? (
+              <>
+                <FontAwesomeIcon icon={faTruck} style={{ color: "#94989e" }} />
+                {!yourAddress.length ? (
+                  <p className="flex flex-col items-start text-[#94989e]">
+                    Olá,{" "}
+                    <span className="text-white">selecione seu endereço</span>
+                  </p>
+                ) : (
                   <p className="flex flex-col items-start text-[#94989e]">
                     Entregar para:
                     <span className="text-white text-xs">
@@ -67,34 +71,13 @@ const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
                       <br></br> CEP: {yourAddress[0].cep}
                     </span>
                   </p>
-                </>
-              ) : (
-                <>
-                  <FontAwesomeIcon
-                    icon={faLocationDot}
-                    style={{ color: "#94989e" }}
-                  />
-                  <p className="flex flex-col items-start text-[#94989e]">
-                    Olá,{" "}
-                    <span className="text-white">selecione seu endereço</span>
-                  </p>
-                </>
-              )
-            ) : (
-              <>
-                <FontAwesomeIcon
-                  icon={faLocationDot}
-                  style={{ color: "#94989e" }}
-                />
-                <p className="flex flex-col items-start text-[#94989e]">
-                  Olá,{" "}
-                  <span className="text-white">selecione seu endereço</span>
-                </p>
+                )}
               </>
+            ) : (
+              <SkeletonNavAddress />
             )}
           </div>
-
-          <div className="w-[50%] rounded-md overflow-hidden h-9 flex">
+          <div className="w-full rounded-md overflow-hidden h-9 flex">
             <input className="w-full" />
             <button className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200">
               <FontAwesomeIcon
@@ -188,10 +171,11 @@ const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
             )}
           </div>
           <div
-          onClick={()=> {
-            setCart(true)
-          }}
-          className="cursor-pointer p-2 hover-border">
+            onClick={() => {
+              setCart(true);
+            }}
+            className="cursor-pointer p-2 hover-border"
+          >
             Seu carrinho{" "}
             <FontAwesomeIcon
               icon={faCartShopping}
