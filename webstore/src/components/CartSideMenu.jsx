@@ -10,21 +10,20 @@ const CartSideMenu = ({ setCart }) => {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
 
-  
   function totalSum(items) {
     var total = 0;
     items.forEach((item) => {
-      console.log(item.price)
-      total += (item.price - (item.price * item.discount)) * item.quantity;
+      console.log(item.price);
+      total += (item.price - item.price * item.discount) * item.quantity;
     });
-    
+
     return total;
   }
-  
+
   useEffect(() => {
     setCartItems(JSON.parse(window.localStorage.getItem("cart")));
   }, []);
-  
+
   return (
     <aside className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] h-screen animate-appear py-8 px-3 z-30">
       <div className="flex flex-col">
@@ -44,7 +43,7 @@ const CartSideMenu = ({ setCart }) => {
         </div>
         <div className="overflow-y-auto overflow-x-hidden flex flex-col gap-5 mt-6">
           <Delayed>
-            {cartItems.length ? (
+            {cartItems && cartItems.length ? (
               cartItems.map((item, index) => {
                 return (
                   <div
@@ -92,7 +91,7 @@ const CartSideMenu = ({ setCart }) => {
                     </div>
                     <button
                       onClick={(e) => {
-                        e.stopPropagation()
+                        e.stopPropagation();
                         removeFromCart(item.productId);
                         setCartItems(
                           JSON.parse(window.localStorage.getItem("cart"))
@@ -115,21 +114,25 @@ const CartSideMenu = ({ setCart }) => {
       </div>
       <Delayed>
         <div className="animate-appear">
-          <p className="text-lg font-semibold mb-4">
-            Total: {moneyMask(Number(totalSum(cartItems)).toFixed(2))}
-          </p>
-          <button
-            onClick={()=>{
-              navigate('/checkout/review-cart')
-            }}
-            className="bg-[#188fa7] w-full px-16 py-2 text-lg
-                                    rounded-md text-white shadow 
-                                    hover:brightness-75
-                                    active:shadow-none active:text-black
-                                    duration-100"
-          >
-            Finalizar compra
-          </button>
+          {cartItems && (
+            <>
+              <p className="text-lg font-semibold mb-4">
+                Total: {moneyMask(Number(totalSum(cartItems)).toFixed(2))}
+              </p>
+              <button
+                onClick={() => {
+                  navigate("/checkout/review-cart");
+                }}
+                className="bg-[#188fa7] w-full px-16 py-2 text-lg
+          rounded-md text-white shadow 
+          hover:brightness-75
+          active:shadow-none active:text-black
+          duration-100"
+              >
+                Finalizar compra
+              </button>
+            </>
+          )}
         </div>
       </Delayed>
     </aside>
