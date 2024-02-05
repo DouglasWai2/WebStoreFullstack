@@ -25,7 +25,7 @@ function App() {
   const [userUrl, setUserUrl] = useState(null);
   const [addressUrl, setAddressUrl] = useState(null);
   const { data: user, loading, error } = useFetchApi(userUrl, "GET");
-  const { data: address, loading: fetching } = useFetchApi(addressUrl, "GET");
+  const { data: address, loading: fetchingAddress } = useFetchApi(addressUrl, "GET");
 
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
@@ -63,7 +63,7 @@ function App() {
               user={user}
               address={address}
               loading={loading}
-              fetching={fetching}
+              fetching={fetchingAddress}
               loggedIn={loggedIn}
             />
           ),

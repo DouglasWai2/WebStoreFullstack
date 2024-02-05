@@ -49,38 +49,40 @@ const ImageMagnifier = ({ image }) => {
   return (
     <div
       onMouseEnter={() => {
-        lens.current.style.visibility = "visible";
-        result.current.style.visibility = "visible";
+        lens.current.style.display = "block";
+        result.current.style.display = "block";
       }}
       onMouseLeave={() => {
-        lens.current.style.visibility = "hidden";
-        result.current.style.visibility = "hidden";
+        lens.current.style.display = "none";
+        result.current.style.display = "none";
       }}
       onMouseMove={handleMouseHover}
       ref={imagePosition}
-      className="relative flex z-10 w-fit h-fit max-h-[433px] max-w-[578px]"  
+      className="relative flex z-10 max-h-full max-w-full"
     >
-      <img ref={displayImage} className="object-contain" src={image} />
-      <div
-        ref={lens}
-        style={{
-          position: "absolute",
-          left: `${cursorPosition.x}px`,
-          top: `${cursorPosition.y}px`,
-          pointerEvents: "none",
-          visibility: "hidden",
-        }}
-        className="bg-white opacity-60 w-[300px] h-[225px]"
-      ></div>
-      <div
-        ref={result}
-        style={{
-          backgroundImage: `url(${image})`,
-          backgroundRepeat: "no-repeat",
-          visibility: "hidden",
-        }}
-        className="w-[578px] h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
-      ></div>
+      <img ref={displayImage} className="max-h-full max-w-full" src={image} />
+      <>
+        <div
+          ref={lens}
+          style={{
+            position: "absolute",
+            left: `${cursorPosition.x}px`,
+            top: `${cursorPosition.y}px`,
+            pointerEvents: "none",
+            display: "none",
+          }}
+          className="bg-white opacity-60 w-[300px] h-[225px]"
+        ></div>
+        <div
+          ref={result}
+          style={{
+            backgroundImage: `url(${image})`,
+            backgroundRepeat: "no-repeat",
+            display: "none",
+          }}
+          className="w-[578px] h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
+        ></div>
+      </>
     </div>
   );
 };

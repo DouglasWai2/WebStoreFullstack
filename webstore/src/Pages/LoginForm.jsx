@@ -42,7 +42,7 @@ const LoginForm = () => {
   }, [error, userData, loading]);
 
   return (
-    <main className="flex flex-col z-[-1] justify-center items-center w-screen h-screen bg-[#F9F7F1]">
+    <main className="flex flex-col justify-center items-center w-screen h-screen overflow-scroll bg-[#F9F7F1]">
       {
       invalid && (
         <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4">
@@ -59,7 +59,7 @@ const LoginForm = () => {
         </div>
       )
       }
-      <div className="w-[500px] rounded-lg shadow-md p-8 py-24">
+      <div className="w-[500px] rounded-lg shadow-md p-8 py-24 max-sm:w-[300px]">
         <a href="/">
           <img src={Logo} />
         </a>

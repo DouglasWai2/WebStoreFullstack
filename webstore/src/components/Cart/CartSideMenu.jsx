@@ -1,8 +1,8 @@
 import { faCartShopping, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { moneyMask } from "../helpers/moneyMask";
-import { removeFromCart } from "../helpers/removeFromCart";
+import { moneyMask } from "../../helpers/moneyMask";
+import { removeFromCart } from "../../helpers/removeFromCart";
 import Delayed from "./Delayed";
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +13,6 @@ const CartSideMenu = ({ setCart }) => {
   function totalSum(items) {
     var total = 0;
     items.forEach((item) => {
-      console.log(item.price);
       total += (item.price - item.price * item.discount) * item.quantity;
     });
 
