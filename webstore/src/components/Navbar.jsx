@@ -14,7 +14,6 @@ import SkeletonNavAddress from "./shared/SkeletonNavAddress";
 
 const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
   const logOut = useLogOut() 
-  const isVerified = window.localStorage.getItem("verified");
   const [yourAddress, setYourAddress] = useState(null);
 
   useEffect(() => {
@@ -201,13 +200,11 @@ const Navbar = ({ data, address, toggleCard, setToggleCard, setCart }) => {
           </div>
         </div>
       </nav>
-      {isVerified === "false" ? (
+      {data && data.confirmedEmail && (
         <h3 className="text-xl font-bold bg-yellow-100 px-8">
           Enviamos um link de verificação para seu e-mail. Por favor, verifique
           sua caixa de entrada.
         </h3>
-      ) : (
-        ""
       )}
     </header>
   );
