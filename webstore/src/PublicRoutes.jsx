@@ -1,7 +1,4 @@
 import React from "react";
-import {
-  Navigate,
-} from "react-router-dom";
 import MyStore from "./Pages/Store/MyStore";
 import ProductPage from "./Pages/Catalog/ProductPage";
 

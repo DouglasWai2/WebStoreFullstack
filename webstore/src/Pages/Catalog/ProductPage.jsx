@@ -36,7 +36,7 @@ const ProductPage = () => {
     product && (
       <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6">
         <article className="shadow-md p-6 w-full max-w-[1440px]">
-          <div className="flex justify-between py-5 max-lg:flex-col max-lg:justify-normal">
+          <div className="flex justify-between gap-5 py-5 max-lg:flex-col max-lg:justify-normal">
             <section
               id="product-images-section"
               className="max-lg:flex max-lg:flex-col max-lg:items-center"
@@ -63,7 +63,7 @@ const ProductPage = () => {
                 })}
               </div>
             </section>
-            <section className="max-w-[50%] max-lg:max-w-full w-max flex flex-col gap-3">
+            <section className="max-w-[50%] max-lg:max-w-full flex flex-col gap-3">
               <h1 className="text-3xl">{product.title}</h1>
               <div className="flex justify-between items-center">
                 <h3 className="text-xl">{moneyMask(product.price)}</h3>

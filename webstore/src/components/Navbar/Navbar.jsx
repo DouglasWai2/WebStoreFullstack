@@ -1,17 +1,14 @@
 import Logo from "../../logo-no-background.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLocationDot,
   faMagnifyingGlass,
   faCaretDown,
   faCartShopping,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { useLogOut } from "../../hooks/useLogOut";
 import SkeletonNavAddress from "../shared/SkeletonNavAddress";
-import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import NavCardMenu from "./NavCardMenu";
 
 const Navbar = ({
@@ -20,10 +17,12 @@ const Navbar = ({
   fetchingAddress,
   toggleCard,
   setToggleCard,
-  setCart,
+  setToggleCart,
 }) => {
   const logOut = useLogOut();
   const [yourAddress, setYourAddress] = useState([]);
+
+  var cart = JSON.parse(localStorage.getItem("cart"));
 
   useEffect(() => {
     if (address) {
@@ -99,7 +98,7 @@ const Navbar = ({
           </div>
           <div
             onClick={() => {
-              setCart(true);
+              setToggleCart(true);
             }}
             className="cursor-pointer flex items-center p-2 hover-border min-w-[150px] justify-around"
           >
@@ -108,6 +107,7 @@ const Navbar = ({
               icon={faCartShopping}
               style={{ color: "#94989e" }}
             />
+            <span>{cart.length}</span>
           </div>
         </div>
       </nav>

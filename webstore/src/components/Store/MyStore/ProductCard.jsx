@@ -12,7 +12,8 @@ const ProductCard = ({ item }) => {
       id="product-card"
       className="w-[250px]  bg-white p-3 px-5 shadow-md group cursor-pointer duration-200"
       onClick={()=> {
-        navigate('/catalog/'+ item.title + '/' + item._id)
+        console.log('/catalog/'+ item.title + '/' + item._id)
+        navigate('/catalog/'+ item.title.replace('/' , '%2F') + '/' + item._id)
       }}
     >
       <img className="aspect-[4/3] object-contain" src={item.thumbnail} />

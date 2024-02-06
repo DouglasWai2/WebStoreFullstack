@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
+import { isMobile } from 'react-device-detect'
 
-const ImageMagnifier = ({ image }) => {
+const ImageMagnifier = ({ image, setFullscreenImage }) => {
   const displayImage = useRef(null);
   const imagePosition = useRef(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const result = useRef(null);
   const lens = useRef(null);
+
+  console.log(isMobile)
 
   const handleMouseHover = (e) => {
     const imgWrapper = displayImage.current;
@@ -48,17 +51,23 @@ const ImageMagnifier = ({ image }) => {
   };
   return (
     <div
-      onMouseEnter={() => {
-        lens.current.style.display = "block";
-        result.current.style.display = "block";
-      }}
-      onMouseLeave={() => {
-        lens.current.style.display = "none";
-        result.current.style.display = "none";
-      }}
+    onMouseEnter={()=>{
+      if(isMobile) return
+      lens.current.style.display = 'block'
+      result.current.style.display = 'block'
+    }}
+    onMouseLeave={()=> {
+      lens.current.style.display = 'none'
+      result.current.style.display = 'none'
+    }}
       onMouseMove={handleMouseHover}
+      onTouchEnd={()=>{
+        // setFullscreenImage(true)
+      }}
       ref={imagePosition}
-      className="relative flex z-10 max-h-full max-w-full"
+      className="relative flex z-10 max-h-full max-w-full group pointer"
+     
+    
     >
       <img ref={displayImage} className="max-h-full max-w-full" src={image} />
       <>
@@ -69,18 +78,18 @@ const ImageMagnifier = ({ image }) => {
             left: `${cursorPosition.x}px`,
             top: `${cursorPosition.y}px`,
             pointerEvents: "none",
-            display: "none",
+            display: 'none'
           }}
-          className="bg-white opacity-60 w-[300px] h-[225px]"
+          className={`bg-white hidden opacity-60 w-[300px] h-[225px] `}
         ></div>
         <div
           ref={result}
           style={{
             backgroundImage: `url(${image})`,
             backgroundRepeat: "no-repeat",
-            display: "none",
+            display: 'none'
           }}
-          className="w-[578px] h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
+          className={"w-[578px] hidden h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"}
         ></div>
       </>
     </div>
