@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const CartSideMenu = ({ setCart }) => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(JSON.parse(localStorage.getItem('cart')));
 
   function totalSum(items) {
     var total = 0;
@@ -20,7 +20,12 @@ const CartSideMenu = ({ setCart }) => {
   }
 
   useEffect(() => {
-    setCartItems(JSON.parse(window.localStorage.getItem("cart")));
+    const handleStorage = () => {
+      setCartItems(JSON.parse(localStorage.getItem('cart'))?.length)
+    }
+  
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
   }, []);
 
   return (
@@ -113,7 +118,7 @@ const CartSideMenu = ({ setCart }) => {
       </div>
       <Delayed>
         <div className="animate-appear">
-          {cartItems && (
+          {cartItems && cartItems.length && (
             <>
               <p className="text-lg font-semibold mb-4">
                 Total: {moneyMask(Number(totalSum(cartItems)).toFixed(2))}

@@ -9,11 +9,11 @@ const ReviewCart = () => {
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
 
  function getFretePrice(){
+
     
  }
 
   useEffect(() => {
-
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import {
   faCartShopping,
   faTruck,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLogOut } from "../../hooks/useLogOut";
 import SkeletonNavAddress from "../shared/SkeletonNavAddress";
 import NavCardMenu from "./NavCardMenu";
@@ -20,9 +20,17 @@ const Navbar = ({
   setToggleCart,
 }) => {
   const logOut = useLogOut();
+  const [cartItemsNum, setCartItemsNum] = useState(JSON.parse(localStorage.getItem('cart'))?.length)
   const [yourAddress, setYourAddress] = useState([]);
-
-  var cart = JSON.parse(localStorage.getItem("cart"));
+  
+  useEffect(() => {
+    const handleStorage = () => {
+      setCartItemsNum(JSON.parse(localStorage.getItem('cart'))?.length)
+    }
+  
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
+  }, [])
 
   useEffect(() => {
     if (address) {
@@ -107,7 +115,7 @@ const Navbar = ({
               icon={faCartShopping}
               style={{ color: "#94989e" }}
             />
-            <span>{cart.length}</span>
+            <span>{cartItemsNum > 0 && cartItemsNum}</span>
           </div>
         </div>
       </nav>

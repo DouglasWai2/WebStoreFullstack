@@ -15,9 +15,11 @@ export function addToCart(
     quantity: 1,
   };
 
+  console.log(product)
+
   var cart = JSON.parse(localStorage.getItem("cart"));
   if (!cart) {
-    window.localStorage.setItem("cart", JSON.stringify([]));
+    localStorage.setItem("cart", JSON.stringify([]));
     return addToCart();
   }
 
@@ -35,4 +37,5 @@ export function addToCart(
 
   cart.push(product);
   localStorage.setItem("cart", JSON.stringify(cart));
+  window.dispatchEvent(new Event('storage'))
 }

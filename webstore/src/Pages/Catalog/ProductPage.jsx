@@ -41,9 +41,9 @@ const ProductPage = () => {
               id="product-images-section"
               className="max-lg:flex max-lg:flex-col max-lg:items-center"
             >
-                <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain">
-                  <ImageMagnifier image={mainImage} />
-                </div>
+              <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain">
+                <ImageMagnifier image={mainImage} />
+              </div>
               <div className="flex w-[578px] overflow-x-scroll my-4 product-images relative max-lg:w-full">
                 {product.images.map((item, index) => {
                   return (
@@ -63,10 +63,33 @@ const ProductPage = () => {
                 })}
               </div>
             </section>
-            <section className="max-w-[50%] max-lg:max-w-full flex flex-col gap-3">
+            <section className="w-[50%] max-lg:w-full flex flex-col gap-3">
               <h1 className="text-3xl">{product.title}</h1>
               <div className="flex justify-between items-center">
-                <h3 className="text-xl">{moneyMask(product.price)}</h3>
+                <div className="font-semibold text-lg mt-2 text-right">
+                  {product.discount > 0 ? (
+                    <div className="flex flex-row-reverse gap-3">
+                      <p className="text-2xl text-[#188fa7] text-end">
+                        {product.discount * 100}% OFF
+                      </p>
+
+                      <div className="text-end">
+                        <p className="strikethrough text-xs text-center h-min w-fit">
+                          {moneyMask(product.price)}
+                        </p>
+                        <p className="text-xl">
+                          {moneyMask(
+                            Number(
+                              product.price - product.price * product.discount
+                            ).toFixed(2)
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  ) : (
+                    <h3 className="text-xl">{moneyMask(product.price)}</h3>
+                  )}
+                </div>
                 <p className="text-gray-600">{product.sells} vendidos</p>
               </div>
               <div className="flex gap-2 items-center">
