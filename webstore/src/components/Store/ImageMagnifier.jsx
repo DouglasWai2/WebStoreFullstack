@@ -15,35 +15,33 @@ const ImageMagnifier = ({ image, setFullscreenImage }) => {
   }, [image]);
 
   const handleMouseHover = (e) => {
-    const image = imageRef.current;
-    const result = resultRef.current;
-    const imageContainer = imageContainerRef.current;
+    const imgWrapper = displayImage.current;
+    const zoomedImage = result.current;
+    const img = imagePosition.current;
     var x, y;
 
-    //get the ratio between the zoomed in image and the lens
-    const cx = result?.offsetWidth / lens.current.offsetWidth;
-    const cy = result?.offsetHeight / lens.current.offsetHeight;
-
-    result.style.backgroundSize = `${image?.width * cx}px ${
-      image?.height * cy
+    const cx = zoomedImage?.offsetWidth / lens.current.offsetWidth;
+    const cy = zoomedImage?.offsetHeight / lens.current.offsetHeight;
+    zoomedImage.style.backgroundSize = `${imgWrapper?.width * cx}px ${
+      imgWrapper?.height * cy
     }px`;
 
-    // get current mouse position
     x =
       e.pageX -
-      imageContainer.getBoundingClientRect().left-
+      img.getBoundingClientRect().left -
+      window.scrollX -
       lens.current.offsetWidth / 2;
     y =
       e.pageY -
-      imageContainer.getBoundingClientRect().top -
+      img.getBoundingClientRect().top -
+      window.scrollY -
       lens.current.offsetHeight / 2;
 
-    //stop the lens following the cursor if it's outside of the image
-    if (x > imageContainer.getBoundingClientRect().width - lens.current.offsetWidth)
-      x = imageContainer.getBoundingClientRect().width - lens.current.offsetWidth;
-    // if (x < 0) x = 0;
-    if (y > imageContainer.getBoundingClientRect().height - lens.current.offsetHeight)
-      y = imageContainer.getBoundingClientRect().height - lens.current.offsetHeight;
+    if (x > imgWrapper?.width - lens.current.offsetWidth)
+      x = imgWrapper?.width - lens.current.offsetWidth;
+    if (x < 0) x = 0;
+    if (y > imgWrapper?.height - lens.current.offsetHeight)
+      y = imgWrapper?.height - lens.current.offsetHeight;
     if (y < 0) y = 0;
 
     setCursorPosition({
@@ -51,13 +49,8 @@ const ImageMagnifier = ({ image, setFullscreenImage }) => {
       y,
     });
 
-    console.log( x)
-    
-    if(x * cx < 0) result.style.backgroundPosition = `-${ x * cx}px -${
-      y * cy
-    }px`;
-    else result.style.backgroundPosition = `-${ x * cx}px -${
-      y * cy
+    zoomedImage.style.backgroundPosition = `-${cursorPosition.x * cx}px -${
+      cursorPosition.y * cy
     }px`;
   };
   return (
