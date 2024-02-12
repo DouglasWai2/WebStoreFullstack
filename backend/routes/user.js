@@ -4,8 +4,11 @@ const User = require("../models/user.model");
 const auth = require("../middlewares/verifyToken");
 require('dotenv').config()
 
+
+// send user info
 router.get("/user", auth, async (req, res) => {
   const user = await User.findById(req.userInfo.id);
+  console.log('teste')
   
   res
     .status(200)
@@ -20,6 +23,7 @@ router.get("/user", auth, async (req, res) => {
     })
 });
 
+// update user data
 router.post("/user/update", auth, async(req, res) => {
   const data = req.body
   const user = await User.findById(req.userInfo.id)
@@ -39,5 +43,4 @@ router.post("/user/update", auth, async(req, res) => {
   }
 
 })
-
 module.exports = router;

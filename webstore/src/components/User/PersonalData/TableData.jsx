@@ -21,11 +21,11 @@ const TableData = ({ item, editData, editForm, handleChange, index }) => {
             (item.CPF && CPFMask(editData.CPF))
           }
           type={item.type}
-          className="border-[1px] border-gray-400 focus:bg-gray-200 transition-colors duration-200 p-1 ml-5"
+          className="border-[1px] border-gray-400 focus:bg-gray-200 transition-colors duration-200 p-1 ml-5 max-sm:ml-0"
         />
       ) : (
         <>
-          <span className="ml-5 p-1">
+          <span className="ml-5 p-1 max-sm:ml-0">
             {!Object.values(item)[0]
               ? (Object.keys(item)[0] === "Data de Nascimento"
                   ? "Insira uma "

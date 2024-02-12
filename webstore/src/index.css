@@ -10,6 +10,10 @@
   }
 }
 
+html {
+  font-family: "Poppins", sans-serif;
+}
+
 .hover-border {
   @apply border-[1px] border-transparent hover:border-white;
 }
@@ -23,7 +27,9 @@
 }
 
 .box-shadow-bottom {
-  @apply relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:shadow-[0_8px_10px_-10px_rgba(0,0,0,0.5)] after:w-full after:h-[30px] after:z-[-1] after:rounded-[50%];
+  @apply relative after:content-[''] after:absolute after:bottom-0 after:left-0 
+  after:shadow-[0_8px_10px_-10px_rgba(0,0,0,0.5)] after:w-full after:h-[30px] 
+  after:z-[-1] after:rounded-[50%];
 }
 
 .link {
@@ -31,11 +37,14 @@
 }
 
 .active-li {
-  @apply font-semibold cursor-pointer;
+  @apply font-semibold w-fit 
+  cursor-pointer relative before:absolute before:w-full before:border-b-2 
+  before:bottom-[-2px] before:border-black before:hidden max-md:before:block 
+  max-md:text-center max-sm:before:bottom-[0];
 }
 
 .unactive-li {
-  @apply text-gray-600 cursor-pointer hover:text-gray-900;
+  @apply text-gray-600 cursor-pointer hover:text-gray-900 max-md:text-center align-middle;
 }
 
 .address-form input {

@@ -20,7 +20,7 @@ const AddressCard = ({ address }) => {
   }, [data]);
 
   return (
-    <div className="border-[1px] flex flex-col gap-5 p-4 w-[250px] shadow-md">
+    <div className="border-[1px] flex flex-col gap-5 p-4 w-[250px] shadow-md justify-between">
       <p>
         <span className="font-semibold">
           {address.nickname ? address.nickname : address.recieverName}{" "}
@@ -55,14 +55,14 @@ const AddressCard = ({ address }) => {
           <p>Endereço selecionado</p>
         ) : (
           <button
-            onClick={() => setUrl("/api/address/set/" + address.id)}
+            onClick={() => setUrl("/address/set/" + address.id)}
             className="bg-yellow-300 w-full h-fit px-3 hover:bg-yellow-400"
           >
             Definir como principal
           </button>
         )}
         <button
-          onClick={() => setUrl("/api/address/delete/" + address.id)}
+          onClick={() => setUrl("/address/delete/" + address.id)}
           className="w-max text-red-500 px-2"
         >
           <FontAwesomeIcon icon={faTrash} />

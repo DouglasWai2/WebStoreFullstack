@@ -18,7 +18,7 @@ const MyProducts = () => {
   const [confirm, setConfirm] = useState(false);
   const [postUrl, setPostUrl] = useState("");
   const [url, setUrl] = useState(
-    "/api/store/my-products?&category=&fromRating=&toRating=&title=&fromDate=&toDate="
+    "/store/my-products?&category=&fromRating=&toRating=&title=&fromDate=&toDate="
   );
   const [title, setTitle] = useState("");
   const [discount, setDiscount] = useState(false);
@@ -26,7 +26,7 @@ const MyProducts = () => {
   const [menu, setMenu] = useState(false);
   const [checked, setChecked] = useState([]);
   const { data, loading, refresh } = useFetchApi(url, "GET");
-  const { data: store } = useFetchApi("/api/store/my-store", "GET");
+  const { data: store } = useFetchApi("/store/my-store", "GET");
   const [body, setBody] = useState(null);
   const {
     data: response,
@@ -49,12 +49,12 @@ const MyProducts = () => {
 
   function deleteSelected() {
     setBody({ productIDs: checked });
-    setPostUrl("/api/store/my-store/delete-products");
+    setPostUrl("/store/my-store/delete-products");
   }
 
   function discountSelected() {
     setBody({ productIDs: checked, discount: discountValue / 100 });
-    setPostUrl("/api/store/my-store/discount-products");
+    setPostUrl("/store/my-store/discount-products");
   }
 
   useEffect(() => {

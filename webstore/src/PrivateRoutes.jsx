@@ -7,7 +7,6 @@ import Security from "./Pages/User/Security";
 import PaymentMethods from "./Pages/User/PaymentMethods";
 import YourPurchases from "./Pages/User/YourPurchases";
 import AddressForm from "./components/shared/AddressForm";
-import PaymentMethodForm from "./Pages/User/SetupForm";
 import Store from "./Pages/Store/Store";
 import RegisterStore from "./Pages/Store/RegisterStore";
 import MyStore from "./Pages/Store/MyStore";
@@ -32,7 +31,7 @@ const PrivateRoutes = (user, loggedIn, loading) => {
             children: [
               {
                 path: "address",
-                element: <AddressForm url="/api/store/address" type="store" />,
+                element: <AddressForm url="/store/address" type="store" />,
               },
             ],
           },
@@ -48,7 +47,7 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           { path: "profile", element: <ProfilePage /> },
           { path: "address", element: <Address /> },
           { path: "security", element: <Security /> },
-          { path: "new-address", element: <AddressForm url="/api/address" /> },
+          { path: "new-address", element: <AddressForm url="/address" /> },
           { path: "payment-methods", element: <PaymentMethods /> },
           { path: "your-purchases", element: <YourPurchases /> },
         ],

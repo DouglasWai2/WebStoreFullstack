@@ -15,13 +15,20 @@ import PrivateRoutes from "./PrivateRoutes";
 import PublicRoutes from "./PublicRoutes";
 import NotFoundError from "./Pages/NotFoundError";
 import UnexpectedError from "./Pages/UnexpectedError";
-import { logOut } from "./helpers/logOut";
+import { useLogOut } from "./hooks/useLogOut";
+import Checkout from "./Pages/Checkout/Checkout";
+import PostCheckout from "./Pages/Checkout/PostCheckout";
+import ReviewCart from "./Pages/Checkout/ReviewCart";
 
 function App() {
+  const logOut = useLogOut();
   const [userUrl, setUserUrl] = useState(null);
   const [addressUrl, setAddressUrl] = useState(null);
   const { data: user, loading, error } = useFetchApi(userUrl, "GET");
-  const { data: address, loading: fetching } = useFetchApi(addressUrl, "GET");
+  const { data: address, loading: fetchingAddress } = useFetchApi(
+    addressUrl,
+    "GET"
+  );
 
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
@@ -40,13 +47,13 @@ function App() {
   }
 
   useEffect(() => {
-    if (error?.data === "Access Denied. No token provided.") logOut();
+    if (error?.data === "Access Denied. No token provided.") logOut(); // If loggedIn cookie is true but there's no access token, i.e. user is not logged in
   }, [error]);
 
   useEffect(() => {
     if (!loggedIn) return;
-    setUserUrl("/api/user");
-    setAddressUrl("/api/address");
+    setUserUrl("/user");
+    setAddressUrl("/address");
   }, []);
 
   const router = createBrowserRouter([
@@ -59,7 +66,7 @@ function App() {
               user={user}
               address={address}
               loading={loading}
-              fetching={fetching}
+              fetching={fetchingAddress}
               loggedIn={loggedIn}
             />
           ),
@@ -78,6 +85,30 @@ function App() {
       path: "/signup",
       element: <RegisterForm loggedIn={loggedIn} />,
       loader: redirectLoader(),
+    },
+    {
+      path: "/checkout/:productName/:productId/:client_secret",
+      element: <Checkout />,
+      loader: () => {
+        if (!loggedIn) redirect("/login");
+        else return null;
+      },
+    },
+    {
+      path: "/checkout/post-checkout",
+      element: <PostCheckout />,
+      loader: () => {
+        if (!loggedIn) redirect("/login");
+        else return null;
+      },
+    },
+    {
+      path: "/checkout/review-cart",
+      element: <ReviewCart />,
+      loader: () => {
+        if (!loggedIn) redirect("/login");
+        else return null;
+      },
     },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },

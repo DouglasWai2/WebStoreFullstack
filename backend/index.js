@@ -18,7 +18,7 @@ mongoose
   .then(console.log("DB Connected"))
   .catch((error) => console.log(error));
 
-app.get("/api", (req, res) => {
+app.get("/api/v1", (req, res) => {
   console.log("user hit the server");
 });
 
@@ -36,17 +36,17 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use("/api", require("./routes/catalog"));
-app.use("/api", require("./routes/rating"));
-app.use("/api", require("./routes/user"));
-app.use("/api", require("./routes/user"));
-app.use("/api", require("./routes/address"));
-app.use("/api", require("./routes/store"));
-app.use("/api", require("./routes/payments"));
-app.use("/auth", require("./routes/auth/register"));
-app.use("/auth", require("./routes/auth/login"));
-app.use("/auth", require("./routes/auth/refreshToken"));
-app.use("/auth", require("./routes/auth/logout"));
+app.use("/api/v1", require("./routes/catalog"));
+app.use("/api/v1", require("./routes/rating"));
+app.use("/api/v1", require("./routes/user"));
+app.use("/api/v1", require("./routes/frete"));
+app.use("/api/v1", require("./routes/address"));
+app.use("/api/v1", require("./routes/store"));
+app.use("/api/v1", require("./routes/payments"));
+app.use("/api/v1/auth", require("./routes/auth/register"));
+app.use("/api/v1/auth", require("./routes/auth/login"));
+app.use("/api/v1/auth", require("./routes/auth/refreshToken"));
+app.use("/api/v1/auth", require("./routes/auth/logout"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}....`);

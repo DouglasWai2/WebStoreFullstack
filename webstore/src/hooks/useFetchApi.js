@@ -1,8 +1,9 @@
-import api from "../helpers/api";
+import { useApi } from "./useApi";
 import { useEffect, useState, useCallback } from "react";
 
 // Custom hook for API calls
 export const useFetchApi = (path, method, body, config) => {
+  const api = useApi();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
@@ -14,10 +15,10 @@ export const useFetchApi = (path, method, body, config) => {
       try {
         const response =
           method === "GET"
-            ? path && (await api.get("http://localhost:5000" + path))
+            ? path && (await api.get(process.env.REACT_APP_API_URL + path))
             : method === "POST"
             ? await api.post(
-                "http://localhost:5000" + path,
+                process.env.REACT_APP_API_URL + path,
                 body,
                 config ? { headers: config } : "" // In case there is headers setted it will be passed in this hook params
               ) //If there's no config setted, default headers will be used
@@ -30,13 +31,13 @@ export const useFetchApi = (path, method, body, config) => {
         setLoading(false);
       }
     },
-    [ method, path, config]
+    [method, path, config]
   );
 
   const refresh = () => {
-    setData(null)
-    setError(null)
-    setLoading(null)
+    setData(null);
+    setError(null);
+    setLoading(null);
     fetchApi(body);
   };
   useEffect(() => {

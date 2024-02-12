@@ -23,7 +23,7 @@ const RegisterStore = () => {
   };
   const [body, setBody] = useState(null);
   const { data, loading, error } = useFetchApi(
-    "/api/store/register-store",
+    "/store/register-store",
     "POST",
     body,
     headers

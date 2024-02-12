@@ -5,7 +5,7 @@ const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 
 exports.addProduct = async (req, res) => {
-  const { title, description, brand, model, tags, genre, features, price } =
+  const { title, description, brand, model, tags, genre, features, price, dimensions } =
     req.body;
 
   console.log(req.body);
@@ -18,6 +18,7 @@ exports.addProduct = async (req, res) => {
     model,
     features,
     price,
+    dimensions
   });
   if (req.files.length) {
     newProduct.thumbnail = req.files[0].location;
@@ -37,7 +38,7 @@ exports.addProduct = async (req, res) => {
     return res.status(200).send("Product saved successfully");
   } catch (error) {
     console.log(error);
-    req.files.map(async (file) => {
+    req.files.forEach(async (file) => {
       const command = new DeleteObjectCommand({
         Bucket: "webstore-api-images",
         Key: file.key,

@@ -36,7 +36,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
 
   function handleClick() {
     setBody({ productIDs: item._id });
-    setUrl("/api/store/my-store/delete-products");
+    setUrl("/store/my-store/delete-products");
   }
 
   return (
@@ -113,7 +113,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                 <button
                   className="hover:underline"
                   onClick={() => {
-                    setUrl("/api/store/my-store/discount-products");
+                    setUrl("/store/my-store/discount-products");
                     setBody({
                       productIDs: [item._id],
                       discount: discountValue / 100,

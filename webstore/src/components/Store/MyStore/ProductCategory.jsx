@@ -8,7 +8,7 @@ const ProductCategory = ({ text, queries, from, to, storeId }) => {
   const [toT, setToT] = useState(to)
   useEffect(() => {
     if (storeId) {
-      setProductsUrl(`/api/catalog/all-products/${storeId}?${queries}&from=${from}&to=${toT}`);
+      setProductsUrl(`/catalog/all-products/${storeId}?${queries}&from=${from}&to=${toT}`);
     }
   }, [storeId, queries, toT]);
 

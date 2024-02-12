@@ -12,28 +12,50 @@ import ProductPreview from "../../components/Store/ProductPreview";
 import { moneyMask } from "../../helpers/moneyMask";
 import SubmitButton from "../../components/shared/SubmitButton";
 import ErrorCard from "../../components/shared/ErrorCard";
+import FeaturesInput from "../../components/Store/NewProduct/FeaturesInput";
+import FormInput from "../../components/Store/NewProduct/FormInput";
 
 const NewProduct = () => {
   const [tagsArray, setTagsArray] = useState([]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState([]);
-  const [tags, setTags] = useState("");
-  const [price, setPrice] = useState("");
-  const [files, setFiles] = useState([]);
-  const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
   const [body, setBody] = useState(null);
   const [invalid, setInvalid] = useState(null);
   const [dropZone, setDropZone] = useState(false);
   const [dragging, setDragging] = useState(null);
   const navigate = useNavigate();
+  const headers = {
+    "content-type": "multipart/form-data",
+  };
+  const {
+    data: response,
+    loading,
+    error,
+    refresh,
+  } = useFetchApi("/catalog/new-product", "POST", body, headers);
+  const [product, setProduct] = useState({
+    title: "",
+    description: "",
+    features: [],
+    price: "",
+    tags: "",
+    files: [],
+    brand: "",
+    model: "",
+    dimensions: {
+      weight: null,
+      length: null,
+      width: null,
+      height: null,
+    },
+  });
+
+  const { title, description, features, price, tags, files, brand, model } =
+    product;
 
   // initial number of features input (1)
   const featuresInput = [
     {
       type: "text",
-      id: 1,
+      id: "features." + 0,
       value: "",
     },
   ];
@@ -46,7 +68,7 @@ const NewProduct = () => {
         ...s,
         {
           type: "text",
-          id: array.length + 1,
+          id: "features." + array.length,
           value: "",
         },
       ];
@@ -58,62 +80,61 @@ const NewProduct = () => {
     setArray(newArray);
   };
 
-  const headers = {
-    "content-type": "multipart/form-data",
-  };
+  function handleChange(e) {
+    let changeName = e.target.name;
+    let changeValue = e.target.value;
+    let changeId = e.target.id;
+    let dimensions;
 
-  const {
-    data: response,
-    loading,
-    error,
-    refresh,
-  } = useFetchApi("/api/catalog/new-product", "POST", body, headers);
+    if (error) e.target.classList.remove("invalid");
+    e.target.classList.remove("!border-red-400");
+    if (changeName === "files") changeValue = Array.from(e.target.files);
+    if (changeName === "price") changeValue = moneyMask(e.target.value);
+
+    if (changeName.includes("features")) {
+      setArray((s) => {
+        const newArr = s.slice();
+        newArr.forEach((item) => {
+          if (item.id == e.target.id) {
+            item.value = e.target.value;
+          }
+        });
+        return newArr;
+      });
+      changeName = null;
+    }
+
+    if (changeId.includes("dimensions")) {
+      dimensions = {
+        ...product.dimensions,
+        [e.target.name]: parseFloat(e.target.value),
+      };
+      changeName = null;
+    }
+
+    setProduct((productInfo) =>
+      changeName
+        ? {
+            ...productInfo,
+            [changeName]: changeValue,
+          }
+        : { ...productInfo, dimensions: { ...dimensions } }
+    );
+  }
 
   useEffect(() => {
-    setFeatures(
-      array.map((item) => {
+    setProduct((productInfo) => ({
+      ...productInfo,
+      features: array.map((item) => {
         return item.value;
-      })
-    );
-  }, [array, tagsArray]); // Use effect necessary to handle async behavior of usestate callback
-
-  function handleTitle(e) {
-    setTitle(e.target.value);
-  }
-  function handleDescription(e) {
-    setDescription(e.target.value);
-  }
-  function handleFeatures(e) {
-    setArray((s) => {
-      const newArr = s.slice();
-      newArr.forEach((item) => {
-        if (item.id == e.target.id) {
-          item.value = e.target.value;
-        }
-      });
-      return newArr;
-    });
-  }
-  function handleTags(e) {
-    setTags(e.target.value);
-  }
-  function handlePrice(e) {
-    setPrice(moneyMask(e.target.value));
-  }
-  function handleFiles(e) {
-    setFiles(Array.from(e.target.files));
-  }
-  function handleBrand(e) {
-    setBrand(e.target.value);
-  }
-  function handleModel(e) {
-    setModel(e.target.value);
-  }
+      }),
+    }));
+  }, [array]); // Use effect necessary to handle async behavior of usestate callback
 
   const handleTagsArray = (e) => {
     if (e.key === ",") {
       setTagsArray([...tagsArray, e.target.value]);
-      setTags("");
+      if (typeof tags === "string") product.tags = "";
       e.target.value = "";
     }
   };
@@ -128,25 +149,25 @@ const NewProduct = () => {
   function handleOnDrop(e) {
     e.stopPropagation();
     e.preventDefault();
-    setFiles(Array.from(e.dataTransfer.files));
+    setProduct((productInfo) => ({
+      ...productInfo,
+      [e.target.name]: Array.from(e.target.files),
+    }));
     setDropZone(false);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setBody({
-      description,
-      title,
-      features,
+      ...product,
       tags: tagsArray,
-      files,
-      brand,
-      model,
       price: parseFloat(
         price.replace("R$ ", "").replace(".", "").replace(",", ".")
       ),
     });
-    if (error) refresh(body);
+
+    if (error) refresh();
   };
 
   function handleDrop(result) {
@@ -156,16 +177,20 @@ const NewProduct = () => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    setFiles(items);
+    setProduct((productInfo) => ({
+      ...productInfo,
+      files: items,
+    }));
   }
 
   useEffect(() => {
     if (error) {
-      setInvalid("Preencha todos os campos corretamente");
+      setInvalid(error.data._message + ". Preencha os campos corretamente");
       Object.keys(error.data.errors).forEach((item) => {
-        const element = document.getElementsByName(item);
-        if (element[0]) {
-          element[0].className += " invalid !border-red-400";
+        const element = document.getElementById(item);
+        if (element) {
+          element.classList.add("invalid");
+          element.classList.add("!border-red-400");
         }
       });
     }
@@ -183,20 +208,13 @@ const NewProduct = () => {
         </div>
       )}
       <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 ">
-        <div className="relative  my-2 z-0">
-          <input
-            className="floating-input-effect w-full peer"
-            onChange={handleTitle}
-            value={title}
-            name="title"
-            type="text"
-            placeholder=""
-            required={true}
-          />
-          <label className="floating-label" htmlFor="title">
-            Título
-          </label>
-        </div>
+        <FormInput
+          props={{ id: "title" }}
+          value={title}
+          name="title"
+          label="Título"
+          handleChange={handleChange}
+        />
         <div className="relative  my-2 z-10">
           <FontAwesomeIcon
             className="absolute right-0 m-2 peer"
@@ -208,8 +226,9 @@ const NewProduct = () => {
           </div>
           <textarea
             placeholder=""
+            id="description"
             className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
-            onChange={handleDescription}
+            onChange={handleChange}
             value={description}
             name="description"
             type="text"
@@ -223,64 +242,26 @@ const NewProduct = () => {
             Descrição do produto
           </label>
         </div>
-        <div className="relative my-2 z-0">
-          <input
-            placeholder=""
-            className={"floating-input-effect w-full peer "}
-            onChange={handleBrand}
-            value={brand}
-            name="brand"
-            type="text"
-            required
-          />
-          <label className="floating-label" htmlFor="brand">
-            Marca
-          </label>
-        </div>
-        <div className="relative my-2 z-0">
-          <input
-            placeholder=""
-            className="floating-input-effect w-full peer"
-            onChange={handleModel}
-            value={model}
-            name="model"
-            type="text"
-          />
-          <label className="floating-label" htmlFor="model">
-            Modelo
-          </label>
-        </div>
+        <FormInput
+          props={{ id: "brand" }}
+          value={brand}
+          name="brand"
+          label="Marca"
+          handleChange={handleChange}
+        />
+        <FormInput
+          props={{ id: "model" }}
+          value={model}
+          name="model"
+          label="Modelo"
+          handleChange={handleChange}
+        />
         <span className="text-sm">
-          Escreva caracteríscas marcantes do seu produto
+          Escreva características marcantes do seu produto
         </span>
         {array.map((item, i) => {
-          return (
-            <div key={i} className="relative my-2 z-0">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  deleteFeature(item.id);
-                }}
-                className="absolute h-full px-2 right-0"
-              >
-                X
-              </button>
-              <input
-                placeholder=""
-                className="floating-input-effect w-full peer"
-                name={"features." + i}
-                onChange={handleFeatures}
-                value={item.value}
-                id={item.id}
-                type={item.type}
-                size="40"
-                required
-              />
-              <label className="floating-label" htmlFor="features">
-                Característica {i + 1}
-              </label>
-            </div>
-          );
+          const props = { item, i, deleteFeature, handleChange };
+          return <FeaturesInput key={i} {...props} />;
         })}
         <div className="flex items-center justify-center text-sm">
           <div
@@ -315,7 +296,7 @@ const NewProduct = () => {
             placeholder=""
             className="floating-input-effect w-full peer"
             onKeyDown={handleTagsArray}
-            onChange={handleTags}
+            onChange={handleChange}
             value={tags.replace(",", "")}
             name="tags"
             // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
@@ -329,28 +310,21 @@ const NewProduct = () => {
             Separe cada etiqueta por vírgula (',') para adicionar
           </div>
         </div>
-        <div className="relative  my-2 z-0">
-          <input
-            placeholder=""
-            className="floating-input-effect w-full peer"
-            onChange={handlePrice}
-            value={price}
-            name="price"
-            type="text"
-            required
-          />
-          <label className="floating-label" htmlFor="price">
-            Preço base
-          </label>
-        </div>
+        <FormInput
+          props={{ id: "price" }}
+          value={price}
+          name="price"
+          label="Preço base"
+          handleChange={handleChange}
+        />
         <div className=" my-2 z-0 flex h-40">
           <label
             className={
               "w-full border-gray-300 border-[1px] p-4 flex flex-col items-center justify-center border-dashed hover:brightness-75 duration-200 bg-white cursor-pointer text-center" +
               (dropZone && " brightness-75")
             }
-            htmlFor="storeImage"
-            name="storeImage"
+            htmlFor="files"
+            name="files"
             onDragOver={(e) => {
               e.stopPropagation();
               e.preventDefault();
@@ -379,16 +353,55 @@ const NewProduct = () => {
               </>
             )}
             <input
-              onChange={handleFiles}
+              onChange={handleChange}
               hidden
               multiple="multiple"
               type="file"
-              name="storeImage"
-              id="storeImage"
+              name="files"
+              id="files"
               accept="image/*"
             />
           </label>
         </div>
+        <div className="">
+          <h2 className="text-lg h-min">Dimensões do produto</h2>
+          <p className="text-xs w-full h-min text-gray-400">
+            <FontAwesomeIcon icon={faCircleInfo} className="mr-1" />
+            Considerando a embalagem
+          </p>
+        </div>
+        <FormInput
+          value={product.dimensions.height}
+          name="height"
+          label="Altura (cm)"
+          type="number"
+          handleChange={handleChange}
+          props={{ id: "dimensions.height" }}
+        />
+        <FormInput
+          value={product.dimensions.length}
+          name="length"
+          label="Comprimento (cm)"
+          type="number"
+          handleChange={handleChange}
+          props={{ id: "dimensions.length" }}
+        />
+        <FormInput
+          value={product.dimensions.width}
+          name="width"
+          label="Largura (cm)"
+          type="number"
+          handleChange={handleChange}
+          props={{ id: "dimensions.width" }}
+        />
+        <FormInput
+          value={product.dimensions.weight}
+          name="weight"
+          label="Peso (kg)"
+          type="number"
+          handleChange={handleChange}
+          props={{ id: "dimensions.weight" }}
+        />
         <div className="h-[30px]">
           <SubmitButton
             loading={loading}
@@ -398,11 +411,7 @@ const NewProduct = () => {
         </div>
       </form>
       <ProductPreview
-        description={description}
-        features={features}
-        title={title}
-        files={files}
-        price={price}
+        {...product}
         setDragging={setDragging}
         handleDrop={handleDrop}
         dragging={dragging}
