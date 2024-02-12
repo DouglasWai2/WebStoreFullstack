@@ -55,7 +55,7 @@ const NewProduct = () => {
   const featuresInput = [
     {
       type: "text",
-      id: 'features.' + 0,
+      id: "features." + 0,
       value: "",
     },
   ];
@@ -68,7 +68,7 @@ const NewProduct = () => {
         ...s,
         {
           type: "text",
-          id: 'features.' + array.length,
+          id: "features." + array.length,
           value: "",
         },
       ];
@@ -86,7 +86,8 @@ const NewProduct = () => {
     let changeId = e.target.id;
     let dimensions;
 
-    if(error) e.target.classList.remove('invalid'); e.target.classList.remove('!border-red-400');
+    if (error) e.target.classList.remove("invalid");
+    e.target.classList.remove("!border-red-400");
     if (changeName === "files") changeValue = Array.from(e.target.files);
     if (changeName === "price") changeValue = moneyMask(e.target.value);
 

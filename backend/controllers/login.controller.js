@@ -46,7 +46,7 @@ exports.googleAuth = async (req, res) => {
     const payload = ticket.getPayload();
     user = await UserSchema.findOne({ gid: payload.sub }); // Search for user by google id
     if (!user) {
-      user = await UserSchema.findOne({ email: payload.email }); // Check if user has an account
+      user = await UserSchema.findOne({ email: payload.email }); // Check if user has an account if no user has been found by given google id
       if (!user) {
         const newUser = new UserSchema({
           email: payload.email,
@@ -62,8 +62,8 @@ exports.googleAuth = async (req, res) => {
     }
 
     if (!user.gid) {
-      user.gid = payload.sub; // Reference google id to user
-      await user.save();
+      user.gid = payload.sub; 
+      await user.save(); // Reference google id to user
     }
 
     return setTokens(res, user);

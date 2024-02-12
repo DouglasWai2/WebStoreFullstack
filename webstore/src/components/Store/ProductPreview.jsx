@@ -83,7 +83,7 @@ const ProductPreview = ({
       <section id="product" className="shadow p-4 flex gap-10">
         <div id="images-container" className="">
           {files.length ? (
-            <div className="w-auto h-[432px] aspect-[4/3] flex items-center justify-center">
+            <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain">
               <ImageMagnifier image={mainImage} />
             </div>
           ) : (

@@ -3,8 +3,6 @@ const jwt = require('jsonwebtoken')
 const { jwtExpiration, jwtRefreshExpiration } = require("../utils/expiration");
 require("dotenv").config();
 
-
-// Function to create and set access and refresh tokens in response and db respectively
 async function setTokens(res, user) {
   const accessToken = jwt.sign(
     { id: user._id, email: user.email },

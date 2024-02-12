@@ -4,14 +4,15 @@ import { isMobile } from "react-device-detect";
 const ImageMagnifier = ({ image, setFullscreenImage }) => {
   const displayImage = useRef(null);
   const imagePosition = useRef(null);
-  const [larger, setLarger] = useState(null)
+  const [larger, setLarger] = useState(null);
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const result = useRef(null);
   const lens = useRef(null);
 
-  useEffect(()=>{
-    if(displayImage.current) setLarger(displayImage.current.width > displayImage.current.height)
-  },[image])
+  useEffect(() => {
+    if (displayImage.current)
+      setLarger(displayImage.current.width > displayImage.current.height);
+  }, [image]);
 
   const handleMouseHover = (e) => {
     const imgWrapper = displayImage.current;
@@ -69,21 +70,10 @@ const ImageMagnifier = ({ image, setFullscreenImage }) => {
       }}
       ref={imagePosition}
       className={
-        "relative flex items-center justify-center z-10 group pointer object-contain " +
-        (larger
-          ? "w-full"
-          : "h-full")
+        "relative flex items-center justify-center z-10 object-contain"
       }
     >
-      <img
-        ref={displayImage}
-        className={
-          larger
-            ? "w-full"
-            : "h-full"
-        }
-        src={image}
-      />
+      <img ref={displayImage} className={"max-h-[433px]"} src={image} />
       <>
         <div
           ref={lens}
