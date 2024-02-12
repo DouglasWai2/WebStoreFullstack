@@ -10,7 +10,7 @@ const Address = () => {
   const { address, fetching } = useOutletContext();
 
   return (
-    <div className="w-full flex gap-5 flex-wrap px-20">
+    <div className="w-full flex gap-5 flex-wrap px-20 max-md:px-0 max-md:justify-center">
       {address ? (
         address.length === 0 ? (
           ""

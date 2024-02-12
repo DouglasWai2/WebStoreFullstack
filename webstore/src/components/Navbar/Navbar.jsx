@@ -5,6 +5,7 @@ import {
   faCaretDown,
   faCartShopping,
   faTruck,
+  faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { useLogOut } from "../../hooks/useLogOut";
@@ -20,17 +21,19 @@ const Navbar = ({
   setToggleCart,
 }) => {
   const logOut = useLogOut();
-  const [cartItemsNum, setCartItemsNum] = useState(JSON.parse(localStorage.getItem('cart'))?.length)
+  const [cartItemsNum, setCartItemsNum] = useState(
+    JSON.parse(localStorage.getItem("cart"))?.length
+  );
   const [yourAddress, setYourAddress] = useState([]);
-  
+
   useEffect(() => {
     const handleStorage = () => {
-      setCartItemsNum(JSON.parse(localStorage.getItem('cart'))?.length)
-    }
-  
-    window.addEventListener('storage', handleStorage)
-    return () => window.removeEventListener('storage', handleStorage)
-  }, [])
+      setCartItemsNum(JSON.parse(localStorage.getItem("cart"))?.length);
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   useEffect(() => {
     if (address) {
@@ -47,9 +50,9 @@ const Navbar = ({
           }
         >
           <a href="/">
-            <img className="h-[50px]" alt="logo" src={Logo} />
+            <img className="h-[50px] max-md:h-[30px]" alt="logo" src={Logo} />
           </a>
-          <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit">
+          <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit max-md:hidden">
             {fetchingAddress ? (
               <SkeletonNavAddress />
             ) : (
@@ -59,7 +62,9 @@ const Navbar = ({
                   {!yourAddress.length ? (
                     <>
                       Olá,{" "}
-                      <span className="text-white w-max">selecione seu endereço</span>
+                      <span className="text-white w-max">
+                        selecione seu endereço
+                      </span>
                     </>
                   ) : (
                     <>
@@ -76,7 +81,7 @@ const Navbar = ({
               </>
             )}
           </div>
-          <div className="w-full rounded-md overflow-hidden h-9 flex">
+          <div className="w-full rounded-md overflow-hidden h-9 flex max-md:w-1/2">
             <input className="w-full" />
             <button className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200">
               <FontAwesomeIcon
@@ -85,7 +90,7 @@ const Navbar = ({
               />
             </button>
           </div>
-          <div className="flex items-center gap-1 relative min-w-[150px]">
+          <div className="flex items-center gap-1 relative min-w-[150px] max-md:hidden">
             <div
               onClick={() => {
                 setToggleCard(true);
@@ -94,7 +99,7 @@ const Navbar = ({
             >
               <img />
 
-              {<p>Olá, {user ? user.name : "Faça login"} </p>}
+              {<p className="">Olá, {user ? user.name : "Faça login"} </p>}
               <FontAwesomeIcon
                 icon={faCaretDown}
                 style={{ color: "#94989e" }}
@@ -104,15 +109,19 @@ const Navbar = ({
               <NavCardMenu user={user} setToggleCard={setToggleCard} />
             )}
           </div>
+          <div className="hover-border p-2 items-center cursor-pointer w-fit hidden max-md:flex">
+          <FontAwesomeIcon icon={faBars} style={{ color: "#94989e" }} size='xl' />
+          </div>
           <div
             onClick={() => {
               setToggleCart(true);
             }}
-            className="cursor-pointer flex items-center p-2 hover-border min-w-[150px] justify-around"
+            className="cursor-pointer flex items-center p-2 hover-border min-w-[150px] justify-around max-md:min-w-fit max-md:justify-center"
           >
-            <p>Seu carrinho </p>
+            <p className="max-md:hidden">Seu carrinho </p>
             <FontAwesomeIcon
               icon={faCartShopping}
+              size='xl'
               style={{ color: "#94989e" }}
             />
             <span>{cartItemsNum > 0 && cartItemsNum}</span>

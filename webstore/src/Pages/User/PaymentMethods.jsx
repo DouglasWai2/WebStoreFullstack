@@ -37,7 +37,7 @@ const PaymentMethods = () => {
   }, []);
 
   return (
-    <div className="w-full flex gap-5 flex-wrap">
+    <div className="w-full flex gap-5 flex-wrap max-md:justify-center">
       {!form ?
       <div
         onClick={() => setForm(true)}

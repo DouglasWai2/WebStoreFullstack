@@ -20,7 +20,7 @@ const AddressCard = ({ address }) => {
   }, [data]);
 
   return (
-    <div className="border-[1px] flex flex-col gap-5 p-4 w-[250px] shadow-md">
+    <div className="border-[1px] flex flex-col gap-5 p-4 w-[250px] shadow-md justify-between">
       <p>
         <span className="font-semibold">
           {address.nickname ? address.nickname : address.recieverName}{" "}

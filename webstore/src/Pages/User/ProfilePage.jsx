@@ -89,7 +89,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="w-[80%] border-[2px] rounded-md overflow-hidden shadow-md">
+    <div className="w-full max-w-[1000px] border-[2px] rounded-md overflow-hidden shadow-md">
       {!user || !address ? (
         <SkeletonData />
       ) : (
@@ -99,12 +99,12 @@ const ProfilePage = () => {
               return (
                 <tr
                   key={Object.keys(item)[0]}
-                  className="flex border-b-[1px] p-10 w-full"
+                  className="flex border-b-[1px] p-10 w-full max-sm:flex-col max-sm:px-0"
                 >
-                  <th className="flex text-start items-center w-[20%]">
+                  <th className="flex text-start items-center w-[20%] max-sm:justify-center max-sm:w-full">
                     {Object.keys(item)[0]}:
                   </th>
-                  <td className="w-full items-center flex justify-between">
+                  <td className="w-full items-center flex justify-between max-sm:flex-col max-sm:justify-normal max-sm:items-center max-sm:gap-3">
                     <TableData
                       handleChange={handleChange}
                       editForm={editForm}
@@ -116,9 +116,9 @@ const ProfilePage = () => {
                 </tr>
               );
             })}
-            <tr className="flex border-b-[1px] p-10 w-full">
-              <th className="flex text-start items-center w-[20%]">Endereço</th>
-              <td className="w-full items-center flex justify-between">
+            <tr className="flex border-b-[1px] p-10 w-full max-sm:flex-col">
+              <th className="flex text-start items-center w-[20%] max-sm:w-full max-sm:justify-center">Endereço</th>
+              <td className="w-full items-center flex justify-between max-sm:justify-normal max-sm:gap-3 max-sm:items-center">
                 <span className="ml-5">
                   {address && address.length
                     ? address[0].street + " - N° " + address[0].number
