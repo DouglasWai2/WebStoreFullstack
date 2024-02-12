@@ -91,6 +91,7 @@ const LoginForm = () => {
               text="Fazer Login"
             />
             <GoogleLogin
+            width={'full'}
               onSuccess={(credentialResponse) => {
                 setBody(credentialResponse);
                 setUrl("/auth/login/google");

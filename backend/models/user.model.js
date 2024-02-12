@@ -64,6 +64,7 @@ const UserSchema = new mongoose.Schema({
   customerId: {
     type: String,
   },
+  gid: { type: String },
   store: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "store",
