@@ -18,6 +18,7 @@ const UserSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  auth_method: { type: String },
   email: {
     type: String,
     minlength: 6,
@@ -33,20 +34,21 @@ const UserSchema = new mongoose.Schema({
   birth: {
     type: Date,
     offset: {
-      type: String
-    }
+      type: String,
+    },
   },
   phone: {
     type: String,
     minlength: 11,
-    required: true,
     unique: true,
     trim: true,
   },
-  address: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "address",
-      }],
+  address: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "address",
+    },
+  ],
   role: {
     type: String,
     default: "Costumer",
@@ -60,7 +62,7 @@ const UserSchema = new mongoose.Schema({
     type: [String],
   },
   customerId: {
-    type: String
+    type: String,
   },
   store: {
     type: mongoose.Schema.Types.ObjectId,
@@ -76,6 +78,5 @@ UserSchema.pre("save", async function (next) {
 
   next();
 });
-
 
 module.exports = mongoose.model("user", UserSchema, "Users");

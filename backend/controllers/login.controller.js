@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const { jwtExpiration, jwtRefreshExpiration } = require("../utils/expiration");
+const setTokens = require("../helpers/setTokens");
 
 //
 exports.login = async (req, res) => {
@@ -16,50 +17,42 @@ exports.login = async (req, res) => {
   try {
     const user = await UserSchema.findOne({ email: email });
     if (!user) {
-      res.status(400).json({ success: false, error: "User does not exist" });
-    } else {
-      if (!bcrypt.compareSync(password, user.password)) {
-        res.status(400).json({ success: false, error: "Wrong password" });
-      } else {
-        const accessToken = jwt.sign(
-          { id: user._id, email: user.email },
-          process.env.SECRET_JWT_TOKEN,
-          { expiresIn: jwtExpiration }
-        );
-        const refreshToken = jwt.sign(
-          { id: user._id, email: user.email },
-          process.env.REFRESH_TOKEN_SECRET,
-          { expiresIn: jwtRefreshExpiration }
-        );
-        try {
-          const newUserToken = await UserSchema.updateOne(
-            { _id: user._id },
-            { $push: { refreshTokens: refreshToken } },
-            { new: true }
-          );
-        } catch (error) {
-          return res
-            .status(500)
-            .json({ error, message: "Unable to reach database" });
-        }
-
-        res
-          .cookie("refreshToken", refreshToken, {
-            httpOnly: true,
-            sameSite: "strict",
-            maxAge: 1000 * 60 * 60 * 24 * 365,
-          })
-          .setHeader("Authorization", accessToken)
-          .json({
-            authorization: accessToken,
-            name: user.name,
-            lastName: user.lastName,
-            email: user.email,
-            isVerified: user.confirmedEmail,
-          });
-      }
+      return res
+        .status(400)
+        .json({ success: false, error: "User does not exist" });
     }
+    if (!bcrypt.compareSync(password, user.password)) {
+      return res.status(400).json({ success: false, error: "Wrong password" });
+    }
+    return setTokens(res, user);
   } catch (err) {
     return res.status(400).json({ success: false, err: err });
+  }
+};
+
+exports.googleAuth = async (req, res) => {
+  let user;
+  const { credential } = req.body;
+  const decoded = jwt.decode(credential);
+
+  try {
+    user = await UserSchema.findOne({ email: decoded.email });
+    if (!user) {
+      const newUser = new UserSchema({
+        email: decoded.email,
+        name: decoded.given_name,
+        lastName: decoded.family_name,
+        password: Math.random().toString(36).slice(-8),
+        confirmedEmail: decoded.email_verified,
+        auth_method: "google",
+      });
+      await newUser.save();
+
+      user = newUser;
+    }
+
+    return setTokens(res, user);
+  } catch (error) {
+    console.log(error);
   }
 };

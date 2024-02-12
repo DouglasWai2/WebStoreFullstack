@@ -25,7 +25,10 @@ function App() {
   const [userUrl, setUserUrl] = useState(null);
   const [addressUrl, setAddressUrl] = useState(null);
   const { data: user, loading, error } = useFetchApi(userUrl, "GET");
-  const { data: address, loading: fetchingAddress } = useFetchApi(addressUrl, "GET");
+  const { data: address, loading: fetchingAddress } = useFetchApi(
+    addressUrl,
+    "GET"
+  );
 
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
@@ -44,7 +47,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (error?.data === "Access Denied. No token provided.") logOut();
+    if (error?.data === "Access Denied. No token provided.") logOut(); // If loggedIn cookie is true but there's no access token, i.e. user is not logged in
   }, [error]);
 
   useEffect(() => {

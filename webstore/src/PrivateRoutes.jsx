@@ -7,7 +7,6 @@ import Security from "./Pages/User/Security";
 import PaymentMethods from "./Pages/User/PaymentMethods";
 import YourPurchases from "./Pages/User/YourPurchases";
 import AddressForm from "./components/shared/AddressForm";
-import PaymentMethodForm from "./Pages/User/SetupForm";
 import Store from "./Pages/Store/Store";
 import RegisterStore from "./Pages/Store/RegisterStore";
 import MyStore from "./Pages/Store/MyStore";
