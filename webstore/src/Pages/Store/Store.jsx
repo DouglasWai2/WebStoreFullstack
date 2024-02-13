@@ -12,7 +12,7 @@ import cardAnimation from "../../assets/WebSiteCardAnimaion.json";
 const Store = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, loading } = useOutletContext();
+  const { user, loading, refreshUser } = useOutletContext();
 
 
   return location.pathname === "/store" ? (
@@ -65,7 +65,7 @@ const Store = () => {
       </p>
     </main>
   ) : (
-    <Outlet context={{ user, loading }} />
+    <Outlet context={{ user, loading, refreshUser }} />
   );
 };
 

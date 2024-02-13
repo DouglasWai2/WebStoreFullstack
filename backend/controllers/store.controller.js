@@ -31,8 +31,6 @@ exports.registerStore = async (req, res) => {
 };
 
 exports.storeInfo = async (req, res) => {
-  console.log(req.params);
-
   const storeId = req.userInfo?.id || req.params.storeid;
 
   try {
@@ -43,7 +41,7 @@ exports.storeInfo = async (req, res) => {
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products categories"
+      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products categories likes"
     );
 
     if (!store) {
@@ -224,8 +222,6 @@ exports.myProducts = async (req, res) => {
         limit: to,
       },
     });
-
-    console.log(products);
 
     return res.status(200).send(products);
   } catch (error) {

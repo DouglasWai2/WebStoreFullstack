@@ -24,11 +24,13 @@ function App() {
   const logOut = useLogOut();
   const [userUrl, setUserUrl] = useState(null);
   const [addressUrl, setAddressUrl] = useState(null);
-  const { data: user, loading, error } = useFetchApi(userUrl, "GET");
-  const { data: address, loading: fetchingAddress } = useFetchApi(
-    addressUrl,
-    "GET"
-  );
+  const {
+    data: user,
+    loading,
+    error,
+    refresh: refreshUser,
+  } = useFetchApi(userUrl, "GET");
+  const { data: address, loading: fetching } = useFetchApi(addressUrl, "GET");
 
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
@@ -56,20 +58,14 @@ function App() {
     setAddressUrl("/address");
   }, []);
 
+  const props = { user, address, loading, fetching, loggedIn, refreshUser };
+
   const router = createBrowserRouter([
     error
       ? { path: "*", element: <UnexpectedError /> }
       : {
           path: "/",
-          element: (
-            <Home
-              user={user}
-              address={address}
-              loading={loading}
-              fetching={fetchingAddress}
-              loggedIn={loggedIn}
-            />
-          ),
+          element: <Home {...props} />,
 
           children: [
             ...PrivateRoutes(user, loggedIn, loading),

@@ -25,7 +25,7 @@ import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";
 import { useApi } from "../../hooks/useApi";
 
 const MyStore = () => {
-  const { user } = useOutletContext();
+  const { user, refreshUser } = useOutletContext();
   const api = useApi();
   const location = useLocation();
   const [edit, setEdit] = useState(false);
@@ -44,9 +44,8 @@ const MyStore = () => {
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
-  const { data, loading, error, refresh } = useFetchApi(url, "GET");
   useFetchApi(`/store/categories/${storeName}/${storeId}`, "GET");
-
+  const { data, loading, error } = useFetchApi(url, "GET");
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
     "/store/change-banner",
@@ -92,14 +91,17 @@ const MyStore = () => {
     );
   }
 
-  function saveStore() {
+  function saveStore(e) {
+    e.preventDefault()
+    e.stopPropagation()
     api
-      .post(process.env.REACT_APP_API_URL + "/user/like_store", 
-        {storeId: data._id},
-        {headers: {'Content-Type': 'application/json'}}
+      .post(
+        process.env.REACT_APP_API_URL + "/user/like_store",
+        { storeId: data._id },
+        { headers: { "Content-Type": "application/json" } }
       )
       .then((response) => {
-        refresh();
+        refreshUser();
       })
       .catch((err) => console.log(err));
   }
@@ -219,12 +221,25 @@ const MyStore = () => {
                       >
                         <FontAwesomeIcon icon={faShareNodes} />
                       </div>
-                      <div
-                        className="rounded-full w-[30px] h-[30px] cursor-pointer text-gray-400 
-                      grid justify-center items-center bg-white hover:brightness-90 duration-150"
-                        onClick={saveStore}
-                      >
-                        <FontAwesomeIcon icon={faHeart} />
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="likes"
+                          className="rounded-full w-[30px] h-[30px] cursor-pointer  
+                      grid justify-center items-center bg-white hover:brightness-90 duration-150 has-[:checked]:!text-red-600"
+                          onClick={saveStore}
+                        >
+                          <FontAwesomeIcon icon={faHeart} />
+                          <input
+                            name="likes"
+                            id="likes"
+                            hidden
+                            type="checkbox"
+                            checked={(user?.saved_stores.indexOf(data?._id || storeId) >= 0)}       
+                            onChange={(e) =>{}}                 
+                          />
+                        
+                        </label>
+                        <span>{data?.likes}</span>
                       </div>
                     </div>
                   </div>

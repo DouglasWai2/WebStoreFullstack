@@ -8,7 +8,6 @@ require("dotenv").config();
 // send user info
 router.get("/user", auth, async (req, res) => {
   const user = await User.findById(req.userInfo.id);
-  console.log("teste");
 
   res.status(200).json({
     email: user.email,
@@ -18,6 +17,7 @@ router.get("/user", auth, async (req, res) => {
     phone: user.phone,
     birth: user.birth,
     role: user.role,
+    saved_stores: user.saved_stores
   });
 });
 

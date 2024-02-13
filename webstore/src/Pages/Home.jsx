@@ -11,6 +11,7 @@ const Home = ({
   loading,
   fetching,
   loggedIn,
+  refreshUser
 }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [toggleCart, setToggleCart] = useState(false);
@@ -40,7 +41,7 @@ const Home = ({
       <Navbar {...props} />
       <main className={"w-screen h-full " + (toggleCard && "brightness-50")}>
         {toggleCart && <CartSideMenu setCart={setToggleCart} />}
-        <Outlet context={{ user, address, fetching, loading }} />
+        <Outlet context={{ user, address, fetching, loading, refreshUser }} />
       </main>
     </>
   );
