@@ -11,7 +11,9 @@ import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCloudArrowUp,
+  faHeart,
   faPenToSquare,
+  faShareNodes,
 } from "@fortawesome/free-solid-svg-icons";
 import TopBarProgress from "react-topbar-progress-indicator";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
@@ -20,9 +22,11 @@ import CarouselStore from "../../components/Store/MyStore/Carousel";
 import CarouselPlaceholder1 from "../../assets/carouselplaceholder1.jpg";
 import CarouselPlaceholder2 from "../../assets/carouselplaceholder2.png";
 import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";
+import { useApi } from "../../hooks/useApi";
 
 const MyStore = () => {
   const { user } = useOutletContext();
+  const api = useApi();
   const location = useLocation();
   const [edit, setEdit] = useState(false);
   const [method, setMethod] = useState(null);
@@ -40,7 +44,7 @@ const MyStore = () => {
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
-  const { data, loading, error } = useFetchApi(url, "GET");
+  const { data, loading, error, refresh } = useFetchApi(url, "GET");
   useFetchApi(`/store/categories/${storeName}/${storeId}`, "GET");
 
   const headers = { "content-type": "multipart/form-data" };
@@ -80,6 +84,24 @@ const MyStore = () => {
 
   function handleSubmit() {
     setMethod("POST");
+  }
+
+  function generateUrl() {
+    navigator.clipboard.writeText(
+      `http://localhost:3000/store/${data.storeName}/${data._id}`
+    );
+  }
+
+  function saveStore() {
+    api
+      .post(process.env.REACT_APP_API_URL + "/user/like_store", 
+        {storeId: data._id},
+        {headers: {'Content-Type': 'application/json'}}
+      )
+      .then((response) => {
+        refresh();
+      })
+      .catch((err) => console.log(err));
   }
 
   return location.pathname !== "/store/my-store/address" ? (
@@ -170,7 +192,11 @@ const MyStore = () => {
                           hidden
                         />
 
-                        <p className="absolute text-xs w-full top-[50%] left-[10%] pointer-events-none text-gray-400 opacity-0 transition-all duration-300 group-hover:opacity-100 z-10">
+                        <p
+                          className="absolute text-xs w-full top-[50%] 
+                        left-[10%] pointer-events-none text-gray-400 opacity-0 
+                        transition-all duration-300 group-hover:opacity-100 z-10"
+                        >
                           <FontAwesomeIcon icon={faCloudArrowUp} /> Clique para
                           editar
                         </p>
@@ -183,7 +209,25 @@ const MyStore = () => {
                       </label>
                     )}
                   </div>
-                  <p className="text-4xl">{data?.storeName}</p>
+                  <div>
+                    <p className="text-4xl">{data?.storeName}</p>
+                    <div className="flex gap-3 ml-4 mt-1">
+                      <div
+                        className="rounded-full w-[30px] h-[30px] cursor-pointer text-gray-400 
+                       grid justify-center items-center bg-white hover:brightness-90 duration-150"
+                        onClick={generateUrl}
+                      >
+                        <FontAwesomeIcon icon={faShareNodes} />
+                      </div>
+                      <div
+                        className="rounded-full w-[30px] h-[30px] cursor-pointer text-gray-400 
+                      grid justify-center items-center bg-white hover:brightness-90 duration-150"
+                        onClick={saveStore}
+                      >
+                        <FontAwesomeIcon icon={faHeart} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 {edit ? (
                   <div>
