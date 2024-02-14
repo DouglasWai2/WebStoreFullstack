@@ -29,6 +29,7 @@ const MyStore = () => {
   const api = useApi();
   const location = useLocation();
   const [edit, setEdit] = useState(false);
+  const [likes, setLikes] = useState(0);
   const [method, setMethod] = useState(null);
   const [bannerEdit, setBannerEdit] = useState([]);
   const [bannerLink, setBannerLink] = useState("");
@@ -92,8 +93,8 @@ const MyStore = () => {
   }
 
   function saveStore(e) {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     api
       .post(
         process.env.REACT_APP_API_URL + "/user/like_store",
@@ -221,7 +222,7 @@ const MyStore = () => {
                       >
                         <FontAwesomeIcon icon={faShareNodes} />
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex items-center text-gray-400 ">
                         <label
                           htmlFor="likes"
                           className="rounded-full w-[30px] h-[30px] cursor-pointer  
@@ -234,12 +235,22 @@ const MyStore = () => {
                             id="likes"
                             hidden
                             type="checkbox"
-                            checked={(user?.saved_stores.indexOf(data?._id || storeId) >= 0)}       
-                            onChange={(e) =>{}}                 
+                            checked={
+                              user?.saved_stores.indexOf(
+                                data?._id || storeId
+                              ) >= 0
+                            }
+                            onChange={(e) => {
+                              console.log(e.target.checked)
+                              if(e.target.checked){
+                                setLikes(data?.likes - 1)
+                              } else{
+                                setLikes(data?.likes + 1)
+                              }
+                            }}
                           />
-                        
                         </label>
-                        <span>{data?.likes}</span>
+                        <span>{likes === 0 ? data?.likes : likes}</span>
                       </div>
                     </div>
                   </div>

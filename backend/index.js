@@ -5,8 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
-const { MongoClient } = require("mongodb");
-const client = new MongoClient(process.env.MONGODB_URI);
+const limiter = require("./middlewares/rateLimitMiddleware");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -35,6 +34,8 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
+app.use(limiter);
 
 app.use("/api/v1", require("./routes/catalog"));
 app.use("/api/v1", require("./routes/rating"));
