@@ -15,10 +15,10 @@ export const useFetchApi = (path, method, body, config) => {
       try {
         const response =
           method === "GET"
-            ? path && (await api.get(process.env.REACT_APP_API_URL + path))
+            ? path && (await api.get(import.meta.env.VITE_API_URL + path))
             : method === "POST"
             ? await api.post(
-                process.env.REACT_APP_API_URL + path,
+                import.meta.env.VITE_API_URL + path,
                 body,
                 config ? { headers: config } : "" // In case there is headers setted it will be passed in this hook params
               ) //If there's no config setted, default headers will be used

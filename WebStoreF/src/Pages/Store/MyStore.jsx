@@ -95,7 +95,7 @@ const MyStore = () => {
     e.preventDefault();
     api
       .post(
-        process.env.REACT_APP_API_URL + "/user/like_store",
+        import.meta.env.VITE_API_URL + "/user/like_store",
         { storeId: data._id },
         { headers: { "Content-Type": "application/json" } }
       )

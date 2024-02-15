@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  purge: [],
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-   darkMode: false, // or 'media' or 'class'
+export default {
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
+  darkMode: 'media', // or 'media' or 'class'
    theme: {
      extend: {
       animation: {
@@ -21,9 +20,5 @@ module.exports = {
       }
      },
    },
-   variants: {
-     extend: {
-     },
-   },
-    plugins: []
- }
+  plugins: [],
+};

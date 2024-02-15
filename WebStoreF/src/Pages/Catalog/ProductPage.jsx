@@ -24,7 +24,7 @@ const ProductPage = () => {
 
   function getPaymentIntent(productId) {
     api
-      .get(process.env.REACT_APP_API_URL + "/payment_intents/" + productId)
+      .get(import.meta.env.VITE_API_URL + "/payment_intents/" + productId)
       .then((response) =>
         navigate(
           `/checkout/${product.title}/${product._id}/${response.data.client_secret}`

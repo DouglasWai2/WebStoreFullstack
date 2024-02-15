@@ -1,9 +1,8 @@
-import "./App.css";
-import Home from "./Pages/Home";
-import LoginForm from "./Pages/LoginForm";
-import RegisterForm from "./Pages/RegisterForm";
-import Terms from "./Pages/Terms";
-import PrivacyPolicy from "./Pages/PrivacyPolicy";
+import Home from "./Pages/Home.jsx";
+import LoginForm from "./Pages/LoginForm.jsx";
+import RegisterForm from "./Pages/RegisterForm.jsx";
+import Terms from "./Pages/Terms.jsx";
+import PrivacyPolicy from "./Pages/PrivacyPolicy.jsx";
 import {
   createBrowserRouter,
   redirect,
@@ -11,14 +10,14 @@ import {
 } from "react-router-dom";
 import { useFetchApi } from "./hooks/useFetchApi";
 import { useEffect, useState } from "react";
-import PrivateRoutes from "./PrivateRoutes";
-import PublicRoutes from "./PublicRoutes";
-import NotFoundError from "./Pages/NotFoundError";
-import UnexpectedError from "./Pages/UnexpectedError";
+import PrivateRoutes from "./PrivateRoutes.jsx";
+import PublicRoutes from "./PublicRoutes.jsx";
+import NotFoundError from "./Pages/NotFoundError.jsx";
+import UnexpectedError from "./Pages/UnexpectedError.jsx";
 import { useLogOut } from "./hooks/useLogOut";
-import Checkout from "./Pages/Checkout/Checkout";
-import PostCheckout from "./Pages/Checkout/PostCheckout";
-import ReviewCart from "./Pages/Checkout/ReviewCart";
+import Checkout from "./Pages/Checkout/Checkout.jsx";
+import PostCheckout from "./Pages/Checkout/PostCheckout.jsx";
+import ReviewCart from "./Pages/Checkout/ReviewCart.jsx";
 
 function App() {
   const logOut = useLogOut();
