@@ -32,18 +32,17 @@ exports.addProduct = async (req, res) => {
     newProduct.store = store.id;
     await newProduct.save();
     store.products.push(newProduct.id);
-    await store.save();
     store.categories = await autoGenerateCategory(store.id);
     await store.save();
     return res.status(200).send("Product saved successfully");
   } catch (error) {
     console.log(error);
-    req.files.forEach(async (file) => {
+    req.files.forEach((file) => {
       const command = new DeleteObjectCommand({
         Bucket: "webstore-api-images",
         Key: file.key,
       });
-      const response = await client.send(command);
+      client.send(command);
     });
     return res.status(400).send(error);
   }

@@ -36,7 +36,6 @@ const MyStore = () => {
   const [imageEdit, setImageEdit] = useState({});
   const [imageLink, setImageLink] = useState("");
   const [url, setUrl] = useState(null);
-  const { storeName, storeId } = useParams();
   const placeholders = [
     CarouselPlaceholder1,
     CarouselPlaceholder2,
@@ -45,7 +44,7 @@ const MyStore = () => {
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
-  useFetchApi(`/store/categories/${storeName}/${storeId}`, "GET");
+
   const { data, loading, error } = useFetchApi(url, "GET");
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
@@ -94,7 +93,6 @@ const MyStore = () => {
 
   function saveStore(e) {
     e.preventDefault();
-    e.stopPropagation();
     api
       .post(
         process.env.REACT_APP_API_URL + "/user/like_store",
@@ -105,6 +103,13 @@ const MyStore = () => {
         refreshUser();
       })
       .catch((err) => console.log(err));
+    if (e.target.children[0].checked) {
+      console.log('checked')
+      setLikes(data?.likes - 1);
+    } else {
+      console.log('unchecked')
+      setLikes(data?.likes + 1);
+    }
   }
 
   return location.pathname !== "/store/my-store/address" ? (
@@ -229,25 +234,17 @@ const MyStore = () => {
                       grid justify-center items-center bg-white hover:brightness-90 duration-150 has-[:checked]:!text-red-600"
                           onClick={saveStore}
                         >
-                          <FontAwesomeIcon icon={faHeart} />
                           <input
                             name="likes"
                             id="likes"
                             hidden
                             type="checkbox"
-                            checked={
-                              user?.saved_stores.indexOf(
-                                data?._id || storeId
-                              ) >= 0
-                            }
-                            onChange={(e) => {
-                              console.log(e.target.checked)
-                              if(e.target.checked){
-                                setLikes(data?.likes - 1)
-                              } else{
-                                setLikes(data?.likes + 1)
-                              }
-                            }}
+                            checked={user?.saved_stores.indexOf(data?._id) >= 0}
+                            onChange={(e) => {}}
+                          />
+                          <FontAwesomeIcon
+                            icon={faHeart}
+                            className="pointer-events-none"
                           />
                         </label>
                         <span>{likes === 0 ? data?.likes : likes}</span>

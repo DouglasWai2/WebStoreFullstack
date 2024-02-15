@@ -86,14 +86,13 @@ exports.setCpfCnpj = async (req, res) => {
     } else if (cpfcnpj.length === 14) {
       store.cnpj = cpfcnpj;
     } else {
-      res.status(400).send({
+      return res.status(400).send({
         "Bad Request": "Your id must have 11 for cpf or 14 digits for cnpj",
       });
-      return;
     }
 
     await store.save();
-    res.status(200).send("Store id updated");
+    return res.status(200).send("Store id updated");
   } catch (error) {
     console.log(error);
   }
@@ -106,7 +105,7 @@ exports.changeBanner = async ({ req, res }) => {
     if (store.storeBanner.length === 0) {
       store.storeBanner = req.files.map((item) => item.location);
       await store.save();
-      res.status(200).send("Banner updated");
+      return res.status(200).send("Banner updated");
     } else {
       try {
         if (!req.files.length) return;
@@ -118,12 +117,14 @@ exports.changeBanner = async ({ req, res }) => {
             Bucket: "webstore-api-images",
             Key: match[0],
           });
-          const response = await client.send(command);
+          client.send(command);
         });
         const array = req.files.map((item) => item.location);
         store.storeBanner = array;
+
         await store.save();
-        res.status(200).send("Banner updated");
+
+        return res.status(200).send("Banner updated");
       } catch (error) {
         console.log(error);
       }
@@ -149,7 +150,7 @@ exports.changeImage = async (req, res) => {
           Bucket: "webstore-api-images",
           Key: match[0],
         });
-        const response = await client.send(command);
+        client.send(command);
 
         store.storeImage = req.file.location;
         await store.save();
@@ -249,7 +250,7 @@ exports.deleteProducts = async (req, res) => {
             Bucket: "webstore-api-images",
             Key: match[0],
           });
-          const response = await client.send(command);
+          client.send(command);
         } catch (error) {
           console.log(error);
         }
