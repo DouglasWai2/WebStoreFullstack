@@ -22,14 +22,14 @@ import ReviewCart from "./Pages/Checkout/ReviewCart.jsx";
 function App() {
   const logOut = useLogOut();
   const [userUrl, setUserUrl] = useState(null);
-  const [addressUrl, setAddressUrl] = useState(null);
   const {
     data: user,
     loading,
     error,
     refresh: refreshUser,
   } = useFetchApi(userUrl, "GET");
-  const { data: address, loading: fetching } = useFetchApi(addressUrl, "GET");
+
+
 
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
@@ -54,10 +54,9 @@ function App() {
   useEffect(() => {
     if (!loggedIn) return;
     setUserUrl("/user");
-    setAddressUrl("/address");
   }, []);
 
-  const props = { user, address, loading, fetching, loggedIn, refreshUser };
+  const props = { user, address: user?.addressess, loading, loggedIn, refreshUser };
 
   const router = createBrowserRouter([
     error

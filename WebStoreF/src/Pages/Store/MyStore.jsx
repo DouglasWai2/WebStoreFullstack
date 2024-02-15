@@ -29,7 +29,7 @@ const MyStore = () => {
   const api = useApi();
   const location = useLocation();
   const [edit, setEdit] = useState(false);
-  const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(null);
   const [method, setMethod] = useState(null);
   const [bannerEdit, setBannerEdit] = useState([]);
   const [bannerLink, setBannerLink] = useState("");
@@ -45,7 +45,11 @@ const MyStore = () => {
     setUrl(`${location.pathname}`);
   }, []);
 
-  const { data, loading, error } = useFetchApi(url, "GET");
+  const { data, loading, error, refresh } = useFetchApi(url, "GET");
+  const { data: products, loading: fetching } = useFetchApi(
+    data && "/catalog/all-products/" + data._id,
+    "GET"
+  );
   const headers = { "content-type": "multipart/form-data" };
   const { data: banner } = useFetchApi(
     "/store/change-banner",
@@ -99,17 +103,12 @@ const MyStore = () => {
         { storeId: data._id },
         { headers: { "Content-Type": "application/json" } }
       )
-      .then((response) => {
+      .then(async (response) => {
+        // const data2 = await api.get(import.meta.env.VITE_API_URL + "/store/info/get_likes/" + data._id)
+        refresh();
         refreshUser();
       })
       .catch((err) => console.log(err));
-    if (e.target.children[0].checked) {
-      console.log('checked')
-      setLikes(data?.likes - 1);
-    } else {
-      console.log('unchecked')
-      setLikes(data?.likes + 1);
-    }
   }
 
   return location.pathname !== "/store/my-store/address" ? (
@@ -247,7 +246,7 @@ const MyStore = () => {
                             className="pointer-events-none"
                           />
                         </label>
-                        <span>{likes === 0 ? data?.likes : likes}</span>
+                        <span>{!likes ? data?.likes : likes}</span>
                       </div>
                     </div>
                   </div>
@@ -299,7 +298,7 @@ const MyStore = () => {
             </div>
           </div>
           <div className="mt-[100px] px-6">
-            {data && data.products.length ? (
+            {products && products.length ? (
               <>
                 <ProductCategory
                   text="Mais vendidos"

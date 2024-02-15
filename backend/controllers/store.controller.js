@@ -41,7 +41,7 @@ exports.storeInfo = async (req, res) => {
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products categories likes"
+      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner categories likes"
     );
 
     if (!store) {
@@ -282,3 +282,4 @@ exports.discountProducts = async (req, res) => {
     console.log(error);
   }
 };
+

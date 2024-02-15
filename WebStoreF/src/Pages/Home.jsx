@@ -7,9 +7,7 @@ import CartSideMenu from "../components/Cart/CartSideMenu";
 const Home = ({
   user,
   address,
-  fetchingAddress,
   loading,
-  fetching,
   loggedIn,
   refreshUser
 }) => {
@@ -28,7 +26,6 @@ const Home = ({
   const props = {
     user,
     address,
-    fetching,
     toggleCard,
     setToggleCard,
     toggleCart,
@@ -37,11 +34,11 @@ const Home = ({
 
   return (
     <>
-      {(loading || fetchingAddress) && <TopBarProgress />}
+      {(loading) && <TopBarProgress />}
       <Navbar {...props} />
       <main className={"w-screen h-full " + (toggleCard && "brightness-50")}>
         {toggleCart && <CartSideMenu setCart={setToggleCart} />}
-        <Outlet context={{ user, address, fetching, loading, refreshUser }} />
+        <Outlet context={{...props}} />
       </main>
     </>
   );

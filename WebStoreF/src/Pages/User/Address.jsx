@@ -7,7 +7,7 @@ import SkeletonAddressCard from "../../components/User/Address/SkeletonAddressCa
 
 const Address = () => {
   const navigate = useNavigate();
-  const { address, fetching } = useOutletContext();
+  const { address } = useOutletContext();
 
   return (
     <div className="w-full flex gap-5 flex-wrap px-20 max-md:px-0 max-md:justify-center">
