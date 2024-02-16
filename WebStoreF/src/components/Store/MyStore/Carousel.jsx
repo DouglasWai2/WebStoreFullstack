@@ -6,12 +6,12 @@ import { useFetchApi } from "../../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
-const CarouselStore = ({ images, edit, method, loading, placeholders }) => {
+const CarouselStore = ({ images, edit, method, loading, placeholders, refresh }) => {
   const [bannerEdit, setBannerEdit] = useState(null);
   const [bannerImages, setBannerImages] = useState();
   const headers = { "content-type": "multipart/form-data" };
 
-  const { data } = useFetchApi(
+  const { data, error } = useFetchApi(
     "/store/change-banner",
     method,
     bannerEdit,
@@ -30,6 +30,11 @@ const CarouselStore = ({ images, edit, method, loading, placeholders }) => {
   useEffect(() => {
     setBannerImages(images);
   }, [images]);
+
+  useEffect(()=>{
+    if(data) refresh()
+    if(error) console.log(error)
+  }, [data, error])
 
   return (
     <>
@@ -120,7 +125,8 @@ const CarouselStore = ({ images, edit, method, loading, placeholders }) => {
                         />
                       </div>
                     );
-                  })}
+                  })
+                  }
             </Carousel>
           )}
         </div>

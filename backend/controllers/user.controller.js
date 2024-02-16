@@ -47,17 +47,25 @@ exports.likeStore = async (req, res) => {
       await UserSchema.findByIdAndUpdate(user, {
         $pull: { saved_stores: storeId },
       }).catch((err) => console.log(err));
-      const store = await StoreSchema.findByIdAndUpdate(storeId, {
-        $inc: { likes: -1 },
-      }).catch((err) => console.log(err));
+      const store = await StoreSchema.findByIdAndUpdate(
+        storeId,
+        {
+          $inc: { likes: -1 },
+        },
+        { new: true }
+      ).catch((err) => console.log(err));
       return res.status(200).send({ likes: store.likes, liked: false });
     } else {
       await UserSchema.findByIdAndUpdate(user, {
         $push: { saved_stores: storeId },
       }).catch((err) => console.log(err));
-      const store = await StoreSchema.findByIdAndUpdate(storeId, {
-        $inc: { likes: 1 },
-      }).catch((err) => console.log(err));
+      const store = await StoreSchema.findByIdAndUpdate(
+        storeId,
+        {
+          $inc: { likes: 1 },
+        },
+        { new: true }
+      ).catch((err) => console.log(err));
       return res.status(200).send({ likes: store.likes, liked: true });
     }
   } catch (error) {

@@ -1,22 +1,16 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useState } from "react";
 import { useApi } from "../../hooks/useApi";
+import { useFetchApi } from "../../hooks/useFetchApi";
 
-const LikeButton = ({ storeId }) => {
+const LikeButton = ({ storeId, user, numLikes }) => {
   const api = useApi();
+  const [body, setBody] = useState(null)
+  const {data, error, loading} = useFetchApi("/user/like_store", "POST", body)
   function saveStore(e) {
     e.preventDefault();
-    api
-      .post(
-        import.meta.env.VITE_API_URL + "/user/like_store",
-        { storeId },
-        { headers: { "Content-Type": "application/json" } }
-      )
-      .then((response) => {
-        
-      })
-      .catch((err) => console.log(err));
+    setBody({storeId})
   }
 
   return (
@@ -32,12 +26,12 @@ const LikeButton = ({ storeId }) => {
           id="likes"
           hidden
           type="checkbox"
-          checked={true}
+          checked={data ? data.liked : user?.includes(storeId)}
           onChange={(e) => {}}
         />
         <FontAwesomeIcon icon={faHeart} className="pointer-events-none" />
       </label>
-      <span>{}</span>
+      <span>{data ? data.likes : numLikes}</span>
     </div>
   );
 };

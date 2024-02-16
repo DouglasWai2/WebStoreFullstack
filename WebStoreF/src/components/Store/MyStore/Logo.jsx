@@ -8,12 +8,17 @@ const Logo = ({ edit, image, method }) => {
   const [imageEdit, setImageEdit] = useState(null);
   const headers = { "content-type": "multipart/form-data" };
 
-  const { data: logo } = useFetchApi(
+  const { data, error } = useFetchApi(
     "/store/change-image",
     method,
     imageEdit,
     headers
   );
+
+  useEffect(() => {
+    if (data) refresh();
+    if (error) console.log(error);
+  }, [data, error]);
 
   return (
     <>
@@ -36,8 +41,7 @@ const Logo = ({ edit, image, method }) => {
         >
           <input
             onChange={(e) => {
-              if (e.target.files[0])
-              setImageEdit({ file: e.target.files[0] });
+              if (e.target.files[0]) setImageEdit({ file: e.target.files[0] });
             }}
             name="file"
             type="file"

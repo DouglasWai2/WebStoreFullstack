@@ -24,24 +24,20 @@ const MyStore = () => {
     CarouselPlaceholder2,
     CarouselPlaceholder3,
   ];
+
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
 
+
+  //Fetch store info and products
   const { data, loading, error, refresh } = useFetchApi(url, "GET");
   const { data: products, loading: fetching } = useFetchApi(
     data && "/catalog/all-products/" + data._id,
     "GET"
   );
 
-  // useEffect(() => {
-  //   if (banner === "Banner updated" || logo === "Store logo updated") {
-  //     window.location.reload();
-  //   }
-  //   if (error) {
-  //   }
-  // }, [error]);
-
+  //send edit info to backend
   function handleSubmit() {
     setMethod("POST");
   }
@@ -61,6 +57,7 @@ const MyStore = () => {
           edit={edit}
           placeholders={placeholders}
           loading={loading}
+          refresh={refresh}
         />
         <div className="max-w-[1280px] w-full">
           {loading && <TopBarProgress />}
@@ -77,7 +74,11 @@ const MyStore = () => {
               <div className="flex relative justify-between px-6 shadow bg-white max-sm:flex-col max-sm:py-3">
                 <div className="flex max-sm:flex-col">
                   <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
-                    <Logo edit={edit} image={data?.storeImage} />
+                    <Logo
+                      edit={edit}
+                      image={data?.storeImage}
+                      refresh={refresh}
+                    />
                   </div>
                   <div>
                     <p className="text-4xl">{data?.storeName}</p>
@@ -89,7 +90,7 @@ const MyStore = () => {
                       >
                         <FontAwesomeIcon icon={faShareNodes} />
                       </div>
-                      <LikeButton />
+                      <LikeButton numLikes={data?.likes} storeId={data?._id} user={user?.saved_stores}/>
                     </div>
                   </div>
                 </div>
@@ -158,6 +159,19 @@ const MyStore = () => {
                   to={10}
                   storeId={data && data._id}
                 />
+                {data &&
+                  data.categories.map((item) => {
+                    return (
+                      <ProductCategory
+                        key={item}
+                        text={"Mais produtos em " + item}
+                        queries={`category=${item}&order=desc&sortby=sells`}
+                        from={0}
+                        to={10}
+                        storeId={data && data._id}
+                      />
+                    );
+                  })}{" "}
               </>
             ) : (
               !loading && (

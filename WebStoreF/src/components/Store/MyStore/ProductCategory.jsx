@@ -33,13 +33,14 @@ const ProductCategory = ({ text, queries, from, to, storeId }) => {
             })
           : ""}
       </div>
+{/*       
       <div className="w-full h-[1px] my-4 border-b-2 border-black shadow-md cursor-pointer"
       onClick={()=>{
         setToT(toT + 2)
       }}
       >
 
-      </div>
+      </div> */}
     </>
   );
 };
