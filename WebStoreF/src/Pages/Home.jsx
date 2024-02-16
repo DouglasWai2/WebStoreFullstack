@@ -8,7 +8,6 @@ const Home = ({
   user,
   address,
   loading,
-  loggedIn,
   refreshUser
 }) => {
   const [toggleCard, setToggleCard] = useState(false);
@@ -30,6 +29,7 @@ const Home = ({
     setToggleCard,
     toggleCart,
     setToggleCart,
+    refreshUser
   };
 
   return (
