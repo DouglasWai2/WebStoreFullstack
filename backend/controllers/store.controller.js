@@ -45,7 +45,7 @@ exports.storeInfo = async (req, res) => {
     );
 
     if (!store) {
-      res.status(404).send("No store found, wrong link!");
+      return res.status(404).send("No store found, wrong link!");
     } else {
       return res.status(200).json(store);
     }

@@ -25,6 +25,18 @@ const PrivateRoutes = (user, loggedIn, loading) => {
         path: "store",
         element: <Store />,
         children: [
+          { path: "signup", element: <RegisterStore /> },
+          {
+            path: "my-store",
+            element: user?.role === "Seller" ? <MyStore /> : <Navigate to="/store" replace />,
+            children: user?.role === "Seller" ? [
+              {
+                path: "address",
+                element: <AddressForm url="/store/address" type="store" />,
+              },
+              // Add more children paths here if the user is a seller
+            ] : [],
+          },
           {
             path: "my-store",
             element: <MyStore />,
@@ -35,9 +47,9 @@ const PrivateRoutes = (user, loggedIn, loading) => {
               },
             ],
           },
-          { path: "signup", element: <RegisterStore /> },
           { path: "new-product", element: <NewProduct /> },
           { path: "my-products", element: <MyProducts /> },
+          ,
         ],
       },
       {

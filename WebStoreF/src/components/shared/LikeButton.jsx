@@ -1,17 +1,23 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useApi } from "../../hooks/useApi";
 import { useFetchApi } from "../../hooks/useFetchApi";
+import { redirect, useNavigate } from "react-router-dom";
 
 const LikeButton = ({ storeId, user, numLikes }) => {
   const api = useApi();
+  const navigate = useNavigate()
   const [body, setBody] = useState(null)
   const {data, error, loading} = useFetchApi("/user/like_store", "POST", body)
   function saveStore(e) {
     e.preventDefault();
     setBody({storeId})
   }
+
+  useEffect(() => {
+    if(error) console.log(error)
+  }, [error])
 
   return (
     <div className="flex items-center text-gray-400 ">

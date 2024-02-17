@@ -6,7 +6,14 @@ import { useFetchApi } from "../../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
-const CarouselStore = ({ images, edit, method, loading, placeholders, refresh }) => {
+const CarouselStore = ({
+  images,
+  edit,
+  method,
+  loading,
+  placeholders,
+  refresh,
+}) => {
   const [bannerEdit, setBannerEdit] = useState(null);
   const [bannerImages, setBannerImages] = useState();
   const headers = { "content-type": "multipart/form-data" };
@@ -24,17 +31,16 @@ const CarouselStore = ({ images, edit, method, loading, placeholders, refresh })
       URL.createObjectURL(item)
     );
     setBannerImages(array);
-    console.log(bannerImages);
   }
 
   useEffect(() => {
     setBannerImages(images);
   }, [images]);
 
-  useEffect(()=>{
-    if(data) refresh()
-    if(error) console.log(error)
-  }, [data, error])
+  useEffect(() => {
+    if (data) refresh();
+    if (error) console.log(error);
+  }, [data, error]);
 
   return (
     <>
@@ -83,12 +89,8 @@ const CarouselStore = ({ images, edit, method, loading, placeholders, refresh })
           </p>
         </label>
       ) : (
-        <div className="w-screen h-[40vh] overflow-hidden ">
-          {loading ? (
-            <div className="w-full h-full flex justify-center items-center">
-              <LoadingSpinner />
-            </div>
-          ) : (
+        <div className="w-full h-[40vh] overflow-hidden ">
+          {loading === false ? (
             <Carousel
               axis="horizontal"
               autoPlay={true}
@@ -125,9 +127,12 @@ const CarouselStore = ({ images, edit, method, loading, placeholders, refresh })
                         />
                       </div>
                     );
-                  })
-                  }
+                  })}
             </Carousel>
+          ) : (
+            <div className="w-full h-full flex justify-center items-center">
+              <LoadingSpinner />
+            </div>
           )}
         </div>
       )}

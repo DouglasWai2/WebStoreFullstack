@@ -32,11 +32,19 @@ const Home = ({
     refreshUser
   };
 
+
+  function handleScroll(e){
+    const bottom = Math.abs(e.scrollHeight - (e.scrollTop + e.clientHeight))
+    if(bottom <= 1){
+      console.log("Chegou ao fim")
+    }
+  }
+
   return (
     <>
       {(loading) && <TopBarProgress />}
       <Navbar {...props} />
-      <main className={"w-screen h-full " + (toggleCard && "brightness-50")}>
+      <main className={"w-full h-full " + (toggleCard && "brightness-50")} onScroll={handleScroll}>
         {toggleCart && <CartSideMenu setCart={setToggleCart} />}
         <Outlet context={{...props}} />
       </main>

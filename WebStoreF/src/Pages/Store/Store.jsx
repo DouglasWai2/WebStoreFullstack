@@ -1,17 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Link,
   Outlet,
   useLocation,
   useOutletContext,
-  useNavigate,
 } from "react-router-dom";
 import { Player } from "@lottiefiles/react-lottie-player";
 import cardAnimation from "../../assets/WebSiteCardAnimaion.json";
 
 const Store = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { user, loading, refreshUser } = useOutletContext();
 
 

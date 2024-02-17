@@ -46,7 +46,7 @@ const Navbar = ({
       <nav>
         <div
           className={
-            "w-screen h-[9vh] bg-[#152128] py-2 px-4 flex items-center justify-between text-white"
+            "w-full h-[80px] bg-[#152128] py-2 px-4 flex items-center justify-between text-white"
           }
         >
           <a href="/">

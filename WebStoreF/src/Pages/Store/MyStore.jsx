@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import icon from "../../assets/2099077-200.png";
-import { Link, Outlet, useLocation, useOutletContext } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useOutletContext,
+} from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faShareNodes } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +20,7 @@ import LikeButton from "../../components/shared/LikeButton";
 import Logo from "../../components/Store/MyStore/Logo";
 
 const MyStore = () => {
+  const navigate = useNavigate();
   const { user } = useOutletContext();
   const location = useLocation();
   const [edit, setEdit] = useState(false);
@@ -25,14 +32,18 @@ const MyStore = () => {
     CarouselPlaceholder3,
   ];
 
+  // useEffect(() => {
+  //   if (user && user.role === "Seller") setUrl(`${location.pathname}`);
+  //   if (user && user.role !== "Seller") navigate('/store')
+  // }, [user]);
+
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
 
-
   //Fetch store info and products
   const { data, loading, error, refresh } = useFetchApi(url, "GET");
-  const { data: products, loading: fetching } = useFetchApi(
+  const { data: products } = useFetchApi(
     data && "/catalog/all-products/" + data._id,
     "GET"
   );
@@ -42,12 +53,11 @@ const MyStore = () => {
     setMethod("POST");
   }
 
-  function generateUrl() {
+  function generateUrl(data) {
     navigator.clipboard.writeText(
-      `http://localhost:3000/store/${data.storeName}/${data._id}`
+      import.meta.env.VITE_DOMAIN + '/store/' + data.storeName + '/' + data._id
     );
   }
-
   return location.pathname !== "/store/my-store/address" ? (
     <div className="flex flex-col items-center">
       <>
@@ -86,11 +96,15 @@ const MyStore = () => {
                       <div
                         className="rounded-full w-[30px] h-[30px] cursor-pointer text-gray-400 
                        grid justify-center items-center bg-white hover:brightness-90 duration-150"
-                        onClick={generateUrl}
+                        onClick={() => generateUrl(data)}
                       >
                         <FontAwesomeIcon icon={faShareNodes} />
                       </div>
-                      <LikeButton numLikes={data?.likes} storeId={data?._id} user={user?.saved_stores}/>
+                      <LikeButton
+                        numLikes={data?.likes}
+                        storeId={data?._id}
+                        user={user?.saved_stores}
+                      />
                     </div>
                   </div>
                 </div>
