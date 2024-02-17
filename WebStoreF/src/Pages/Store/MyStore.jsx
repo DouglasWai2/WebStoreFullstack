@@ -32,10 +32,9 @@ const MyStore = () => {
     CarouselPlaceholder3,
   ];
 
-  // useEffect(() => {
-  //   if (user && user.role === "Seller") setUrl(`${location.pathname}`);
-  //   if (user && user.role !== "Seller") navigate('/store')
-  // }, [user]);
+  useEffect(() => {
+    if (user && user.role !== "Seller") navigate("/store");
+  }, [user]);
 
   useEffect(() => {
     setUrl(`${location.pathname}`);
@@ -55,7 +54,7 @@ const MyStore = () => {
 
   function generateUrl(data) {
     navigator.clipboard.writeText(
-      import.meta.env.VITE_DOMAIN + '/store/' + data.storeName + '/' + data._id
+      import.meta.env.VITE_DOMAIN + "/store/" + data.storeName + "/" + data._id
     );
   }
   return location.pathname !== "/store/my-store/address" ? (
@@ -71,7 +70,7 @@ const MyStore = () => {
         />
         <div className="max-w-[1280px] w-full">
           {loading && <TopBarProgress />}
-          {error?.response.status === 404 && (
+          {error && (
             <div className="absolute top-0 right-0 h-full w-full bg-white z-10 flex items-center justify-center">
               <img src={icon} />
               <div className="text-2xl">
