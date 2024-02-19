@@ -6,8 +6,6 @@ import { useFetchApi } from "../../hooks/useFetchApi";
 import { redirect, useNavigate } from "react-router-dom";
 
 const LikeButton = ({ storeId, user, numLikes }) => {
-  const api = useApi();
-  const navigate = useNavigate()
   const [body, setBody] = useState(null)
   const {data, error, loading} = useFetchApi("/user/like_store", "POST", body)
   function saveStore(e) {

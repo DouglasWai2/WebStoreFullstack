@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import icon from "../../assets/2099077-200.png";
 import {
   Link,
@@ -26,26 +26,44 @@ const MyStore = () => {
   const [edit, setEdit] = useState(false);
   const [method, setMethod] = useState(null);
   const [url, setUrl] = useState(null);
+  const [counter, setCounter] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [lastTime, setLastTime] = useState(0);
   const placeholders = [
     CarouselPlaceholder1,
     CarouselPlaceholder2,
     CarouselPlaceholder3,
   ];
 
+  //Fetch store info and products
+  const { data, loading, error, refresh } = useFetchApi(url, "GET");
+
   useEffect(() => {
     if (user && user.role !== "Seller") navigate("/store");
   }, [user]);
 
+  const handleScroll = useCallback(() => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      var now = new Date().getTime(); // Time in milliseconds
+      if (now - lastTime < 1000) {
+        console.log("teste");
+        return;
+      } else {
+        setLastTime(now);
+      }
+      setCategories((categories) => [...categories, data?.categories[counter]]);
+      setCounter((counter) => counter + 1);
+    }
+  }, [counter, categories, data, lastTime]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
-
-  //Fetch store info and products
-  const { data, loading, error, refresh } = useFetchApi(url, "GET");
-  const { data: products } = useFetchApi(
-    data && "/catalog/all-products/" + data._id,
-    "GET"
-  );
 
   //send edit info to backend
   function handleSubmit() {
@@ -78,7 +96,7 @@ const MyStore = () => {
               </div>
             </div>
           )}
-          <div className="flex justify-center">
+          <div className="flex justify-center -mt-6">
             <div className="w-full flex flex-col">
               <div className="flex relative justify-between px-6 shadow bg-white max-sm:flex-col max-sm:py-3">
                 <div className="flex max-sm:flex-col">
@@ -156,7 +174,7 @@ const MyStore = () => {
             </div>
           </div>
           <div className="mt-[100px] px-6">
-            {products && products.length ? (
+            {data && data.products.length ? (
               <>
                 <ProductCategory
                   text="Mais vendidos"
@@ -172,24 +190,22 @@ const MyStore = () => {
                   to={10}
                   storeId={data && data._id}
                 />
-                {data &&
-                  data.categories.map((item) => {
-                    return (
-                      <ProductCategory
-                        key={item}
-                        text={"Mais produtos em " + item}
-                        queries={`category=${item}&order=desc&sortby=sells`}
-                        from={0}
-                        to={10}
-                        storeId={data && data._id}
-                      />
-                    );
-                  })}{" "}
+                {categories.map((item) => {
+                  return (
+                    <ProductCategory
+                      key={item}
+                      text={"Mais produtos em " + item}
+                      queries={`category=${item}&order=desc&sortby=sells`}
+                      from={0}
+                      to={10}
+                      storeId={data && data._id}
+                    />
+                  );
+                })}{" "}
               </>
             ) : (
-              !loading && (
-                <h1 className="text-3xl">Adicione produtos à sua loja</h1>
-              )
+              !loading &&
+              <h1 className="text-3xl">Nenhum produto</h1>
             )}
           </div>
         </div>

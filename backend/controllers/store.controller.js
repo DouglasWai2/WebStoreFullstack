@@ -34,14 +34,14 @@ exports.storeInfo = async (req, res) => {
   const storeId = req.userInfo?.id || req.params.storeid;
 
   try {
-    const store = await StoreSchema.findOne(
+    let store = await StoreSchema.findOne(
       {
         $or: [
           { user: storeId },
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner categories likes"
+      "storeImage storeDescription storeName storeAddress storeId products cpf cnpj storeBanner categories likes"
     );
 
     if (!store) {

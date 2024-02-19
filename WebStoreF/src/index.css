@@ -174,3 +174,19 @@ input[type="date"] {
   -o-transform: rotate(-5deg);
   transform: rotate(-8deg);
 }
+
+
+/* HTML: <div class="loader"></div> */
+
+.loader {
+  width: 15px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+    0%  {box-shadow: 20px 0 #188fa7, -20px 0 #0002;background: #188fa7 }
+    33% {box-shadow: 20px 0 #188fa7, -20px 0 #0002;background: #0002}
+    66% {box-shadow: 20px 0 #0002,-20px 0 #188fa7; background: #0002}
+    100%{box-shadow: 20px 0 #0002,-20px 0 #188fa7; background: #188fa7 }
+}

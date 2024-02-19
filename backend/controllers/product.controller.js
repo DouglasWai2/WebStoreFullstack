@@ -130,7 +130,7 @@ exports.allProducts = async (req, res) => {
       },
     });
 
-    return res.status(200).send(products);
+    return setTimeout(() => res.status(200).send(products), 1000); //res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }
