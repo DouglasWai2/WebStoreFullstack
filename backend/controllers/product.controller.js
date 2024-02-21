@@ -1,4 +1,4 @@
-const productSchema = require("../models/product.models");
+const productSchema = require("../models/product.model");
 const StoreSchema = require("../models/store.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
@@ -131,6 +131,21 @@ exports.allProducts = async (req, res) => {
     });
 
     return setTimeout(() => res.status(200).send(products), 1000); //res.status(200).send(products);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.productsByCategory = async (req, res) => {
+  const { category } = req.params;
+
+  try {
+    const products = await productSchema
+      .find({ tags: category })
+      .select("title thumbnail brand price rating sells discount")
+      .sort({ sells: 1 })
+      .limit(20);
+      return res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }

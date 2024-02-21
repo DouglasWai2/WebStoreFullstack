@@ -1,6 +1,6 @@
 const StoreSchema = require("../models/store.model");
 const UserSchema = require("../models/user.model");
-const productSchema = require("../models/product.models");
+const productSchema = require("../models/product.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");

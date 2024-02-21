@@ -13,9 +13,11 @@
 html {
   font-family: "Poppins", sans-serif;
   box-sizing: border-box;
+  /* scrollbar-gutter: stable; */
   margin: 0;
   padding: 0;
 }
+
 
 .hover-border {
   @apply border-[1px] border-transparent hover:border-white;
@@ -102,7 +104,16 @@ main {
   height: 7px;
 }
 
-.product-images::-webkit-scrollbar-track {
+.carousel-scroll::-webkit-scrollbar-track{
+  display: none;
+}
+
+.carousel-scroll::-webkit-scrollbar-thumb{
+  
+}
+
+.product-images::-webkit-scrollbar-track,
+.carousel-scrollbar::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 

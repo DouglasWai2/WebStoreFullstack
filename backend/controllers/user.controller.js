@@ -1,6 +1,7 @@
 const UserSchema = require("../models/user.model");
 const AddressSchema = require("../models/address.model");
 const StoreSchema = require("../models/store.model");
+const ProductSchema = require("../models/product.model");
 
 exports.sendUserInfo = async (req, res) => {
   const user = await UserSchema.findById(req.userInfo.id).populate("address");
@@ -16,6 +17,27 @@ exports.sendUserInfo = async (req, res) => {
     saved_stores: user.saved_stores,
     addressess: user.address,
   });
+};
+
+exports.getUsersInterests = async (req, res) => {
+  const productsIds = req.body;
+  var interests = new Set();
+
+  try {
+    await Promise.all(
+      productsIds.map(async (element) => {
+        const { tags } = await ProductSchema.findById(element);
+        tags.forEach((tag) => {
+          interests.add(tag);
+        });
+      })
+    );
+
+    const interestsArray = [...interests];
+    return res.status(200).send(interestsArray);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 exports.updateUserData = async (req, res) => {

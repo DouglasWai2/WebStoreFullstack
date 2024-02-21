@@ -15,8 +15,6 @@ export function addToCart(
     quantity: 1,
   };
 
-  console.log(product)
-
   var cart = JSON.parse(localStorage.getItem("cart"));
   if (!cart) {
     localStorage.setItem("cart", JSON.stringify([]));

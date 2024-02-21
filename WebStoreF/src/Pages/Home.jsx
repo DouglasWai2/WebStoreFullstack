@@ -1,17 +1,27 @@
 import Navbar from "../components/Navbar/Navbar";
-import { Outlet, useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
 import CartSideMenu from "../components/Cart/CartSideMenu";
+import ProductsCarousel from "../components/ProductsCarousel";
+import { useFetchApi } from "../hooks/useFetchApi";
 
-const Home = ({
-  user,
-  address,
-  loading,
-  refreshUser
-}) => {
+const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [toggleCart, setToggleCart] = useState(false);
+  const [productsIds, setProductsIds] = useState(null);
+  const location = useLocation()
+
+  useEffect(() => {
+    var lvpIDs = JSON.parse(localStorage.getItem("lvpIDs"));
+    if (lvpIDs?.length > 0) setProductsIds(lvpIDs);
+  }, []);
+
+  const {
+    data,
+    loading: fetching,
+    error,
+  } = useFetchApi("/user/interests", "POST", productsIds);
 
   TopBarProgress.config({
     barColors: {
@@ -29,24 +39,22 @@ const Home = ({
     setToggleCard,
     toggleCart,
     setToggleCart,
-    refreshUser
+    refreshUser,
   };
-
-
-  function handleScroll(e){
-    const bottom = Math.abs(e.scrollHeight - (e.scrollTop + e.clientHeight))
-    if(bottom <= 1){
-      console.log("Chegou ao fim")
-    }
-  }
 
   return (
     <>
-      {(loading) && <TopBarProgress />}
+      {loading && <TopBarProgress />}
       <Navbar {...props} />
-      <main className={"w-full h-full " + (toggleCard && "brightness-50")} onScroll={handleScroll}>
+      <main className={"w-full h-full " + (toggleCard && "brightness-50")}>
         {toggleCart && <CartSideMenu setCart={setToggleCart} />}
-        <Outlet context={{...props}} />
+        {location.pathname !== "/" ? (
+          <Outlet context={{ ...props }} />
+        ) : (
+        <div className="w-full flex justify-center">
+          <ProductsCarousel category={"Eletrônicos"} />
+          </div>
+        )}
       </main>
     </>
   );

@@ -19,6 +19,19 @@ const ProductPage = () => {
   } = useFetchApi("/catalog/" + productId, "GET");
 
   useEffect(() => {
+    if (!JSON.parse(localStorage.getItem("lvpIDs"))) {
+      localStorage.setItem("lvpIDs", JSON.stringify([]));
+    }
+
+    var lvpIDs = JSON.parse(localStorage.getItem("lvpIDs"));
+    if (lvpIDs.includes(productId)) return;
+
+    lvpIDs.unshift(productId);
+    if(lvpIDs.length > 5) lvpIDs.pop();
+    localStorage.setItem("lvpIDs", JSON.stringify(lvpIDs));
+  }, []);
+
+  useEffect(() => {
     if (product) setMainImage(product.thumbnail);
   }, [product]);
 

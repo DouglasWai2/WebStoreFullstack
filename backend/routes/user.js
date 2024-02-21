@@ -8,10 +8,12 @@ const {
   sendUserInfo,
   updateUserData,
   likeStore,
+  getUsersInterests,
 } = require("../controllers/user.controller");
 require("dotenv").config();
 
 router.get("/user", auth, sendUserInfo);
+router.post("/user/interests", getUsersInterests);
 router.post("/user/update", auth, updateUserData);
 router.post("/user/like_store", auth, likeStore);
 router.post("/user/address", auth, saveAddress);

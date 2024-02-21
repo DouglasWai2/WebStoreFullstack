@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 require("dotenv").config();
 const UserSchema = require("../models/user.model");
-const productSchema = require("../models/product.models");
+const productSchema = require("../models/product.model");
 const auth = require("../middlewares/verifyToken");
 const Stripe = require("stripe");
 const stripe = Stripe(process.env.STRIPE_KEY);
