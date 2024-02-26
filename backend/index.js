@@ -54,3 +54,5 @@ app.use("/api/v1/auth", require("./routes/auth/logout"));
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}....`);
 });
+
+module.exports = app;
