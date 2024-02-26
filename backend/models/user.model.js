@@ -69,6 +69,12 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "store",
   },
+  saved_stores: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "store",
+    },
+  ],
 });
 
 UserSchema.pre("save", async function (next) {

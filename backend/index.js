@@ -5,8 +5,12 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
-const { MongoClient } = require("mongodb");
-const client = new MongoClient(process.env.MONGODB_URI);
+const {
+  defaultLimiter,
+  userLimiter,
+  productsLimiter,
+  storeLimiter,
+} = require("./middlewares/rateLimitMiddleware");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -36,12 +40,11 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use("/api/v1", require("./routes/catalog"));
+app.use("/api/v1", productsLimiter, require("./routes/catalog"));
 app.use("/api/v1", require("./routes/rating"));
-app.use("/api/v1", require("./routes/user"));
+app.use("/api/v1", userLimiter, require("./routes/user"));
 app.use("/api/v1", require("./routes/frete"));
-app.use("/api/v1", require("./routes/address"));
-app.use("/api/v1", require("./routes/store"));
+app.use("/api/v1", storeLimiter, require("./routes/store"));
 app.use("/api/v1", require("./routes/payments"));
 app.use("/api/v1/auth", require("./routes/auth/register"));
 app.use("/api/v1/auth", require("./routes/auth/login"));

@@ -1,46 +1,22 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/user.model");
 const auth = require("../middlewares/verifyToken");
-require('dotenv').config()
+const {
+  saveAddress,
+  updateMainAddress,
+  deleteAddress,
+  sendUserInfo,
+  updateUserData,
+  likeStore,
+  getUsersInterests,
+} = require("../controllers/user.controller");
+require("dotenv").config();
 
-
-// send user info
-router.get("/user", auth, async (req, res) => {
-  const user = await User.findById(req.userInfo.id);
-  console.log('teste')
-  
-  res
-    .status(200)
-    .json({
-      email: user.email,
-      name: user.name,
-      lastName: user.lastName,
-      cpf: user.cpf,
-      phone: user.phone,
-      birth: user.birth,
-      role: user.role
-    })
-});
-
-// update user data
-router.post("/user/update", auth, async(req, res) => {
-  const data = req.body
-  const user = await User.findById(req.userInfo.id)
-
-  data.map(item => {
-    if(Object.values(item)[0]){
-      user[item.value] = Object.values(item)[0]
-    } 
-  })
-
-  try {
-    await user.save()
-    res.status(200).send('User data updated')
-  } catch (error) {
-    console.log(error)
-    res.status(400).send(error.message)
-  }
-
-})
+router.get("/user", auth, sendUserInfo);
+router.post("/user/interests", getUsersInterests);
+router.post("/user/update", auth, updateUserData);
+router.post("/user/like_store", auth, likeStore);
+router.post("/user/address", auth, saveAddress);
+router.get("/user/address/set/:address_id", auth, updateMainAddress);
+router.get("/user/address/delete/:address_id", auth, deleteAddress);
 module.exports = router;

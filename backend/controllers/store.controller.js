@@ -1,6 +1,6 @@
 const StoreSchema = require("../models/store.model");
 const UserSchema = require("../models/user.model");
-const productSchema = require("../models/product.models");
+const productSchema = require("../models/product.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
@@ -31,23 +31,21 @@ exports.registerStore = async (req, res) => {
 };
 
 exports.storeInfo = async (req, res) => {
-  console.log(req.params);
-
   const storeId = req.userInfo?.id || req.params.storeid;
 
   try {
-    const store = await StoreSchema.findOne(
+    let store = await StoreSchema.findOne(
       {
         $or: [
           { user: storeId },
           { $and: [{ _id: storeId }, { storeName: req.params.storename }] },
         ],
       },
-      "storeImage storeDescription storeName storeAddress storeId cpf cnpj storeBanner products categories"
+      "storeImage storeDescription storeName storeAddress storeId products cpf cnpj storeBanner categories likes"
     );
 
     if (!store) {
-      res.status(404).send("No store found, wrong link!");
+      return res.status(404).send("No store found, wrong link!");
     } else {
       return res.status(200).json(store);
     }
@@ -88,14 +86,13 @@ exports.setCpfCnpj = async (req, res) => {
     } else if (cpfcnpj.length === 14) {
       store.cnpj = cpfcnpj;
     } else {
-      res.status(400).send({
+      return res.status(400).send({
         "Bad Request": "Your id must have 11 for cpf or 14 digits for cnpj",
       });
-      return;
     }
 
     await store.save();
-    res.status(200).send("Store id updated");
+    return res.status(200).send("Store id updated");
   } catch (error) {
     console.log(error);
   }
@@ -108,7 +105,7 @@ exports.changeBanner = async ({ req, res }) => {
     if (store.storeBanner.length === 0) {
       store.storeBanner = req.files.map((item) => item.location);
       await store.save();
-      res.status(200).send("Banner updated");
+      return res.status(200).send("Banner updated");
     } else {
       try {
         if (!req.files.length) return;
@@ -120,12 +117,14 @@ exports.changeBanner = async ({ req, res }) => {
             Bucket: "webstore-api-images",
             Key: match[0],
           });
-          const response = await client.send(command);
+          client.send(command);
         });
         const array = req.files.map((item) => item.location);
         store.storeBanner = array;
+
         await store.save();
-        res.status(200).send("Banner updated");
+
+        return res.status(200).send("Banner updated");
       } catch (error) {
         console.log(error);
       }
@@ -151,7 +150,7 @@ exports.changeImage = async (req, res) => {
           Bucket: "webstore-api-images",
           Key: match[0],
         });
-        const response = await client.send(command);
+        client.send(command);
 
         store.storeImage = req.file.location;
         await store.save();
@@ -225,8 +224,6 @@ exports.myProducts = async (req, res) => {
       },
     });
 
-    console.log(products);
-
     return res.status(200).send(products);
   } catch (error) {
     console.log(error);
@@ -253,7 +250,7 @@ exports.deleteProducts = async (req, res) => {
             Bucket: "webstore-api-images",
             Key: match[0],
           });
-          const response = await client.send(command);
+          client.send(command);
         } catch (error) {
           console.log(error);
         }
@@ -285,3 +282,4 @@ exports.discountProducts = async (req, res) => {
     console.log(error);
   }
 };
+
