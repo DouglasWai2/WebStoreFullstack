@@ -49,7 +49,7 @@ const ProductPreview = ({
                                     hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
                 name="backward"
                 onClick={() => {
-                  handleScroll(-500);
+                  handleScroll(-578);
                 }}
               >
                 <FontAwesomeIcon
@@ -134,7 +134,7 @@ const ProductPreview = ({
                       bg-transparent text-white h-[102px] cursor-pointer w-[50px] right-0 bottom-0
                        hover:bg-gray-300/20  hover:text-white/100 duration-200"
                 onClick={() => {
-                  handleScroll(500);
+                  handleScroll(578);
                 }}
               >
                 <FontAwesomeIcon
