@@ -24,6 +24,7 @@ mongoose
 
 app.get("/api/v1", (req, res) => {
   console.log("user hit the server");
+  return res.status(200).send("Server OK")
 });
 
 app.use(function (req, res, next) {
