@@ -11,69 +11,19 @@ const ProductPreview = ({
   description,
   price,
   handleDrop,
+  setDragging,
   dragging,
 }) => {
   const [mainImage, setMainImage] = useState("");
-  const [y, setY] = useState(4);
   const images = useRef(null);
-  const buttonsWrapper = useRef(null);
 
   useEffect(() => {
     if (files.length) setMainImage(URL.createObjectURL(files[0]));
   }, [files]);
 
-  function fixButtonsInsideDiv() {
-    const rect = images.current.getBoundingClientRect();
-    buttonsWrapper.current.style.top = `${rect.top}px`;
-  }
-
-  useEffect(() => {
-    if (buttonsWrapper.current && images.current) {
-      window.addEventListener("scroll", fixButtonsInsideDiv);
-
-      return () => {
-        window.removeEventListener("scroll", fixButtonsInsideDiv);
-      };
-    }
-  }, [files]);
-
-  function handleScrollFoward(e) {
-    var name = e.target.getAttribute("name");
-    if (name === "foward") {
-      if (y + 4 > images.current.children.length - 1) {
-        images.current?.children[
-          images.current.children.length - 2
-        ].scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "nearest",
-        });
-      } else {
-        setY(y + 4);
-        images.current.children[y + 4].scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "nearest",
-        });
-      }
-    }
-
-    if (name === "backward") {
-      if (y - 4 < 0) {
-        images.current?.firstElementChild.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "nearest",
-        });
-        setY(4);
-      } else {
-        setY(y - 4);
-        images.current.children[y - 4].scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "nearest",
-        });
-      }
+  function handleScroll(value) {
+    if (images.current) {
+      images.current.scrollLeft += value;
     }
   }
 
@@ -91,95 +41,109 @@ const ProductPreview = ({
               <p>1</p>
             </div>
           )}
-          <DragDropContext onDragEnd={handleDrop}>
-            <Droppable direction={"horizontal"} droppableId={"files"}>
-              {(provided) => (
-                <div
-                  ref={(e) => {
-                    images.current = e;
-                    provided.innerRef(e);
-                  }}
-                  className="flex w-[578px] overflow-x-scroll my-4 product-images relative"
-                >
-                  {files.length ? (
-                    <>
-                      {files.map((item, index) => {
-                        return (
-                          <Draggable
-                            key={item.name}
-                            draggableId={item.name}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                onMouseOver={() => {
-                                  setMainImage(URL.createObjectURL(item));
-                                }}
-                                className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 mx-"
-                              >
-                                <img
-                                  className="!object-contain h-full w-full pointer-events-none"
-                                  src={URL.createObjectURL(item)}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {files.length > 4 && !dragging && (
-                        <div ref={buttonsWrapper} className="fixed w-[578px]">
-                          <div
-                            className="absolute flex items-center justify-center text-transparent text-2xl 
+          <div className="relative">
+            {files.length > 4 && !dragging && (
+              <div
+                className="absolute flex items-center justify-center text-transparent text-2xl 
                                       bg-transparent text-white h-[102px] cursor-pointer w-[50px]
                                     hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
-                            name="backward"
-                            onClick={handleScrollFoward}
-                          >
-                            <FontAwesomeIcon
-                              className="rotate-180 pointer-events-none"
-                              icon={faAngleRight}
-                            />
-                          </div>
-                          <div
-                            name="foward"
-                            className="absolute flex items-center justify-center text-transparent text-2xl 
-                      bg-transparent text-white h-[102px] cursor-pointer w-[50px] right-0
-                       hover:bg-gray-300/20  hover:text-white/100 duration-200"
-                            onClick={handleScrollFoward}
-                          >
-                            <FontAwesomeIcon
-                              className="pointer-events-none"
-                              icon={faAngleRight}
-                            />
-                          </div>
+                name="backward"
+                onClick={() => {
+                  handleScroll(-500);
+                }}
+              >
+                <FontAwesomeIcon
+                  className="rotate-180 pointer-events-none"
+                  icon={faAngleRight}
+                />
+              </div>
+            )}
+            <DragDropContext
+              onDragEnd={handleDrop}
+              onDragStart={() => {
+                setDragging(true);
+              }}
+            >
+              <Droppable direction={"horizontal"} droppableId={"files"}>
+                {(provided) => (
+                  <div
+                    ref={(e) => {
+                      images.current = e;
+                      provided.innerRef(e);
+                    }}
+                    className={
+                      "flex w-[578px] overflow-x-scroll my-4 product-images relative " +
+                      (!dragging && "scroll-smooth")
+                    }
+                  >
+                    {files.length ? (
+                      <>
+                        {files.map((item, index) => {
+                          return (
+                            <Draggable
+                              key={item.name}
+                              draggableId={item.name}
+                              index={index}
+                            >
+                              {(provided) => (
+                                <div
+                                  ref={provided.innerRef}
+                                  {...provided.draggableProps}
+                                  {...provided.dragHandleProps}
+                                  onMouseOver={() => {
+                                    setMainImage(URL.createObjectURL(item));
+                                  }}
+                                  className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 mx-"
+                                >
+                                  <img
+                                    className="!object-contain h-full w-full pointer-events-none"
+                                    src={URL.createObjectURL(item)}
+                                  />
+                                </div>
+                              )}
+                            </Draggable>
+                          );
+                        })}
+                      </>
+                    ) : (
+                      <>
+                        {" "}
+                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                          1
                         </div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {" "}
-                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                        1
-                      </div>
-                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                        2
-                      </div>
-                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                        3
-                      </div>
-                      <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
-                        4
-                      </div>
-                    </>
-                  )}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          </DragDropContext>
+                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                          2
+                        </div>
+                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                          3
+                        </div>
+                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                          4
+                        </div>
+                      </>
+                    )}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+            {files.length > 4 && !dragging && (
+              <div
+                name="foward"
+                className="absolute flex items-center justify-center text-transparent text-2xl 
+                      bg-transparent text-white h-[102px] cursor-pointer w-[50px] right-0 bottom-0
+                       hover:bg-gray-300/20  hover:text-white/100 duration-200"
+                onClick={() => {
+                  handleScroll(500);
+                }}
+              >
+                <FontAwesomeIcon
+                  className="pointer-events-none"
+                  icon={faAngleRight}
+                />
+              </div>
+            )}
+          </div>
           <div className="text-xs text-right w-full text-gray-400">
             <FontAwesomeIcon icon={faCircleInfo} className="mr-1" />
             Você pode arrastar as imagens para reordernar. A primeira será a

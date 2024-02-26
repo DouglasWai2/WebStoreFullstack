@@ -86,11 +86,19 @@ const NewProduct = () => {
     let changeId = e.target.id;
     let dimensions;
 
+
+    // Remove red border and invalid on input change
     if (error) e.target.classList.remove("invalid");
     e.target.classList.remove("!border-red-400");
+
+    // Files are handled differently
     if (changeName === "files") changeValue = Array.from(e.target.files);
+
+    // Format the price
     if (changeName === "price") changeValue = moneyMask(e.target.value);
 
+
+    // Handle features
     if (changeName.includes("features")) {
       setArray((s) => {
         const newArr = s.slice();
@@ -104,6 +112,7 @@ const NewProduct = () => {
       changeName = null;
     }
 
+    // Format dimensions values (weight, width, height and length)
     if (changeId.includes("dimensions")) {
       dimensions = {
         ...product.dimensions,
@@ -113,7 +122,7 @@ const NewProduct = () => {
     }
 
     setProduct((productInfo) =>
-      changeName
+      changeName // If it is not dimensions change
         ? {
             ...productInfo,
             [changeName]: changeValue,
@@ -181,6 +190,7 @@ const NewProduct = () => {
       ...productInfo,
       files: items,
     }));
+    setDragging(null);
   }
 
   useEffect(() => {
