@@ -36,7 +36,7 @@ const LoginForm = () => {
     if (userData?.authorization) {
       window.localStorage.setItem("accessToken", userData.authorization);
       document.cookie = "loggedin=True; path=/";
-      navigate(-1, { replace: true });
+      navigate(`/`, { replace: true });
     }
   }, [error, userData, loading]);
 
