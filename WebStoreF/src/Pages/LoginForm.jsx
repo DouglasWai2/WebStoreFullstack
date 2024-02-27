@@ -34,9 +34,10 @@ const LoginForm = () => {
 
     // If logged in successfully set cookie and redirect
     if (userData?.authorization) {
-      window.localStorage.setItem("accessToken", userData.authorization);
-      document.cookie = "loggedin=True; path=/";
-      navigate(-1, { replace: true });
+      console.log(userData)
+      // window.localStorage.setItem("accessToken", userData.authorization);
+      // document.cookie = "loggedin=True; path=/";
+      // navigate(-1, { replace: true });
     }
   }, [error, userData, loading]);
 
