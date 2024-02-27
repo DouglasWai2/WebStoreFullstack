@@ -5,6 +5,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const app = express();
+
+app.set('trust proxy', 1)
+app.get('/api/v1/ip', (request, response) => response.send(request.ip))
+
 const {
   defaultLimiter,
   userLimiter,
