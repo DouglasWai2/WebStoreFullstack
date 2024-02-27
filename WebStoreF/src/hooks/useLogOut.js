@@ -4,7 +4,7 @@ const useLogOut = () => {
   async function logOut() {
     try {
       const data = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/auth/logout`,
+        `${import.meta.env.VITE_API_URL}/auth/logout`,
         {
           withCredentials: true,
         }
