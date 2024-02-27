@@ -24,7 +24,8 @@ async function setTokens(res, user) {
   return res
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 365,
     })
     .setHeader("Authorization", accessToken)
