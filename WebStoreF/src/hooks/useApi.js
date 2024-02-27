@@ -33,7 +33,7 @@ function useApi() {
 
         try {
           const response = await axios.get(
-            import.meta.env.VITE_API_URL + '/auth/refresh',
+            `${import.meta.env.VITE_API_URL}/auth/refresh`,
             {
               withCredentials: true,
             }
