@@ -35,8 +35,10 @@ const Home = ({ user, address, loading, refreshUser }) => {
       } else {
         setLastTime(now);
       }
+    if(data[counter] !== undefined) {
       setCategories((categories) => [...categories, data[counter]]);
       setCounter((counter) => counter + 1);
+    }
     }
   }, [counter, categories, data, lastTime]);
 
@@ -64,11 +66,21 @@ const Home = ({ user, address, loading, refreshUser }) => {
     refreshUser,
   };
 
+  useEffect(() => {
+    if(toggleCard) {
+      document.body.style.overflow = "hidden";
+    }
+    if(!toggleCard) {
+      document.body.style.overflow = "auto";
+    }
+  }, [toggleCard])
+
   return (
     <>
+   { toggleCard && <div className="absolute right-0 top-0 w-screen h-screen bg-black/50 overflow-hidden flex items-center justify-center z-30"></div>}
       {loading && <TopBarProgress />}
       <Navbar {...props} />
-      <main className={"w-full h-full " + (toggleCard && "brightness-50")}>
+      <main className={"w-full h-full"}>
         {toggleCart && <CartSideMenu setCart={setToggleCart} />}
         {location.pathname !== "/" ? (
           <Outlet context={{ ...props }} />

@@ -76,8 +76,10 @@ const MyStore = () => {
       } else {
         setLastTime(now);
       }
-      setCategories((categories) => [...categories, data?.categories[counter]]);
-      setCounter((counter) => counter + 1);
+      if(data[counter] !== undefined){
+        setCategories((categories) => [...categories, data?.categories[counter]]);
+        setCounter((counter) => counter + 1);
+      } 
     }
   }, [counter, categories, data, lastTime]);
 

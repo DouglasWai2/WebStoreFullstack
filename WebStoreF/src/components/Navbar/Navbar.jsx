@@ -8,7 +8,6 @@ import {
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { useLogOut } from "../../hooks/useLogOut";
 import SkeletonNavAddress from "../shared/SkeletonNavAddress";
 import NavCardMenu from "./NavCardMenu";
 
@@ -20,10 +19,11 @@ const Navbar = ({
   setToggleCard,
   setToggleCart,
 }) => {
-  const logOut = useLogOut();
   const [cartItemsNum, setCartItemsNum] = useState(
     JSON.parse(localStorage.getItem("cart"))?.length
   );
+
+ 
   const [yourAddress, setYourAddress] = useState([]);
 
   useEffect(() => {
@@ -40,6 +40,8 @@ const Navbar = ({
       setYourAddress(address.filter((item) => item.main));
     }
   }, [address]);
+
+
 
   return (
     <header>
@@ -99,10 +101,11 @@ const Navbar = ({
             >
               <img />
 
-              {<p className="">Olá, {user ? user.name : "Faça login"} </p>}
+              {<p className={toggleCard ? "z-50" : "z-0"}>Olá, {user ? user.name : "Faça login"} </p>}
               <FontAwesomeIcon
                 icon={faCaretDown}
                 style={{ color: "#94989e" }}
+                className={toggleCard ? "z-50" : "z-0"}
               />
             </div>
             {toggleCard && (

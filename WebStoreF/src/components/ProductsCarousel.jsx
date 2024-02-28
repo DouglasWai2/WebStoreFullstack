@@ -36,12 +36,12 @@ const ProductsCarousel = ({ text, queries, from, to, category }) => {
   }
 
   return (
-    <div className="bg-white py-6 px-4 max-w-[1440px] shadow rounded-md">
+    <div className="bg-white py-6 px-4 max-w-[1440px] w-full shadow rounded-md">
       <h1 className="text-2xl">     
         {phrase + ` ` + category}
       </h1>
       {fetching ? (
-        <div className="flex justify-center py-24">
+        <div className="flex justify-center py-[150px]">
           <div className="loader"></div>
         </div>
       ) : (
