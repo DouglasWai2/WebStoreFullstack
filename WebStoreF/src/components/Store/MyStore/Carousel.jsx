@@ -83,7 +83,8 @@ const CarouselStore = ({
                 })}
             </Carousel>
           </div>
-          <p className="absolute bottom-[10%] right-[50%] pointer-events-none text-gray-500 opacity-0 transition-all duration-300 group-hover:opacity-100 z-10">
+          <p className="absolute bottom-[10%] right-[50%] pointer-events-none 
+          text-gray-500 opacity-0 transition-all duration-300 group-hover:opacity-100 z-10">
             <FontAwesomeIcon icon={faCloudArrowUp} /> Você pode clicar para
             fazer upload do banner ou arrastar o arquivo até esta área
           </p>

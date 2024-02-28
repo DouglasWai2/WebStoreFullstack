@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar/Navbar";
 import { Outlet, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
 import CartSideMenu from "../components/Cart/CartSideMenu";
 import ProductsCarousel from "../components/ProductsCarousel";
@@ -10,7 +10,10 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [toggleCart, setToggleCart] = useState(false);
   const [productsIds, setProductsIds] = useState(null);
-  const location = useLocation()
+  const [counter, setCounter] = useState(2);
+  const [categories, setCategories] = useState([]);
+  const [lastTime, setLastTime] = useState(0);
+  const location = useLocation();
 
   useEffect(() => {
     var lvpIDs = JSON.parse(localStorage.getItem("lvpIDs"));
@@ -22,6 +25,25 @@ const Home = ({ user, address, loading, refreshUser }) => {
     loading: fetching,
     error,
   } = useFetchApi("/user/interests", "POST", productsIds);
+
+  const handleScroll = useCallback(() => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+      var now = new Date().getTime(); // Time in milliseconds
+      if (now - lastTime < 1000) {
+        console.log("teste");
+        return;
+      } else {
+        setLastTime(now);
+      }
+      setCategories((categories) => [...categories, data[counter]]);
+      setCounter((counter) => counter + 1);
+    }
+  }, [counter, categories, data, lastTime]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   TopBarProgress.config({
     barColors: {
@@ -51,8 +73,16 @@ const Home = ({ user, address, loading, refreshUser }) => {
         {location.pathname !== "/" ? (
           <Outlet context={{ ...props }} />
         ) : (
-        <div className="w-full flex justify-center">
-          <ProductsCarousel category={"Eletrônicos"} />
+          <div className="w-full flex flex-col items-center gap-8">
+            {categories && (
+              <>
+                <ProductsCarousel category={data && data[0]} />
+                <ProductsCarousel category={data && data[1]} />
+                {categories.map((item) => (
+                  <ProductsCarousel key={item} category={item} {...item} />
+                ))}
+              </>
+            )}
           </div>
         )}
       </main>

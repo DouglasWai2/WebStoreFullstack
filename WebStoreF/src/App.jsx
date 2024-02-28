@@ -29,6 +29,8 @@ function App() {
     refresh: refreshUser,
   } = useFetchApi(userUrl, "GET");
 
+  console.log(`Teste`)
+
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
     var re = new RegExp(name + "=([^;]+)");

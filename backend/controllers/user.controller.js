@@ -41,13 +41,12 @@ exports.getUsersInterests = async (req, res) => {
 };
 
 exports.updateUserData = async (req, res) => {
+  console.log(req.body)
   const data = req.body;
-  const user = await UserSchema.findById(req.userInfo.id);
+  let user = await UserSchema.findById(req.userInfo.id);
 
-  data.map((item) => {
-    if (Object.values(item)[0]) {
-      user[item.value] = Object.values(item)[0];
-    }
+  Object.keys(data).forEach((item) => {
+    if(item) user[item] = data[item];
   });
 
   try {
@@ -190,6 +189,7 @@ exports.sendAddressInfo = async (req, res) => {
 exports.updateMainAddress = async (req, res) => {
   const addressId = req.params.address_id;
   const userId = req.userInfo.id;
+  
   try {
     const foundUserAddressess = await AddressSchema.findOneAndUpdate(
       { user: userId, main: true },

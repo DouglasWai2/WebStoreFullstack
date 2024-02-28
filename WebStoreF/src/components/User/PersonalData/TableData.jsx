@@ -3,7 +3,7 @@ import EditButton from "../EditButton";
 import { formatPhoneNumber } from "../../../helpers/formatPhoneNumber";
 import { CPFMask } from "../../../helpers/CPFMask";
 
-const TableData = ({ item, editData, editForm, handleChange, index }) => {
+const TableData = ({ item, editForm, handleChange, index }) => {
   const [edit, setEdit] = useState();
 
   const handleClick = () => {
@@ -15,13 +15,11 @@ const TableData = ({ item, editData, editForm, handleChange, index }) => {
       {edit ? (
         <input
           name={Object.keys(item)[0]}
+          maxLength={item.maxLength || 200}
           onChange={(e) => handleChange(e, index)}
-          value={
-            (item.Celular && formatPhoneNumber(editData.Celular)) ||
-            (item.CPF && CPFMask(editData.CPF))
-          }
+          value={Object.values(item)[0]}
           type={item.type}
-          className="border-[1px] border-gray-400 focus:bg-gray-200 transition-colors duration-200 p-1 ml-5 max-sm:ml-0"
+          className="border-[1px] rounded-sm border-gray-400 focus:bg-gray-200 transition-colors duration-200 p-1 ml-5 max-sm:ml-0"
         />
       ) : (
         <>

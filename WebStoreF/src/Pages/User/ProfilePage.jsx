@@ -10,23 +10,13 @@ import { CPFMask } from "../../helpers/CPFMask";
 const ProfilePage = () => {
   const [userInfo, setUserInfo] = useState([]);
   const [editForm, setEditForm] = useState(false);
-  const [method, setMethod] = useState(null);
-  const [editData, setEditData] = useState([
-    { Nome: "", value: "name" },
-    { "Ultimo Nome": "", value: "lastName" },
-    { Email: "", value: "email" },
-    { Celular: "", value: "phone" },
-    { CPF: "", value: "cpf" },
-    {
-      "Data de Nascimento": "",
-      value: "birth",
-    },
-  ]);
-  const { data: response, loading: submiting } = useFetchApi(
-    "/user/update",
-    method,
-    editData
-  );
+  const [body, setBody] = useState(null);
+  const [editData, setEditData] = useState(null);
+  const {
+    data: response,
+    loading: submiting,
+    error,
+  } = useFetchApi("/user/update", "POST", body);
 
   const { user, address, loading } = useOutletContext();
 
@@ -40,14 +30,30 @@ const ProfilePage = () => {
     ); // new Date object is created here with the current client OS timezone
     return newDate.toLocaleDateString(); // then, it's converted to string again and in the current local format (DD/MM/YYYY)
   }
-  const varToString = (varObj) => {
-    return Object.keys(varObj)[0];
-  };
 
   const handleChange = (e, index) => {
-    let newArr = [...editData];
-    newArr[index][e.target.name] = e.target.value;
-    setEditData(newArr);
+    let newArr = [...userInfo];
+    let changeValue = e.target.value;
+
+    if (e.target.name === `CPF`) {
+      changeValue = CPFMask(e.target.value);
+    }
+
+    if (e.target.name === `Celular`) {
+      changeValue = formatPhoneNumber(e.target.value);
+    }
+
+    newArr[index][e.target.name] = changeValue;
+    setUserInfo(newArr);
+
+    setEditData((editData) =>
+      e.target.name === `Celular` || e.target.name === `CPF`
+        ? {
+            ...editData,
+            [newArr[index][`info`]]: changeValue.replace(/\D/g, ""),
+          }
+        : { ...editData, [newArr[index][`info`]]: changeValue }
+    );
   };
 
   useEffect(() => {
@@ -61,8 +67,13 @@ const ProfilePage = () => {
         { Nome: name, info: "name", type: "text" },
         { "Ultimo Nome": lastName, info: "lastName", type: "text" },
         { Email: email, info: "email", type: "email" },
-        { Celular: formatPhoneNumber(phone), info: "phone", type: "text" },
-        { CPF: CPFMask(cpf) || "", info: "cpf", type: "text" },
+        {
+          Celular: formatPhoneNumber(phone),
+          info: "phone",
+          type: "text",
+          maxLength: 14,
+        },
+        { CPF: CPFMask(cpf) || "", info: "cpf", type: "text", maxLength: 14 },
         {
           "Data de Nascimento": formatedBirth || "",
           info: "birth",
@@ -70,22 +81,18 @@ const ProfilePage = () => {
         },
       ]);
     }
+  }, [user]);
 
+  useEffect(() => {
     if (response && !loading) {
       window.location.reload();
     }
-  }, [user, response]);
+  }, [response, error]);
 
   function handleSubmit() {
-    const cpf = userInfo.find((element) => element.info === "cpf");
-    const phone = userInfo.find((element) => element.info === "phone");
-    const indexCPF = userInfo.indexOf(cpf);
-    const indexPhone = userInfo.indexOf(phone);
-    let newArr = [...editData];
-    newArr[indexCPF].CPF = newArr[indexCPF].CPF.replace(/\D/g, "");
-    newArr[indexPhone].Celular = newArr[indexPhone].Celular.replace(/\D/g, "");
-    setEditData(newArr);
-    setMethod("POST");
+
+    console.log(editData)
+    setBody(editData);
   }
 
   return (
@@ -108,7 +115,6 @@ const ProfilePage = () => {
                     <TableData
                       handleChange={handleChange}
                       editForm={editForm}
-                      editData={editData[index]}
                       item={item}
                       index={index}
                     />
@@ -117,7 +123,9 @@ const ProfilePage = () => {
               );
             })}
             <tr className="flex border-b-[1px] p-10 w-full max-sm:flex-col">
-              <th className="flex text-start items-center w-[20%] max-sm:w-full max-sm:justify-center">Endereço</th>
+              <th className="flex text-start items-center w-[20%] max-sm:w-full max-sm:justify-center">
+                Endereço
+              </th>
               <td className="w-full items-center flex justify-between max-sm:justify-normal max-sm:gap-3 max-sm:items-center">
                 <span className="ml-5">
                   {address && address.length
@@ -146,14 +154,14 @@ const ProfilePage = () => {
                 text="Salvar"
               />
             </div>
-            <div
-              className="cursor-pointer text-red-600 hover:underline"
+            <button
+              className="cursor-pointer bg-red-500 shadow-sm w-full rounded-md text-black hover:brightness-75"
               onClick={() => {
                 window.location.reload();
               }}
             >
               Cancelar
-            </div>
+            </button>
           </div>
         )}
       </div>
