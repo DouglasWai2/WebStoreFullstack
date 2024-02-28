@@ -98,8 +98,7 @@ exports.setCpfCnpj = async (req, res) => {
   }
 };
 
-exports.changeBanner = async ({ req, res }) => {
-  console.log(req)
+exports.changeBanner = async (req, res ) => {
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
@@ -112,7 +111,7 @@ exports.changeBanner = async ({ req, res }) => {
       try {
         if (!req.files.length) return;
         const regex = /([^/]+(\.\w+))$/;
-        store.storeBanner.forEach(async (item) => {
+        store.storeBanner.forEach((item) => {
           const match = item.match(regex);
 
           const command = new DeleteObjectCommand({

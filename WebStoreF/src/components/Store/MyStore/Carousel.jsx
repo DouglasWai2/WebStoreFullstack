@@ -9,21 +9,14 @@ import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 const CarouselStore = ({
   images,
   edit,
-  method,
   loading,
   placeholders,
-  refresh,
+  setBannerEdit,
+  bannerEdit
 }) => {
-  const [bannerEdit, setBannerEdit] = useState(null);
-  const [bannerImages, setBannerImages] = useState();
-  const headers = { "content-type": "multipart/form-data" };
 
-  const { data, error } = useFetchApi(
-    "/store/change-banner",
-    method,
-    bannerEdit,
-    headers
-  );
+  const [bannerImages, setBannerImages] = useState();
+  
 
   function handleChange(e) {
     setBannerEdit(e.target.files);
@@ -37,10 +30,6 @@ const CarouselStore = ({
     setBannerImages(images);
   }, [images]);
 
-  useEffect(() => {
-    if (data) refresh();
-    if (error) console.log(error);
-  }, [data, error]);
 
   return (
     <>
@@ -83,10 +72,10 @@ const CarouselStore = ({
                 })}
             </Carousel>
           </div>
-          <p className="absolute bottom-[10%] right-[50%] pointer-events-none 
+          <p className="absolute bottom-[50%] right-[50%] pointer-events-none 
           text-gray-500 opacity-0 transition-all duration-300 group-hover:opacity-100 z-10">
             <FontAwesomeIcon icon={faCloudArrowUp} /> Você pode clicar para
-            fazer upload do banner ou arrastar o arquivo até esta área
+            fazer upload do banner ou arrastar o(s) arquivo(s) até esta área
           </p>
         </label>
       ) : (

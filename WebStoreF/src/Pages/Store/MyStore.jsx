@@ -23,12 +23,19 @@ const MyStore = () => {
   const navigate = useNavigate();
   const { user } = useOutletContext();
   const location = useLocation();
+
   const [edit, setEdit] = useState(false);
   const [method, setMethod] = useState(null);
   const [url, setUrl] = useState(null);
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
   const [lastTime, setLastTime] = useState(0);
+  const [bannerEdit, setBannerEdit] = useState(null);
+  const [imageEdit, setImageEdit] = useState(null);
+  const [logoBody, setLogoBody] = useState(null);
+  const [bannerBody, setBannerBody] = useState(null);
+
+  const headers = { "content-type": "multipart/form-data" };
   const placeholders = [
     CarouselPlaceholder1,
     CarouselPlaceholder2,
@@ -38,6 +45,25 @@ const MyStore = () => {
   //Fetch store info and products
   const { data, loading, error, refresh } = useFetchApi(url, "GET");
 
+  const { data: bannerResponse, loading: editingBanner } = useFetchApi(
+    "/store/change-banner",
+    "POST",
+    bannerBody,
+    headers
+  );
+  const { data: logoResponse, loading: editingLogo } = useFetchApi(
+    "/store/change-image",
+    "POST",
+    logoBody,
+    headers
+  );
+
+  useEffect(() => {
+    if (logoResponse || bannerResponse) {
+      window.location.reload();
+    }
+  }, [logoResponse, bannerResponse]);
+
   useEffect(() => {
     if (user && user.role !== "Seller") navigate("/store");
   }, [user]);
@@ -46,7 +72,6 @@ const MyStore = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       var now = new Date().getTime(); // Time in milliseconds
       if (now - lastTime < 1000) {
-        console.log("teste");
         return;
       } else {
         setLastTime(now);
@@ -65,9 +90,15 @@ const MyStore = () => {
     setUrl(`${location.pathname}`);
   }, []);
 
+
   //send edit info to backend
   function handleSubmit() {
-    setMethod("POST");
+    if (bannerEdit) {
+      setBannerBody(bannerEdit);
+    }
+    if (imageEdit) {
+      setLogoBody(imageEdit);
+    }
   }
 
   function generateUrl(data) {
@@ -85,6 +116,8 @@ const MyStore = () => {
           placeholders={placeholders}
           loading={loading}
           refresh={refresh}
+          setBannerEdit={setBannerEdit}
+          bannerEdit={bannerEdit}
         />
         <div className="max-w-[1280px] w-full">
           {loading && <TopBarProgress />}
@@ -105,6 +138,8 @@ const MyStore = () => {
                       edit={edit}
                       image={data?.storeImage}
                       refresh={refresh}
+                      setImageEdit={setImageEdit}
+                      imageEdit={imageEdit}
                     />
                   </div>
                   <div>
@@ -125,18 +160,25 @@ const MyStore = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex flex-col items-end">
+                <div className="flex gap-1 flex-col items-end py-2">
                   {edit ? (
                     <>
-                      <p className="link !text-lg h-fit" onClick={handleSubmit}>
+                      <button
+                        className="bg-blue-600 border-2 border-blue-600 !text-lg text-white px-6 rounded h-fit hover:bg-white hover:text-blue-600 duration-200"
+                        onClick={handleSubmit}
+                      >
                         Salvar
-                      </p>
-                      <p
-                        className="link !text-red-600 h-fit flex items-center"
-                        onClick={() => window.location.reload()}
+                      </button>
+                      <button
+                        className="bg-red-600  text-white text-sm px-1 rounded h-fit w-full hover:brightness-75 duration-300"
+                        onClick={() => {
+                          setEdit(false);
+                          setBannerEdit(null);
+                          setImageEdit(null);
+                        }}
                       >
                         Cancelar
-                      </p>
+                      </button>
                     </>
                   ) : (
                     user &&
@@ -204,8 +246,7 @@ const MyStore = () => {
                 })}{" "}
               </>
             ) : (
-              !loading &&
-              <h1 className="text-3xl">Nenhum produto</h1>
+              !loading && <h1 className="text-3xl">Nenhum produto</h1>
             )}
           </div>
         </div>

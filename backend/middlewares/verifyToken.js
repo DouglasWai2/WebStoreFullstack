@@ -17,7 +17,6 @@ const verifyToken = async (req, res, next) => {
   // If there's no user from given refresh token, token is already deleted (user could been hacked)
   try {
     const foundUser = await UserSchema.findOne({ refreshTokens: refreshToken });
-    console.log(foundUser)
     if (!foundUser) return
   } catch (error) {
     console.log(error);

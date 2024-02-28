@@ -4,21 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useFetchApi } from "../../../hooks/useFetchApi";
 import LoadingSpinner from "../../shared/LoadingSpinner";
 
-const Logo = ({ edit, image, method }) => {
-  const [imageEdit, setImageEdit] = useState(null);
-  const headers = { "content-type": "multipart/form-data" };
+const Logo = ({ edit, image, setImageEdit, imageEdit }) => {
 
-  const { data, error } = useFetchApi(
-    "/store/change-image",
-    method,
-    imageEdit,
-    headers
-  );
 
-  useEffect(() => {
-    if (data) refresh();
-    if (error) console.log(error);
-  }, [data, error]);
 
   return (
     <>
