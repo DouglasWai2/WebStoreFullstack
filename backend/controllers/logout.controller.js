@@ -21,6 +21,11 @@ exports.logout = async (req, res) => {
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 365,
       })
+      .clearCookie("loggedin", {
+        sameSite: "none",
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+      })
       .status(200)
       .send("User Logged Out succesfully");
   } catch (error) {

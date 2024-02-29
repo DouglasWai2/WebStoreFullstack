@@ -1,5 +1,5 @@
 const UserSchema = require("../models/user.model");
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 const { jwtExpiration, jwtRefreshExpiration } = require("../utils/expiration");
 require("dotenv").config();
 
@@ -24,6 +24,11 @@ async function setTokens(res, user) {
   return res
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
+      sameSite: "none",
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365,
+    })
+    .cookie("loggedin", true, {
       sameSite: "none",
       secure: true,
       maxAge: 1000 * 60 * 60 * 24 * 365,
