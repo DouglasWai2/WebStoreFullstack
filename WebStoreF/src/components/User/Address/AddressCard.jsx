@@ -10,6 +10,7 @@ import { useFetchApi } from "../../../hooks/useFetchApi";
 
 const AddressCard = ({ address }) => {
   const [url, setUrl] = useState(null);
+  console.log(address)
 
   const { data, loading, error } = useFetchApi(url, "GET");
 
@@ -55,14 +56,14 @@ const AddressCard = ({ address }) => {
           <p>Endereço selecionado</p>
         ) : (
           <button
-            onClick={() => setUrl("/user/address/set/" + address.id)}
+            onClick={() => setUrl("/user/address/set/" + address._id)}
             className="bg-yellow-300 w-full h-fit px-3 hover:bg-yellow-400"
           >
             Definir como principal
           </button>
         )}
         <button
-          onClick={() => setUrl("/user/address/delete/" + address.id)}
+          onClick={() => setUrl("/user/address/delete/" + address._id)}
           className="w-max text-red-500 px-2"
         >
           <FontAwesomeIcon icon={faTrash} />
