@@ -374,10 +374,10 @@ const NewProduct = () => {
           </label>
         </div>
         <div className="">
-          <h2 className="text-lg h-min">Dimensões do produto</h2>
+          <h2 className="text-lg h-min">Dimensões da embalagem</h2>
           <p className="text-xs w-full h-min text-gray-400">
             <FontAwesomeIcon icon={faCircleInfo} className="mr-1" />
-            Considerando a embalagem
+            Considerando o produto dentro
           </p>
         </div>
         <FormInput

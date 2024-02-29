@@ -68,30 +68,32 @@ const MyStore = () => {
     if (user && user.role !== "Seller") navigate("/store");
   }, [user]);
 
-  const handleScroll = useCallback(() => {
+  const handleStoreScroll = useCallback(() => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       var now = new Date().getTime(); // Time in milliseconds
-      if (now - lastTime < 1000) {
+      if (now - lastTime < 500) {
         return;
       } else {
         setLastTime(now);
       }
-      if(data[counter] !== undefined){
-        setCategories((categories) => [...categories, data?.categories[counter]]);
+      if (data.categories[counter]) {
+        setCategories((categories) => [
+          ...categories,
+          data?.categories[counter],
+        ]);
         setCounter((counter) => counter + 1);
-      } 
+      }
     }
   }, [counter, categories, data, lastTime]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+    window.addEventListener("scroll", handleStoreScroll);
+    return () => window.removeEventListener("scroll", handleStoreScroll);
+  }, [handleStoreScroll]);
 
   useEffect(() => {
     setUrl(`${location.pathname}`);
   }, []);
-
 
   //send edit info to backend
   function handleSubmit() {
@@ -234,10 +236,10 @@ const MyStore = () => {
                   to={10}
                   storeId={data && data._id}
                 />
-                {categories.map((item) => {
+                {categories.map((item, index) => {
                   return (
                     <ProductCategory
-                      key={item}
+                      key={item + index}
                       text={"Mais produtos em " + item}
                       queries={`category=${item}&order=desc&sortby=sells`}
                       from={0}

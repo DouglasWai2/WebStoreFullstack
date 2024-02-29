@@ -30,7 +30,7 @@ const LikeButton = ({ storeId, user, numLikes }) => {
           id="likes"
           hidden
           type="checkbox"
-          checked={data ? data.liked : user?.includes(storeId)}
+          checked={data ? data.liked : user?.includes(storeId) || false}
           onChange={(e) => {}}
         />
         <FontAwesomeIcon icon={faHeart} className="pointer-events-none" />

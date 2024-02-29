@@ -19,6 +19,7 @@ const ProductCategory = ({ text, queries, from, to, storeId }) => {
     e,
   } = useFetchApi(productsUrl, "GET");
 
+
   return fetching ? (
     <div className="flex justify-center py-24">
       <div className="loader"></div>

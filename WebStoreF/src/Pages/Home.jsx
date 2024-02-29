@@ -12,7 +12,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [toggleCart, setToggleCart] = useState(false);
   const [productsIds, setProductsIds] = useState(null);
-  const [counter, setCounter] = useState(2);
+  const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
   const [lastTime, setLastTime] = useState(0);
   const location = useLocation();
@@ -34,7 +34,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
     error: errorImages,
   } = useFetchApi("/store/get-carousel-images", "POST", data);
 
-  const handleScroll = useCallback(() => {
+  const handleHomeScroll = useCallback(() => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       var now = new Date().getTime(); // Time in milliseconds
       if (now - lastTime < 1000) {
@@ -42,17 +42,20 @@ const Home = ({ user, address, loading, refreshUser }) => {
       } else {
         setLastTime(now);
       }
-      if (data.interests[counter] !== undefined) {
-        setCategories((categories) => [...categories, data.interests[counter]]);
+      if (data.interest[counter]) {
+        console.log("Teste")
+        setCategories((categories) => [...categories, data.interest[counter]]);
         setCounter((counter) => counter + 1);
       }
     }
   }, [counter, categories, data, lastTime]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+    if (location.pathname === "/") {
+      window.addEventListener("scroll", handleHomeScroll);
+    }
+    return () => window.removeEventListener("scroll", handleHomeScroll);
+  }, [handleHomeScroll]);
 
   TopBarProgress.config({
     barColors: {
@@ -99,7 +102,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
               <div className="max-w-[1440px] h-[400px] overflow-hidden">
                 {fetchingImages ? (
                   <div className="w-full h-full flex justify-center items-center">
-                    <LoadingSpinner size="w-12 h-12"/>
+                    <LoadingSpinner size="w-12 h-12" />
                   </div>
                 ) : (
                   images && (
@@ -112,7 +115,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
                       showArrows={false}
                     >
                       {images.map((item, i) => {
-                        return <img className="" src={item} />;
+                        return <img className="" key={item} src={item} />;
                       })}
                     </Carousel>
                   )

@@ -2,7 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFetchApi } from "../hooks/useFetchApi";
 import ProductCard from "./Store/MyStore/ProductCard";
 
-const ProductsCarousel = ({ text, queries, from, to, category, topSelling }) => {
+const ProductsCarousel = ({
+  text,
+  queries,
+  from,
+  to,
+  category,
+  topSelling,
+}) => {
   const [productsUrl, setProductsUrl] = useState(null);
   const [toT, setToT] = useState(to);
   const [phrase, setPhrase] = useState(null);
@@ -18,9 +25,9 @@ const ProductsCarousel = ({ text, queries, from, to, category, topSelling }) => 
 
   useEffect(() => {
     if (category && !topSelling) {
-      setPhrase(prhasesArray[Math.floor(Math.random() * prhasesArray.length)])
+      setPhrase(prhasesArray[Math.floor(Math.random() * prhasesArray.length)]);
       setProductsUrl(`/catalog/category/${category}`);
-    } 
+    }
   }, [category, queries, toT]);
 
   useEffect(() => {
@@ -43,7 +50,7 @@ const ProductsCarousel = ({ text, queries, from, to, category, topSelling }) => 
 
   return (
     <div className="bg-white py-6 px-4 max-w-[1440px] w-full shadow rounded-md">
-      <h1 className="text-2xl">     
+      <h1 className="text-2xl">
         {!topSelling ? phrase + ` ` + category : "Mais vendidos hoje"}
       </h1>
       {fetching ? (
