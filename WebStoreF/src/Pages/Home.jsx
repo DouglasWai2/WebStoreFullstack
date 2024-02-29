@@ -5,6 +5,8 @@ import TopBarProgress from "react-topbar-progress-indicator";
 import CartSideMenu from "../components/Cart/CartSideMenu";
 import ProductsCarousel from "../components/ProductsCarousel";
 import { useFetchApi } from "../hooks/useFetchApi";
+import { Carousel } from "react-responsive-carousel";
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
 const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
@@ -26,19 +28,24 @@ const Home = ({ user, address, loading, refreshUser }) => {
     error,
   } = useFetchApi("/user/interests", "POST", productsIds);
 
+  const {
+    data: images,
+    loading: fetchingImages,
+    error: errorImages,
+  } = useFetchApi("/store/get-carousel-images", "POST", data);
+
   const handleScroll = useCallback(() => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
       var now = new Date().getTime(); // Time in milliseconds
       if (now - lastTime < 1000) {
-        console.log("teste");
         return;
       } else {
         setLastTime(now);
       }
-    if(data[counter] !== undefined) {
-      setCategories((categories) => [...categories, data[counter]]);
-      setCounter((counter) => counter + 1);
-    }
+      if (data.interests[counter] !== undefined) {
+        setCategories((categories) => [...categories, data.interests[counter]]);
+        setCounter((counter) => counter + 1);
+      }
     }
   }, [counter, categories, data, lastTime]);
 
@@ -67,17 +74,19 @@ const Home = ({ user, address, loading, refreshUser }) => {
   };
 
   useEffect(() => {
-    if(toggleCard) {
+    if (toggleCard) {
       document.body.style.overflow = "hidden";
     }
-    if(!toggleCard) {
+    if (!toggleCard) {
       document.body.style.overflow = "auto";
     }
-  }, [toggleCard])
+  }, [toggleCard]);
 
   return (
     <>
-   { toggleCard && <div className="absolute right-0 top-0 w-screen h-screen bg-black/50 overflow-hidden flex items-center justify-center z-30"></div>}
+      {toggleCard && (
+        <div className="absolute right-0 top-0 w-screen h-screen bg-black/50 overflow-hidden flex items-center justify-center z-30"></div>
+      )}
       {loading && <TopBarProgress />}
       <Navbar {...props} />
       <main className={"w-full h-full"}>
@@ -85,17 +94,40 @@ const Home = ({ user, address, loading, refreshUser }) => {
         {location.pathname !== "/" ? (
           <Outlet context={{ ...props }} />
         ) : (
-          <div className="w-full flex flex-col items-center gap-8">
-            {categories && (
-              <>
-                <ProductsCarousel category={data && data[0]} />
-                <ProductsCarousel category={data && data[1]} />
-                {categories.map((item) => (
-                  <ProductsCarousel key={item} category={item} {...item} />
-                ))}
-              </>
-            )}
-          </div>
+          <>
+            <div className="w-full flex flex-col items-center gap-8">
+              <div className="max-w-[1440px] h-[400px] overflow-hidden">
+                {fetchingImages ? (
+                  <div className="w-full h-full flex justify-center items-center">
+                    <LoadingSpinner size="w-12 h-12"/>
+                  </div>
+                ) : (
+                  images && (
+                    <Carousel
+                      axis="horizontal"
+                      autoPlay={true}
+                      infiniteLoop={true}
+                      showIndicators={false}
+                      showThumbs={false}
+                      showArrows={false}
+                    >
+                      {images.map((item, i) => {
+                        return <img className="" src={item} />;
+                      })}
+                    </Carousel>
+                  )
+                )}
+              </div>
+              <ProductsCarousel topSelling />
+              {categories && (
+                <>
+                  {categories.map((item) => (
+                    <ProductsCarousel key={item} category={item} {...item} />
+                  ))}
+                </>
+              )}
+            </div>
+          </>
         )}
       </main>
     </>

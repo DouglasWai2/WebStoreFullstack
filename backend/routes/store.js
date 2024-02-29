@@ -9,6 +9,7 @@ const {
   myProducts,
   deleteProducts,
   discountProducts,
+  getCarouselImages,
 } = require("../controllers/store.controller");
 const auth = require("../middlewares/verifyToken");
 const router = express.Router();
@@ -24,5 +25,6 @@ router.post("/store/change-banner", auth, upload.array("files[]", 3), changeBann
 router.post("/store/change-image", auth, upload.single("file"), changeImage);
 router.post("/store/my-store/delete-products", auth, deleteProducts);
 router.post("/store/my-store/discount-products", auth, discountProducts);
+router.post("/store/get-carousel-images", getCarouselImages);
 
 module.exports = router;

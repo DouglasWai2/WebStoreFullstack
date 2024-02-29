@@ -98,8 +98,7 @@ exports.setCpfCnpj = async (req, res) => {
   }
 };
 
-exports.changeBanner = async (req, res ) => {
-
+exports.changeBanner = async (req, res) => {
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
 
@@ -284,3 +283,41 @@ exports.discountProducts = async (req, res) => {
   }
 };
 
+exports.getCarouselImages = async (req, res) => {
+  const { storeInterests } = req.body;
+  const { interest } = req.body;
+  const carouselImages = new Set();
+
+  try {
+    await Promise.all(
+      storeInterests.map(async (storeInterest) => {
+        const stores = await StoreSchema.find({ storeCategory: storeInterest })
+          .sort({
+            likes: -1,
+          })
+          .limit(3);
+        stores.forEach((store) => {
+          carouselImages.add(store.storeBanner[0]);
+        });
+      })
+    );
+
+    await Promise.all(
+      interest.map(async (interest) => {
+        const stores = await StoreSchema.find({ categories: interest })
+          .sort({
+            likes: -1,
+          })
+          .limit(3);
+
+        stores.forEach((store) => {
+          carouselImages.add(store.storeBanner[0]);
+        });
+      })
+    );
+
+    res.status(200).send([...carouselImages]);
+  } catch (error) {
+    console.log(error);
+  }
+};

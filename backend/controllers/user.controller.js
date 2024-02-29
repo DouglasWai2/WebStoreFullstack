@@ -22,31 +22,40 @@ exports.sendUserInfo = async (req, res) => {
 exports.getUsersInterests = async (req, res) => {
   const productsIds = req.body;
   var interests = new Set();
+  var storeInterest = new Set();
 
   try {
     await Promise.all(
       productsIds.map(async (element) => {
         const { tags } = await ProductSchema.findById(element);
+        const { storeCategory } = await StoreSchema.findOne({
+          products: element,
+        });
         tags.forEach((tag) => {
           interests.add(tag);
         });
+        storeInterest.add(storeCategory);
       })
     );
 
-    const interestsArray = [...interests];
-    return res.status(200).send(interestsArray);
+    const userInterests = {
+      interest: [...interests],
+      storeInterests: [...storeInterest],
+    };
+
+    return res.status(200).send(userInterests);
   } catch (error) {
     console.log(error);
   }
 };
 
 exports.updateUserData = async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const data = req.body;
   let user = await UserSchema.findById(req.userInfo.id);
 
   Object.keys(data).forEach((item) => {
-    if(item) user[item] = data[item];
+    if (item) user[item] = data[item];
   });
 
   try {
@@ -189,7 +198,7 @@ exports.sendAddressInfo = async (req, res) => {
 exports.updateMainAddress = async (req, res) => {
   const addressId = req.params.address_id;
   const userId = req.userInfo.id;
-  
+
   try {
     const foundUserAddressess = await AddressSchema.findOneAndUpdate(
       { user: userId, main: true },

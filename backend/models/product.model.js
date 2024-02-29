@@ -15,10 +15,11 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     store: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Stores",
+      ref: "Store",
     },
     rating: { type: Number, default: 0.0, min: 0, max: 5 },
     sells: { type: Number, default: 0, min: 0 },
+    sellsToday: { type: Number, default: 0, min: 0 },
     discount: { type: Number, min: 0, max: 1, default: 0},
     dimensions: {
       weight: { type: Number, required: true },

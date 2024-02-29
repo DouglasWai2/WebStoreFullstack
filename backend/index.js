@@ -4,10 +4,13 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
-const app = express();
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(console.log("DB Connected"))
+  .catch((error) => console.log(error));
 
-app.set('trust proxy', 1)
-app.get('/api/v1/ip', (request, response) => response.send(request.ip))
+
+const app = express();
 
 const {
   defaultLimiter,
@@ -21,15 +24,12 @@ app.use(bodyParser.json());
 app.use(cors({ credentials: true, origin: `${process.env.ORIGIN}` }));
 app.use(cookieParser());
 
-mongoose
-  .connect(process.env.MONGODB_URI)
-  .then(console.log("DB Connected"))
-  .catch((error) => console.log(error));
-
 app.get("/api/v1", (req, res) => {
   console.log("user hit the server");
   return res.status(200).send("Server OK")
 });
+app.set('trust proxy', 1)
+app.get('/api/v1/ip', (req, res) => res.send(req.ip))
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Credentials", true);

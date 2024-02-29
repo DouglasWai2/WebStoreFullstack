@@ -143,9 +143,22 @@ exports.productsByCategory = async (req, res) => {
     const products = await productSchema
       .find({ tags: category })
       .select("title thumbnail brand price rating sells discount")
-      .sort({ sells: 1 })
+      .sort({ sells: -1 })
       .limit(20);
-      return setTimeout(() => res.status(200).send(products), 1000); //res.status(200).send(products);
+    return setTimeout(() => res.status(200).send(products), 1000); //res.status(200).send(products);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.mostSelledProducts = async (req, res) => {
+  try {
+    const products = await productSchema
+      .find()
+      .sort({ sellsToday: -1 })
+      .select("title thumbnail brand price rating sells discount")
+      .limit(20);
+    res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }
