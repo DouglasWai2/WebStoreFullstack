@@ -1,11 +1,11 @@
 import Logo from "../logo-no-background-2.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import Google from "../assets/google.svg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../hooks/useFetchApi";
 import SubmitButton from "../components/shared/SubmitButton";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const LoginForm = () => {
   const [invalid, setInvalid] = useState("");
@@ -14,6 +14,14 @@ const LoginForm = () => {
   const [url, setUrl] = useState("");
   const [body, setBody] = useState(null);
   const navigate = useNavigate();
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      setBody(codeResponse);
+      setUrl("/auth/login/google");
+      if (error) refresh();
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,7 +31,12 @@ const LoginForm = () => {
   const handleEmailInput = (e) => setEmail(e.target.value);
   const handlePasswordInput = (e) => setPassword(e.target.value);
 
-  const { data: userData, loading, error } = useFetchApi(url, "POST", body);
+  const {
+    data: userData,
+    loading,
+    error,
+    refresh,
+  } = useFetchApi(url, "POST", body);
 
   useEffect(() => {
     if (!loading && error?.data.error === "User does not exist") {
@@ -90,16 +103,20 @@ const LoginForm = () => {
               loading={loading}
               text="Fazer Login"
             />
-            <GoogleLogin
-            width={'full'}
-              onSuccess={(credentialResponse) => {
-                setBody(credentialResponse);
-                setUrl("/auth/login/google");
-              }}
-              onError={() => {
-                console.log("Login Failed");
-              }}
-            />
+            <div className="relative flex justify-center w-full text-gray-500">
+              <span className="w-full border-b-[1px] border-gray-500 absolute top-[50%]"></span>
+              <p className="bg-[#F9F7F1] z-10 px-4">Ou faça login com</p>
+            </div>
+            <button
+              onClick={() => login()}
+              className="flex justify-center items-center gap-2 py-2
+             border-gray-200 border-[1px] bg-white hover:bg-gray-100 rounded-sm
+             duration-200 font-semibold
+             "
+            >
+              Google
+              <img className="h-4" src={Google} />
+            </button>
           </form>
         </div>
         <div className="mt-6 text-center w-full box-shadow-bottom">

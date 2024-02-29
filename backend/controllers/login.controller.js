@@ -2,8 +2,6 @@ const UserSchema = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const { OAuth2Client } = require("google-auth-library");
-const client = new OAuth2Client();
 const setTokens = require("../helpers/setTokens");
 const axios = require("axios");
 
@@ -34,26 +32,25 @@ exports.login = async (req, res) => {
 
 exports.googleAuth = async (req, res) => {
   let user;
-  const { credential } = req.body;
+  const credentials = req.body;
 
   try {
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
-      // Or, if multiple clients access the backend:
-      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-    });
-    const payload = ticket.getPayload();
-    user = await UserSchema.findOne({ gid: payload.sub }); // Search for user by google id
+
+    const { data } = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${credentials.access_token}`,
+    );
+
+
+    user = await UserSchema.findOne({ gid: data.id }); // Search for user by google id
     if (!user) {
-      user = await UserSchema.findOne({ email: payload.email }); // Check if user has an account if no user has been found by given google id
+      user = await UserSchema.findOne({ email: data.email }); // Check if user has an account if no user has been found by given google id
       if (!user) {
         const newUser = new UserSchema({
-          email: payload.email,
-          name: payload.given_name,
-          lastName: payload.family_name,
+          email: data.email,
+          name: data.given_name,
+          lastName: data.family_name,
           password: Math.random().toString(36).slice(-8),
-          confirmedEmail: payload.email_verified,
+          confirmedEmail: data.email_verified,
           auth_method: "google",
         });
         await newUser.save(); //Store new user if no account
@@ -62,7 +59,7 @@ exports.googleAuth = async (req, res) => {
     }
 
     if (!user.gid) {
-      user.gid = payload.sub; 
+      user.gid = data.sub; 
       await user.save(); // Reference google id to user
     }
 

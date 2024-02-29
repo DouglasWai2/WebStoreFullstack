@@ -15,17 +15,17 @@ const NavCardMenu = ({ user, setToggleCard }) => {
       <div
         ref={wrapperRef}
         className="
-        bg-white absolute right-0 top-[100%] h-fit p-6 
-        w-max pl-20
-        text-right
-        flex flex-col gap-2 items-center z-30"
+        bg-white absolute right-0 top-[100%] h-fit p-6 z-30"
       >
         {user ? (
           // if user is logged in, render this
 
-          <>
-            <div className="flex flex-col w-full gap-4">
-            <div className="w-full border-r-[1px] border-gray-600 pr-4">
+          <div
+            className="w-max pl-20
+          flex flex-col gap-2 items-center"
+          >
+            <div className="flex flex-col w-full gap-4 text-right">
+              <div className="w-full border-r-[1px] border-gray-600 pr-4">
                 <p className="text-black">Seu perfil</p>
                 <Link
                   onClick={() => setToggleCard(false)}
@@ -92,10 +92,10 @@ const NavCardMenu = ({ user, setToggleCard }) => {
             >
               Sair
             </a>
-          </>
+          </div>
         ) : (
           // if user is not logged in, render this
-          <>
+          <div className="w-max flex flex-col gap-3">
             <a
               href="/login"
               className="bg-yellow-400 w-[100%] cursor-pointer text-black text-center hover:bg-yellow-600 transition-colors duration-200"
@@ -108,7 +108,7 @@ const NavCardMenu = ({ user, setToggleCard }) => {
             >
               Não possui conta? Cadastre-se
             </a>
-          </>
+          </div>
         )}
       </div>
     </>

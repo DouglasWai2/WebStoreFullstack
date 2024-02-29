@@ -296,25 +296,27 @@ exports.getCarouselImages = async (req, res) => {
             likes: -1,
           })
           .limit(3);
-        stores.forEach((store) => {
-          carouselImages.add(store.storeBanner[0]);
-        });
+
+          stores.forEach((store) => {
+            if(store.storeBanner[0]) carouselImages.add(store.storeBanner[0]);
+          });
+        })
+        );
+        
+        await Promise.all(
+          interest.map(async (interest) => {
+            const stores = await StoreSchema.find({ categories: interest })
+            .sort({
+              likes: -1,
+            })
+            .limit(3);
+            
+            stores.forEach((store) => {
+              if(store.storeBanner[0]) carouselImages.add(store.storeBanner[0]);
+            });
       })
     );
 
-    await Promise.all(
-      interest.map(async (interest) => {
-        const stores = await StoreSchema.find({ categories: interest })
-          .sort({
-            likes: -1,
-          })
-          .limit(3);
-
-        stores.forEach((store) => {
-          carouselImages.add(store.storeBanner[0]);
-        });
-      })
-    );
 
     res.status(200).send([...carouselImages]);
   } catch (error) {

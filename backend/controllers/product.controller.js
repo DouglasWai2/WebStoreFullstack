@@ -3,6 +3,7 @@ const StoreSchema = require("../models/store.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
+const capitalizeFirstLetter = require("../helpers/capitalizeFirstLetter");
 
 exports.addProduct = async (req, res) => {
   const {
@@ -20,7 +21,6 @@ exports.addProduct = async (req, res) => {
   const newProduct = new productSchema({
     title,
     description,
-    tags,
     genre,
     brand,
     model,
@@ -34,6 +34,10 @@ exports.addProduct = async (req, res) => {
       return file.location;
     });
   }
+
+  newProduct.tags = tags.map((tag) => {
+    return capitalizeFirstLetter(tag);
+  });
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id });
