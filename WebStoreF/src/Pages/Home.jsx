@@ -43,7 +43,6 @@ const Home = ({ user, address, loading, refreshUser }) => {
         setLastTime(now);
       }
       if (data.interest[counter]) {
-        console.log("Teste")
         setCategories((categories) => [...categories, data.interest[counter]]);
         setCounter((counter) => counter + 1);
       }
