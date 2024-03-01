@@ -10,7 +10,6 @@ import { useFetchApi } from "../../../hooks/useFetchApi";
 
 const AddressCard = ({ address }) => {
   const [url, setUrl] = useState(null);
-  console.log(address)
 
   const { data, loading, error } = useFetchApi(url, "GET");
 

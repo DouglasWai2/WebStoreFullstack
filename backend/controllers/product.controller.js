@@ -134,7 +134,7 @@ exports.allProducts = async (req, res) => {
       },
     });
 
-    return setTimeout(() => res.status(200).send(products), 1000); //res.status(200).send(products);
+    return res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }
@@ -149,7 +149,7 @@ exports.productsByCategory = async (req, res) => {
       .select("title thumbnail brand price rating sells discount")
       .sort({ sells: -1 })
       .limit(20);
-    return setTimeout(() => res.status(200).send(products), 1000); //res.status(200).send(products);
+    return res.status(200).send(products);
   } catch (error) {
     console.log(error);
   }
