@@ -45,6 +45,8 @@ function App() {
     }
   }
 
+  console.log(loggedIn)
+
   useEffect(() => {
     if (error?.data === "Access Denied. No token provided.") logOut(); // If loggedIn cookie is true but there's no access token, i.e. user is not logged in
   }, [error]);
