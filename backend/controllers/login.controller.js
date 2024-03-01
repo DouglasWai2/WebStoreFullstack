@@ -1,7 +1,6 @@
 const UserSchema = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
 const setTokens = require("../helpers/setTokens");
 const axios = require("axios");
 

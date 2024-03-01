@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetchApi } from "../hooks/useFetchApi";
 import SubmitButton from "../components/shared/SubmitButton";
 import { useGoogleLogin } from "@react-oauth/google";
+import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 const LoginForm = () => {
   const [invalid, setInvalid] = useState("");
