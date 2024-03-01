@@ -20,9 +20,9 @@ exports.search = async (req, res) => {
         storeName: { $regex: diacriticSensitiveRegex(search), $options: "i" },
       })
       .select("storeName storeImage");
- c
     return res.status(200).json({ products, stores });
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: error.message });
   }
 };
