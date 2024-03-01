@@ -32,6 +32,7 @@ app.set('trust proxy', 1)
 app.get('/api/v1/ip', (req, res) => res.send(req.ip))
 
 app.use(function (req, res, next) {
+  console.log("Setting CORS headers");
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Origin", `${process.env.ORIGIN}`);
   res.header(
@@ -42,12 +43,14 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
   );
+
+  console.log(res.getHeaders())
   next();
 });
 
 app.use("/api/v1", productsLimiter, require("./routes/catalog"));
 app.use("/api/v1", require("./routes/rating"));
-app.use("/api/v1", userLimiter, require("./routes/user"));
+app.use("/api/v1", require("./routes/user"));
 app.use("/api/v1", require("./routes/frete"));
 app.use("/api/v1", storeLimiter, require("./routes/store"));
 app.use("/api/v1", require("./routes/payments"));

@@ -49,6 +49,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
     }
   }, [counter, categories, data, lastTime]);
 
+
   useEffect(() => {
     if (location.pathname === "/") {
       window.addEventListener("scroll", handleHomeScroll);
