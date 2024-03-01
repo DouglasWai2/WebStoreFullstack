@@ -71,7 +71,8 @@ exports.sendProduct = async (req, res) => {
 
     return res.send(product);
   } catch (error) {
-    throw new Error(error);
+    console.log(error)
+    return res.status(400).send(error);
   }
 };
 

@@ -4,19 +4,24 @@ const StoreSchema = require("../models/store.model");
 const ProductSchema = require("../models/product.model");
 
 exports.sendUserInfo = async (req, res) => {
-  const user = await UserSchema.findById(req.userInfo.id).populate("address");
+  try {
+    const user = await UserSchema.findById(req.userInfo.id).populate("address");
 
-  res.status(200).json({
-    email: user.email,
-    name: user.name,
-    lastName: user.lastName,
-    cpf: user.cpf,
-    phone: user.phone,
-    birth: user.birth,
-    role: user.role,
-    saved_stores: user.saved_stores,
-    addressess: user.address,
-  });
+    res.status(200).json({
+      email: user.email,
+      name: user.name,
+      lastName: user.lastName,
+      cpf: user.cpf,
+      phone: user.phone,
+      birth: user.birth,
+      role: user.role,
+      saved_stores: user.saved_stores,
+      addressess: user.address,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error.message);
+  }
 };
 
 exports.getUsersInterests = async (req, res) => {

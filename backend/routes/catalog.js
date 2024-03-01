@@ -17,5 +17,4 @@ router.get("/catalog/:productId", sendProduct)
 router.get("/catalog/category/:category", productsByCategory)
 router.get("/catalog", mostSelledProducts)
 
-
 module.exports = router;

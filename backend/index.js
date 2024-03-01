@@ -63,6 +63,7 @@ app.use("/api/v1/auth", require("./routes/auth/register"));
 app.use("/api/v1/auth", require("./routes/auth/login"));
 app.use("/api/v1/auth", require("./routes/auth/refreshToken"));
 app.use("/api/v1/auth", require("./routes/auth/logout"));
+app.use("/api/v1", require("./routes/search"));
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is listening on port ${process.env.PORT}....`);

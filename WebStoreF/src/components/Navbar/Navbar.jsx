@@ -10,6 +10,9 @@ import {
 import { useEffect, useState } from "react";
 import SkeletonNavAddress from "../shared/SkeletonNavAddress";
 import NavCardMenu from "./NavCardMenu";
+import { useFetchApi } from "../../hooks/useFetchApi";
+import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../shared/LoadingSpinner";
 
 const Navbar = ({
   user,
@@ -23,8 +26,16 @@ const Navbar = ({
     JSON.parse(localStorage.getItem("cart"))?.length
   );
 
- 
+  const navigate = useNavigate();
   const [yourAddress, setYourAddress] = useState([]);
+  const [url, setUrl] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const {
+    data: result,
+    loading: searching,
+    error: searchError,
+  } = useFetchApi(url, "GET");
 
   useEffect(() => {
     const handleStorage = () => {
@@ -41,7 +52,16 @@ const Navbar = ({
     }
   }, [address]);
 
+  useEffect(() => {
+    var delayDebounceFn;
+    if (search) {
+      delayDebounceFn = setTimeout(() => {
+        setUrl(`/search?search=${search}`);
+      }, 2000);
+    }
 
+    return () => clearTimeout(delayDebounceFn);
+  }, [search]);
 
   return (
     <header>
@@ -83,14 +103,55 @@ const Navbar = ({
               </>
             )}
           </div>
-          <div className="w-full rounded-md overflow-hidden h-9 flex max-md:w-1/2">
-            <input className="w-full" />
-            <button className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200">
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                style={{ color: "#152128" }}
+          <div className="relative z-10 w-full h-9 max-md:w-1/2 text-black">
+            <div className="rounded-md h-full flex overflow-hidden">
+              <input
+                className="w-full px-3"
+                type="text"
+                onChange={(e) => setSearch(e.target.value)}
               />
-            </button>
+              <button className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200">
+                <FontAwesomeIcon
+                  icon={faMagnifyingGlass}
+                  style={{ color: "#152128" }}
+                />
+              </button>
+            </div>
+            {(searching || result) && (
+              <div className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2">
+                {searching ? (
+                  <div className="h-[50px] py-6 flex items-center justify-center w-full">
+                    <LoadingSpinner />
+                  </div>
+                ) : result && result.products.length > 0 ? (
+                  result.products.map((item) => {
+                    return (
+                      <div
+                        onClick={() =>
+                          navigate(`/catalog/${item.title}/${item._id}`)
+                        }
+                        className="flex py-2 px-4 items-center gap-2 group bg-white cursor-pointer hover:bg-[#188fa7]"
+                      >
+                        <div className="h-[50px] w-[50px] bg-white flex rounded-full overflow-hidden">
+                          <img
+                            className="w-full object-contain"
+                            src={item.thumbnail}
+                            alt={item.title}
+                          />
+                        </div>
+                        <p className="select-none pointer-events-none group-hover:text-white">
+                          {item.title}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-center py-6">
+                    Nenhum resultado encontrado
+                  </p>
+                )}
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-1 relative min-w-[150px] max-md:hidden">
             <div
@@ -101,7 +162,11 @@ const Navbar = ({
             >
               <img />
 
-              {<p className={toggleCard ? "z-50" : "z-0"}>Olá, {user ? user.name : "Faça login"} </p>}
+              {
+                <p className={toggleCard ? "z-50" : "z-0"}>
+                  Olá, {user ? user.name : "Faça login"}{" "}
+                </p>
+              }
               <FontAwesomeIcon
                 icon={faCaretDown}
                 style={{ color: "#94989e" }}
@@ -113,7 +178,11 @@ const Navbar = ({
             )}
           </div>
           <div className="hover-border p-2 items-center cursor-pointer w-fit hidden max-md:flex">
-          <FontAwesomeIcon icon={faBars} style={{ color: "#94989e" }} size='xl' />
+            <FontAwesomeIcon
+              icon={faBars}
+              style={{ color: "#94989e" }}
+              size="xl"
+            />
           </div>
           <div
             onClick={() => {
@@ -124,7 +193,7 @@ const Navbar = ({
             <p className="max-md:hidden">Seu carrinho </p>
             <FontAwesomeIcon
               icon={faCartShopping}
-              size='xl'
+              size="xl"
               style={{ color: "#94989e" }}
             />
             <span>{cartItemsNum > 0 && cartItemsNum}</span>
