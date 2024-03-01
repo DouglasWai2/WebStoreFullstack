@@ -66,7 +66,8 @@ exports.sendProduct = async (req, res) => {
   try {
     const product = await productSchema
       .findById(productId)
-      .select("-legacyCreatedAt -store -updatedAt -createdAt");
+      .select("-legacyCreatedAt -store -updatedAt -createdAt")
+      .populate("store", "storeName storeImage likes");
 
     return res.send(product);
   } catch (error) {

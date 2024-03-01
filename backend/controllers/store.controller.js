@@ -287,6 +287,7 @@ exports.getCarouselImages = async (req, res) => {
   const { storeInterests } = req.body;
   const { interest } = req.body;
   const carouselImages = new Set();
+  const storeInfo = [];
 
   try {
     await Promise.all(
@@ -297,28 +298,33 @@ exports.getCarouselImages = async (req, res) => {
           })
           .limit(3);
 
-          stores.forEach((store) => {
-            if(store.storeBanner[0]) carouselImages.add(store.storeBanner[0]);
-          });
-        })
-        );
-        
-        await Promise.all(
-          interest.map(async (interest) => {
-            const stores = await StoreSchema.find({ categories: interest })
-            .sort({
-              likes: -1,
-            })
-            .limit(3);
-            
-            stores.forEach((store) => {
-              if(store.storeBanner[0]) carouselImages.add(store.storeBanner[0]);
-            });
+        stores.forEach((store) => {
+          if (store.storeBanner[0]  && !carouselImages.has(store.storeBanner[0])) {
+            carouselImages.add(store.storeBanner[0]);
+            storeInfo.push({name: store.storeName, image: store.storeImage, id: store._id});
+          }
+        });
       })
     );
 
+    await Promise.all(
+      interest.map(async (interest) => {
+        const stores = await StoreSchema.find({ categories: interest })
+          .sort({
+            likes: -1,
+          })
+          .limit(3);
 
-    res.status(200).send([...carouselImages]);
+        stores.forEach((store) => {
+          if (store.storeBanner[0] && !carouselImages.has(store.storeBanner[0])) {
+            carouselImages.add(store.storeBanner[0]);
+            storeInfo.push({name: store.storeName, image: store.storeImage, id: store._id});
+          }
+        });
+      })
+    );
+
+    res.status(200).send({carouselImages: [...carouselImages], storeInfo});
   } catch (error) {
     console.log(error);
   }

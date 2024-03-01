@@ -1,15 +1,12 @@
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
-import { useFetchApi } from "../../../hooks/useFetchApi";
+import React from "react";
 import LoadingSpinner from "../../shared/LoadingSpinner";
 
-const Logo = ({ edit, image, setImageEdit, imageEdit }) => {
-
-
+const Logo = ({ edit, image, setImageEdit, imageEdit, className }) => {
 
   return (
-    <>
+    <div className={className}>
       {!edit ? (
         !image ? (
           <div className="w-full h-full flex justify-center items-center bg-black opacity-60">
@@ -52,7 +49,7 @@ const Logo = ({ edit, image, setImageEdit, imageEdit }) => {
           />
         </label>
       )}
-    </>
+    </div>
   );
 };
 

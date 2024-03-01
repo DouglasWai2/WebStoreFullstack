@@ -18,6 +18,8 @@ import CarouselPlaceholder2 from "../../assets/carouselplaceholder2.png";
 import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";
 import LikeButton from "../../components/shared/LikeButton";
 import Logo from "../../components/Store/MyStore/Logo";
+import generateUrl from "../../helpers/generateUrl";
+import ShareButton from "../../components/shared/ShareButton";
 
 const MyStore = () => {
   const navigate = useNavigate();
@@ -105,11 +107,6 @@ const MyStore = () => {
     }
   }
 
-  function generateUrl(data) {
-    navigator.clipboard.writeText(
-      import.meta.env.VITE_DOMAIN + "/store/" + data.storeName + "/" + data._id
-    );
-  }
   return location.pathname !== "/store/my-store/address" ? (
     <div className="flex flex-col items-center">
       <>
@@ -137,25 +134,23 @@ const MyStore = () => {
             <div className="w-full flex flex-col">
               <div className="flex relative justify-between px-6 shadow bg-white max-sm:flex-col max-sm:py-3">
                 <div className="flex max-sm:flex-col">
-                  <div className="h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4">
-                    <Logo
-                      edit={edit}
-                      image={data?.storeImage}
-                      refresh={refresh}
-                      setImageEdit={setImageEdit}
-                      imageEdit={imageEdit}
-                    />
-                  </div>
+                  <Logo
+                    edit={edit}
+                    image={data?.storeImage}
+                    refresh={refresh}
+                    setImageEdit={setImageEdit}
+                    imageEdit={imageEdit}
+                    className={
+                      "h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4"
+                    }
+                  />
                   <div>
                     <p className="text-4xl">{data?.storeName}</p>
                     <div className="flex gap-3 ml-4 mt-1">
-                      <div
-                        className="rounded-full w-[30px] h-[30px] cursor-pointer text-gray-400 
-                       grid justify-center items-center bg-white hover:brightness-90 duration-150"
-                        onClick={() => generateUrl(data)}
-                      >
-                        <FontAwesomeIcon icon={faShareNodes} />
-                      </div>
+                      <ShareButton
+                        storeName={data?.storeName}
+                        storeId={data?._id}
+                      />
                       <LikeButton
                         numLikes={data?.likes}
                         storeId={data?._id}

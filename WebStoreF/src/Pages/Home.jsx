@@ -1,5 +1,5 @@
 import Navbar from "../components/Navbar/Navbar";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
 import CartSideMenu from "../components/Cart/CartSideMenu";
@@ -7,6 +7,7 @@ import ProductsCarousel from "../components/ProductsCarousel";
 import { useFetchApi } from "../hooks/useFetchApi";
 import { Carousel } from "react-responsive-carousel";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
+import Logo from "../components/Store/MyStore/Logo";
 
 const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
@@ -15,6 +16,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
   const [lastTime, setLastTime] = useState(0);
+  const navigate = useNavigate()
   const location = useLocation();
 
   useEffect(() => {
@@ -49,13 +51,12 @@ const Home = ({ user, address, loading, refreshUser }) => {
     }
   }, [counter, categories, data, lastTime]);
 
-
   useEffect(() => {
     if (location.pathname === "/") {
       window.addEventListener("scroll", handleHomeScroll);
     }
     return () => window.removeEventListener("scroll", handleHomeScroll);
-  }, [handleHomeScroll]);
+  }, [handleHomeScroll, location]);
 
   TopBarProgress.config({
     barColors: {
@@ -110,12 +111,33 @@ const Home = ({ user, address, loading, refreshUser }) => {
                       axis="horizontal"
                       autoPlay={true}
                       infiniteLoop={true}
-                      showIndicators={false}
+                      // showIndicators={false}
                       showThumbs={false}
                       showArrows={false}
                     >
-                      {images.map((item, i) => {
-                        return <img className="" key={item} src={item} />;
+                      {images.carouselImages.map((item, i) => {
+                        return (
+                          <div className="relative flex items-center h-[400px] overflow-hidden">
+                            <img alt="banner image from store" className="h-full object-cover" key={item} src={item} />
+                            <div onClick={() => {
+                              navigate(`/store/${images.storeInfo[i].name}/${images.storeInfo[i].id}`);
+                            }
+                            } className="absolute bottom-5 left-5 hover:opacity-60
+                            hover:translate-y-[-10px] duration-300 cursor-pointer 
+                            active:translate-y-0">
+                              <p className="text-white">Por:</p>
+                              <Logo
+                                image={images.storeInfo[i].image}
+                                className={
+                                  "shadow-lg items-center justify-center w-[100px] h-[100px] overflow-hidden rounded-full border-white border-4"
+                                }
+                              />
+                              <p className="text-white">
+                                {images.storeInfo[i].name}
+                              </p>
+                            </div>
+                          </div>
+                        );
                       })}
                     </Carousel>
                   )
