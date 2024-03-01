@@ -35,7 +35,7 @@ function App() {
     var value = re.exec(document.cookie);
     return value != null ? unescape(value[1]) : null;
   }
-  const loggedIn = getCookie("loggedin");
+  const loggedIn = window.localStorage.getItem("accessToken") ? true : false;
 
   function redirectLoader() {
     if (loggedIn) {
@@ -44,8 +44,6 @@ function App() {
       return null;
     }
   }
-
-  console.log(loggedIn)
 
   useEffect(() => {
     if (error?.data === "Access Denied. No token provided.") logOut(); // If loggedIn cookie is true but there's no access token, i.e. user is not logged in
