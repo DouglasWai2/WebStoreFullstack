@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import ImageMagnifier from "../../components/Store/ImageMagnifier";
@@ -10,12 +10,16 @@ import ProductPageSkeleton from "../../components/Catalog/ProductPageSkeleton";
 import Logo from "../../components/Store/MyStore/Logo";
 import LikeButton from "../../components/shared/LikeButton";
 import ShareButton from "../../components/shared/ShareButton";
+import { faAnglesDown, faAnglesUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ProductPage = () => {
   const api = useApi();
   const { productId } = useParams();
   const navigate = useNavigate();
   const [mainImage, setMainImage] = useState("");
+  const [fullDescription, setFullDescription] = useState(null);
+  const descriptionRef = useRef(null);
   const { user } = useOutletContext();
   const {
     data: product,
@@ -36,9 +40,25 @@ const ProductPage = () => {
     localStorage.setItem("lvpIDs", JSON.stringify(lvpIDs));
   }, []);
 
+  useEffect(() => {}, []);
+
   useEffect(() => {
     if (product) setMainImage(product.thumbnail);
+
+    if (descriptionRef?.current) {
+      isVisible(descriptionRef?.current);
+    }
   }, [product]);
+
+  function isVisible(parent) {
+    var child = parent.children[1];
+
+    var child_height = child.offsetHeight;
+    var parent_height = parent.offsetHeight;
+    if (child_height > parent_height) {
+      setFullDescription(false);
+    }
+  }
 
   function getPaymentIntent(productId) {
     api
@@ -109,78 +129,120 @@ const ProductPage = () => {
                     );
                   })}
                 </ul>
-                <div className="w-full min-w-[200px]">
-                  <button
-                    onClick={() => getPaymentIntent(product._id)}
-                    className="bg-[#188fa7] w-full px-2 py-2 mb-2 text-lg
-                                  rounded-md text-center text-white shadow
-                                  hover:brightness-75
-                                  active:shadow-none active:text-black
-                                  duration-100"
-                  >
-                    Comprar
-                  </button>
-                  <button
-                    onClick={() => {
-                      addToCart(
-                        product._id,
-                        product.price,
-                        product.discount,
-                        product.title,
-                        product.thumbnail
-                      );
-                    }}
-                    className="px-6 bg-[#ade6f1] text-center w-full rounded-md hover:brightness-95"
-                  >
-                    adicionar ao carrinho
-                  </button>
-                </div>
               </div>
             </section>
           </div>
-          <section id="store-info">
+          <section>
             <p>Vendido por:</p>
-            <div
-              className="flex items-center gap-3 border-2 
-            bg-white
-             border-gray-300 rounded-md p-2 px-6 w-max 
-            duration-300 cursor-pointer 
-            active:translate-y-0 active:shadow-none"
-            >
-              <Logo
-                className={"w-[70px] h-[70px] rounded-full overflow-hidden"}
-                image={product.store.storeImage}
-              />
-              <div>
-                <p className="text-2xl">{product.store.storeName}</p>
-                <div className="flex">
-                <ShareButton
-                  storeName={product.store.storeName}
-                  storeId={product.store._id}
+            <div className="flex justify-between items-center gap-8 max-lg:flex-col max-lg:justify-normal">
+              <div
+                className="flex items-center gap-3 border-2 
+            bg-white border-gray-300 rounded-md p-2 px-6 
+            duration-300 cursor-pointer w-1/2
+            active:translate-y-0 active:shadow-none max-lg:w-full"
+              >
+                <Logo
+                  className={"w-[70px] h-[70px] rounded-full overflow-hidden"}
+                  image={product.store.storeImage}
                 />
-                <LikeButton
-                  numLikes={product.store.likes}
-                  storeId={product.store._id}
-                  user={user?.saved_stores}
-                />
+                <div>
+                  <p className="text-2xl">{product.store.storeName}</p>
+                  <div className="flex">
+                    <ShareButton
+                      storeName={product.store.storeName}
+                      storeId={product.store._id}
+                    />
+                    <LikeButton
+                      numLikes={product.store.likes}
+                      storeId={product.store._id}
+                      user={user?.saved_stores}
+                    />
+                  </div>
+                  <Rating
+                    readonly
+                    initialValue={4.3}
+                    allowFraction
+                    fillColor={"#188fa7"}
+                    size={25}
+                  />
                 </div>
-                <Rating
-                  readonly
-                  initialValue={4.3}
-                  allowFraction
-                  fillColor={"#188fa7"}
-                  size={25}
-                />
+              </div>
+              <div className="min-w-[200px] w-1/2 max-lg:w-full">
+                <button
+                  onClick={() => getPaymentIntent(product._id)}
+                  className="bg-[#188fa7] w-full px-2 py-2 h-[65px]
+                                  rounded-md text-xl text-center text-white shadow
+                                  hover:brightness-75 mb-2
+                                  active:shadow-none active:text-black
+                                  duration-100"
+                >
+                  Comprar
+                </button>
+                <button
+                  onClick={() => {
+                    addToCart(
+                      product._id,
+                      product.price,
+                      product.discount,
+                      product.title,
+                      product.thumbnail
+                    );
+                  }}
+                  className="px-6 bg-[#ade6f1] text-center w-full h-[30px] rounded-md hover:brightness-95"
+                >
+                  adicionar ao carrinho
+                </button>
               </div>
             </div>
           </section>
-          <section className="w-[auto] mt-8" id="Product-description">
-            <div className="text-left">
-              <h1 className="text-2xl">Descrição</h1>
-              <p className="whitespace-pre-line">{product.description}</p>
-            </div>
-          </section>
         </article>
+        <section
+          className="w-full max-w-[1440px] mt-8"
+          id="Product-description"
+        >
+          <div
+            ref={descriptionRef}
+            className={
+              "text-left max-h-[190px] duration-200 overflow-hidden " +
+              (fullDescription ? "!max-h-[3000px]" : "")
+            }
+          >
+            <h1 className="text-2xl">Descrição</h1>
+            <p
+              className={
+                "whitespace-pre-line py-4 " +
+                (fullDescription === false ? "line-clamp-5" : "")
+              }
+            >
+              {product.description}
+            </p>
+          </div>
+          {fullDescription !== null && (
+            <div
+              onClick={() => setFullDescription(!fullDescription)}
+              className="relative flex items-center justify-center cursor-pointer group"
+            >
+              <span className="w-full border-b-[1px] border-black absolute"></span>
+              <div className="absolute flex items-center gap-2 bg-white px-3">
+                <span className="group-hover:underline">
+                  {fullDescription ? "Mostrar menos" : "Mostrar mais"}
+                </span>
+                {!fullDescription && (
+                  <FontAwesomeIcon
+                    className="group-hover:animate-bounce"
+                    icon={faAnglesDown}
+                  />
+                )}
+                {fullDescription && (
+                  <FontAwesomeIcon
+                    className="group-hover:animate-bounce"
+                    icon={faAnglesUp}
+                  />
+                )}
+              </div>
+            </div>
+          )}
+        </section>
         <section id="ratings" className="max-w-[1440px]">
           <h1 className="text-2xl mb-4">Avaliações</h1>
 

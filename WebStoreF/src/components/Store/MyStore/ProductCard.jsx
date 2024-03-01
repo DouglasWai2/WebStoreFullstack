@@ -3,17 +3,19 @@ import { Rating } from "react-simple-star-rating";
 import { moneyMask } from "../../../helpers/moneyMask";
 import { useNavigate } from "react-router-dom";
 
-const ProductCard = ({ item, className}) => {
-  const navigate = useNavigate()
-
+const ProductCard = ({ item, className }) => {
+  const navigate = useNavigate();
 
   return (
     <article
       id="product-card"
-      className={"w-[250px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200 " + className}
-      onClick={()=> {
-        console.log('/catalog/'+ item.title + '/' + item._id)
-        navigate('/catalog/'+ item.title.replace('/' , '%2F') + '/' + item._id)
+      className={
+        "w-[250px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200 " +
+        className
+      }
+      onClick={() => {
+        console.log("/catalog/" + item.title + "/" + item._id);
+        navigate("/catalog/" + item.title.replace("/", "%2F") + "/" + item._id);
       }}
     >
       <img className="aspect-[4/3] object-contain" src={item.thumbnail} />

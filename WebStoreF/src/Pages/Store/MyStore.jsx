@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare, faShareNodes } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import TopBarProgress from "react-topbar-progress-indicator";
 import ProductCategory from "../../components/Store/MyStore/ProductCategory";
 import CarouselStore from "../../components/Store/MyStore/Carousel";
@@ -18,7 +18,6 @@ import CarouselPlaceholder2 from "../../assets/carouselplaceholder2.png";
 import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";
 import LikeButton from "../../components/shared/LikeButton";
 import Logo from "../../components/Store/MyStore/Logo";
-import generateUrl from "../../helpers/generateUrl";
 import ShareButton from "../../components/shared/ShareButton";
 
 const MyStore = () => {
