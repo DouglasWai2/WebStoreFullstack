@@ -32,4 +32,14 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+productSchema.pre('find', function() {
+  this._startTime = Date.now();
+});
+
+productSchema.post('find', function() {
+  if (this._startTime != null) {
+    console.log('Product Query Runtime in MS: ', Date.now() - this._startTime);
+  }
+});
+
 module.exports = mongoose.model("Product", productSchema, "Catalog");

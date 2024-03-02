@@ -26,7 +26,6 @@ const MyStore = () => {
   const location = useLocation();
 
   const [edit, setEdit] = useState(false);
-  const [method, setMethod] = useState(null);
   const [url, setUrl] = useState(null);
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
@@ -94,7 +93,7 @@ const MyStore = () => {
 
   useEffect(() => {
     setUrl(`${location.pathname}`);
-  }, []);
+  }, [location]);
 
   //send edit info to backend
   function handleSubmit() {
@@ -110,7 +109,6 @@ const MyStore = () => {
     <div className="flex flex-col items-center">
       <>
         <CarouselStore
-          method={method}
           images={data?.storeBanner}
           edit={edit}
           placeholders={placeholders}

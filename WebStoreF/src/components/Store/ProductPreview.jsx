@@ -46,7 +46,7 @@ const ProductPreview = ({
               <div
                 className="absolute flex items-center justify-center text-transparent text-2xl 
                                       bg-transparent text-white h-[102px] cursor-pointer w-[50px]
-                                    hover:bg-gray-300/20  hover:text-white/100 duration-200 z-10"
+                                    hover:bg-gray-300/20  hover:text-white/100 duration-200"
                 name="backward"
                 onClick={() => {
                   handleScroll(-578);

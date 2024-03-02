@@ -33,7 +33,6 @@ app.get('/api/v1/ip', (req, res) => res.send(req.ip))
 
 app.use(function (req, res, next) {
   try {
-    console.log("Setting CORS headers");
     res.header("Access-Control-Allow-Credentials", true);
     res.header("Access-Control-Allow-Origin", `${process.env.ORIGIN}`);
     res.header(
@@ -44,8 +43,6 @@ app.use(function (req, res, next) {
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept"
     );
-  
-    console.log(res.getHeaders())
     next();
   }catch (error) {
     console.log(error)

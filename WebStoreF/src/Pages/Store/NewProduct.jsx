@@ -225,7 +225,7 @@ const NewProduct = () => {
           label="Título"
           handleChange={handleChange}
         />
-        <div className="relative  my-2 z-10">
+        <div className="relative  my-2 z-20">
           <FontAwesomeIcon
             className="absolute right-0 m-2 peer"
             icon={faCircleInfo}

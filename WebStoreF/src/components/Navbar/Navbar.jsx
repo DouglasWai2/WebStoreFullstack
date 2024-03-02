@@ -1,7 +1,6 @@
 import Logo from "../../logo-no-background.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faMagnifyingGlass,
   faCaretDown,
   faCartShopping,
   faTruck,
@@ -10,9 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import SkeletonNavAddress from "../shared/SkeletonNavAddress";
 import NavCardMenu from "./NavCardMenu";
-import { useFetchApi } from "../../hooks/useFetchApi";
-import { useNavigate } from "react-router-dom";
-import LoadingSpinner from "../shared/LoadingSpinner";
+import SearchInput from "./SearchInput";
 
 const Navbar = ({
   user,
@@ -26,16 +23,7 @@ const Navbar = ({
     JSON.parse(localStorage.getItem("cart"))?.length
   );
 
-  const navigate = useNavigate();
   const [yourAddress, setYourAddress] = useState([]);
-  const [url, setUrl] = useState(null);
-  const [search, setSearch] = useState("");
-
-  const {
-    data: result,
-    loading: searching,
-    error: searchError,
-  } = useFetchApi(url, "GET");
 
   useEffect(() => {
     const handleStorage = () => {
@@ -51,17 +39,6 @@ const Navbar = ({
       setYourAddress(address.filter((item) => item.main));
     }
   }, [address]);
-
-  useEffect(() => {
-    var delayDebounceFn;
-    if (search) {
-      delayDebounceFn = setTimeout(() => {
-        setUrl(`/search?search=${search}`);
-      }, 2000);
-    }
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [search]);
 
   return (
     <header>
@@ -103,56 +80,7 @@ const Navbar = ({
               </>
             )}
           </div>
-          <div className="relative z-10 w-full h-9 max-md:w-1/2 text-black">
-            <div className="rounded-md h-full flex overflow-hidden">
-              <input
-                className="w-full px-3"
-                type="text"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-              <button className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200">
-                <FontAwesomeIcon
-                  icon={faMagnifyingGlass}
-                  style={{ color: "#152128" }}
-                />
-              </button>
-            </div>
-            {(searching || result) && (
-              <div className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2">
-                {searching ? (
-                  <div className="h-[50px] py-6 flex items-center justify-center w-full">
-                    <LoadingSpinner />
-                  </div>
-                ) : result && result.products.length > 0 ? (
-                  result.products.map((item) => {
-                    return (
-                      <div
-                        onClick={() =>
-                          navigate(`/catalog/${item.title}/${item._id}`)
-                        }
-                        className="flex py-2 px-4 items-center gap-2 group bg-white cursor-pointer hover:bg-[#188fa7]"
-                      >
-                        <div className="h-[50px] w-[50px] bg-white flex rounded-full overflow-hidden">
-                          <img
-                            className="w-full object-contain"
-                            src={item.thumbnail}
-                            alt={item.title}
-                          />
-                        </div>
-                        <p className="select-none pointer-events-none group-hover:text-white">
-                          {item.title}
-                        </p>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-center py-6">
-                    Nenhum resultado encontrado
-                  </p>
-                )}
-              </div>
-            )}
-          </div>
+          <SearchInput />
           <div className="flex items-center gap-1 relative min-w-[150px] max-md:hidden">
             <div
               onClick={() => {
