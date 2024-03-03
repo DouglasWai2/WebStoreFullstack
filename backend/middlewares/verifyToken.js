@@ -3,7 +3,6 @@ require("dotenv").config();
 const UserSchema = require("../models/user.model");
 
 const verifyToken = async (req, res, next) => {
-  console.log("Request", req.getHeaders())
   console.log("Response", res.getHeaders())
 
   if (!req.headers.authorization) {
@@ -34,9 +33,13 @@ const verifyToken = async (req, res, next) => {
       process.env.REFRESH_TOKEN_SECRET
 
     );
+
+    console.log(refreshDecoded)
+    
     try {
 
       const decoded = jwt.verify(accessToken, process.env.SECRET_JWT_TOKEN);
+      console.log(decoded)
       req.userInfo = decoded;
       next();
 
