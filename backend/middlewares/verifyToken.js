@@ -3,6 +3,8 @@ require("dotenv").config();
 const UserSchema = require("../models/user.model");
 
 const verifyToken = async (req, res, next) => {
+  console.log("Request", req.getHeaders())
+  console.log("Response", res.getHeaders())
 
   if (!req.headers.authorization) {
     return res.status(401).send("Unauthorized");
