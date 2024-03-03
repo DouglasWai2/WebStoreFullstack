@@ -3,7 +3,14 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const {
+  defaultLimiter,
+  userLimiter,
+  productsLimiter,
+  storeLimiter,
+} = require("./middlewares/rateLimitMiddleware");
 require("dotenv").config();
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(console.log("DB Connected"))
@@ -11,13 +18,6 @@ mongoose
 
 
 const app = express();
-
-const {
-  defaultLimiter,
-  userLimiter,
-  productsLimiter,
-  storeLimiter,
-} = require("./middlewares/rateLimitMiddleware");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -31,24 +31,24 @@ app.get("/api/v1", (req, res) => {
 app.set('trust proxy', 1)
 app.get('/api/v1/ip', (req, res) => res.send(req.ip))
 
-app.use(function (req, res, next) {
-  try {
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header("Access-Control-Allow-Origin", `${process.env.ORIGIN}`);
-    res.header(
-      "Access-Control-Allow-Methods",
-      "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
-    );
-    res.header(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    next();
-  }catch (error) {
-    console.log(error)
-  }
+// app.use(function (req, res, next) {
+//   try {
+//     res.header("Access-Control-Allow-Credentials", true);
+//     res.header("Access-Control-Allow-Origin", `${process.env.ORIGIN}`);
+//     res.header(
+//       "Access-Control-Allow-Methods",
+//       "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
+//     );
+//     res.header(
+//       "Access-Control-Allow-Headers",
+//       "Origin, X-Requested-With, Content-Type, Accept"
+//     );
+//     next();
+//   }catch (error) {
+//     console.log(error)
+//   }
  
-});
+// });
 
 app.use("/api/v1", productsLimiter, require("./routes/catalog"));
 app.use("/api/v1", require("./routes/rating"));
