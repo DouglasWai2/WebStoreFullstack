@@ -57,7 +57,7 @@ function App() {
   const props = { user, address: user?.addressess, loading, loggedIn, refreshUser };
 
   const router = createBrowserRouter([
-    error
+    error && error?.status !== 403
       ? { path: "*", element: <UnexpectedError /> }
       : {
           path: "/",

@@ -3,8 +3,6 @@ require("dotenv").config();
 const UserSchema = require("../models/user.model");
 
 const verifyToken = async (req, res, next) => {
-  console.log("Response", req.headers)
-
   if (!req.headers.authorization) {
     return res.status(401).send("Unauthorized");
   }
@@ -20,40 +18,25 @@ const verifyToken = async (req, res, next) => {
   try {
     const foundUser = await UserSchema.findOne({ refreshTokens: refreshToken });
     if (!foundUser) return;
-  } catch (error) {
-    console.log(error)
-    return res.status(403).send("Invalid refresh token");
-
-  }
-
-  try {
-
     const refreshDecoded = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET
-
     );
+  } catch (error) {
+    console.log(error);
+    return res.status(403).send("Invalid refresh token");
+  }
 
-    console.log(refreshDecoded)
+  try {
+    const decoded = jwt.verify(accessToken, process.env.SECRET_JWT_TOKEN);
 
-    try {
+    req.userInfo = decoded;
 
-      const decoded = jwt.verify(accessToken, process.env.SECRET_JWT_TOKEN);
-      console.log(decoded)
-      req.userInfo = decoded;
-      next();
+    return next();
+  } catch (error) {
+    console.log(error);
 
-    } catch (error) {
-
-      console.log(error);
-      return res.status(401).send("Expired access token");
-
-    }
-  } catch (err) {
-
-    console.log(err);
-    return res.status(401).send("Expired refresh token");
-
+    return res.status(401).send("Expired access token");
   }
 };
 

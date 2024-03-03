@@ -4,6 +4,8 @@ const StoreSchema = require("../models/store.model");
 const ProductSchema = require("../models/product.model");
 
 exports.sendUserInfo = async (req, res) => {
+  console.log(req.userInfo);
+
   try {
     const user = await UserSchema.findById(req.userInfo.id).populate("address");
 
