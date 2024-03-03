@@ -3,7 +3,7 @@ require("dotenv").config();
 const UserSchema = require("../models/user.model");
 
 const verifyToken = async (req, res, next) => {
-  console.log("Response", res.getHeaders())
+  console.log("Response", req.headers)
 
   if (!req.headers.authorization) {
     return res.status(401).send("Unauthorized");
@@ -35,7 +35,7 @@ const verifyToken = async (req, res, next) => {
     );
 
     console.log(refreshDecoded)
-    
+
     try {
 
       const decoded = jwt.verify(accessToken, process.env.SECRET_JWT_TOKEN);
