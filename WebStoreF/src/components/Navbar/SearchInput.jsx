@@ -4,7 +4,7 @@ import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "../shared/LoadingSpinner";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SearchInput = () => {
   const [url, setUrl] = useState(null);
@@ -24,7 +24,7 @@ const SearchInput = () => {
     var delayDebounceFn;
     if (search) {
       delayDebounceFn = setTimeout(() => {
-        setUrl(`/search?search=${search}`);
+        setUrl(`/search?search=${search}&limit=10`);
         setShowResult(true);
       }, 2000);
     }
@@ -43,6 +43,7 @@ const SearchInput = () => {
           className="w-full px-3"
           id="search"
           type="text"
+          value={search}
           onChange={(e) => setSearch(e.target.value)}
           onFocus={() => {
             if (search) {
@@ -60,7 +61,7 @@ const SearchInput = () => {
       {showResult && (
         <div
           id="results"
-          className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2"
+          className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2 max-h-screen overflow-y-scroll"
         >
           {searching ? (
             <div className="h-[50px] py-6 flex items-center justify-center w-full">
@@ -69,16 +70,25 @@ const SearchInput = () => {
           ) : (
             result && (
               <>
-                <p className="px-3">Você quis dizer: </p>
+                <p className="px-3 font-medium">Você quis dizer: </p>
                 {result.tags.length > 0 &&
                   result.tags.map((item) => {
                     return (
-                      <div className="py-2 px-4 cursor-pointer hover:text-white hover:bg-[#188fa7] hover:shadow-[inset_-2px_-7px_29px_-18px_rgba(0,0,0,0.75)]">
+                      <div
+                        onClick={() => {
+                          setSearch(item._id);
+                          navigate(
+                            `/catalog/products/search/result?search=${item._id}`
+                          );
+                        }}
+                        className="py-2 px-4 cursor-pointer hover:text-white hover:bg-[#188fa7] 
+                      hover:shadow-[inset_-2px_-7px_29px_-18px_rgba(0,0,0,0.75)]"
+                      >
                         <p>{item._id}</p>
                       </div>
                     );
                   })}
-                <p className="px-3">Busca por produtos: </p>
+                <p className="px-3 font-medium">Busca por produtos: </p>
                 {result.products.length > 0 ? (
                   result.products.map((item) => {
                     return (
@@ -109,7 +119,7 @@ const SearchInput = () => {
                     Nenhum resultado encontrado
                   </p>
                 )}
-                <p className="px-3">Busca por lojas: </p>
+                <p className="px-3 font-medium">Busca por lojas: </p>
                 <div className="flex flex-wrap">
                   {result.stores.length > 0 ? (
                     result.stores.map((item) => {

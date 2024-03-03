@@ -29,7 +29,7 @@ const CartSideMenu = ({ setCart }) => {
   }, []);
 
   return (
-    <aside className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] h-screen animate-appear py-8 px-3 z-30">
+    <aside className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] h-screen animate-appear py-8 px-3 z-50">
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-2xl text-slate-900">

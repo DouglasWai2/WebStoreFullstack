@@ -13,6 +13,7 @@ router.post(
 );
 
 router.get("/catalog/all-products/:storeid", allProducts)
+router.get("/catalog/products/search/result", allProducts)
 router.get("/catalog/:productId", sendProduct)
 router.get("/catalog/category/:category", productsByCategory)
 router.get("/catalog", mostSelledProducts)
