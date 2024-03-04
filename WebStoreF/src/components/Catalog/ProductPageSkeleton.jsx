@@ -7,22 +7,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ProductPageSkeleton = () => {
   return (
-    <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6 animate-pulse">
+    <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6 animate-pulse max-sm:px-0">
       <article className="shadow-md p-6 w-full max-w-[1440px]">
         <div className="flex justify-between py-5 max-lg:flex-col max-lg:justify-normal">
           <section
             id="product-images-section"
             className="max-lg:flex max-lg:flex-col max-lg:items-center"
           >
-            <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain">
+            <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain max-lg:!w-full">
               <div className="bg-gray-300 w-[578px] h-[433px]"></div>
             </div>
             <div className="flex w-[578px] overflow-x-scroll my-4 product-images relative max-lg:w-full">
-              <div className="w-[136px] max-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
-              <div className="w-[136px] max-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
-              <div className="w-[136px] max-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
-              <div className="w-[136px] max-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
-              <div className="w-[136px] max-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
+              <div className="!min-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
+              <div className="!min-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
+              <div className="!min-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
+              <div className="!min-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
+              <div className="!min-w-[136px] aspect-[4/3] bg-gray-300 mx-1"></div>
             </div>
           </section>
           <section className="max-w-[50%] max-lg:max-w-full w-full flex flex-col gap-3">
@@ -89,7 +89,7 @@ const ProductPageSkeleton = () => {
           </div>
         </section>
       </article>
-      <section className="w-full max-w-[1440px] mt-10" id="Product-description">
+      <section className="w-full max-w-[1440px] mt-10 max-sm:px-2" id="Product-description">
           <div className="text-left">
             <div className="bg-gray-300 w-1/6 h-7"></div>
             <div className="bg-gray-300 w-1/6 h-4 mt-3"></div>

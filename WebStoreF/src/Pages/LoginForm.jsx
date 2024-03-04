@@ -70,7 +70,7 @@ const LoginForm = () => {
             </button>
           </div>
         )}
-        <div className="w-[500px] rounded-lg shadow-md p-8 py-24 max-sm:w-[300px]">
+        <div className="w-[500px] rounded-lg shadow-md p-8 py-24 max-sm:w-full">
           <a href="/">
             <img src={Logo} />
           </a>
@@ -81,7 +81,7 @@ const LoginForm = () => {
             <label htmlFor="email" className="flex flex-col">
               <span className="flex justify-between">E-mail</span>
               <input
-                className={"input-login"}
+                className={"input-login !h-[2.5em] px-3 py-1"}
                 type="email"
                 name="email"
                 onChange={handleEmailInput}
@@ -91,7 +91,7 @@ const LoginForm = () => {
             <label htmlFor="password" className="flex flex-col">
               Senha
               <input
-                className="input-login"
+                className="input-login !h-[2.5em] px-3 py-1"
                 type="password"
                 name="password"
                 onChange={handlePasswordInput}

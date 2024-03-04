@@ -70,11 +70,11 @@ const ProductPage = () => {
       );
   }
 
-  return loading ? (
+  return true ? (
     <ProductPageSkeleton />
   ) : (
     product && (
-      <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6">
+      <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6 max-sm:px-0">
         <article className="shadow-md p-6 w-full max-w-[1440px]">
           <div className="flex justify-between py-5 max-lg:flex-col max-lg:justify-normal">
             <section
@@ -197,7 +197,7 @@ const ProductPage = () => {
           </section>
         </article>
         <section
-          className="w-full max-w-[1440px] mt-8"
+          className="w-full max-w-[1440px] mt-8 px-2"
           id="Product-description"
         >
           <div
@@ -243,7 +243,7 @@ const ProductPage = () => {
             </div>
           )}
         </section>
-        <section id="ratings" className="max-w-[1440px]">
+        <section id="ratings" className="max-w-[1440px] px-2">
           <h1 className="text-2xl mb-4">Avaliações</h1>
 
           <div className="border-b-[1px] border-slate-200 py-3 w-full">
