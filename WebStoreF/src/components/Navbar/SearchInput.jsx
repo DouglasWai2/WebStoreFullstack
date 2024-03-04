@@ -4,12 +4,13 @@ import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "../shared/LoadingSpinner";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SearchInput = () => {
   const [url, setUrl] = useState(null);
   const [search, setSearch] = useState("");
   const [showResult, setShowResult] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
 
   const results = useRef(null);
@@ -22,14 +23,15 @@ const SearchInput = () => {
 
   useEffect(() => {
     var delayDebounceFn;
+    if (location.search.split(`=`)[1] === search) return;
     if (search) {
       delayDebounceFn = setTimeout(() => {
-        setUrl(`/search?search=${search}&limit=10`);
+        setUrl(`/search?search=${search}`);
         setShowResult(true);
       }, 2000);
     }
     return () => clearTimeout(delayDebounceFn);
-  }, [search]);
+  }, [search, location]);
 
   useOutsideAlerter(results, () => setShowResult(false));
 
@@ -51,7 +53,14 @@ const SearchInput = () => {
             }
           }}
         />
-        <button className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200">
+        <button
+          onClick={() => {
+            if (search) {
+              navigate(`/catalog/products/search/result?search=${search}`);
+            }
+          }}
+          className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200"
+        >
           <FontAwesomeIcon
             icon={faMagnifyingGlass}
             style={{ color: "#152128" }}
@@ -61,7 +70,7 @@ const SearchInput = () => {
       {showResult && (
         <div
           id="results"
-          className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2 max-h-screen overflow-y-scroll"
+          className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2 max-h-[80vh] overflow-y-scroll"
         >
           {searching ? (
             <div className="h-[50px] py-6 flex items-center justify-center w-full">
@@ -80,6 +89,7 @@ const SearchInput = () => {
                           navigate(
                             `/catalog/products/search/result?search=${item._id}`
                           );
+                          setShowResult(false)
                         }}
                         className="py-2 px-4 cursor-pointer hover:text-white hover:bg-[#188fa7] 
                       hover:shadow-[inset_-2px_-7px_29px_-18px_rgba(0,0,0,0.75)]"

@@ -1,6 +1,8 @@
 const productSchema = require("../models/product.model");
 const StoreSchema = require("../models/store.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
+const diacriticSensitiveRegex = require("../helpers/diacriticSensitiveRegex");
+const applyFilters = require("../helpers/applyFilters");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 const capitalizeFirstLetter = require("../helpers/capitalizeFirstLetter");
@@ -71,74 +73,48 @@ exports.sendProduct = async (req, res) => {
 
     return res.send(product);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).send(error);
   }
 };
 
-exports.allProducts = async (req, res) => {
+exports.productsFromStore = async (req, res) => {
   const { storeid } = req.params;
-  const from = req.query.from;
-  const to = parseInt(req.query.to);
-  const fromDate = req.query.fromDate;
-  const toDate = req.query.toDate;
-  const fromRating = req.query.fromRating;
-  const toRating = req.query.toRating;
-  const sortBy = req.query.sortby;
-  const order = req.query.order;
-  const category = req.query.category;
-  const title = req.query.title;
-  const maxPrice = req.query.maxPrice;
-  const minPrice = req.query.minPrice;
 
-  let match = {};
-
-  if (category) {
-    match.tags = category;
-  }
-  if (title) {
-    match.title = { $regex: diacriticSensitiveRegex(title), $options: "i" };
-  }
-
-  if (fromDate) {
-    match.$or = [
-      {
-        $and: [
-          { createdAt: { $gt: fromDate } },
-          { createdAt: { $lt: toDate } },
-        ],
-      },
-      {
-        $and: [
-          { legacyCreatedAt: { $gt: fromDate } },
-          { legacyCreatedAt: { $lt: toDate } },
-        ],
-      },
-    ];
-  }
-
-  if (fromRating) {
-    match.$and = [
-      { rating: { $gte: parseFloat(fromRating) } },
-      { rating: { $lte: parseFloat(toRating) } },
-    ];
-  }
+  const { match, options } = applyFilters(req.query);
 
   try {
     var { products } = await StoreSchema.findById(storeid).populate({
       path: "products",
       select: "title thumbnail brand price rating sells discount",
       match,
-      options: {
-        sort: { [sortBy]: order },
-        skip: from,
-        limit: to,
-      },
+      options,
     });
 
     return res.status(200).send(products);
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.searchResult = async (req, res) => {
+  const { match, options } = applyFilters(req.query);
+  const { page } = req.query || 1;
+
+  try {
+    const products = await productSchema
+      .find(match)
+      .sort(options.sort)
+      .select("title thumbnail price rating sells discount")
+      .skip((page - 1) * 30)
+      .limit(30);
+
+    const countQuery = await productSchema.where(match).countDocuments();
+
+    return res.status(200).send({ products, countQuery });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error);
   }
 };
 

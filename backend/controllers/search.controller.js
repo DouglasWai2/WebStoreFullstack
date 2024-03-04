@@ -5,7 +5,6 @@ const storeModel = require("../models/store.model");
 
 exports.search = async (req, res) => {
   const { search } = req.query;
-  const {limit} = req.query;
 
   try {
     const products = await productModel
@@ -17,7 +16,7 @@ exports.search = async (req, res) => {
       })
       .sort({ sells: -1 })
       .select("title thumbnail")
-      .limit(999);
+      .limit(10);
 
     const tags = await productModel.aggregate([
       // Filter for products that matches the search to reduce the $unwind operation
@@ -47,6 +46,8 @@ exports.search = async (req, res) => {
       },
     ]);
 
+
+    // Sort by the similarity of the search (levenshtein distance algorithm)
     tags.sort(
       (a, b) =>
         levenshteinDistance(search, a._id) - levenshteinDistance(search, b._id)
@@ -63,7 +64,7 @@ exports.search = async (req, res) => {
       .find({
         storeName: { $regex: diacriticSensitiveRegex(search), $options: "i" },
       })
-      .select("storeName storeImage").limit(40);
+      .select("storeName storeImage").limit(10);
     return res.status(200).json({ products, stores, tags });
   } catch (error) {
     console.log(error);
