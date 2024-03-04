@@ -217,15 +217,11 @@ const MyStore = () => {
                 <ProductCategory
                   text="Mais vendidos"
                   queries="sortby=sells&order=desc"
-                  from={0}
-                  to={10}
                   storeId={data && data._id}
                 />
                 <ProductCategory
                   text="Melhores avaliados"
                   queries="sortby=rating&order=desc"
-                  from={0}
-                  to={10}
                   storeId={data && data._id}
                 />
                 {categories.map((item, index) => {
@@ -234,8 +230,6 @@ const MyStore = () => {
                       key={item + index}
                       text={"Mais produtos em " + item}
                       queries={`category=${item}&order=desc&sortby=sells`}
-                      from={0}
-                      to={10}
                       storeId={data && data._id}
                     />
                   );

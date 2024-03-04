@@ -37,9 +37,9 @@ const Home = ({ user, address, loading, refreshUser }) => {
   } = useFetchApi("/store/get-carousel-images", "POST", data);
 
   const handleHomeScroll = useCallback(() => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
       var now = new Date().getTime(); // Time in milliseconds
-      if (now - lastTime < 1000) {
+      if (now - lastTime < 600) {
         return;
       } else {
         setLastTime(now);

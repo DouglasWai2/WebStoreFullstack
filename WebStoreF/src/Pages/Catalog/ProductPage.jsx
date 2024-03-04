@@ -25,7 +25,7 @@ const ProductPage = () => {
     data: product,
     loading,
     error,
-  } = useFetchApi("/catalog/" + productId, "GET");
+  } = useFetchApi("/catalog/product/" + productId, "GET");
 
   useEffect(() => {
     if (!JSON.parse(localStorage.getItem("lvpIDs"))) {

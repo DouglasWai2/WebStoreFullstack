@@ -56,7 +56,7 @@ const SearchInput = () => {
         <button
           onClick={() => {
             if (search) {
-              navigate(`/catalog/products/search/result?search=${search}`);
+              navigate(`/catalog/products/search/result?search=${search}&sortBy=sells&order=-1`);
             }
           }}
           className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200"

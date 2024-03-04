@@ -107,7 +107,7 @@ exports.searchResult = async (req, res) => {
       .sort(options.sort)
       .select("title thumbnail price rating sells discount")
       .skip((page - 1) * 30)
-      .limit(30);
+      .limit(7);
 
     const countQuery = await productSchema.where(match).countDocuments();
 
@@ -115,21 +115,6 @@ exports.searchResult = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
-  }
-};
-
-exports.productsByCategory = async (req, res) => {
-  const { category } = req.params;
-
-  try {
-    const products = await productSchema
-      .find({ tags: category })
-      .select("title thumbnail brand price rating sells discount")
-      .sort({ sells: -1 })
-      .limit(20);
-    return res.status(200).send(products);
-  } catch (error) {
-    console.log(error);
   }
 };
 

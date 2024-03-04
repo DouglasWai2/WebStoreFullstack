@@ -1,19 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFetchApi } from "../hooks/useFetchApi";
 import ProductCard from "./Store/MyStore/ProductCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
-const ProductsCarousel = ({
-  text,
-  queries,
-  from,
-  to,
-  category,
-  topSelling,
-}) => {
+const ProductsCarousel = ({ queries, category, topSelling }) => {
   const [productsUrl, setProductsUrl] = useState(null);
-  const [toT, setToT] = useState(to);
   const [phrase, setPhrase] = useState(null);
+  const [scrollable, setScrollable] = useState(false);
   const scrollRef = useRef(null);
+  const navigate = useNavigate();
 
   const prhasesArray = [
     `Recomendados para você em`,
@@ -26,13 +23,17 @@ const ProductsCarousel = ({
   useEffect(() => {
     if (category && !topSelling) {
       setPhrase(prhasesArray[Math.floor(Math.random() * prhasesArray.length)]);
-      setProductsUrl(`/catalog/category/${category}`);
+      setProductsUrl(
+        `/catalog/products/search/result?category=${category}&sortBy=sells&order=-1`
+      );
     }
-  }, [category, queries, toT]);
+  }, [category, queries]);
 
   useEffect(() => {
     if (topSelling) {
-      setProductsUrl(`/catalog`);
+      setProductsUrl(
+        `/catalog/products/search/result?sortBy=sellsToday&order=-1`
+      );
     }
   }, [topSelling]);
 
@@ -42,6 +43,14 @@ const ProductsCarousel = ({
     e,
   } = useFetchApi(productsUrl, "GET");
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      if (scrollRef.current.clientWidth < scrollRef.current.scrollWidth) {
+        setScrollable(true);
+      }
+    }
+  }, [scrollRef.current]);
+
   function scrollCarousel(value) {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += value;
@@ -49,7 +58,7 @@ const ProductsCarousel = ({
   }
 
   return (
-    <div className="bg-white py-6 px-4 max-w-[1440px] w-full shadow rounded-md">
+    <div className="bg-white py-6 px-4 max-w-[1440px] w-full shadow rounded-md mt-6">
       <h1 className="text-2xl">
         {!topSelling ? phrase + ` ` + category : "Mais vendidos hoje"}
       </h1>
@@ -58,33 +67,58 @@ const ProductsCarousel = ({
           <div className="loader"></div>
         </div>
       ) : (
-        <div className="flex">
-          <div
-            onClick={() => {
-              scrollCarousel(-1000);
-            }}
-            className="w-[50px]"
-          ></div>
+        <div className="flex items-center">
+          {scrollable && (
+            <div
+              onClick={() => {
+                scrollCarousel(-scrollRef.current.clientWidth);
+              }}
+              className="w-[50px] mr-[-25px] z-10 bg-white cursor-pointer rounded-full shadow h-[50px] flex justify-center items-center"
+            >
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </div>
+          )}
+
           <div
             ref={scrollRef}
-            className="py-5 w-full flex gap-6 overflow-x-scroll carousel-scroll"
+            className="py-5 px-4 w-full flex items-center gap-6 overflow-x-scroll carousel-scroll"
           >
-            {products?.map((item, index) => {
-              return (
-                <ProductCard
-                  className={"!min-w-[200px] !text-sm"}
-                  key={index}
-                  item={item}
-                />
-              );
-            })}
+            {products &&
+              products?.products.map((item, index) => {
+                return (
+                  <ProductCard
+                    className={"!min-w-[200px] !text-sm"}
+                    key={index}
+                    item={item}
+                  />
+                );
+              })}
+            {products && products.countQuery > products.products.length && (
+              <div
+                onClick={() =>
+                  navigate(
+                    `/catalog/products/search/result?${category ? `category=${category}&` : ""}&sortBy=${
+                      topSelling ? "sellsToday" : "sells"
+                    }&order=-1`
+                  )
+                }
+                className="px-8 font-semibold hover:underline cursor-pointer text-center"
+              >
+                Ver todos
+              </div>
+            )}
           </div>
-          <div
-            onClick={() => {
-              scrollCarousel(1000);
-            }}
-            className="w-[50px]"
-          ></div>
+
+          {scrollable && (
+            <div
+              onClick={() => {
+                scrollCarousel(scrollRef.current.clientWidth);
+              }}
+              className="w-[50px] ml-[-25px] bg-white  cursor-pointer rounded-full shadow h-[50px] flex justify-center items-center"
+            >
+              <FontAwesomeIcon icon={faArrowRight} />
+            </div>
+          )}
         </div>
       )}
     </div>

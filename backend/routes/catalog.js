@@ -3,8 +3,6 @@ const {
   addProduct,
   productsFromStore,
   sendProduct,
-  productsByCategory,
-  mostSelledProducts,
   searchResult,
 } = require("../controllers/product.controller");
 const auth = require("../middlewares/verifyToken");
@@ -18,11 +16,8 @@ router.post(
   upload.array("files[]", 20),
   addProduct
 );
-
 router.get("/catalog/all-products/:storeid", productsFromStore);
+router.get("/catalog/product/:productId", sendProduct);
 router.get("/catalog/products/search/result", searchResult);
-router.get("/catalog/:productId", sendProduct);
-router.get("/catalog/category/:category", productsByCategory);
-router.get("/catalog", mostSelledProducts);
 
 module.exports = router;

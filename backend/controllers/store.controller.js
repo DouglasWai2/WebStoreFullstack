@@ -5,6 +5,7 @@ const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 const diacriticSensitiveRegex = require("../helpers/diacriticSensitiveRegex");
+const applyFilters = require("../helpers/applyFilters");
 
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
@@ -57,7 +58,7 @@ exports.storeInfo = async (req, res) => {
 };
 
 exports.addStoreAddress = async (req, res) => {
-  console.log(req.body);
+
   try {
     const store = await StoreSchema.findOneAndUpdate(
       { user: req.userInfo.id },
@@ -166,62 +167,14 @@ exports.changeImage = async (req, res) => {
 
 exports.myProducts = async (req, res) => {
   const userId = req.userInfo.id;
-  const from = req.query.from;
-  const to = parseInt(req.query.to);
-  const fromDate = req.query.fromDate;
-  const toDate = req.query.toDate;
-  const fromRating = req.query.fromRating;
-  const toRating = req.query.toRating;
-  const sortBy = req.query.sortby;
-  const order = req.query.order;
-  const category = req.query.category;
-  const title = req.query.title;
-  const maxPrice = req.query.maxPrice;
-  const minPrice = req.query.minPrice;
-
-  let match = {};
-
-  if (category) {
-    match.tags = category;
-  }
-  if (title) {
-    match.title = { $regex: diacriticSensitiveRegex(title), $options: "i" };
-  }
-
-  if (fromDate) {
-    match.$or = [
-      {
-        $and: [
-          { createdAt: { $gt: fromDate } },
-          { createdAt: { $lt: toDate } },
-        ],
-      },
-      {
-        $and: [
-          { legacyCreatedAt: { $gt: fromDate } },
-          { legacyCreatedAt: { $lt: toDate } },
-        ],
-      },
-    ];
-  }
-
-  if (fromRating) {
-    match.$and = [
-      { rating: { $gte: parseFloat(fromRating) } },
-      { rating: { $lte: parseFloat(toRating) } },
-    ];
-  }
+  const { match, options } = applyFilters(req.query);
 
   try {
     var { products } = await StoreSchema.findOne({ user: userId }).populate({
       path: "products",
       select: "title thumbnail brand price rating sells discount",
       match,
-      options: {
-        sort: { [sortBy]: order },
-        skip: from,
-        limit: to,
-      },
+      options,
     });
 
     return res.status(200).send(products);
@@ -299,9 +252,16 @@ exports.getCarouselImages = async (req, res) => {
           .limit(3);
 
         stores.forEach((store) => {
-          if (store.storeBanner[0]  && !carouselImages.has(store.storeBanner[0])) {
+          if (
+            store.storeBanner[0] &&
+            !carouselImages.has(store.storeBanner[0])
+          ) {
             carouselImages.add(store.storeBanner[0]);
-            storeInfo.push({name: store.storeName, image: store.storeImage, id: store._id});
+            storeInfo.push({
+              name: store.storeName,
+              image: store.storeImage,
+              id: store._id,
+            });
           }
         });
       })
@@ -316,15 +276,22 @@ exports.getCarouselImages = async (req, res) => {
           .limit(3);
 
         stores.forEach((store) => {
-          if (store.storeBanner[0] && !carouselImages.has(store.storeBanner[0])) {
+          if (
+            store.storeBanner[0] &&
+            !carouselImages.has(store.storeBanner[0])
+          ) {
             carouselImages.add(store.storeBanner[0]);
-            storeInfo.push({name: store.storeName, image: store.storeImage, id: store._id});
+            storeInfo.push({
+              name: store.storeName,
+              image: store.storeImage,
+              id: store._id,
+            });
           }
         });
       })
     );
 
-    res.status(200).send({carouselImages: [...carouselImages], storeInfo});
+    res.status(200).send({ carouselImages: [...carouselImages], storeInfo });
   } catch (error) {
     console.log(error);
   }

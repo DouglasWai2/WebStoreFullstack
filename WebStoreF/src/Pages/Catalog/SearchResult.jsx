@@ -16,8 +16,7 @@ const SearchResult = () => {
   useEffect(() => {
     setUrl(
       location.pathname +
-        location.search +
-        `&page=${page}&sortBy=sells&order=-1`
+        location.search + `&page=${page}`
     );
   }, [location, page]);
 
