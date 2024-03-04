@@ -6,10 +6,12 @@ import {
   faTruck,
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SkeletonNavAddress from "../shared/SkeletonNavAddress";
 import NavCardMenu from "./NavCardMenu";
 import SearchInput from "./SearchInput";
+import SideMenuNav from "./SideMenuNav";
+import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 
 const Navbar = ({
   user,
@@ -22,6 +24,12 @@ const Navbar = ({
   const [cartItemsNum, setCartItemsNum] = useState(
     JSON.parse(localStorage.getItem("cart"))?.length
   );
+
+  const wrapperRef = useRef(null);
+
+  useOutsideAlerter(wrapperRef, () => {
+    setToggleCard(false);
+  });
 
   const [yourAddress, setYourAddress] = useState([]);
 
@@ -102,15 +110,19 @@ const Navbar = ({
               />
             </div>
             {toggleCard && (
-              <NavCardMenu user={user} setToggleCard={setToggleCard} />
+              <NavCardMenu wrapperRef={wrapperRef} user={user} setToggleCard={setToggleCard} />
             )}
           </div>
-          <div className="hover-border p-2 items-center cursor-pointer w-fit hidden max-md:flex">
+          <div
+            onClick={() => setToggleCard(true)}
+            className="hover-border p-2 items-center cursor-pointer w-fit hidden max-md:flex"
+          >
             <FontAwesomeIcon
               icon={faBars}
               style={{ color: "#94989e" }}
               size="xl"
             />
+            {toggleCard && <SideMenuNav wrapperRef={wrapperRef} user={user} />}
           </div>
           <div
             onClick={() => {

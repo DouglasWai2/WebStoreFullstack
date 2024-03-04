@@ -3,19 +3,17 @@ import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import { Link } from "react-router-dom";
 import { useLogOut } from "../../hooks/useLogOut";
 
-const NavCardMenu = ({ user, setToggleCard }) => {
+const NavCardMenu = ({ user, setToggleCard, wrapperRef }) => {
   const logOut = useLogOut();
-  const wrapperRef = useRef(null);
-  useOutsideAlerter(wrapperRef, () => {
-    setToggleCard(false);
-  });
+  
+
 
   return (
     <>
       <div
         ref={wrapperRef}
         className="
-        bg-white absolute right-0 top-[100%] h-fit p-6 z-30"
+        bg-white absolute right-0 top-[100%] h-fit p-6 z-30 max-md:hidden"
       >
         {user ? (
           // if user is logged in, render this

@@ -86,7 +86,6 @@ const NewProduct = () => {
     let changeId = e.target.id;
     let dimensions;
 
-
     // Remove red border and invalid on input change
     if (error) e.target.classList.remove("invalid");
     e.target.classList.remove("!border-red-400");
@@ -96,7 +95,6 @@ const NewProduct = () => {
 
     // Format the price
     if (changeName === "price") changeValue = moneyMask(e.target.value);
-
 
     // Handle features
     if (changeName.includes("features")) {
@@ -211,13 +209,13 @@ const NewProduct = () => {
   }, [error, loading, response]);
 
   return (
-    <div className="flex justify-center py-10 px-10 gap-8">
+    <div className="flex w-full justify-center py-10 px-10 gap-8 max-md:px-0 max-2xl:flex-col max-2xl:items-center">
       {invalid && (
         <div className="absolute z-20 translate-y-4 animate-expand">
           <ErrorCard invalid={invalid} handleClick={() => setInvalid("")} />
         </div>
       )}
-      <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 ">
+      <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 max-2xl:w-full max-2xl:max-w-[1440px] max-md:gap-6">
         <FormInput
           props={{ id: "title" }}
           value={title}
@@ -225,14 +223,20 @@ const NewProduct = () => {
           label="Título"
           handleChange={handleChange}
         />
-        <div className="relative  my-2 z-20">
-          <FontAwesomeIcon
-            className="absolute right-0 m-2 peer"
-            icon={faCircleInfo}
-          />
-          <div className="bg-white shadow-sm absolute left-[100%] w-[200px] py-1 px-3 invisible opacity-0 peer-hover:visible peer-hover:opacity-100 duration-300">
-            Especificações técnicas do produto, conteúdo da embalagem, guia de
-            tamanhos, etc...
+        <div className="relative my-2 z-20">
+          <div className="absolute right-0 w-max h-max">
+            <FontAwesomeIcon
+              className="absolute right-0 m-2 peer"
+              icon={faCircleInfo}
+            />
+            <div
+              className="bg-white shadow-sm absolute right-[30px] top-[15px] w-[200px] 
+            py-1 px-3 invisible opacity-0 peer-hover:visible 
+            peer-hover:opacity-100 duration-300"
+            >
+              Especificações técnicas do produto, conteúdo da embalagem, guia de
+              tamanhos, etc...
+            </div>
           </div>
           <textarea
             placeholder=""
@@ -312,7 +316,7 @@ const NewProduct = () => {
             // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
             type="text"
           />
-          <label className="floating-label" htmlFor="tags">
+          <label className="floating-label max-md:!text-xs" htmlFor="tags">
             Etiquetas (para encontrarem seu produto)
           </label>
           <div className="text-xs text-right w-full text-gray-400">

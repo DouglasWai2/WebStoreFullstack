@@ -3,6 +3,7 @@ import ImageMagnifier from "./ImageMagnifier";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Rating } from "react-simple-star-rating";
 
 const ProductPreview = ({
   files,
@@ -28,19 +29,22 @@ const ProductPreview = ({
   }
 
   return (
-    <article className="w-2/3">
-      <h1 className="font-bold">Previsualização do produto:</h1>
-      <section id="product" className="shadow p-4 flex gap-10">
+    <article className="w-2/3 max-2xl:w-full max-2xl:max-w-[1440px]">
+      <h1 className="font-bold px-2">Previsualização do produto:</h1>
+      <section id="product" className="shadow p-4 flex gap-10 max-lg:flex-col">
         <div id="images-container" className="">
-          {files.length ? (
-            <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain">
+          <div className="w-[578px] !h-[433px] flex items-center justify-center object-contain max-md:w-full">
+            {files.length ? (
               <ImageMagnifier image={mainImage} />
-            </div>
-          ) : (
-            <div className="bg-gray-200 h-[433px] text-gray-400 text-3xl flex justify-center items-center w-[578px] overflow-hidden hover:brightness-75 transition-[filter] duration-100">
-              <p>1</p>
-            </div>
-          )}
+            ) : (
+              <div
+                className="bg-gray-200 w-full flex items-center justify-center 
+              h-full hover:brightness-75 transition-[filter] duration-100"
+              >
+                <p>1</p>
+              </div>
+            )}
+          </div>
           <div className="relative">
             {files.length > 4 && !dragging && (
               <div
@@ -72,7 +76,7 @@ const ProductPreview = ({
                       provided.innerRef(e);
                     }}
                     className={
-                      "flex w-[578px] overflow-x-scroll my-4 product-images relative " +
+                      "flex w-[578px] overflow-x-scroll my-4 product-images relative max-md:w-full " +
                       (!dragging && "scroll-smooth")
                     }
                   >
@@ -108,16 +112,16 @@ const ProductPreview = ({
                     ) : (
                       <>
                         {" "}
-                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        <div className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-gray-200 flex items-center justify-center text-gray-600 mx-1 hover:brightness-75">
                           1
                         </div>
-                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        <div className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-gray-200 flex items-center justify-center text-gray-600 mx-1 hover:brightness-75">
                           2
                         </div>
-                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        <div className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-gray-200 flex items-center justify-center text-gray-600 mx-1 hover:brightness-75">
                           3
                         </div>
-                        <div className="w-[136px] mx-1 aspect-[4/3] flex items-center justify-center text-gray-400 overflow-hidden bg-gray-200 hover:brightness-75 transition-[filter] duration-100">
+                        <div className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-gray-200 flex items-center justify-center text-gray-600 mx-1 hover:brightness-75">
                           4
                         </div>
                       </>
@@ -150,8 +154,9 @@ const ProductPreview = ({
             foto de capa do produto.
           </div>
         </div>
-        <div className="w-1/2 flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <h1 className="text-3xl">{title ? title : "Título"}</h1>
+          <Rating readonly initialValue={0} />
           <h1 className="text-xl">{price}</h1>
           <h3 className="text-xl">Características</h3>
           <ul className="list-disc ml-7">
@@ -166,7 +171,7 @@ const ProductPreview = ({
           </ul>
         </div>
       </section>
-      <section className="w-[1000px]" id="Product-description">
+      <section className="w-full px-2" id="Product-description">
         <h1 className="text-2xl">Descrição</h1>
         <p className="whitespace-pre-line">{description}</p>
       </section>

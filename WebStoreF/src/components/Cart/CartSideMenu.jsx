@@ -8,7 +8,9 @@ import { useNavigate } from "react-router-dom";
 
 const CartSideMenu = ({ setCart }) => {
   const navigate = useNavigate();
-  const [cartItems, setCartItems] = useState(JSON.parse(localStorage.getItem('cart')));
+  const [cartItems, setCartItems] = useState(
+    JSON.parse(localStorage.getItem("cart"))
+  );
 
   function totalSum(items) {
     var total = 0;
@@ -21,15 +23,18 @@ const CartSideMenu = ({ setCart }) => {
 
   useEffect(() => {
     const handleStorage = () => {
-      setCartItems(JSON.parse(localStorage.getItem('cart'))?.length)
-    }
-  
-    window.addEventListener('storage', handleStorage)
-    return () => window.removeEventListener('storage', handleStorage)
+      setCartItems(JSON.parse(localStorage.getItem("cart"))?.length);
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
   return (
-    <aside className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] h-screen animate-appear py-8 px-3 z-50">
+    <aside
+      className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] 
+    h-screen animate-appear py-8 px-3 z-50 max-lg:w-2/3"
+    >
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
           <p className="font-semibold text-2xl text-slate-900">
@@ -37,7 +42,9 @@ const CartSideMenu = ({ setCart }) => {
             Carrinho
           </p>
           <button
-            className="text-3xl font-semibold"
+            className="text-xl font-semibold border-2 border-slate-900 
+            rounded-lg px-3 py-1 hover:bg-slate-900 hover:text-white 
+            active:bg-slate-900 active:text-white"
             onClick={() => {
               setCart(false);
             }}

@@ -16,7 +16,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
   const [lastTime, setLastTime] = useState(0);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
@@ -37,7 +37,10 @@ const Home = ({ user, address, loading, refreshUser }) => {
   } = useFetchApi("/store/get-carousel-images", "POST", data);
 
   const handleHomeScroll = useCallback(() => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 50
+    ) {
       var now = new Date().getTime(); // Time in milliseconds
       if (now - lastTime < 600) {
         return;
@@ -100,7 +103,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
         ) : (
           <>
             <div className="w-full flex flex-col items-center gap-8">
-              <div className="max-w-[1440px] h-[400px] overflow-hidden">
+              <div className="max-w-[1440px] h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">
                 {fetchingImages ? (
                   <div className="w-full h-full flex justify-center items-center">
                     <LoadingSpinner size="w-12 h-12" />
@@ -117,20 +120,28 @@ const Home = ({ user, address, loading, refreshUser }) => {
                     >
                       {images.carouselImages.map((item, i) => {
                         return (
-                          <div className="relative flex items-center h-[400px] overflow-hidden">
-                            <img alt="banner image from store" className="h-full object-cover" key={item} src={item} />
-                            <div onClick={() => {
-                              navigate(`/store/${images.storeInfo[i].name}/${images.storeInfo[i].id}`);
-                            }
-                            } className="absolute bottom-5 left-5 hover:opacity-60
+                          <div className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">
+                            <img
+                              alt="banner image from store"
+                              className="object-cover max-w-[1440px] h-full block"
+                              key={item}
+                              src={item}
+                            />
+                            <div
+                              onClick={() => {
+                                navigate(
+                                  `/store/${images.storeInfo[i].name}/${images.storeInfo[i].id}`
+                                );
+                              }}
+                              className="absolute flex flex-col items-center bottom-5 left-5 hover:opacity-60
                             hover:translate-y-[-10px] duration-300 cursor-pointer 
-                            active:translate-y-0">
+                            active:translate-y-0"
+                            >
                               <p className="text-white">Por:</p>
                               <Logo
                                 image={images.storeInfo[i].image}
-                                className={
-                                  "shadow-lg items-center justify-center w-[100px] h-[100px] overflow-hidden rounded-full border-white border-4"
-                                }
+                                className="shadow-lg items-center justify-center w-[100px] h-[100px] overflow-hidden
+                                   rounded-full border-white border-4 max-sm:w-[50px] max-sm:h-[50px] max-sm:border-[1px]"
                               />
                               <p className="text-white">
                                 {images.storeInfo[i].name}

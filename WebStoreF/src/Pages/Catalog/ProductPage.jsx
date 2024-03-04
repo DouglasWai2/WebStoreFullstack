@@ -81,7 +81,7 @@ const ProductPage = () => {
               id="product-images-section"
               className="max-lg:flex max-lg:flex-col max-lg:items-center"
             >
-              <div className="!w-[578px] h-[433px] flex items-center justify-center object-contain">
+              <div className="w-[578px] h-[433px] flex items-center justify-center object-contain max-md:w-full">
                 <ImageMagnifier image={mainImage} />
               </div>
               <div className="flex w-[578px] overflow-x-scroll my-4 product-images relative max-lg:w-full">

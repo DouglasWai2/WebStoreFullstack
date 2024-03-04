@@ -10,7 +10,7 @@ const ProductCard = ({ item, className }) => {
     <article
       id="product-card"
       className={
-        "w-[250px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200 " +
+        "w-[250px] h-[350px] bg-white p-3 px-5 shadow-md group cursor-pointer duration-200 max-sm:!w-[140px] max-sm:px-2 " +
         className
       }
       onClick={() => {
@@ -26,7 +26,7 @@ const ProductCard = ({ item, className }) => {
       </div>
       <div className="flex items-center justify-between">
         <Rating
-          size={25}
+          size={window.innerWidth < 640 ? 15 : 25}
           readonly={true}
           initialValue={item.rating}
           allowFraction={true}
@@ -36,10 +36,10 @@ const ProductCard = ({ item, className }) => {
         <span className="text-xs">({item.rating})</span>
       </div>
       <span className="text-sm">{item.sells} vendidos</span>
-      <div className="font-semibold text-lg mt-2 text-right">
+      <div className="font-semibold text-lg mt-2 text-right max-sm:text-sm">
         {item.discount > 0 ? (
-          <div className="flex justify-between gap-5">
-            <p className="text-lg text-[#188fa7] text-end">
+          <div className="flex justify-between gap-5 max-sm:gap-3">
+            <p className="text-lg text-[#188fa7] text-end max-sm:text-base">
               {item.discount * 100}% OFF
             </p>
 

@@ -84,7 +84,7 @@ const ImageMagnifier = ({ image, setFullscreenImage }) => {
             pointerEvents: "none",
             display: "none",
           }}
-          className={`bg-white hidden opacity-60 w-[300px] h-[225px] `}
+          className={`bg-white hidden opacity-60 w-[300px] h-[225px] max-md:!hidden`}
         ></div>
         <div
           ref={result}
@@ -94,7 +94,7 @@ const ImageMagnifier = ({ image, setFullscreenImage }) => {
             display: "none",
           }}
           className={
-            "w-[578px] hidden h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto"
+            "w-[578px] hidden h-[432px] border-[2px] border-white bg-center absolute left-[110%] top-0 bottom-0 my-auto max-lg:!hidden"
           }
         ></div>
       </>
