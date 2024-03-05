@@ -17,7 +17,7 @@ const verifyToken = async (req, res, next) => {
   // If there's no user from given refresh token, token is already deleted (user could been hacked)
   try {
     const foundUser = await UserSchema.findOne({ refreshTokens: refreshToken });
-    if (!foundUser) return;
+    if (!foundUser) return res.status(403).send("Invalid refresh token");
     const refreshDecoded = jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET
