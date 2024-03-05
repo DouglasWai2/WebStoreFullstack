@@ -26,9 +26,11 @@ const ProductCategory = ({ text, queries, storeId }) => {
     </div>
   ) : (
     <>
-      <div>
-        <h1 className="text-2xl mt-10">{text}</h1>
-        <div className="py-5 flex flex-wrap gap-6">
+      <div className="border-[1px] rounded-lg border-gray-200">
+        <h1 className="text-2xl mt-[-15px] bg-white w-fit mx-2 px-2 max-sm:text-lg max-sm:text-center">
+          {text}
+        </h1>
+        <div className="py-5 flex flex-wrap gap-6 max-sm:justify-center max-sm:gap-2">
           {products &&
             products.map((item, index) => {
               if (index >= limit) return;

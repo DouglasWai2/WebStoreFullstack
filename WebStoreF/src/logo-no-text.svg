@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlnsXlink="http://www.w3.org/1999/xlink" xmlnsSvgjs="http://svgjs.dev/svgjs" width="1000" height="164" viewBox="0 0 1000 164">
+	<g transform="matrix(1,0,0,1,-0.6060606060606233,0.417590796221063)">
+		<svg viewBox="0 0 396 65" data-background-color="#000000" preserveAspectRatio="xMidYMid meet" height="164" width="1000" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+			<g id="tight-bounds" transform="matrix(1,0,0,1,0.2400000000000091,-0.1655085472827409)">
+				<svg viewBox="0 0 395.52 65.3310170945655" height="65.3310170945655" width="395.52">
+					<g>
+						<svg viewBox="0 0 527.8261038866129 87.18501268197365" height="65.3310170945655" width="395.52">
+							<g>
+								<svg viewBox="0 0 117.41298590259734 87.18501268197365" height="87.18501268197365" width="117.41298590259734">
+									<g>
+										<svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" x="0" y="0" viewBox="0 12.873 100 74.255" enable-background="new 0 0 100 100" xml:space="preserve" height="87.18501268197365" width="117.41298590259734" class="icon-icon-0" data-fill-palette-color="#ffffff" id="icon-0">
+											<g fill="#ffffff" data-fill-palette-color="#ffffff">
+												<g fill="#ffffff" data-fill-palette-color="#ffffff">
+													<path d="M0 12.873v74.255h100V12.873H0zM97.029 84.155H2.971V15.843h94.058V84.155z" fill="#ffffff" data-fill-palette-color="#ffffff">
+													</path>
+													<polygon points="79.841,67.305 83.047,74.18 85.831,72.889 82.594,65.948 88.732,65.842 74.441,52.042 75.484,72.025   " fill="#ffffff" data-fill-palette-color="#ffffff">
+													</polygon>
+													<path d="M65.781 23.512H14.686v38.102h51.095V23.512zM38.286 58.068H21.177v-4.258h17.109V58.068zM59.287 58.068H42.175v-4.258h17.112V58.068zM60.396 46.875H20.071v-1.188h40.326V46.875zM60.396 42.86H20.071v-1.188h40.326V42.86zM60.396 38.853H20.071v-1.189h40.326V38.853zM60.396 34.836H20.071v-1.188h40.326V34.836zM63.188 29.493H17.277v-4.257h45.911V29.493z" fill="#ffffff" data-fill-palette-color="#ffffff">
+													</path>
+												</g>
+											</g>
+										</svg>
+									</g>
+								</svg>
+							</g>
+						</svg>
+					</g>
+					<defs>
+					</defs>
+				</svg>
+				<rect width="395.52" height="65.3310170945655" fill="none" stroke="none" visibility="hidden">
+				</rect>
+			</g>
+		</svg>
+	</g>
+</svg>

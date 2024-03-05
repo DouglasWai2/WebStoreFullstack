@@ -8,9 +8,11 @@ import { useFetchApi } from "../hooks/useFetchApi";
 import { Carousel } from "react-responsive-carousel";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import Logo from "../components/Store/MyStore/Logo";
+import { isMobile } from "react-device-detect";
 
 const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
+  const [toggleSideNav, setToggleSideNav] = useState(false);
   const [toggleCart, setToggleCart] = useState(false);
   const [productsIds, setProductsIds] = useState(null);
   const [counter, setCounter] = useState(0);
@@ -75,23 +77,25 @@ const Home = ({ user, address, loading, refreshUser }) => {
     address,
     toggleCard,
     setToggleCard,
+    setToggleSideNav,
+    toggleSideNav,
     toggleCart,
     setToggleCart,
     refreshUser,
   };
 
   useEffect(() => {
-    if (toggleCard) {
+    if (toggleCard || toggleSideNav) {
       document.body.style.overflow = "hidden";
     }
-    if (!toggleCard) {
+    if (!toggleCard && !toggleSideNav) {
       document.body.style.overflow = "auto";
     }
-  }, [toggleCard]);
+  }, [toggleCard, toggleSideNav]);
 
   return (
     <>
-      {toggleCard && (
+      {(toggleCard || toggleSideNav) && (
         <div className="absolute right-0 top-0 w-screen h-screen bg-black/50 overflow-hidden flex items-center justify-center z-30"></div>
       )}
       {loading && <TopBarProgress />}
@@ -154,11 +158,11 @@ const Home = ({ user, address, loading, refreshUser }) => {
                   )
                 )}
               </div>
-              <ProductsCarousel topSelling />
+              <ProductsCarousel isMobile={isMobile} topSelling />
               {categories && (
                 <>
                   {categories.map((item) => (
-                    <ProductsCarousel key={item} category={item} {...item} />
+                    <ProductsCarousel isMobile={isMobile} key={item} category={item} {...item} />
                   ))}
                 </>
               )}

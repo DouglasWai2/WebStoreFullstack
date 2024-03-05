@@ -193,6 +193,10 @@ input[type="date"] {
   transform: rotate(-8deg);
 }
 
+.sidenav {
+  @apply group-[.actived]:bg-[#eef5f7] group-[.actived]:text-[#188fa7]
+}
+
 /* HTML: <div class="loader"></div> */
 
 .loader {

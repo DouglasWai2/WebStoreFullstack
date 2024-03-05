@@ -14,10 +14,7 @@ const SearchResult = () => {
   const { data, loading, error } = useFetchApi(url, "GET");
 
   useEffect(() => {
-    setUrl(
-      location.pathname +
-        location.search + `&page=${page}`
-    );
+    setUrl(location.pathname + location.search + `&page=${page}`);
   }, [location, page]);
 
   useEffect(() => {
@@ -33,7 +30,7 @@ const SearchResult = () => {
   }, [data]);
 
   return (
-    <div className="flex flex-col gap-4 items-center w-full">
+    <div className="flex flex-col gap-4 items-center w-full px-2">
       <h1 className="text-left w-full max-w-[1440px]">
         Resultado da busca por: {}
       </h1>

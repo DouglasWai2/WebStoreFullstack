@@ -1,4 +1,5 @@
 import Logo from "../../logo-no-background.svg";
+import Logo2 from "../../webstore-favicon-color.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretDown,
@@ -20,6 +21,8 @@ const Navbar = ({
   toggleCard,
   setToggleCard,
   setToggleCart,
+  setToggleSideNav,
+  toggleSideNav,
 }) => {
   const [cartItemsNum, setCartItemsNum] = useState(
     JSON.parse(localStorage.getItem("cart"))?.length
@@ -27,8 +30,13 @@ const Navbar = ({
 
   const wrapperRef = useRef(null);
 
+  const sideBarRef = useRef(null);
+
   useOutsideAlerter(wrapperRef, () => {
     setToggleCard(false);
+  });
+  useOutsideAlerter(sideBarRef, () => {
+    setToggleSideNav(false);
   });
 
   const [yourAddress, setYourAddress] = useState([]);
@@ -57,7 +65,11 @@ const Navbar = ({
           }
         >
           <a href="/">
-            <img className="h-[50px] max-md:h-[30px]" alt="logo" src={Logo} />
+
+            <img className="h-[50px] max-md:h-[80px]" 
+            alt="logo" 
+            src={window.innerWidth < 768 ? Logo2 : Logo} />
+
           </a>
           <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit max-md:hidden">
             {fetchingAddress ? (
@@ -75,12 +87,17 @@ const Navbar = ({
                     </>
                   ) : (
                     <>
-                      Entregar para:
-                      <span className="text-white text-xs w-max">
+                      <span className="max-lg:!hidden">Entregar para:</span>
+                      <span
+                        className="text-white text-xs 
+                      w-max max-xl:w-fit max-lg:!hidden"
+                      >
                         {" "}
                         {yourAddress[0].recieverName.split(" ")[0]} em{" "}
                         {yourAddress[0].street} - N° {yourAddress[0].number}{" "}
-                        <br></br> CEP: {yourAddress[0].cep}
+                      </span>
+                      <span className="w-max max-lg:text-white">
+                        CEP: {yourAddress[0].cep}
                       </span>
                     </>
                   )}
@@ -110,33 +127,41 @@ const Navbar = ({
               />
             </div>
             {toggleCard && (
-              <NavCardMenu wrapperRef={wrapperRef} user={user} setToggleCard={setToggleCard} />
+              <NavCardMenu
+                wrapperRef={wrapperRef}
+                user={user}
+                setToggleCard={setToggleCard}
+              />
             )}
           </div>
-          <div
-            onClick={() => setToggleCard(true)}
-            className="hover-border p-2 items-center cursor-pointer w-fit hidden max-md:flex"
-          >
-            <FontAwesomeIcon
-              icon={faBars}
-              style={{ color: "#94989e" }}
-              size="xl"
-            />
-            {toggleCard && <SideMenuNav wrapperRef={wrapperRef} user={user} />}
-          </div>
-          <div
-            onClick={() => {
-              setToggleCart(true);
-            }}
-            className="cursor-pointer flex items-center p-2 hover-border min-w-[150px] justify-around max-md:min-w-fit max-md:justify-center"
-          >
-            <p className="max-md:hidden">Seu carrinho </p>
-            <FontAwesomeIcon
-              icon={faCartShopping}
-              size="xl"
-              style={{ color: "#94989e" }}
-            />
-            <span>{cartItemsNum > 0 && cartItemsNum}</span>
+          <div ref={sideBarRef} className="flex">
+            <div className="items-center w-fit hidden max-md:flex">
+              <div 
+                onClick={() => setToggleSideNav(true)}
+                className="hover-border p-2 cursor-pointer"
+              >
+                <FontAwesomeIcon
+                  icon={faBars}
+                  style={{ color: "#94989e" }}
+                  size="xl"
+                />
+              </div>
+              {toggleSideNav && <SideMenuNav user={user} />}
+            </div>
+            <div
+              onClick={() => {
+                setToggleCart(true);
+              }}
+              className="cursor-pointer flex items-center p-2 hover-border min-w-[150px] justify-around max-md:min-w-fit max-md:justify-center"
+            >
+              <p className="max-md:hidden">Seu carrinho </p>
+              <FontAwesomeIcon
+                icon={faCartShopping}
+                size="xl"
+                style={{ color: "#94989e" }}
+              />
+              <span>{cartItemsNum > 0 && cartItemsNum}</span>
+            </div>
           </div>
         </div>
       </nav>

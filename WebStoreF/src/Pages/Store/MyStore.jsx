@@ -160,13 +160,17 @@ const MyStore = () => {
                   {edit ? (
                     <>
                       <button
-                        className="bg-blue-600 border-2 border-blue-600 !text-lg text-white px-6 rounded h-fit hover:bg-white hover:text-blue-600 duration-200"
+                        className="bg-blue-600 border-2 border-blue-600 
+                        !text-lg text-white px-6 rounded h-fit hover:bg-white 
+                        hover:text-blue-600 duration-200 max-sm:w-full"
                         onClick={handleSubmit}
                       >
                         Salvar
                       </button>
                       <button
-                        className="bg-red-600  text-white text-sm px-1 rounded h-fit w-full hover:brightness-75 duration-300"
+                        className="bg-red-600 text-white text-sm px-1 
+                        rounded h-fit w-full hover:brightness-75 
+                        duration-300"
                         onClick={() => {
                           setEdit(false);
                           setBannerEdit(null);
@@ -211,7 +215,7 @@ const MyStore = () => {
               </div>
             </div>
           </div>
-          <div className="mt-[100px] px-6">
+          <div className="mt-[100px] px-6 max-sm:px-2 max-sm:flex max-sm:flex-col max-sm:gap-7">
             {data && data.products.length ? (
               <>
                 <ProductCategory
