@@ -34,7 +34,6 @@ const MyProducts = () => {
     error: invalid,
   } = useFetchApi(postUrl, "POST", body);
 
-
   function checkUncheckAll() {
     if (!checked.length) setChecked(data.map((item) => item._id));
     // check if checked array is empty, that is, if anything is checked
@@ -77,139 +76,141 @@ const MyProducts = () => {
       {confirm && (
         <ConfirmDelete handleClick={deleteSelected} setConfirm={setConfirm} />
       )}
-      <div className="w-full h-full flex flex-col items-center">
-        <h1 className="text-2xl">Meus produtos</h1>
-        <div className="border-2 border-gray-200 py-4 px-2 rounded-sm w-[1440px] relative">
-          <div className="w-full bg-gray-200">
-            <div className="w-full bg-gray-300 flex items-center justify-between px-2 py-4">
-              <label
-                htmlFor="select-all"
-                className="cursor-pointer has-[:checked]:text-blue-500 select-none"
-              >
-                <input
-                  className="mr-1"
-                  id="select-all"
-                  type="checkbox"
-                  onClick={checkUncheckAll}
-                  checked={checked.length}
-                  onChange={(e) => {}}
-                />
-                Selecionar todos
-              </label>
-              <label className="flex flex-col w-[50%]" htmlFor="name-search">
-                <div className="w-full flex gap-3">
-                  <input
-                    value={title}
-                    type="text"
-                    id="name-search"
-                    className="w-full h-[2em]"
-                    onChange={(e) => {
-                      setTitle(e.target.value);
-                    }}
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setUrl(
-                        url.replace(/&title=\D*?(?=&)/, `&title=${title}`)
-                      ); // search for title in url and add a value to it
-                    }}
-                  >
-                    <FontAwesomeIcon icon={faMagnifyingGlass} />
-                  </button>
-                </div>
-              </label>
-              <div>
-                <button
-                  className="px-3 py-1"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setMenu(!menu);
-                  }}
+      <div className="flex justify-center w-full h-full py-4">
+        <div className="flex flex-col items-center max-w-[1440px] w-full">
+          <h1 className="text-2xl">Meus produtos</h1>
+          <div className="border-2 border-gray-200 py-4 px-2 rounded-sm relative">
+            <div className="w-full bg-gray-200">
+              <div className="w-full bg-gray-300 flex items-center justify-between px-2 py-4">
+                <label
+                  htmlFor="select-all"
+                  className="cursor-pointer has-[:checked]:text-blue-500 select-none"
                 >
-                  <FontAwesomeIcon icon={faCaretDown} />
-                </button>
-                {menu && (
-                  <div className="absolute bg-white shadow-md right-0 px-3 py-5 flex flex-col gap-2 animate-appear z-20">
-                    <button
-                      onClick={() => {
-                        if (!checked.length)
-                          return alert("Nenhum produto selecionado");
-                        setConfirm(true);
+                  <input
+                    className="mr-1"
+                    id="select-all"
+                    type="checkbox"
+                    onClick={checkUncheckAll}
+                    checked={checked.length}
+                    onChange={(e) => {}}
+                  />
+                  Selecionar todos
+                </label>
+                <label className="flex flex-col w-[50%]" htmlFor="name-search">
+                  <div className="w-full flex gap-3">
+                    <input
+                      value={title}
+                      type="text"
+                      id="name-search"
+                      className="w-full h-[2em]"
+                      onChange={(e) => {
+                        setTitle(e.target.value);
                       }}
-                      className="text-left rounded-sm bg-[#9dbbae] px-3 py-1 hover:underline"
-                    >
-                      Excluir selecionados
-                    </button>
+                    />
                     <button
-                      onClick={() => {
-                        if (!checked.length)
-                          return alert("Nenhum produto selecionado");
-                        setDiscount(true);
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setUrl(
+                          url.replace(/&title=\D*?(?=&)/, `&title=${title}`)
+                        ); // search for title in url and add a value to it
                       }}
-                      className="text-left rounded-sm bg-[#9dbbae] px-3 py-1 hover:underline"
                     >
-                      Aplicar desconto em selecionados
+                      <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
                   </div>
+                </label>
+                <div>
+                  <button
+                    className="px-3 py-1"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMenu(!menu);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faCaretDown} />
+                  </button>
+                  {menu && (
+                    <div className="absolute bg-white shadow-md right-0 px-3 py-5 flex flex-col gap-2 animate-appear z-20">
+                      <button
+                        onClick={() => {
+                          if (!checked.length)
+                            return alert("Nenhum produto selecionado");
+                          setConfirm(true);
+                        }}
+                        className="text-left rounded-sm bg-[#9dbbae] px-3 py-1 hover:underline"
+                      >
+                        Excluir selecionados
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (!checked.length)
+                            return alert("Nenhum produto selecionado");
+                          setDiscount(true);
+                        }}
+                        className="text-left rounded-sm bg-[#9dbbae] px-3 py-1 hover:underline"
+                      >
+                        Aplicar desconto em selecionados
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div
+                className={
+                  "overflow-hidden max-h-0 transition-all !duration-400" +
+                  (filter ? " !max-h-[600px]" : "")
+                }
+              >
+                {filter && (
+                  <Filters
+                    filter={filter}
+                    categories={store && store.categories}
+                    setUrl={setUrl}
+                    url={url}
+                    title={title}
+                  />
                 )}
               </div>
-            </div>
-            <div
-              className={
-                "overflow-hidden max-h-0 transition-all !duration-400" +
-                (filter ? " !max-h-[600px]" : "")
-              }
-            >
-              {filter && (
-                <Filters
-                  filter={filter}
-                  categories={store && store.categories}
-                  setUrl={setUrl}
-                  url={url}
-                  title={title}
+              <div
+                aria-label="More filters"
+                id="arrow-down"
+                onClick={() => {
+                  setFilter(!filter);
+                }}
+                className="w-full text-center bg-gray-300 group cursor-pointer hover:brightness-90 duration-100"
+              >
+                <FontAwesomeIcon
+                  className={"group-hover:animate-bounce"}
+                  icon={faChevronDown}
                 />
-              )}
+              </div>
             </div>
-            <div
-              aria-label="More filters"
-              id="arrow-down"
-              onClick={() => {
-                setFilter(!filter);
-              }}
-              className="w-full text-center bg-gray-300 group cursor-pointer hover:brightness-90 duration-100"
-            >
-              <FontAwesomeIcon
-                className={"group-hover:animate-bounce"}
-                icon={faChevronDown}
-              />
-            </div>
+            {loading && (
+              <div className="w-full py-6 flex justify-center">
+                <LoadingSpinner />
+              </div>
+            )}
+            {data &&
+              data.map((item, index) => {
+                return (
+                  <MyProductsCard
+                    key={index}
+                    item={item}
+                    checked={checked}
+                    handleCheck={checkOne}
+                    refresh={refresh}
+                  />
+                );
+              })}
+            {!loading && !data && (
+              <div className="w-full py-6 flex flex-col items-center">
+                <h1 className="text-lg">
+                  Você ainda não adicionou nenhum produto
+                </h1>
+                <Link to="/store/new-product">Adicionar produtos</Link>
+              </div>
+            )}
           </div>
-          {loading && (
-            <div className="w-full py-6 flex justify-center">
-              <LoadingSpinner />
-            </div>
-          )}
-          {data &&
-            data.map((item, index) => {
-              return (
-                <MyProductsCard
-                  key={index}
-                  item={item}
-                  checked={checked}
-                  handleCheck={checkOne}
-                  refresh={refresh}
-                />
-              );
-            })}
-          {!loading && !data && (
-            <div className="w-full py-6 flex flex-col items-center">
-              <h1 className="text-lg">
-                Você ainda não adicionou nenhum produto
-              </h1>
-              <Link to="/store/new-product">Adicionar produtos</Link>
-            </div>
-          )}
         </div>
       </div>
     </>

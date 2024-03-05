@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "../shared/LoadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -10,6 +13,7 @@ const SearchInput = () => {
   const [url, setUrl] = useState(null);
   const [search, setSearch] = useState("");
   const [showResult, setShowResult] = useState(false);
+  const [searchFull, setSearchFull] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -23,7 +27,11 @@ const SearchInput = () => {
 
   useEffect(() => {
     var delayDebounceFn;
-    if (location.search.split(`=`)[1] === search) return;
+
+    let params = new URL(document.location).searchParams;
+    if (params.get("search") === search) return;
+
+
     if (search) {
       delayDebounceFn = setTimeout(() => {
         setUrl(`/search?search=${search}`);
@@ -33,21 +41,44 @@ const SearchInput = () => {
     return () => clearTimeout(delayDebounceFn);
   }, [search, location]);
 
-  useOutsideAlerter(results, () => setShowResult(false));
+  useOutsideAlerter(results, () => {
+    setShowResult(false);
+    setSearchFull(false);
+  });
 
   return (
     <div
       ref={results}
-      className="relative z-40 w-full h-9 max-md:w-1/2 text-black"
+      className={
+        "relative z-40 w-full max-md:w-full text-black " +
+        (searchFull && "h-[80px] w-screen !fixed left-0")
+      }
     >
-      <div className="rounded-md h-full flex overflow-hidden">
+      <div
+        className={
+          "rounded-md max-h-[35px] h-[35px] flex overflow-hidden transition-all duration-200 " +
+          (searchFull && "!max-w-full !w-full !max-h-full !h-full rounded-none")
+        }
+      >
+        {searchFull && (
+          <button
+            onClick={() => {
+              setShowResult(false);
+              setSearchFull(false);
+            }}
+            className={"absolute left-0 h-full px-3"}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+        )}
         <input
-          className="w-full px-3"
+          className={"h-full px-3 w-full " + (searchFull && "pl-10")}
           id="search"
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onFocus={() => {
+            if (window.innerWidth < 640) setSearchFull(true);
             if (search) {
               setShowResult(true);
             }
@@ -56,7 +87,9 @@ const SearchInput = () => {
         <button
           onClick={() => {
             if (search) {
-              navigate(`/catalog/products/search/result?search=${search}&sortBy=sells&order=-1`);
+              navigate(
+                `/catalog/products/search/result?search=${search}&sortBy=sells&order=-1`
+              );
             }
           }}
           className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200"
@@ -70,7 +103,9 @@ const SearchInput = () => {
       {showResult && (
         <div
           id="results"
-          className="absolute w-full top-[102%] h-max bg-white flex flex-col gap-2 max-h-[80vh] overflow-y-scroll"
+          className={
+            "absolute w-full top-[100%] h-max bg-white flex flex-col gap-2 max-h-[80vh] overflow-y-scroll"
+          }
         >
           {searching ? (
             <div className="h-[50px] py-6 flex items-center justify-center w-full">
@@ -89,7 +124,7 @@ const SearchInput = () => {
                           navigate(
                             `/catalog/products/search/result?search=${item._id}`
                           );
-                          setShowResult(false)
+                          setShowResult(false);
                         }}
                         className="py-2 px-4 cursor-pointer hover:text-white hover:bg-[#188fa7] 
                       hover:shadow-[inset_-2px_-7px_29px_-18px_rgba(0,0,0,0.75)]"
@@ -107,18 +142,21 @@ const SearchInput = () => {
                           navigate(`/catalog/${item.title}/${item._id}`);
                           setShowResult(false);
                         }}
-                        className="flex py-2 px-4 items-center gap-2 group bg-white 
-                    cursor-pointer hover:bg-[#188fa7] 
+                        className="flex h-[80px] py-2 items-center group bg-white 
+                    cursor-pointer hover:bg-[#188fa7] hover:text-white
                     hover:shadow-[inset_-2px_-7px_29px_-18px_rgba(0,0,0,0.75)]"
                       >
-                        <div className="h-[50px] w-[50px] bg-white flex rounded-full overflow-hidden">
+                        <div className="w-[50px] h-[50px] mr-2 ml-2 bg-white rounded-full overflow-hidden">
                           <img
-                            className="w-full object-contain"
+                            className="h-full w-full object-contain"
                             src={item.thumbnail}
                             alt={item.title}
                           />
                         </div>
-                        <p className="select-none pointer-events-none group-hover:text-white">
+                        <p
+                          className="select-none w-fit 
+                        pointer-events-none max-lg:text-sm"
+                        >
                           {item.title}
                         </p>
                       </div>

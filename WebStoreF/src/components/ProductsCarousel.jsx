@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const ProductsCarousel = ({ queries, category, topSelling }) => {
+const ProductsCarousel = ({ queries, category, topSelling, isMobile }) => {
   const [productsUrl, setProductsUrl] = useState(null);
   const [phrase, setPhrase] = useState(null);
   const [scrollable, setScrollable] = useState(false);
@@ -68,7 +68,7 @@ const ProductsCarousel = ({ queries, category, topSelling }) => {
         </div>
       ) : (
         <div className="flex items-center">
-          {scrollable && (
+          {scrollable && !isMobile && (
             <div
               onClick={() => {
                 scrollCarousel(-scrollRef.current.clientWidth);
@@ -97,9 +97,9 @@ const ProductsCarousel = ({ queries, category, topSelling }) => {
               <div
                 onClick={() =>
                   navigate(
-                    `/catalog/products/search/result?${category ? `category=${category}&` : ""}&sortBy=${
-                      topSelling ? "sellsToday" : "sells"
-                    }&order=-1`
+                    `/catalog/products/search/result?${
+                      category ? `category=${category}&` : ""
+                    }&sortBy=${topSelling ? "sellsToday" : "sells"}&order=-1`
                   )
                 }
                 className="px-8 font-semibold hover:underline cursor-pointer text-center"
@@ -109,7 +109,7 @@ const ProductsCarousel = ({ queries, category, topSelling }) => {
             )}
           </div>
 
-          {scrollable && (
+          {scrollable && !isMobile && (
             <div
               onClick={() => {
                 scrollCarousel(scrollRef.current.clientWidth);
