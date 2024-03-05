@@ -70,7 +70,7 @@ const ProductPage = () => {
       );
   }
 
-  return true ? (
+  return loading ? (
     <ProductPageSkeleton />
   ) : (
     product && (
