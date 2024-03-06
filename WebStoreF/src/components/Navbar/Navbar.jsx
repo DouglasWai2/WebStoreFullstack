@@ -146,7 +146,7 @@ const Navbar = ({
                   size="xl"
                 />
               </div>
-              {toggleSideNav && <SideMenuNav user={user} />}
+              {toggleSideNav && <SideMenuNav setToggleSideNav={setToggleSideNav} user={user} />}
             </div>
             <div
               onClick={() => {

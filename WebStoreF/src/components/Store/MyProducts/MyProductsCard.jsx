@@ -44,8 +44,9 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
       {confirm && (
         <ConfirmDelete handleClick={handleClick} setConfirm={setConfirm} />
       )}
-      <div className="shadow flex bg-white justify-between py-3 px-2 my-3 hover:brightness-80 duration-400">
-        <div className="flex">
+      <div className="shadow flex bg-white justify-between py-3 px-2 my-3 gap-2 
+      hover:brightness-80 duration-400 min-w-[400px]">
+        <div className="flex items-center">
           <input
             id={"item_" + item._id}
             type="checkbox"
@@ -54,11 +55,11 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
             onClick={(e) => handleCheck(e.target.value)}
             onChange={(e) => {}}
           />
-          <div className="h-[100px] aspect-[4/3] px-3">
+          <div className="h-[100px] aspect-[4/3] px-3 max-sm:h-[60px]">
             <img className="object-contain h-full" src={item.thumbnail} />
           </div>
-          <div>
-            <h1 className="max-w-[60%]">{item.title}</h1>
+          <div className="max-w-[750px]">
+            <h1 className="w-full max-sm:text-sm">{item.title}</h1>
             <Rating
               size={25}
               readonly={true}
@@ -70,9 +71,9 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
           </div>
         </div>
         <div className="flex flex-col justify-between">
-          <div className="flex justify-end">
+          <div className="flex justify-end text-nowrap">
             {discount && (
-              <label htmlFor="discount" className="mr-4">
+              <label htmlFor="discount" className="mr-4 max-sm:mr-1">
                 <input
                   value={discountValue}
                   onChange={(e) => {
@@ -98,7 +99,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                   {moneyMask(item.price)}
                 </p>
               )}
-              <p className="font-semibold text-right">
+              <p className="font-semibold text-right ">
                 {moneyMask(
                   item.discount
                     ? Number(item.price - item.price * item.discount).toFixed(2)
@@ -107,7 +108,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
               </p>
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-4 justify-end">
             {discount ? (
               <>
                 <button
@@ -136,22 +137,22 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
             ) : (
               <>
                 <button
-                  className="hover:underline text"
+                  className="hover:underline rounded-md p-1 text transition-colors duration-200 active:bg-green-300 active:text-green-600"
                   onClick={() => {
                     setDiscount(true);
                   }}
                 >
-                  <FontAwesomeIcon icon={faPercent} />
-                  Desconto
+                  <FontAwesomeIcon className="text-xl" icon={faPercent} />
+                  <span className="">Desconto</span>
                 </button>
                 <button
-                  className="hover:underline text"
+                  className="hover:underline rounded-md text p-1 transition-colors duration-200 active:bg-red-300 active:text-red-600"
                   onClick={() => {
                     setConfirm(true);
                   }}
                 >
-                  <FontAwesomeIcon icon={faTrashCan} />
-                  Excluir
+                  <FontAwesomeIcon className="text-xl" icon={faTrashCan} />
+                  <span className="">Excluir</span>
                 </button>
               </>
             )}

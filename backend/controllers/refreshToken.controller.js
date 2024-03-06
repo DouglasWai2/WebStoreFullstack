@@ -11,7 +11,11 @@ exports.refreshToken = async (req, res) => {
   if (!refreshToken) {
     return res.status(401).send("Access Denied. No refresh token provided.");
   }
-  res.clearCookie('refreshToken', {httpOnly: true, sameSite: 'strict'})
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    sameSite: "none",
+    secure: true,
+    maxAge: 1000 * 60 * 60 * 24 * 365,})
   try {
     const foundUser = await User.findOne({refreshTokens: refreshToken})
     if (!foundUser){
@@ -60,7 +64,9 @@ exports.refreshToken = async (req, res) => {
     res
     .cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "none",
+      secure: true,
+      maxAge: 1000 * 60 * 60 * 24 * 365,
     })
     .setHeader("Authorization", accessToken)
     .json({

@@ -194,7 +194,7 @@ input[type="date"] {
 }
 
 .sidenav {
-  @apply group-[.actived]:bg-[#eef5f7] group-[.actived]:text-[#188fa7]
+  @apply group-[.actived]:bg-[#eef5f7] group-[.actived]:text-[#188fa7] active:bg-[#a7e7f8] duration-300
 }
 
 /* HTML: <div class="loader"></div> */

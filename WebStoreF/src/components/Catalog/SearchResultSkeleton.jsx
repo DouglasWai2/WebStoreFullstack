@@ -11,13 +11,13 @@ const SearchResultSkeleton = () => {
         (_, i) => i + 1
       ).map((item) => {
         return (
-          <div className="w-[250px] bg-white p-3 px-5 shadow-md animate-pulse">
-            <div className="aspect-[4/3] object-contain bg-gray-300"></div>
-            <div className="mt-3 h-[4.5em]">
+          <div className="w-[250px] py-5 bg-white p-3 px-5 shadow-md animate-pulse max-sm:w-[160px] max-sm:px-2">
+            <div className="object-contain w-full aspect-[4/3] bg-gray-300"></div>
+            <div className="mt-3 h-12">
               <div className="w-full mt-1 h-[1em] bg-gray-300"></div>
             </div>
             <div className="flex items-center justify-between mt-4">
-              <Rating size={25} initialValue={0} readonly={true} />
+              <Rating size={window.innerWidth < 768 ? 15 : 25} initialValue={0} readonly={true} />
               <div className="text-xs w-3 h-3 bg-gray-300"></div>
             </div>
             <div className="text-sm w-24 h-3 bg-gray-300"></div>

@@ -192,7 +192,7 @@ const AddressForm = ({ url, type }) => {
   return (
     <div
       className={
-        "flex flex-col border-[1px] relative shadow-md w-3/4 py-10 px-6 rounded-sm"
+        "flex flex-col border-[1px] relative shadow-md w-full max-w-[1440px] py-10 px-6 rounded-sm max-sm:px-2"
       }
     >
       {type && <h1 className="text-xl mb-8">Coloque as informações do endereço da sua loja</h1>}
@@ -297,7 +297,7 @@ const AddressForm = ({ url, type }) => {
             Bairro
           </label>
         </div>
-        <div className="flex w-full gap-10">
+        <div className="flex w-full gap-10 max-sm:gap-3">
           <div className="relative w-3/4">
             <input
               required
@@ -316,7 +316,7 @@ const AddressForm = ({ url, type }) => {
               Lougradouro
             </label>
           </div>
-          <div className="relative w-1/4">
+          <div className="relative w-2/5">
             <input
               required
               className="floating-input-effect peer  w-full  border-[1px] rounded-sm"
@@ -336,8 +336,8 @@ const AddressForm = ({ url, type }) => {
         </div>
         {!type && (
           <>
-            <div className="flex w-full gap-10">
-              <div className="relative w-3/4">
+            <div className="flex w-full gap-10 max-sm:gap-8 max-sm:flex-col-reverse">
+              <div className="relative w-3/5 max-sm:w-full">
                 <input
                   required
                   className=" floating-input-effect peer w-full border-[1px] rounded-sm"
@@ -354,7 +354,7 @@ const AddressForm = ({ url, type }) => {
                   Nome do destinatário
                 </label>
               </div>
-              <div className="relative w-2/5">
+              <div className="relative w-2/5 max-sm:w-full">
                 <input
                   required
                   className=" floating-input-effect peer w-full  border-[1px] rounded-sm"
@@ -391,12 +391,12 @@ const AddressForm = ({ url, type }) => {
             </div>
           </>
         )}
-
+        <div className="h-10">
         <SubmitButton
           onClick={handleSubmit}
           loading={fetching}
           text="Adicionar Endereço"
-        />
+        /></div>
       </form>
     </div>
   );

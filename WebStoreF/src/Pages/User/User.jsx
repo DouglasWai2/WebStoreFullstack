@@ -11,7 +11,7 @@ const User = () => {
                 <h1 className="text-3xl mb-4">Seu perfil</h1>
                 <div className="flex max-md:flex-col">
                     <SideNav />
-                    <div className="w-full flex justify-center px-9 max-md:px-2 max-md:py-9">
+                    <div className="w-full flex justify-center max-md:px-2 max-md:py-9">
                         <Outlet context={{user, address, loading, fetching}}/>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ const SearchInput = () => {
   } = useFetchApi(url, "GET");
 
   useEffect(() => {
-    var delayDebounceFn;
+    var delayDebounceFn;``
 
     let params = new URL(document.location).searchParams;
     if (params.get("search") === search) return;
@@ -125,6 +125,7 @@ const SearchInput = () => {
                             `/catalog/products/search/result?search=${item._id}`
                           );
                           setShowResult(false);
+                          setSearchFull(false);
                         }}
                         className="py-2 px-4 cursor-pointer hover:text-white hover:bg-[#188fa7] 
                       hover:shadow-[inset_-2px_-7px_29px_-18px_rgba(0,0,0,0.75)]"
@@ -141,6 +142,7 @@ const SearchInput = () => {
                         onClick={() => {
                           navigate(`/catalog/${item.title}/${item._id}`);
                           setShowResult(false);
+                          setSearchFull(false);
                         }}
                         className="flex h-[80px] py-2 items-center group bg-white 
                     cursor-pointer hover:bg-[#188fa7] hover:text-white
@@ -176,6 +178,7 @@ const SearchInput = () => {
                           onClick={() => {
                             navigate(`/store/${item.storeName}/${item._id}`);
                             setShowResult(false);
+                            setSearchFull(false);
                           }}
                           className="flex min-w-[150px] flex-col items-center cursor-pointer 
                           hover:text-white hover:bg-[#188fa7] 

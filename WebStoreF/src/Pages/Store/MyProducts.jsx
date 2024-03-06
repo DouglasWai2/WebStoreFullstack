@@ -77,7 +77,7 @@ const MyProducts = () => {
         <ConfirmDelete handleClick={deleteSelected} setConfirm={setConfirm} />
       )}
       <div className="flex justify-center w-full h-full py-4">
-        <div className="flex flex-col items-center max-w-[1440px] w-full">
+        <div className="flex flex-col items-center max-w-[1440px] w-full overflow-x-scroll">
           <h1 className="text-2xl">Meus produtos</h1>
           <div className="border-2 border-gray-200 py-4 px-2 rounded-sm relative">
             <div className="w-full bg-gray-200">
@@ -94,7 +94,7 @@ const MyProducts = () => {
                     checked={checked.length}
                     onChange={(e) => {}}
                   />
-                  Selecionar todos
+                  <span className="max-sm:hidden">Selecionar todos</span>
                 </label>
                 <label className="flex flex-col w-[50%]" htmlFor="name-search">
                   <div className="w-full flex gap-3">

@@ -13,6 +13,7 @@ const SearchResult = () => {
   const [pageCount, setPageCount] = useState([]);
   const { data, loading, error } = useFetchApi(url, "GET");
 
+
   useEffect(() => {
     setUrl(location.pathname + location.search + `&page=${page}`);
   }, [location, page]);
@@ -32,7 +33,7 @@ const SearchResult = () => {
   return (
     <div className="flex flex-col gap-4 items-center w-full px-2">
       <h1 className="text-left w-full max-w-[1440px]">
-        Resultado da busca por: {}
+        Total de resultados: {data?.countQuery}
       </h1>
       <div className="max-w-[1440px] flex flex-wrap gap-3 w-full">
         {loading ? (

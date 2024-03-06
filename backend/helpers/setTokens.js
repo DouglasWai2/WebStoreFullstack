@@ -15,13 +15,14 @@ async function setTokens(res, user) {
     { expiresIn: jwtRefreshExpiration }
   );
 
-  await UserSchema.updateOne(
-    { _id: user._id },
-    { $push: { refreshTokens: refreshToken } },
-    { new: true }
-  );
+  try{
+    await UserSchema.updateOne(
+      { _id: user._id },
+      { $push: { refreshTokens: refreshToken } },
+      { new: true }
+    );
 
-  return res
+    return res
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
       sameSite: "none",
@@ -41,6 +42,14 @@ async function setTokens(res, user) {
       email: user.email,
       isVerified: user.confirmedEmail,
     });
+    
+  } catch (error) {
+    console.log(error)
+  }
+
+
+
+
 }
 
 module.exports = setTokens;
