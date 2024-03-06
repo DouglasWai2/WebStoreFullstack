@@ -114,7 +114,8 @@ const ProductsCarousel = ({ queries, category, topSelling, isMobile }) => {
               onClick={() => {
                 scrollCarousel(scrollRef.current.clientWidth);
               }}
-              className="w-[50px] ml-[-25px] bg-white  cursor-pointer rounded-full shadow h-[50px] flex justify-center items-center"
+              className="w-[50px] ml-[-25px] bg-white  
+              cursor-pointer rounded-full shadow h-[50px] flex justify-center items-center"
             >
               <FontAwesomeIcon icon={faArrowRight} />
             </div>

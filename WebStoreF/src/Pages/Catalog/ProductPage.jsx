@@ -10,7 +10,7 @@ import ProductPageSkeleton from "../../components/Catalog/ProductPageSkeleton";
 import Logo from "../../components/Store/MyStore/Logo";
 import LikeButton from "../../components/shared/LikeButton";
 import ShareButton from "../../components/shared/ShareButton";
-import { faAnglesDown, faAnglesUp } from "@fortawesome/free-solid-svg-icons";
+import { faAnglesDown, faAnglesUp, faCartPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ProductPage = () => {
@@ -190,7 +190,7 @@ const ProductPage = () => {
                   }}
                   className="px-6 bg-[#ade6f1] text-center w-full h-[30px] rounded-md hover:brightness-95"
                 >
-                  adicionar ao carrinho
+                  <FontAwesomeIcon icon={faCartPlus} /> Adicionar ao carrinho
                 </button>
               </div>
             </div>

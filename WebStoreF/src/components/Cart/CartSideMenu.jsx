@@ -5,6 +5,7 @@ import { moneyMask } from "../../helpers/moneyMask";
 import { removeFromCart } from "../../helpers/removeFromCart";
 import Delayed from "./Delayed";
 import { useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 
 const CartSideMenu = ({ setCart }) => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const CartSideMenu = ({ setCart }) => {
   return (
     <aside
       className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] 
-    h-screen animate-appear py-8 px-3 z-50 max-lg:w-2/3"
+    h-screen animate-appear py-8 px-3 z-50 max-lg:w-2/3 max-md:w-3/4 max-sm:w-full"
     >
       <div className="flex flex-col">
         <div className="flex items-center justify-between">
@@ -58,10 +59,21 @@ const CartSideMenu = ({ setCart }) => {
               cartItems.map((item, index) => {
                 return (
                   <div
-                    onClick={() =>
-                      navigate("/catalog/" + item.title + "/" + item.productId)
-                    }
-                    className="border-2 flex items-center justify-between border-slate-200 rounded-md px-4 py-3 hover:border-slate-900 animate-appear cursor-pointer"
+                    onClick={() => {
+       
+                        navigate(
+                          "/catalog/" + item.title + "/" + item.productId
+                        );
+                      setCart(false);
+                      
+                    }}
+                    // onTouchEndCapture={() => {
+                    //   navigate("/catalog/" + item.title + "/" + item.productId);
+                    //   setCart(false);
+                    // }}
+                    className="border-2 flex items-center justify-between
+                     border-slate-200 rounded-md px-4 py-3 transition-colors duration-200
+                      hover:border-slate-900 animate-appear cursor-pointer active:bg-gray-200"
                     key={item.id + index}
                   >
                     <div className="flex items-center">
@@ -108,7 +120,9 @@ const CartSideMenu = ({ setCart }) => {
                           JSON.parse(window.localStorage.getItem("cart"))
                         );
                       }}
-                      className="bg-slate-200 p-2 h-[50px] px-6 rounded-md text-red-500  hover:bg-red-500 hover:text-white duration-100"
+                      className="bg-slate-200 p-2 h-[50px] px-6 rounded-md 
+                      text-red-500  hover:bg-red-500 hover:text-white 
+                      duration-100 active:bg-red-500 active:text-white"
                     >
                       <FontAwesomeIcon icon={faTrash} />
                     </button>

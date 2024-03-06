@@ -107,7 +107,7 @@ exports.searchResult = async (req, res) => {
       .sort(options.sort)
       .select("title thumbnail price rating sells discount")
       .skip((page - 1) * 30)
-      .limit(7);
+      .limit(30);
 
     const countQuery = await productSchema.where(match).countDocuments();
 

@@ -61,7 +61,7 @@ const Navbar = ({
       <nav>
         <div
           className={
-            "w-full h-[80px] bg-[#152128] py-2 px-4 flex items-center justify-between text-white"
+            "w-full h-[80px] bg-[#152128] py-1 px-2 flex items-center justify-between gap-2 text-white"
           }
         >
           <a href="/">
@@ -152,7 +152,7 @@ const Navbar = ({
               onClick={() => {
                 setToggleCart(true);
               }}
-              className="cursor-pointer flex items-center p-2 hover-border min-w-[150px] justify-around max-md:min-w-fit max-md:justify-center"
+              className="cursor-pointer relative flex items-center p-2 hover-border min-w-[150px] justify-around max-md:min-w-fit max-md:justify-center"
             >
               <p className="max-md:hidden">Seu carrinho </p>
               <FontAwesomeIcon
@@ -160,7 +160,9 @@ const Navbar = ({
                 size="xl"
                 style={{ color: "#94989e" }}
               />
-              <span>{cartItemsNum > 0 && cartItemsNum}</span>
+              <span className="absolute top-0 right-0
+               text-white bg-red-500 grid place-items-center rounded-full
+                w-[20px] h-[20px] text-xs">{cartItemsNum > 0 && cartItemsNum}</span>
             </div>
           </div>
         </div>

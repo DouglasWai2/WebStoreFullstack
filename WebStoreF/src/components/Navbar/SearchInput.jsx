@@ -26,7 +26,7 @@ const SearchInput = () => {
   } = useFetchApi(url, "GET");
 
   useEffect(() => {
-    var delayDebounceFn;``
+    var delayDebounceFn;
 
     let params = new URL(document.location).searchParams;
     if (params.get("search") === search) return;
@@ -56,7 +56,7 @@ const SearchInput = () => {
     >
       <div
         className={
-          "rounded-md max-h-[35px] h-[35px] flex overflow-hidden transition-all duration-200 " +
+          "max-h-[30px] h-[30px] flex overflow-hidden transition-all duration-200 " +
           (searchFull && "!max-w-full !w-full !max-h-full !h-full rounded-none")
         }
       >
@@ -92,7 +92,7 @@ const SearchInput = () => {
               );
             }
           }}
-          className="w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200"
+          className={"w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200 " + (searchFull && "w-[60px]")}
         >
           <FontAwesomeIcon
             icon={faMagnifyingGlass}

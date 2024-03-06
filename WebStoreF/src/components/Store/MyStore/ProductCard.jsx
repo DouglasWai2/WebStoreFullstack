@@ -20,8 +20,10 @@ const ProductCard = ({ item, className }) => {
     >
       <img className="aspect-[4/3] object-contain" src={item.thumbnail} />
       <div className="mt-3 group-hover:text-yellow-500 duration-100">
-        <legend className="truncate text-wrap 
-        min-h-[4.5em] line-clamp-3 max-sm:text-sm">
+        <legend
+          className="truncate text-wrap 
+        min-h-[4.5em] line-clamp-3 max-sm:text-sm"
+        >
           {item.title}
         </legend>
       </div>
@@ -45,7 +47,7 @@ const ProductCard = ({ item, className }) => {
             </p>
 
             <div className="flex flex-col items-center">
-              <p className="strikethrough text-xs text-center h-min w-fit">
+              <p className="strikethrough text-xs text-center font-normal h-min w-fit text-gray-800">
                 {moneyMask(item.price)}
               </p>
               <p className="w-max">
@@ -56,7 +58,7 @@ const ProductCard = ({ item, className }) => {
             </div>
           </div>
         ) : (
-          moneyMask(item.price)
+          <p className="h-9">{moneyMask(item.price)}</p>
         )}
       </div>
     </article>
