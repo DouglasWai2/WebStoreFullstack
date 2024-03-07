@@ -2,18 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
+import axios from "axios";
 
 const ReviewCart = () => {
-  const [body, setBody] = useState(null);
-  const {data} = useFetchApi('/frete', 'POST', body)
   const navigate = useNavigate();
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
 
-  useEffect(()=> {
-    setBody({"dummy": "content"})
-  },[])
+  async function integrateApi(){
+    const response = await axios.get(import.meta.env.VITE_API_URL + "/frete")
+    console.log(response)
+  }
 
-  console.log(data)
+
 
   return (
     <main className="w-screen h-screen flex items-center justify-center">
@@ -63,6 +63,7 @@ const ReviewCart = () => {
             </div>
           );
         })}
+        <button onClick={integrateApi} className="bg-black text-white">Integrar</button>
       </div>
     </main>
   );

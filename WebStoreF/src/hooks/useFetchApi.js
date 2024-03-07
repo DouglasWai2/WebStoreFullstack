@@ -13,16 +13,12 @@ export const useFetchApi = (path, method, body, config) => {
       if (error) return;
       setLoading(true);
       try {
-        const response =
-          method === "GET"
-            ? path && (await api.get(import.meta.env.VITE_API_URL + path))
-            : method === "POST"
-            ? await api.post(
-                import.meta.env.VITE_API_URL + path,
-                body,
-                config ? { headers: config } : "" // In case there is headers setted it will be passed in this hook params
-              ) //If there's no config setted, default headers will be used
-            : null; // If method is GET, body isn't needed
+        const response = await api({
+          method,
+          url: import.meta.env.VITE_API_URL + path,
+          data: body,
+          headers: config,
+        })      
         const data = await response?.data;
         setData(data);
       } catch (e) {
