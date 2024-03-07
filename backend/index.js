@@ -21,7 +21,11 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ credentials: true, origin: [`${process.env.ORIGIN}`, "https://webstore-git-develop-douglaswai2s-projects.vercel.app"]}));
+app.use(cors({ credentials: true, origin: [
+  `${process.env.ORIGIN}`, 
+"https://webstore-git-develop-douglaswai2s-projects.vercel.app", 
+"https://sandbox.melhorenvio.com.br"
+]}));
 app.use(cookieParser());
 
 app.get("/api/v1", (req, res) => {

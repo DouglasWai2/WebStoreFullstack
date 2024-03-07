@@ -8,12 +8,18 @@ const ReviewCart = () => {
   const navigate = useNavigate();
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
 
-  async function integrateApi(){
-    const response = await axios.get(import.meta.env.VITE_API_URL + "/frete")
-    console.log(response)
+  async function integrateApi() {
+    const response = await axios.post(
+      import.meta.env.VITE_API_URL + "/frete",
+      null,
+      {
+        headers: {
+          "User-Agent": "WebStore (douglas.wai@outlook.com)",
+        },
+      }
+    );
+    console.log(response);
   }
-
-
 
   return (
     <main className="w-screen h-screen flex items-center justify-center">
@@ -63,7 +69,9 @@ const ReviewCart = () => {
             </div>
           );
         })}
-        <button onClick={integrateApi} className="bg-black text-white">Integrar</button>
+        <button onClick={integrateApi} className="bg-black text-white">
+          Integrar
+        </button>
       </div>
     </main>
   );
