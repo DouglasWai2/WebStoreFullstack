@@ -33,6 +33,7 @@ const ProductPage = () => {
     }
 
     var lvpIDs = JSON.parse(localStorage.getItem("lvpIDs"));
+    if (!product) return;
     if (lvpIDs.includes(productId)) return;
 
     lvpIDs.unshift(productId);

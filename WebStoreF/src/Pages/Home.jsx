@@ -32,6 +32,13 @@ const Home = ({ user, address, loading, refreshUser }) => {
     error,
   } = useFetchApi("/user/interests", "POST", productsIds);
 
+  useEffect(() => {
+    if (data) {
+      setCategories((categories) => [...categories, data.interest[counter]]);
+      setCounter((counter) => counter + 1);
+    }
+  }, [data]);
+
   const {
     data: images,
     loading: fetchingImages,
@@ -162,7 +169,12 @@ const Home = ({ user, address, loading, refreshUser }) => {
               {categories && (
                 <>
                   {categories.map((item) => (
-                    <ProductsCarousel isMobile={isMobile} key={item} category={item} {...item} />
+                    <ProductsCarousel
+                      isMobile={isMobile}
+                      key={item}
+                      category={item}
+                      {...item}
+                    />
                   ))}
                 </>
               )}
