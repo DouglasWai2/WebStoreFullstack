@@ -4,11 +4,14 @@ import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
 
 const ReviewCart = () => {
-  const {data} = useFetchApi('/frete', 'POST', {
-    'user-agent': 'WebStore (douglas.wai@outlook.com)'
-  })
+  const [body, setBody] = useState(null);
+  const {data} = useFetchApi('/frete', 'POST', body)
   const navigate = useNavigate();
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
+
+  useEffect(()=> {
+    setBody({"dummy": "content"})
+  },[])
 
   console.log(data)
 

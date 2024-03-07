@@ -160,9 +160,9 @@ const Navbar = ({
                 size="xl"
                 style={{ color: "#94989e" }}
               />
-              <span className="absolute top-0 right-0
+             {cartItemsNum > 0 && <span className="absolute top-0 right-0
                text-white bg-red-500 grid place-items-center rounded-full
-                w-[20px] h-[20px] text-xs">{cartItemsNum > 0 && cartItemsNum}</span>
+                w-[20px] h-[20px] text-xs">{cartItemsNum}</span>}
             </div>
           </div>
         </div>
