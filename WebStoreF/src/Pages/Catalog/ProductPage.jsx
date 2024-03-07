@@ -180,13 +180,7 @@ const ProductPage = () => {
                 </button>
                 <button
                   onClick={() => {
-                    addToCart(
-                      product._id,
-                      product.price,
-                      product.discount,
-                      product.title,
-                      product.thumbnail
-                    );
+                    addToCart(product);
                   }}
                   className="px-6 bg-[#ade6f1] text-center w-full h-[30px] rounded-md hover:brightness-95"
                 >

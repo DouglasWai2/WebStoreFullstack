@@ -1,24 +1,19 @@
-export function addToCart(
-  productId,
-  price,
-  discount,
-  title,
-  thumbnail,
-  quantity
-) {
-  const product = {
-    productId,
-    price,
-    discount,
-    title,
-    thumbnail,
+export function addToCart(product) {
+
+
+  const newProduct = {
+    productId: product._id,
+    price: product.price,
+    discount: product.discount,
+    title: product.title,
+    thumbnail: product.thumbnail,
     quantity: 1,
   };
 
   var cart = JSON.parse(localStorage.getItem("cart"));
   if (!cart) {
     localStorage.setItem("cart", JSON.stringify([]));
-    return addToCart();
+    return addToCart(product);
   }
 
   if (
@@ -33,7 +28,7 @@ export function addToCart(
     return localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  cart.push(product);
+  cart.push(newProduct);
   localStorage.setItem("cart", JSON.stringify(cart));
-  window.dispatchEvent(new Event('storage'))
+  window.dispatchEvent(new Event("storage"));
 }

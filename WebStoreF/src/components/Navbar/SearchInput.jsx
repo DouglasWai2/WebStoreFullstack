@@ -143,6 +143,7 @@ const SearchInput = () => {
                           navigate(`/catalog/${item.title}/${item._id}`);
                           setShowResult(false);
                           setSearchFull(false);
+                          setSearch("");
                         }}
                         className="flex h-[80px] py-2 items-center group bg-white 
                     cursor-pointer hover:bg-[#188fa7] hover:text-white

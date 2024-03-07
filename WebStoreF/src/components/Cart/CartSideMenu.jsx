@@ -60,17 +60,12 @@ const CartSideMenu = ({ setCart }) => {
                 return (
                   <div
                     onClick={() => {
-       
                         navigate(
                           "/catalog/" + item.title + "/" + item.productId
                         );
                       setCart(false);
                       
                     }}
-                    // onTouchEndCapture={() => {
-                    //   navigate("/catalog/" + item.title + "/" + item.productId);
-                    //   setCart(false);
-                    // }}
                     className="border-2 flex items-center justify-between
                      border-slate-200 rounded-md px-4 py-3 transition-colors duration-200
                       hover:border-slate-900 animate-appear cursor-pointer active:bg-gray-200"
