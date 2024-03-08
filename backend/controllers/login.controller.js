@@ -33,6 +33,8 @@ exports.googleAuth = async (req, res) => {
   let user;
   const credentials = req.body;
 
+  console.log(credentials);
+
   try {
 
     const { data } = await axios.get(

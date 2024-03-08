@@ -7,11 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { useFetchApi } from "../hooks/useFetchApi";
+import SubmitButton from "../components/shared/SubmitButton";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [errMessage, setErrMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     lastName: "",
@@ -21,6 +23,15 @@ const RegisterForm = () => {
     password: "",
     confirmPassword: "",
   });
+  const {
+    name,
+    lastName,
+    email,
+    confirmEmail,
+    phone,
+    password,
+    confirmPassword,
+  } = registerInfo;
   const [body, setBody] = useState(null);
 
 
@@ -32,7 +43,7 @@ const RegisterForm = () => {
   );
 
 
-  const { data, loading, error } = useFetchApi("/auth/register", "POST", body);
+  const { data, loading, error, refresh } = useFetchApi("/auth/register", "POST", body);
 
   useEffect(() => {
     if (data) {
@@ -40,23 +51,30 @@ const RegisterForm = () => {
     }
 
     if (error) {
-      // TODO: handle errors
+      console.log(error)
+      if(error.data.message === "already registered"){
+        setErrMessage("Email ja registrado");
+        return
+      }
+      if(error?.data.error.errors){
+        Object.keys(error.data.error.errors).forEach((key) => {
+          document.getElementsByName(key)[0].classList.add("!border-red-500");
+          setErrMessage("Preencha os campos corretamente")
+        })
+      }
     }
   }, [data, error]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    const {
-      name,
-      lastName,
-      email,
-      confirmEmail,
-      phone,
-      password,
-      confirmPassword,
-    } = registerInfo;
+  
     const cleanPhone = phone.replace(/\D+/g, "");
+
+    if (!name || !lastName || !email || !confirmEmail || !phone || !password || !confirmPassword) {
+      setErrMessage("Preencha todos os campos");
+      return
+    }
 
     if (!strongPassword.test(password)) {
       setErrMessage("Escolha uma senha mais forte");
@@ -78,7 +96,16 @@ const RegisterForm = () => {
     registerInfo.phone = cleanPhone;
 
     setBody(registerInfo);
+    if(error) refresh()
   };
+  
+  useEffect(() => {
+    if (email && password && confirmPassword && phone && name && lastName) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  },[email, password, confirmPassword, phone, name, lastName])
 
   const handleInputChange = (e) => {
     setRegisterInfo((registerInfo) => ({
@@ -88,21 +115,23 @@ const RegisterForm = () => {
   };
   return (
     <main className="flex flex-col z-[-1] p-10 justify-center items-center w-screen bg-[#F9F7F1]">
-      <div className="w-[500px] relative rounded-lg shadow-md p-8 py-20">
+      <div className="w-[500px] rounded-lg shadow-md p-8 py-20">
         {errMessage !== "" && (
-          <div className="relative bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4">
+          <div className="absolute flex top-4 gap-3 justify-center items-center z-10 bg-white rounded-sm border-[1px]
+          left-0 right-0 mx-auto my-0 max-w-[400px]
+           border-red-500 text-red-500 p-4 animate-expand">
             <FontAwesomeIcon icon={faTriangleExclamation} />
             {errMessage}
             <button
               onClick={() => setErrMessage("")}
-              className="ml-5 absolute right-4"
+              className="ml-5 right-4"
             >
               X
             </button>
           </div>
         )}
         <a href="/">
-          <img className="w-[200px] absolute top-5" src={Logo} alt="logo" />
+          <img className="w-[200px]" src={Logo} alt="logo" />
         </a>
         <form
           onSubmit={handleInputChange}
@@ -211,16 +240,7 @@ const RegisterForm = () => {
               name="confirmPassword"
             />
           </label>
-          <button
-            onClick={handleSubmit}
-            className={
-              "button-login flex items-center justify-center" +
-              (isLoading ? " brightness-75 pointer-events-none" : "")
-            }
-            type="submit"
-          >
-            {loading ? <LoadingSpinner /> : "Criar conta"}
-          </button>
+          <SubmitButton disabled={disabled} onClick={handleSubmit} loading={loading} text="Criar conta"/>
         </form>
         <h5 className="!text-[8pt] mt-3 w-full text-center">
           Ao se cadastrar você concorda com os{" "}

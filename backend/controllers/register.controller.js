@@ -24,12 +24,9 @@ exports.register = async (req, res) => {
     token: crypto.randomBytes(32).toString("hex"),
   });
 
-  const customer = await stripe.customers.create();
 
-  const {id} = customer
-  newUser.customerId = id
   const message = `Este é seu e-mail de verificação, não compartilhe com ninguem: 
-  http://localhost:5000/api/v1/auth/register/user/verify/${newUser.id}/${token.token}`;
+  http://${process.env.BASE_URL}/api/v1/auth/register/user/verify/${newUser.id}/${token.token}`;
   try {
     await newUser.save();
     await token.save();
@@ -42,6 +39,7 @@ exports.register = async (req, res) => {
         )
       );
   } catch (err) {
+    console.log(err)
     if (err.code === 11000) {
       res.status(400).json({
         message: "already registered",

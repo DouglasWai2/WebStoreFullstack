@@ -40,7 +40,10 @@ const UserSchema = new mongoose.Schema({
   phone: {
     type: String,
     minlength: 11,
-    unique: true,
+    index: {
+      unique: true,
+      sparse: true,
+    },
     trim: true,
   },
   address: [
