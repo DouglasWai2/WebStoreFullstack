@@ -137,55 +137,55 @@ const Home = ({ user, address, loading, refreshUser }) => {
                     showThumbs={false}
                     showArrows={false}
                   >
-                    {!images &&todayCarouselImages.map((item, i) => {
-                      return (
-                        <div
-                          key={item}
-                          className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
-                        >
-                          <img
-                            alt="banner image from store"
-                            className="object-cover max-w-[1440px] h-full block"
-                            src={item}
-                          />
-                        </div>
-                      );
-                    })}
-                    {images &&
-                      images.carouselImages.map((item, i) => {
-                        return (
-                          <div
-                            key={item}
-                            className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
-                          >
-                            <img
-                              alt="banner image from store"
-                              className="object-cover max-w-[1440px] h-full block"
-                              src={item}
-                            />
+                    {!images
+                      ? todayCarouselImages.map((item, i) => {
+                          return (
                             <div
-                              onClick={() => {
-                                navigate(
-                                  `/store/${images.storeInfo[i].name}/${images.storeInfo[i].id}`
-                                );
-                              }}
-                              className="absolute flex flex-col items-center bottom-5 left-5 hover:opacity-60
+                              key={item}
+                              className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
+                            >
+                              <img
+                                alt="banner image from store"
+                                className="object-cover max-w-[1440px] h-full block"
+                                src={item}
+                              />
+                            </div>
+                          );
+                        })
+                      : images.carouselImages.map((item, i) => {
+                          return (
+                            <div
+                              key={item}
+                              className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
+                            >
+                              <img
+                                alt="banner image from store"
+                                className="object-cover max-w-[1440px] h-full block"
+                                src={item}
+                              />
+                              <div
+                                onClick={() => {
+                                  navigate(
+                                    `/store/${images.storeInfo[i].name}/${images.storeInfo[i].id}`
+                                  );
+                                }}
+                                className="absolute flex flex-col items-center bottom-5 left-5 hover:opacity-60
                             hover:translate-y-[-10px] duration-300 cursor-pointer 
                             active:translate-y-0"
-                            >
-                              <p className="text-white">Por:</p>
-                              <Logo
-                                image={images.storeInfo[i].image}
-                                className="shadow-lg items-center justify-center w-[100px] h-[100px] overflow-hidden
+                              >
+                                <p className="text-white">Por:</p>
+                                <Logo
+                                  image={images.storeInfo[i].image}
+                                  className="shadow-lg items-center justify-center w-[100px] h-[100px] overflow-hidden
                                    rounded-full border-white border-4 max-sm:w-[50px] max-sm:h-[50px] max-sm:border-[1px]"
-                              />
-                              <p className="text-white">
-                                {images.storeInfo[i].name}
-                              </p>
+                                />
+                                <p className="text-white">
+                                  {images.storeInfo[i].name}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                   </Carousel>
                 )}
               </div>
