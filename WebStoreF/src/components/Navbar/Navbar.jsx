@@ -1,5 +1,5 @@
-import Logo from "../../logo-no-background.svg";
-import Logo2 from "../../webstore-favicon-color.svg";
+import Logo from "../../assets/logo-no-background.svg";
+import Logo2 from "../../assets/webstore-favicon-color.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCaretDown,

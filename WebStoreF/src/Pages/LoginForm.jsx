@@ -1,4 +1,4 @@
-import Logo from "../logo-no-background-2.svg";
+import Logo from "../assets/logo-no-background-2.svg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Google from "../assets/google.svg";
 import { useEffect, useState } from "react";

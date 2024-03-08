@@ -1,7 +1,7 @@
 import InputMask from "react-input-mask";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../logo-no-background-2.svg";
+import Logo from "../assets/logo-no-background-2.svg";
 import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
