@@ -42,10 +42,16 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
   return (
     <>
       {confirm && (
-        <ConfirmDelete handleClick={handleClick} setConfirm={setConfirm} />
+        <ConfirmDelete
+          loading={submiting}
+          handleClick={handleClick}
+          setConfirm={setConfirm}
+        />
       )}
-      <div className="shadow flex bg-white justify-between py-3 px-2 my-3 gap-2 
-      hover:brightness-80 duration-400 min-w-[400px]">
+      <div
+        className="shadow flex bg-white justify-between py-3 px-2 my-3 gap-2 
+      hover:brightness-80 duration-400 min-w-[400px]"
+      >
         <div className="flex items-center">
           <input
             id={"item_" + item._id}
