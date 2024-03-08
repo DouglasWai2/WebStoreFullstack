@@ -24,7 +24,7 @@ const CartSideMenu = ({ setCart }) => {
 
   useEffect(() => {
     const handleStorage = () => {
-      setCartItems(JSON.parse(localStorage.getItem("cart"))?.length);
+      setCartItems(JSON.parse(localStorage.getItem("cart")));
     };
 
     window.addEventListener("storage", handleStorage);

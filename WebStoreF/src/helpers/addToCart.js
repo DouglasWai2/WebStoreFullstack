@@ -18,17 +18,18 @@ export function addToCart(product) {
 
   if (
     cart.find((item, index) => {
-      if (item.productId === productId) {
+      if (item.productId === product._id) {
         cart[index].quantity += 1;
         return true;
       }
       return false;
     })
   ) {
-    return localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem("cart", JSON.stringify(cart));
+    return window.dispatchEvent(new Event('storage'));
   }
 
   cart.push(newProduct);
   localStorage.setItem("cart", JSON.stringify(cart));
-  window.dispatchEvent(new Event("storage"));
+  return window.dispatchEvent(new Event('storage'));
 }

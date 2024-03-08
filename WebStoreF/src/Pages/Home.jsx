@@ -21,6 +21,11 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const todayCarouselImages = [
+    "https://webstore-api-images.s3.sa-east-1.amazonaws.com/1709909737285_4490167.png",
+    "https://webstore-api-images.s3.sa-east-1.amazonaws.com/1709909737285_431630370.png",
+  ];
+
   useEffect(() => {
     var lvpIDs = JSON.parse(localStorage.getItem("lvpIDs"));
     if (lvpIDs?.length > 0) setProductsIds(lvpIDs);
@@ -129,6 +134,18 @@ const Home = ({ user, address, loading, refreshUser }) => {
                       showThumbs={false}
                       showArrows={false}
                     >
+                      {todayCarouselImages.map((item, i) => {
+                        return (
+                          <div className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">
+                            <img
+                              alt="banner image from store"
+                              className="object-cover max-w-[1440px] h-full block"
+                              key={item}
+                              src={item}
+                            />
+                          </div>
+                        );
+                      })}
                       {images.carouselImages.map((item, i) => {
                         return (
                           <div className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">

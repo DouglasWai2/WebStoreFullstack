@@ -3,7 +3,8 @@ import { NavLink } from "react-router-dom";
 const SideNav = () => {
   return (
     <aside className="">
-      <ul className="flex flex-col gap-4 text-lg w-full border-r-2 border-gray-200 overflow-x-scroll overflow-y-hidden h-max max-md:flex-row max-md:border-r-0 max-md:border-b-2">
+      <ul className="flex flex-col gap-4 text-lg w-full border-r-2 border-gray-200 
+      overflow-y-hidden h-max max-md:flex-row max-md:border-r-0 max-md:border-b-2">
 
           <NavLink
             className={({ isActive }) =>
