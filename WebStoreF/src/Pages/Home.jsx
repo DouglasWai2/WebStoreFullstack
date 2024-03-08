@@ -137,7 +137,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
                     showThumbs={false}
                     showArrows={false}
                   >
-                    {todayCarouselImages.map((item, i) => {
+                    {!images &&todayCarouselImages.map((item, i) => {
                       return (
                         <div
                           key={item}

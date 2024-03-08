@@ -22,7 +22,7 @@ import ShareButton from "../../components/shared/ShareButton";
 
 const MyStore = () => {
   const navigate = useNavigate();
-  const { user } = useOutletContext();
+  const { user, refreshUser } = useOutletContext();
   const location = useLocation();
 
   const [edit, setEdit] = useState(false);
@@ -248,7 +248,7 @@ const MyStore = () => {
     </div>
   ) : (
     <div className="w-full h-[70vh] py-28 flex justify-center items-center">
-      <Outlet />
+      <Outlet context={{refresh, refreshUser} } />
     </div>
   );
 };

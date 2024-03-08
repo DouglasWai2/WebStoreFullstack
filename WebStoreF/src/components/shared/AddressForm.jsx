@@ -47,15 +47,18 @@ const AddressForm = ({ url, type }) => {
     error: badRequest,
   } = useFetchApi(url, "POST", body);
 
-  const {refreshUser} = useOutletContext();
+  const { refreshUser, refresh } = useOutletContext();
 
   useEffect(() => {
-    if (
-      data === "Address saved successfully" ||
-      data === "Store Address updated"
-    ) {
+    if (data) {
+      if (data === "Address saved successfully") {
+        refreshUser();
+      }
+
+      if (data === "Store Address updated") {
+        refresh();
+      }
       setSuccess("Endereço adicionado com sucesso. Redirecionando...");
-      refreshUser()
       setTimeout(() => {
         navigate(-1, { replace: true });
       }, 600);
@@ -64,7 +67,7 @@ const AddressForm = ({ url, type }) => {
     if (badRequest) {
       console.log(badRequest);
     }
-  }, [data]);
+  }, [data, badRequest]);
 
   const getCityOptions = async () => {
     // get cities from given state
