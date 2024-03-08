@@ -59,6 +59,12 @@ exports.storeInfo = async (req, res) => {
 
 exports.addStoreAddress = async (req, res) => {
 
+  const { cep, street, number, neighborhood, city, state } = req.body.address;
+
+  if(!cep || !street || !number || !neighborhood || !city || !state){
+    return res.status(400).send("Missing address data");
+  }
+
   try {
     const store = await StoreSchema.findOneAndUpdate(
       { user: req.userInfo.id },

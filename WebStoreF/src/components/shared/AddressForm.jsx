@@ -45,6 +45,7 @@ const AddressForm = ({ url, type }) => {
     data,
     loading: fetching,
     error: badRequest,
+    refresh: retry,
   } = useFetchApi(url, "POST", body);
 
   const { refreshUser, refresh } = useOutletContext();
@@ -65,7 +66,8 @@ const AddressForm = ({ url, type }) => {
     }
 
     if (badRequest) {
-      console.log(badRequest);
+      badRequest.data === "Missing address data" &&
+        setError("Preencha todos os campos");
     }
   }, [data, badRequest]);
 
@@ -192,10 +194,17 @@ const AddressForm = ({ url, type }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!cep || !street || !neighborhood || !city || !state || !number) {
+      return setError("Preencha todos os campos");
+    }
+
+    if (!type && (!recieverName || !CPF)) return setError("Preencha todos os campos");
+
     addressInfo.cep = cep.replace(/\D/g, "");
     addressInfo.CPF = CPF.replace(/\D/g, "");
 
     setBody({ address: addressInfo });
+    if (badRequest) retry();
   };
 
   return (
@@ -210,11 +219,11 @@ const AddressForm = ({ url, type }) => {
         </h1>
       )}
       {error !== "" ? (
-        <div className="absolute top-3 left-[50%] translate-x-[-50%]">
+        <div className="absolute top-3 flex justify-center max-w-[400px] right-0 left-0 my-0 mx-auto animate-expand ">
           <ErrorCard invalid={error} handleClick={handleClick} />
         </div>
       ) : success !== "" ? (
-        <div className="absolute top-3 left-[50%] translate-x-[-50%] animate-expand">
+        <div className="absolute top-3 flex justify-center max-w-[400px] right-0 left-0 my-0 mx-auto animate-expand">
           <SuccessCard success={success} handleClick={handleClick} />
         </div>
       ) : (

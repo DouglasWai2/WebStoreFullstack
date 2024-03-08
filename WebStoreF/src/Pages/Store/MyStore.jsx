@@ -22,6 +22,7 @@ import ShareButton from "../../components/shared/ShareButton";
 
 const MyStore = () => {
   const navigate = useNavigate();
+
   const { user, refreshUser } = useOutletContext();
   const location = useLocation();
 
@@ -60,7 +61,8 @@ const MyStore = () => {
 
   useEffect(() => {
     if (logoResponse || bannerResponse) {
-      window.location.reload();
+      refresh()
+      setEdit(false);
     }
   }, [logoResponse, bannerResponse]);
 
@@ -92,7 +94,8 @@ const MyStore = () => {
   }, [handleStoreScroll]);
 
   useEffect(() => {
-    setUrl(`${location.pathname}`);
+    console.log(location)
+    if(location.pathname !== "/store/my-store/address") setUrl(`${location.pathname}`);
   }, [location]);
 
   //send edit info to backend
