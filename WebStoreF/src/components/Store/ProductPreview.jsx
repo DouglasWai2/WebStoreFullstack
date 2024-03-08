@@ -94,7 +94,7 @@ const ProductPreview = ({
                                   ref={provided.innerRef}
                                   {...provided.draggableProps}
                                   {...provided.dragHandleProps}
-                                  onMouseOver={() => {
+                                  onMouseEnter={() => {
                                     setMainImage(URL.createObjectURL(item));
                                   }}
                                   className="min-w-[136px] max-w-[136px] aspect-[4/3] overflow-hidden bg-white hover:brightness-75 mx-"

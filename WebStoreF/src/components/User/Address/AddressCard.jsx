@@ -7,17 +7,23 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFetchApi } from "../../../hooks/useFetchApi";
+import { useOutletContext } from "react-router-dom";
 
 const AddressCard = ({ address }) => {
   const [url, setUrl] = useState(null);
 
+  const { refreshUser } = useOutletContext()
+
   const { data, loading, error } = useFetchApi(url, "GET");
 
   useEffect(() => {
-    if (data === "Main address altered successfully") {
-      window.location.reload();
+    if (data) {
+      refreshUser()
+      setUrl(null)
     }
-  }, [data]);
+
+    if(error) console.log(error)
+  }, [data, error]);
 
   return (
     <div className="border-[1px] flex flex-col gap-5 p-4 w-[275px] shadow-md justify-between">

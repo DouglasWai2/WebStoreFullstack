@@ -112,6 +112,7 @@ const NewProduct = () => {
 
     // Format dimensions values (weight, width, height and length)
     if (changeId.includes("dimensions")) {
+
       dimensions = {
         ...product.dimensions,
         [e.target.name]: parseFloat(e.target.value),

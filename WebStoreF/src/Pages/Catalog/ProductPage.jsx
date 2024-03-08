@@ -10,7 +10,11 @@ import ProductPageSkeleton from "../../components/Catalog/ProductPageSkeleton";
 import Logo from "../../components/Store/MyStore/Logo";
 import LikeButton from "../../components/shared/LikeButton";
 import ShareButton from "../../components/shared/ShareButton";
-import { faAnglesDown, faAnglesUp, faCartPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAnglesDown,
+  faAnglesUp,
+  faCartPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ProductPage = () => {
@@ -20,7 +24,7 @@ const ProductPage = () => {
   const [mainImage, setMainImage] = useState("");
   const [fullDescription, setFullDescription] = useState(null);
   const descriptionRef = useRef(null);
-  const { user } = useOutletContext();
+  const { user, setToggleCart } = useOutletContext();
   const {
     data: product,
     loading,
@@ -40,8 +44,6 @@ const ProductPage = () => {
     if (lvpIDs.length > 5) lvpIDs.pop();
     localStorage.setItem("lvpIDs", JSON.stringify(lvpIDs));
   }, []);
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     if (product) setMainImage(product.thumbnail);
@@ -137,6 +139,11 @@ const ProductPage = () => {
             <p>Vendido por:</p>
             <div className="flex justify-between items-center gap-8 max-lg:flex-col max-lg:justify-normal">
               <div
+                onClick={() =>
+                  navigate(
+                    `/store/${product.store.storeName}/${product.store._id}`
+                  )
+                }
                 className="flex items-center gap-3 border-2 
             bg-white border-gray-300 rounded-md p-2 px-6 
             duration-300 cursor-pointer w-1/2
@@ -182,6 +189,7 @@ const ProductPage = () => {
                 <button
                   onClick={() => {
                     addToCart(product);
+                    setToggleCart(true);
                   }}
                   className="px-6 bg-[#ade6f1] text-center w-full h-[30px] rounded-md hover:brightness-95"
                 >

@@ -8,34 +8,36 @@ import SetupForm from "./SetupForm";
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
-const stripePromise = loadStripe(
-  "pk_test_51OD656IiYJkcjJsLpaFohGqlL805BDltCIO6GdGoK8T6YQGCN5w0lnkIw7HPh1mRqTMlv155HPiyxYEBfM9uryW600fN3Mq5aI"
-);
+// const stripePromise = loadStripe(
+//   "pk_test_51OD656IiYJkcjJsLpaFohGqlL805BDltCIO6GdGoK8T6YQGCN5w0lnkIw7HPh1mRqTMlv155HPiyxYEBfM9uryW600fN3Mq5aI"
+// );
 
 const PaymentMethods = () => {
 
 
-  const [form, setForm] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
+  // const [form, setForm] = useState(false);
+  // const [clientSecret, setClientSecret] = useState("");
 
-  const getClientSecret = async () => {
-    const accessToken = window.localStorage.getItem("accessToken");
+  // const getClientSecret = async () => {
+  //   const accessToken = window.localStorage.getItem("accessToken");
 
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/test/payment/${accessToken}`,
-        { withCredentials: true }
-      );
-      setClientSecret(response.data.client_secret);
+  //   try {
+  //     const response = await axios.get(
+  //       `http://localhost:5000/api/test/payment/${accessToken}`,
+  //       { withCredentials: true }
+  //     );
+  //     setClientSecret(response.data.client_secret);
 
-    } catch (error) {
-    }
-  };
+  //   } catch (error) {
+  //   }
+  // };
 
-  useEffect(() => {
-    // getClientSecret();
-  }, []);
+  // useEffect(() => {
+  //   // getClientSecret();
+  // }, []);
 
+  return <div>PaymentMethods</div>
+  
   return (
     <div className="w-full flex gap-5 flex-wrap max-md:justify-center">
       {!form ?

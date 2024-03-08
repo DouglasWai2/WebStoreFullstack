@@ -1,7 +1,7 @@
 import React from "react";
 
 const FeaturesInput = ({ item, i, deleteFeature, handleChange }) => {
-  console.log(item.id)
+  
   return (
     <div className="relative my-2 z-0">
       <button

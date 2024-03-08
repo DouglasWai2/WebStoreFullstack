@@ -22,6 +22,7 @@ import ReviewCart from "./Pages/Checkout/ReviewCart.jsx";
 function App() {
   const logOut = useLogOut();
   const [userUrl, setUserUrl] = useState(null);
+  const [toggleCart, setToggleCart] = useState(false);
   const {
     data: user,
     loading,

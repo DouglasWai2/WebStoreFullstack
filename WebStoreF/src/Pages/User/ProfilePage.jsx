@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
 import TableData from "../../components/User/PersonalData/TableData";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import SubmitButton from "../../components/shared/SubmitButton";
 import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
@@ -18,7 +18,9 @@ const ProfilePage = () => {
     error,
   } = useFetchApi("/user/update", "POST", body);
 
-  const { user, address, loading } = useOutletContext();
+  const navigate = useNavigate()
+
+  const { user, address, loading, refreshUser } = useOutletContext();
 
   // This function is needed due to the differences between the timezone stored in database and the client OS time zone, wich causes it to render an wrong date
   function formatDate(date) {
@@ -117,6 +119,7 @@ const ProfilePage = () => {
                       editForm={editForm}
                       item={item}
                       index={index}
+
                     />
                   </td>
                 </tr>
@@ -127,11 +130,11 @@ const ProfilePage = () => {
                 Endereço
               </th>
               <td className="w-full items-center flex justify-between max-sm:justify-normal max-sm:gap-3 max-sm:items-center">
-                <span className="ml-5">
+                <div className="ml-5">
                   {address && address.length
                     ? address[0].street + " - N° " + address[0].number
-                    : "Adicione um endereço"}
-                </span>
+                    : <span className="hover:underline cursor-pointer" onClick={() => navigate("/user/address")}>Adicione um endereço</span>}
+                </div>
               </td>
             </tr>
           </tbody>
@@ -157,7 +160,9 @@ const ProfilePage = () => {
             <button
               className="cursor-pointer bg-red-500 shadow-sm w-full rounded-md text-black hover:brightness-75"
               onClick={() => {
-                window.location.reload();
+                setEditForm(false);
+                setEditData(null)
+                refreshUser()
               }}
             >
               Cancelar

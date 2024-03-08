@@ -13,6 +13,7 @@ import NavCardMenu from "./NavCardMenu";
 import SearchInput from "./SearchInput";
 import SideMenuNav from "./SideMenuNav";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({
   user,
@@ -27,6 +28,8 @@ const Navbar = ({
   const [cartItemsNum, setCartItemsNum] = useState(
     JSON.parse(localStorage.getItem("cart"))?.length
   );
+
+  const navigate = useNavigate()
 
   const wrapperRef = useRef(null);
 
@@ -71,7 +74,11 @@ const Navbar = ({
             src={window.innerWidth < 768 ? Logo2 : Logo} />
 
           </a>
-          <div className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit max-md:hidden">
+          <div onClick={() => {
+            if(!yourAddress[0]){
+              navigate("/user/address")
+            }
+          }} className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit max-md:hidden">
             {fetchingAddress ? (
               <SkeletonNavAddress />
             ) : (

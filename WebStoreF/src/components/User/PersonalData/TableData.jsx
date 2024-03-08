@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import EditButton from "../EditButton";
 import { formatPhoneNumber } from "../../../helpers/formatPhoneNumber";
 import { CPFMask } from "../../../helpers/CPFMask";
@@ -9,6 +9,10 @@ const TableData = ({ item, editForm, handleChange, index }) => {
   const handleClick = () => {
     setEdit(true);
   };
+
+  useEffect(()=>{
+    if(!editForm) setEdit(false)
+  },[editForm])
 
   return (
     <>

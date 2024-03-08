@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar/Navbar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
 import CartSideMenu from "../components/Cart/CartSideMenu";
 import ProductsCarousel from "../components/ProductsCarousel";
@@ -9,6 +9,7 @@ import { Carousel } from "react-responsive-carousel";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import Logo from "../components/Store/MyStore/Logo";
 import { isMobile } from "react-device-detect";
+import { useOutsideAlerter } from "../hooks/useOutsideAlerter";
 
 const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);
@@ -18,6 +19,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
   const [lastTime, setLastTime] = useState(0);
+  const cartRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -113,7 +115,9 @@ const Home = ({ user, address, loading, refreshUser }) => {
       {loading && <TopBarProgress />}
       <Navbar {...props} />
       <main className={"w-full h-full"}>
-        {toggleCart && <CartSideMenu setCart={setToggleCart} />}
+        {toggleCart && (
+          <CartSideMenu cartRef={cartRef} setCart={setToggleCart} />
+        )}
         {location.pathname !== "/" ? (
           <Outlet context={{ ...props }} />
         ) : (
@@ -125,34 +129,38 @@ const Home = ({ user, address, loading, refreshUser }) => {
                     <LoadingSpinner size="w-12 h-12" />
                   </div>
                 ) : (
-                  images && (
-                    <Carousel
-                      axis="horizontal"
-                      autoPlay={true}
-                      infiniteLoop={true}
-                      // showIndicators={false}
-                      showThumbs={false}
-                      showArrows={false}
-                    >
-                      {todayCarouselImages.map((item, i) => {
+                  <Carousel
+                    axis="horizontal"
+                    autoPlay={true}
+                    infiniteLoop={true}
+                    // showIndicators={false}
+                    showThumbs={false}
+                    showArrows={false}
+                  >
+                    {todayCarouselImages.map((item, i) => {
+                      return (
+                        <div
+                          key={item}
+                          className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
+                        >
+                          <img
+                            alt="banner image from store"
+                            className="object-cover max-w-[1440px] h-full block"
+                            src={item}
+                          />
+                        </div>
+                      );
+                    })}
+                    {images &&
+                      images.carouselImages.map((item, i) => {
                         return (
-                          <div className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">
+                          <div
+                            key={item}
+                            className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
+                          >
                             <img
                               alt="banner image from store"
                               className="object-cover max-w-[1440px] h-full block"
-                              key={item}
-                              src={item}
-                            />
-                          </div>
-                        );
-                      })}
-                      {images.carouselImages.map((item, i) => {
-                        return (
-                          <div className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">
-                            <img
-                              alt="banner image from store"
-                              className="object-cover max-w-[1440px] h-full block"
-                              key={item}
                               src={item}
                             />
                             <div
@@ -178,8 +186,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
                           </div>
                         );
                       })}
-                    </Carousel>
-                  )
+                  </Carousel>
                 )}
               </div>
               <ProductsCarousel isMobile={isMobile} topSelling />

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import LoadingSpinner from "./LoadingSpinner";
 import ErrorCard from "./ErrorCard";
 import SuccessCard from "./SuccessCard";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { CEPMask } from "../../helpers/CEPMask";
 import { CPFMask } from "../../helpers/CPFMask";
@@ -47,11 +47,17 @@ const AddressForm = ({ url, type }) => {
     error: badRequest,
   } = useFetchApi(url, "POST", body);
 
+  const {refreshUser} = useOutletContext();
+
   useEffect(() => {
-    if (data === "Address saved successfully" || data === "Store Address updated") {
+    if (
+      data === "Address saved successfully" ||
+      data === "Store Address updated"
+    ) {
       setSuccess("Endereço adicionado com sucesso. Redirecionando...");
+      refreshUser()
       setTimeout(() => {
-        navigate(-1, {replace: true});
+        navigate(-1, { replace: true });
       }, 600);
     }
 
@@ -87,7 +93,7 @@ const AddressForm = ({ url, type }) => {
     // get address info with cep
     if (cep.length >= 8 && lastCep !== cep) {
       setLoading(true);
-      fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`)
+      fetch(`https://viacep.com.br/ws/${cep.replace(/\D/g, "")}/json/`)
         .then((response) => {
           if (response.status === 404) {
             setError("CEP não encontrado");
@@ -95,10 +101,10 @@ const AddressForm = ({ url, type }) => {
             response.json().then((data) => {
               setAddressInfo((addressInfo) => ({
                 ...addressInfo,
-                street: data.street,
-                neighborhood: data.neighborhood,
-                city: data.city,
-                state: data.state,
+                street: data.logradouro,
+                neighborhood: data.bairro,
+                city: data.localidade,
+                state: data.uf,
               }));
             });
           }
@@ -195,13 +201,17 @@ const AddressForm = ({ url, type }) => {
         "flex flex-col border-[1px] relative shadow-md w-full max-w-[1440px] py-10 px-6 rounded-sm max-sm:px-2"
       }
     >
-      {type && <h1 className="text-xl mb-8">Coloque as informações do endereço da sua loja</h1>}
+      {type && (
+        <h1 className="text-xl mb-8">
+          Coloque as informações do endereço da sua loja
+        </h1>
+      )}
       {error !== "" ? (
-        <div className="absolute top-[-75px] left-[50%] translate-x-[-50%]">
+        <div className="absolute top-3 left-[50%] translate-x-[-50%]">
           <ErrorCard invalid={error} handleClick={handleClick} />
         </div>
       ) : success !== "" ? (
-        <div className="absolute top-[-75px] left-[50%] translate-x-[-50%]">
+        <div className="absolute top-3 left-[50%] translate-x-[-50%] animate-expand">
           <SuccessCard success={success} handleClick={handleClick} />
         </div>
       ) : (
@@ -392,11 +402,12 @@ const AddressForm = ({ url, type }) => {
           </>
         )}
         <div className="h-10">
-        <SubmitButton
-          onClick={handleSubmit}
-          loading={fetching}
-          text="Adicionar Endereço"
-        /></div>
+          <SubmitButton
+            onClick={handleSubmit}
+            loading={fetching}
+            text="Adicionar Endereço"
+          />
+        </div>
       </form>
     </div>
   );

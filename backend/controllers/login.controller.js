@@ -33,14 +33,11 @@ exports.googleAuth = async (req, res) => {
   let user;
   const credentials = req.body;
 
-  console.log(credentials);
-
   try {
 
     const { data } = await axios.get(
       `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${credentials.access_token}`,
     );
-
 
     user = await UserSchema.findOne({ gid: data.id }); // Search for user by google id
     if (!user) {
