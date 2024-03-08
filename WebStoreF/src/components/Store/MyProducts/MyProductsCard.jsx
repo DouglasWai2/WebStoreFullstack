@@ -35,7 +35,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
   }, [response, submiting]);
 
   function handleClick() {
-    setBody({ productIDs: item._id });
+    setBody({ productIDs: [...item._id] });
     setUrl("/store/my-store/delete-products");
   }
 

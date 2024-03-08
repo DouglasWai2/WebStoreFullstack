@@ -29,7 +29,7 @@ const Navbar = ({
     JSON.parse(localStorage.getItem("cart"))?.length
   );
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const wrapperRef = useRef(null);
 
@@ -68,17 +68,18 @@ const Navbar = ({
           }
         >
           <a href="/">
-
-            <img className="h-[50px] max-md:h-[80px]" 
-            alt="logo" 
-            src={window.innerWidth < 768 ? Logo2 : Logo} />
-
+            <img
+              className="h-[50px] max-md:h-[80px]"
+              alt="logo"
+              src={window.innerWidth < 768 ? Logo2 : Logo}
+            />
           </a>
-          <div onClick={() => {
-            if(!yourAddress[0]){
-              navigate("/user/address")
-            }
-          }} className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit max-md:hidden">
+          <div
+            onClick={() => {
+              navigate("/user/address");
+            }}
+            className="flex items-center gap-2 cursor-pointer hover-border p-2 text-[10pt] w-fit max-md:hidden"
+          >
             {fetchingAddress ? (
               <SkeletonNavAddress />
             ) : (
@@ -143,7 +144,7 @@ const Navbar = ({
           </div>
           <div ref={sideBarRef} className="flex">
             <div className="items-center w-fit hidden max-md:flex">
-              <div 
+              <div
                 onClick={() => setToggleSideNav(true)}
                 className="hover-border p-2 cursor-pointer"
               >
@@ -153,7 +154,9 @@ const Navbar = ({
                   size="xl"
                 />
               </div>
-              {toggleSideNav && <SideMenuNav setToggleSideNav={setToggleSideNav} user={user} />}
+              {toggleSideNav && (
+                <SideMenuNav setToggleSideNav={setToggleSideNav} user={user} />
+              )}
             </div>
             <div
               onClick={() => {
@@ -167,9 +170,15 @@ const Navbar = ({
                 size="xl"
                 style={{ color: "#94989e" }}
               />
-             {cartItemsNum > 0 && <span className="absolute top-0 right-0
+              {cartItemsNum > 0 && (
+                <span
+                  className="absolute top-0 right-0
                text-white bg-red-500 grid place-items-center rounded-full
-                w-[20px] h-[20px] text-xs">{cartItemsNum}</span>}
+                w-[20px] h-[20px] text-xs"
+                >
+                  {cartItemsNum}
+                </span>
+              )}
             </div>
           </div>
         </div>

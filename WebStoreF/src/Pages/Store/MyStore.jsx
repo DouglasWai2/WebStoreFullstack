@@ -94,7 +94,6 @@ const MyStore = () => {
   }, [handleStoreScroll]);
 
   useEffect(() => {
-    console.log(location)
     if(location.pathname !== "/store/my-store/address") setUrl(`${location.pathname}`);
   }, [location]);
 
