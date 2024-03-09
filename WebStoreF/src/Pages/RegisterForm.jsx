@@ -5,15 +5,14 @@ import Logo from "../assets/logo-no-background-2.svg";
 import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "../components/shared/LoadingSpinner";
 import { useFetchApi } from "../hooks/useFetchApi";
 import SubmitButton from "../components/shared/SubmitButton";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [errMessage, setErrMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [regexVisible, setRegexVisible] = useState(false)
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     lastName: "",
@@ -53,11 +52,10 @@ const RegisterForm = () => {
     }
 
     if (error) {
-      console.log(error);
       if (error.data.message === "already registered") {
-        setErrMessage("Email ja registrado");
-        return;
+        return setErrMessage("Email ou celular já registrado");
       }
+
       if (error?.data.error.errors) {
         Object.keys(error.data.error.errors).forEach((key) => {
           document.getElementsByName(key)[0].classList.add("!border-red-500");
@@ -69,7 +67,6 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
 
     const cleanPhone = phone.replace(/\D+/g, "");
 
@@ -86,13 +83,18 @@ const RegisterForm = () => {
       return;
     }
 
-    if (!strongPassword.test(password)) {
-      setErrMessage("Escolha uma senha mais forte");
-      setIsLoading(false);
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      setErrMessage("Email inválido");
       return;
     }
+
     if (email !== confirmEmail) {
       setErrMessage("E-mails não conferem");
+      return;
+    }
+
+    if (!strongPassword.test(password)) {
+      setErrMessage("Escolha uma senha mais forte");
       setIsLoading(false);
       return;
     }
@@ -104,7 +106,6 @@ const RegisterForm = () => {
     }
 
     registerInfo.phone = cleanPhone;
-
     setBody(registerInfo);
     if (error) refresh();
   };
@@ -124,12 +125,12 @@ const RegisterForm = () => {
     }));
   };
   return (
-    <main className="flex flex-col z-[-1] p-10 justify-center items-center w-screen bg-[#F9F7F1]">
-      <div className="w-[500px] rounded-lg shadow-md p-8 py-20">
+    <main className="flex flex-col z-[-1] p-10 justify-center items-center w-screen bg-[#F9F7F1] max-sm:px-0">
+      <div className="w-full max-w-[600px] rounded-lg shadow-md p-8 py-20">
         {errMessage !== "" && (
           <div
-            className="absolute flex top-4 gap-3 justify-center items-center z-10 bg-white rounded-sm border-[1px]
-          left-0 right-0 mx-auto my-0 max-w-[400px]
+            className="fixed flex top-4 gap-3 justify-center items-center z-10 bg-white rounded-sm border-[1px]
+          left-0 right-0 mx-auto my-0 w-full max-w-[350px]
            border-red-500 text-red-500 p-4 animate-expand"
           >
             <FontAwesomeIcon icon={faTriangleExclamation} />
@@ -146,7 +147,7 @@ const RegisterForm = () => {
           onSubmit={handleInputChange}
           className="flex flex-col justify-center gap-8 relative"
         >
-          <div className="flex justify-between">
+          <div className="flex gap-2 justify-between max-sm:flex-col max-sm:gap-8">
             <label htmlFor="Nome" className="flex flex-col">
               <span className="flex justify-between">Nome</span>
               <input
@@ -223,6 +224,8 @@ const RegisterForm = () => {
               required
               value={registerInfo.password}
               onChange={handleInputChange}
+              onFocus={() => setRegexVisible(true)}
+              onBlur={() => setRegexVisible(false)}
               className={
                 "input-login " +
                 (registerInfo.password !== ""
@@ -236,7 +239,7 @@ const RegisterForm = () => {
               type="password"
               name="password"
             />
-            <RegisterRegex password={registerInfo.password} />
+            {regexVisible && <RegisterRegex password={registerInfo.password} />}
           </label>
           <label htmlFor="passwordConfirm" className="flex flex-col">
             <span className="flex justify-between">Confirmar senha</span>
@@ -249,12 +252,14 @@ const RegisterForm = () => {
               name="confirmPassword"
             />
           </label>
-          <SubmitButton
-            disabled={disabled}
-            onClick={handleSubmit}
-            loading={loading}
-            text="Criar conta"
-          />
+          <div className="h-[50px]">
+            <SubmitButton
+              disabled={disabled}
+              onClick={handleSubmit}
+              loading={loading}
+              text="Criar conta"
+            />
+          </div>
         </form>
         <h5 className="!text-[8pt] mt-3 w-full text-center">
           Ao se cadastrar você concorda com os{" "}

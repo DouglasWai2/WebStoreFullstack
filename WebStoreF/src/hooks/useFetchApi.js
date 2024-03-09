@@ -27,7 +27,7 @@ export const useFetchApi = (path, method, body, config) => {
         setLoading(false);
       }
     },
-    [method, path, config]
+    [method, path, config, error]
   );
 
   const refresh = () => {

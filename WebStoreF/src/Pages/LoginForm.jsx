@@ -28,6 +28,7 @@ const LoginForm = () => {
     e.preventDefault();
     setBody({ email, password });
     setUrl("/auth/login");
+    if(error) refresh()
   };
   const handleEmailInput = (e) => setEmail(e.target.value);
   const handlePasswordInput = (e) => setPassword(e.target.value);
@@ -57,7 +58,7 @@ const LoginForm = () => {
     <>
       <main className="flex flex-col justify-center items-center w-screen h-screen overflow-scroll bg-[#F9F7F1]">
         {invalid && (
-          <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4">
+          <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4 animate-expand">
             <FontAwesomeIcon icon={faTriangleExclamation} />
             {invalid}
             <button

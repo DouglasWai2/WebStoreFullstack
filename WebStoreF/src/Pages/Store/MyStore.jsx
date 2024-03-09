@@ -144,7 +144,7 @@ const MyStore = () => {
                     }
                   />
                   <div>
-                    <p className="text-4xl">{data?.storeName}</p>
+                    <p className="text-4xl max-sm:text-lg">{data?.storeName}</p>
                     <div className="flex gap-3 ml-4 mt-1">
                       <ShareButton
                         storeName={data?.storeName}
@@ -242,7 +242,7 @@ const MyStore = () => {
                 })}{" "}
               </>
             ) : (
-              !loading && <h1 className="text-3xl">Nenhum produto</h1>
+              !loading && <h1 className="text-3xl py-10">Nenhum produto</h1>
             )}
           </div>
         </div>

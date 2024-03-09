@@ -87,8 +87,8 @@ const NewProduct = () => {
     let dimensions;
 
     // Remove red border and invalid on input change
-    if (error) e.target.classList.remove("invalid");
-    e.target.classList.remove("!border-red-400");
+    e.target.classList.remove("invalid");
+    e.target.classList.remove("!border-red-500");
 
     // Files are handled differently
     if (changeName === "files") changeValue = Array.from(e.target.files);
@@ -112,7 +112,6 @@ const NewProduct = () => {
 
     // Format dimensions values (weight, width, height and length)
     if (changeId.includes("dimensions")) {
-
       dimensions = {
         ...product.dimensions,
         [e.target.name]: parseFloat(e.target.value),
@@ -167,6 +166,49 @@ const NewProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const {weight, width, height, length} = product.dimensions
+
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !brand ||
+      !model ||
+      !tags||
+      !weight ||
+      !width ||
+      !height ||
+      !length
+    ) {
+      Object.keys(product).map(item => {
+        if (!product[item]) {
+          const element = document.getElementById(item);
+          if(element){
+            element.classList.add("!border-red-500");
+            element.classList.add("invalid");
+          }
+        }
+      })
+      Object.keys(product.dimensions).map(item => {
+        if (!product.dimensions[item]) {
+          const element = document.getElementsByName(item)[0];
+          if(element){
+            element.classList.add("!border-red-500");
+            element.classList.add("invalid");
+          }
+        }
+      })
+      return setInvalid("Preencha todos os campos");
+    }
+
+    if (tagsArray.length < 3) {
+      return setInvalid("Adicione pelo menos 3 etiquetas");
+    }
+
+    if (files.length === 0) {
+      return setInvalid("Adicione pelo menos uma imagem");
+    }
+
     setBody({
       ...product,
       tags: tagsArray,
@@ -195,6 +237,7 @@ const NewProduct = () => {
   useEffect(() => {
     if (error) {
       setInvalid(error.data._message + ". Preencha os campos corretamente");
+      console.log(error)
       Object.keys(error.data.errors).forEach((item) => {
         const element = document.getElementById(item);
         if (element) {
@@ -210,9 +253,9 @@ const NewProduct = () => {
   }, [error, loading, response]);
 
   return (
-    <div className="flex w-full justify-center py-10 px-10 gap-8 max-md:px-0 max-2xl:flex-col max-2xl:items-center">
+    <div className="flex relative w-full justify-center py-10 px-10 gap-8 max-md:px-0 max-2xl:flex-col max-2xl:items-center">
       {invalid && (
-        <div className="absolute z-20 translate-y-4 animate-expand">
+        <div className="fixed z-40 top-3 translate-y-4 animate-expand">
           <ErrorCard invalid={invalid} handleClick={() => setInvalid("")} />
         </div>
       )}
@@ -314,6 +357,7 @@ const NewProduct = () => {
             onChange={handleChange}
             value={tags.replace(",", "")}
             name="tags"
+            id="tags"
             // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
             type="text"
           />

@@ -1,3 +1,5 @@
+import { faCheck, faX } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
 const AttributeRegex = ({ text, regex, password }) => {
@@ -13,7 +15,15 @@ const AttributeRegex = ({ text, regex, password }) => {
   }, [password]);
 
   return (
-    <li key={regex} className={pass ? "text-green-500" : "text-red-500"}>
+    <li
+      key={regex}
+      className={"mt-2 " + (pass ? "text-green-500" : "text-red-500")}
+    >
+      {pass ? (
+        <FontAwesomeIcon className="mr-2" icon={faCheck} />
+      ) : (
+        <FontAwesomeIcon icon={faX} />
+      )}{" "}
       {text}
     </li>
   );
