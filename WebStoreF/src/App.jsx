@@ -18,6 +18,7 @@ import { useLogOut } from "./hooks/useLogOut";
 import Checkout from "./Pages/Checkout/Checkout.jsx";
 import PostCheckout from "./Pages/Checkout/PostCheckout.jsx";
 import ReviewCart from "./Pages/Checkout/ReviewCart.jsx";
+import VerificationPage from "./Pages/VerificationPage.jsx";
 
 function App() {
   const logOut = useLogOut();
@@ -103,6 +104,7 @@ function App() {
         else return null;
       },
     },
+    { path: `/register/user/verify`, element: <VerificationPage /> },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },
     { path: "*", element: <NotFoundError /> },

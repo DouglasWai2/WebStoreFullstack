@@ -28,7 +28,6 @@ const LoginForm = () => {
     e.preventDefault();
     setBody({ email, password });
     setUrl("/auth/login");
-    if(error) refresh()
   };
   const handleEmailInput = (e) => setEmail(e.target.value);
   const handlePasswordInput = (e) => setPassword(e.target.value);

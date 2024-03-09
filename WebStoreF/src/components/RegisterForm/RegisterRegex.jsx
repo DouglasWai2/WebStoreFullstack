@@ -26,7 +26,7 @@ const RegisterRegex = ({ password }) => {
   ];
 
   return (
-    <ul className="animate-appear speech up">
+    <ul className="!absolute top-[100%] animate-appear speech up">
       {passwordStrength.map((element) => {
         return (
           <AttributeRegex

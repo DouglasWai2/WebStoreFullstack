@@ -219,11 +219,11 @@ const AddressForm = ({ url, type }) => {
         </h1>
       )}
       {error !== "" ? (
-        <div className="absolute top-3 flex justify-center max-w-[400px] right-0 left-0 my-0 mx-auto animate-expand ">
+        <div className="fixed z-40 top-3 flex justify-center w-full max-w-[350px] right-0 left-0 my-0 mx-auto animate-expand">
           <ErrorCard invalid={error} handleClick={handleClick} />
         </div>
       ) : success !== "" ? (
-        <div className="absolute top-3 flex justify-center max-w-[400px] right-0 left-0 my-0 mx-auto animate-expand">
+        <div className="fixed z-40 top-3 flex justify-center w-full max-w-[350px] right-0 left-0 my-0 mx-auto animate-expand">
           <SuccessCard success={success} handleClick={handleClick} />
         </div>
       ) : (

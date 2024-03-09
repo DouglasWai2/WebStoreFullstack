@@ -48,7 +48,7 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (data) {
-      navigate("/login");
+      navigate("/register/user/verify");
     }
 
     if (error) {
@@ -205,7 +205,7 @@ const RegisterForm = () => {
               name="phone"
             />
           </label>
-          <label htmlFor="password" className="flex flex-col">
+          <label htmlFor="password" className="flex flex-col relative">
             <span className="flex justify-between">
               Senha{" "}
               {registerInfo.password !== "" ? (
