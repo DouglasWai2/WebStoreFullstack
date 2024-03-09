@@ -12,7 +12,7 @@ const RegisterForm = () => {
   const navigate = useNavigate();
   const [errMessage, setErrMessage] = useState("");
   const [disabled, setDisabled] = useState(true);
-  const [regexVisible, setRegexVisible] = useState(false)
+  const [regexVisible, setRegexVisible] = useState(false);
   const [registerInfo, setRegisterInfo] = useState({
     name: "",
     lastName: "",
@@ -61,7 +61,12 @@ const RegisterForm = () => {
           document.getElementsByName(key)[0].classList.add("!border-red-500");
           setErrMessage("Preencha os campos corretamente");
         });
+        return;
       }
+
+      setErrMessage(
+        "Ocorreu um erro inesperado, tente novamente em alguns instantes"
+      );
     }
   }, [data, error]);
 

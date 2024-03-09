@@ -5,6 +5,8 @@ const sendEmail = async (email, subject, text) => {
 
   try {
     const transporter = nodemailer.createTransport({
+      send: true,
+      name: "WebStore",
       service: process.env.SERVICE,
       auth: {
         user: process.env.EMAIL_USER,
@@ -12,13 +14,17 @@ const sendEmail = async (email, subject, text) => {
       },
     });
 
-    await transporter.sendMail({
-      from: process.env.USER,
+    transporter.sendMail({
+      from: process.env.EMAIL_USER,
       to: email,
       subject: subject,
       html: text,
+    }, (error, info) => {
+      if (error) {
+        console.log(error);
+      }
+      console.log("Email sent: " + info.response)
     });
-    console.log("email sent sucessfully");
   } catch (error) {
     console.log("email not sent");
     console.log(error);

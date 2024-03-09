@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
     await newUser.save();
     await token.save();
     await sendEmail(newUser.email, "Verifique sua conta WebStore", message);
-    res
+    return res
       .status(201)
       .send(
         JSON.stringify(newUser, {
