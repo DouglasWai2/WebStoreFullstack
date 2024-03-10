@@ -248,6 +248,20 @@ input[type="date"] {
   border-radius: 50%;
   animation: l5 1s infinite linear alternate;
 }
+
+.radial-gradient-bg {
+  background: rgb(24,143,167);
+  background: radial-gradient(circle, rgba(24,143,167,1) 32%, rgba(148,203,214,1) 64%, rgba(255,255,255,0.9360119047619048) 88%, rgba(255,255,255,1) 100%);
+}
+
+.linear-gradient-bg {
+  background: rgb(24,143,167);
+  background: linear-gradient(0deg, rgba(24,143,167,1) 70%, rgba(255,255,255,0.9360119047619048) 95%, rgba(255,255,255,1) 100%);
+}
+
+
+
+
 @keyframes l5 {
   0% {
     box-shadow: 20px 0 #188fa7, -20px 0 #0002;

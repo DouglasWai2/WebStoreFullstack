@@ -183,7 +183,7 @@ const Navbar = ({
           </div>
         </div>
       </nav>
-      {user && user.confirmedEmail && (
+      {user && !user.confirmedEmail && (
         <h3 className="text-xl font-bold bg-yellow-100 px-8">
           Enviamos um link de verificação para seu e-mail. Por favor, verifique
           sua caixa de entrada.
