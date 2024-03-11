@@ -55,7 +55,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <main className="flex flex-col justify-center items-center w-screen h-screen overflow-scroll bg-[#F9F7F1]">
+      <main className="flex flex-col justify-center items-center w-screen h-screen overflow-scroll bg-[#f5f5f5]">
         {invalid && (
           <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4 animate-expand">
             <FontAwesomeIcon icon={faTriangleExclamation} />
@@ -105,7 +105,7 @@ const LoginForm = () => {
             />
             <div className="relative flex justify-center w-full text-gray-500">
               <span className="w-full border-b-[1px] border-gray-500 absolute top-[50%]"></span>
-              <p className="bg-[#F9F7F1] z-10 px-4">Ou faça login com</p>
+              <p className="bg-[#f4f4f4] z-10 px-4">Ou faça login com</p>
             </div>
             <button
               onClick={() => login()}
