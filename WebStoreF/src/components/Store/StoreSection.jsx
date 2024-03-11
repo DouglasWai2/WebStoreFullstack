@@ -1,9 +1,34 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-const StoreSection = ({ children, className }) => {
+const StoreSection = ({ children, className, first, last, ...props }) => {
   return (
-    <section className={"w-full h-full flex items-center justify-center " + className}>
-      <div className="shadow w-fit px-5">{children}</div>
+    <section
+      {...props}
+      className={"max-w-[1280px] mx-auto h-full p-4 max-sm:p-1 max-sm:py-4 " + className}
+    >
+      <div
+        className={
+          "shadow-lg bg-[#fcfcfc] h-full grid place-items-center p-8 " +
+          "grid-rows-1 gap-5 grid-flow-col auto-cols-auto " +
+          "max-sm:grid-cols-1 max-sm:items-start max-sm:p-4"
+        }
+      >
+        {!first && <FontAwesomeIcon
+            className="w-fit max-sm:row-start-2 max-sm:row-end-2 
+            max-sm:col-start-1 justify-self-start"
+            icon={faArrowLeft}
+          />
+        }
+        <div className="w-full">{children}</div>
+        {!last && <FontAwesomeIcon
+            className="w-fit max-sm:row-start-2 max-sm:row-end-2 
+            max-sm:col-start-1 justify-self-end"
+            icon={faArrowRight}
+          />
+        }
+      </div>
     </section>
   );
 };

@@ -184,7 +184,7 @@ const Navbar = ({
         </div>
       </nav>
       {user && !user.confirmedEmail && (
-        <h3 className="text-xl font-bold bg-yellow-100 px-8">
+        <h3 className="text-xl font-bold bg-yellow-100 px-8 max-md:text-base max-sm:text-sm">
           Enviamos um link de verificação para seu e-mail. Por favor, verifique
           sua caixa de entrada.
         </h3>
