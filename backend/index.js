@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 app.use(cors({ credentials: true, origin: [
   `${process.env.ORIGIN}`, 
 "https://webstore-git-develop-douglaswai2s-projects.vercel.app", 
-"https://sandbox.melhorenvio.com.br"
+"https://melhorenvio.com.br"
 ]}));
 app.use(cookieParser());
 

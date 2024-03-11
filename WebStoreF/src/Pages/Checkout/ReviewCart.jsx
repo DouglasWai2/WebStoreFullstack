@@ -11,13 +11,7 @@ const ReviewCart = () => {
   async function integrateApi() {
     const response = await axios.post(
       import.meta.env.VITE_API_URL + "/frete",
-      null,
-      {
-        headers: {
-          "User-Agent": "WebStore (douglas.wai@outlook.com)",
-        },
-      }
-    );
+      null );
     console.log(response);
   }
 
