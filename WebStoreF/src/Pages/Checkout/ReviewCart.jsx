@@ -9,9 +9,8 @@ const ReviewCart = () => {
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
 
   async function integrateApi() {
-    const response = await axios.post(
-      import.meta.env.VITE_API_URL + "/frete",
-      null );
+    const response = await axios.get(
+      import.meta.env.VITE_API_URL + "/frete");
     console.log(response);
   }
 
