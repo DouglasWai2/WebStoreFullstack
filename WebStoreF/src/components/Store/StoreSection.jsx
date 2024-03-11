@@ -10,8 +10,8 @@ const StoreSection = ({ children, className, first, last, ...props }) => {
     >
       <div
         className={
-          "shadow-lg bg-[#fcfcfc] h-full grid place-items-center p-8 " +
-          "grid-rows-1 gap-5 grid-flow-col auto-cols-auto " +
+          "shadow-lg rounded bg-[#fcfcfc] h-full grid place-items-center p-12 " +
+          "grid-rows-1 gap-12 grid-flow-col auto-cols-auto " +
           "max-sm:grid-cols-1 max-sm:items-start max-sm:p-4"
         }
       >

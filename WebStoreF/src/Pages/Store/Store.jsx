@@ -21,7 +21,7 @@ const Store = () => {
           <h1 className="text-2xl">
             Seja bem-vindo a área do vendedor da WebStore
           </h1>
-          <div className="flex items-center justify-center max-sm:flex-col-reverse">
+          <div className="flex items-center justify-center gap-4 max-lg:flex-col-reverse">
             <p className="text-lg">
               Anuncie seu produto na WebStore e aproveite uma plataforma segura
               e com suporte.
@@ -40,9 +40,9 @@ const Store = () => {
             <span className="text-2xl text-slate-800">1.</span> O primeiro passo
             é registrar sua loja{" "}
           </p>
-          <div className="flex items-center justify-around gap-3 max-sm:flex-col">
+          <div className="flex items-center justify-around gap-4 max-lg:flex-col">
             <video
-              className="w-[700px] h-[600px] max-sm:w-[400px] max-sm:h-[300px] overflow-hidden"
+              className="w-[700px] h-[500px] max-sm:w-[400px] max-sm:h-[300px] overflow-hidden"
               autoPlay
               muted
               loop
@@ -64,7 +64,7 @@ const Store = () => {
             é colocar as informações da sua loja
           </p>
 
-          <div className="flex items-center justify-center max-sm:flex-col-reverse">
+          <div className="flex items-center justify-center gap-4 max-lg:flex-col-reverse">
             <p className="text-left">
               Nesta etapa você vai colocar o endereço da sua loja (de onde os
               produtos vão sair)
@@ -85,7 +85,7 @@ const Store = () => {
               autoplay={true}
               loop={true}
               src={deliveryAnimation}
-              className="w-[500px] h-[500px] max-sm:w-[200px] max-sm:h-[200px]"
+              className="w-[400px] h-[500px] max-sm:w-[200px] max-sm:h-[200px]"
             ></Player>
           </div>
         </StoreSection>
@@ -94,7 +94,7 @@ const Store = () => {
             <span className="text-2xl text-slate-800">3.</span> O terceiro passo
             é cadastrar seu(s) produto(s)
           </p>
-          <div className="flex items-center justify-center max-sm:flex-col-reverse">
+          <div className="flex items-center justify-center gap-4 max-lg:flex-col-reverse">
             <p className="text-left">
               Siga as instruções do formulário e preencha os campos
               corretamente. Após submeter o formulário, seu produto ficará
