@@ -67,7 +67,7 @@ const MyStore = () => {
   }, [logoResponse, bannerResponse]);
 
   useEffect(() => {
-    if (user && user.role !== "Seller") navigate("/store");
+    if (user && user.role !== "Seller" && location.pathname === "/store/my-store") navigate("/store");
   }, [user]);
 
   const handleStoreScroll = useCallback(() => {
