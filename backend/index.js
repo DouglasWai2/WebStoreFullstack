@@ -23,9 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors({ credentials: true, 
   origin: [
-  `${process.env.ORIGIN}`, 
-// "https://webstore-git-develop-douglaswai2s-projects.vercel.app", 
-// "https://melhorenvio.com.br"
+  `${process.env.ORIGIN}`
 ]
 }));
 app.use(cookieParser());

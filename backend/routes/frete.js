@@ -8,7 +8,8 @@ router.get('/frete', async (req, res) => {
   const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`
   try{
     console.log('redirect_uri', redirect_uri)
-    return res.redirect(301, `https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code&scope=shipping-calculate`)
+    return res.writeHead(302, 
+      `https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code&scope=shipping-calculate`)
 
   }catch(error){
     console.log(error)
