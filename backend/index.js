@@ -21,11 +21,13 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ credentials: true, origin: [
+app.use(cors({ credentials: true, 
+  origin: [
   `${process.env.ORIGIN}`, 
-"https://webstore-git-develop-douglaswai2s-projects.vercel.app", 
-"https://melhorenvio.com.br"
-]}));
+// "https://webstore-git-develop-douglaswai2s-projects.vercel.app", 
+// "https://melhorenvio.com.br"
+]
+}));
 app.use(cookieParser());
 
 app.get("/api/v1", (req, res) => {

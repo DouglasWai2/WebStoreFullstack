@@ -1,26 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const sdk = require('api')('@melhorenvio/v1.0#cyp6ra28lneli520');
+
 const axios = require('axios')
 
 router.get('/frete', async (req, res) => {
-
+  const clientId = 4287
+  const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`
   try{
-    const response = await axios.get('https://www.melhorenvio.com.br/oauth/authorize?client_id=14224&redirect_uri=https://webstore-api-1d03bd2b0336.herokuapp.com/api/v1/frete/callback&response_type=code&scope=shipping-calculate', {
-      headers: {
-        "user-agent": "WebStore (douglas.wai@outlook.com)",
-        "accept": "application/json",
-      }
-    })
-    console.log(response)
-    return res.send(response.data)
+    console.log('redirect_uri', redirect_uri)
+    return res.redirect(301, `https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code&scope=shipping-calculate`)
+
   }catch(error){
     console.log(error)
-    return res.send(error)
+    return res.status(400).send(error)
   }
 
-  // return res
-    // .redirect(301, `https://www.melhorenvio.com.br/oauth/authorize?client_id=14224&redirect_uri=https://webstore-api-1d03bd2b0336.herokuapp.com/api/v1/frete/callback&response_type=code&scope=shipping-calculate`)
 })
 
 router.get('/frete/callback', async (req, res) => {
