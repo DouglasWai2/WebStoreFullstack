@@ -4,9 +4,11 @@ const StoreSchema = require("../models/store.model");
 const ProductSchema = require("../models/product.model");
 
 exports.sendUserInfo = async (req, res) => {
-
   try {
-    const user = await UserSchema.findById(req.userInfo.id, "-password -refreshTokens").populate("address");
+    const user = await UserSchema.findById(
+      req.userInfo.id,
+      "-password -refreshTokens"
+    ).populate("address");
 
     res.status(200).json(user);
   } catch (error) {
@@ -46,7 +48,7 @@ exports.getUsersInterests = async (req, res) => {
 };
 
 exports.updateUserData = async (req, res) => {
-  console.log(req.body);
+
   const data = req.body;
   let user = await UserSchema.findById(req.userInfo.id);
 

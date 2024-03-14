@@ -8,7 +8,7 @@ router.get("/frete", async (req, res) => {
   const clientId = 4287;
   const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`;
 
-  return res.redirect("/");
+  return res.redirect(301, `https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code&scope=shipping-calculate`)
 });
 
 router.get("/frete/callback", async (req, res) => {
@@ -37,20 +37,18 @@ router.get("/frete/callback", async (req, res) => {
   try {
     const { data } = await axios.request(options);
 
-    console.log(data)
+    const store = await storeSchema.findOneAndUpdate(
+      {
+        user: state,
+      },
+      { $set: { melhorEnvios: { ...data } } }
+    );
 
-    // const { refresh_token, access_token } = data;
-
-    // const store = await storeSchema.findOneAndUpdate(
-    //   {
-    //     user: state,
-    //   },
-    //   { $set: { melhorEnvios: { access_token, refresh_token } } }
-    // );
-
-    return res.status(200).send(`<script>
-  window.location.href = 'https://webstore-app.shop/store/mystore'
-</script>`);
+    return res.status(200).send(
+      `<script>
+        window.location.href = 'https://webstore-app.shop/store/my-store'
+      </script>`
+    );
   } catch (error) {
     console.error(error);
     return res.status(400).send(error.response.data);

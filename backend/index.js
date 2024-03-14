@@ -23,9 +23,7 @@ app.use(bodyParser.json());
 app.use(
   cors({
     credentials: true,
-    origin: [
-      `${process.env.ORIGIN}`,
-    ],
+    origin: [`${process.env.ORIGIN}`,`https://sandbox.melhorenvio.com.br`],
   })
 );
 

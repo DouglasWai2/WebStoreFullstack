@@ -18,7 +18,7 @@ const ProfilePage = () => {
     error,
   } = useFetchApi("/user/update", "POST", body);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const { user, address, loading, refreshUser } = useOutletContext();
 
@@ -60,12 +60,15 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (user) {
-      console.log(user)
+
       const { name, lastName, email, phone, cpf, birth } = user;
+
       let formatedBirth;
+
       if (birth) {
         formatedBirth = formatDate(birth);
       }
+
       setUserInfo([
         { Nome: name, info: "name", type: "text" },
         { "Ultimo Nome": lastName, info: "lastName", type: "text" },
@@ -118,7 +121,6 @@ const ProfilePage = () => {
                       editForm={editForm}
                       item={item}
                       index={index}
-
                     />
                   </td>
                 </tr>
@@ -130,9 +132,16 @@ const ProfilePage = () => {
               </th>
               <td className="w-full items-center flex justify-between max-sm:justify-normal max-sm:gap-3 max-sm:items-center">
                 <div className="ml-5">
-                  {address && address.length
-                    ? address[0].street + " - N° " + address[0].number
-                    : <span className="hover:underline cursor-pointer" onClick={() => navigate("/user/address")}>Adicione um endereço</span>}
+                  {address && address.length ? (
+                    address[0].street + " - N° " + address[0].number
+                  ) : (
+                    <span
+                      className="hover:underline cursor-pointer"
+                      onClick={() => navigate("/user/address")}
+                    >
+                      Adicione um endereço
+                    </span>
+                  )}
                 </div>
               </td>
             </tr>
@@ -160,8 +169,8 @@ const ProfilePage = () => {
               className="cursor-pointer bg-red-500 shadow-sm w-full rounded-md text-black hover:brightness-75"
               onClick={() => {
                 setEditForm(false);
-                setEditData(null)
-                refreshUser()
+                setEditData(null);
+                refreshUser();
               }}
             >
               Cancelar

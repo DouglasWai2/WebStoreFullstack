@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
-import { useFetchApi } from "../../hooks/useFetchApi";
 import { useApi } from "../../hooks/useApi";
-import axios from "axios";
+import axios  from "axios";
 
 const ReviewCart = ({ id }) => {
   const api = useApi();
-  console.log(id)
   const navigate = useNavigate();
+
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
+
   const clientId = 4287;
-  const redirect_uri = `https://api.webstore-app.shop/api/v1/frete/callback`;
+  const redirect_uri = `${import.meta.env.VITE_API_URL}/api/v1/frete/callback`;
 
   async function integrateApi() {
-    const response = await api.get(import.meta.env.VITE_API_URL + "/frete");
+    const response = await axios.get(import.meta.env.VITE_API_URL + "/frete");
     console.log(response);
   }
 
