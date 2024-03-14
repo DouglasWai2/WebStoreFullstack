@@ -77,6 +77,10 @@ const StoreSchema = new mongoose.Schema(
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     categories: [{ type: String }],
     likes: { type: Number },
+    melhorEnvios:{
+      access_token: {type: String},
+      refresh_token: {type: String}
+    }
   },
   { timestamps: true }
 );

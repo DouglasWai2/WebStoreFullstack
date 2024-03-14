@@ -98,7 +98,7 @@ function App() {
     },
     {
       path: "/checkout/review-cart",
-      element: <ReviewCart />,
+      element: <ReviewCart id={user?._id} />,
       loader: () => {
         if (!loggedIn) redirect("/login");
         else return null;

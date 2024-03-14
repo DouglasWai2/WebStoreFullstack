@@ -22,11 +22,13 @@ function useApi() {
   );
 
   api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+      return response;
+    },
     async (error) => {
       const originalRequest = error.config;
 
-      if(error.response.status === 403){
+      if (error.response.status === 403) {
         logOut();
       }
 
@@ -58,6 +60,6 @@ function useApi() {
     }
   );
 
-  return api
+  return api;
 }
 export { useApi };

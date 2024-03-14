@@ -16,24 +16,27 @@ mongoose
   .then(console.log("DB Connected"))
   .catch((error) => console.log(error));
 
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ credentials: true, 
-  origin: [
-  `${process.env.ORIGIN}`
-]
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      `${process.env.ORIGIN}`,
+    ],
+  })
+);
+
 app.use(cookieParser());
 
 app.get("/api/v1", (req, res) => {
   console.log("user hit the server");
-  return res.status(200).send("Server OK")
+  return res.status(200).send("Server OK");
 });
-app.set('trust proxy', 1)
-app.get('/api/v1/ip', (req, res) => res.send(req.ip))
+app.set("trust proxy", 1);
+app.get("/api/v1/ip", (req, res) => res.send(req.ip));
 
 app.use("/api/v1", productsLimiter, require("./routes/catalog"));
 app.use("/api/v1", require("./routes/rating"));

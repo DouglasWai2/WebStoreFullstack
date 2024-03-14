@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
+import { useApi } from "../../hooks/useApi";
 import axios from "axios";
 
-const ReviewCart = () => {
+const ReviewCart = ({ id }) => {
+  const api = useApi();
+  console.log(id)
   const navigate = useNavigate();
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
+  const clientId = 4287;
+  const redirect_uri = `https://api.webstore-app.shop/api/v1/frete/callback`;
 
   async function integrateApi() {
-    const response = await axios.get(import.meta.env.VITE_API_URL + "/frete");
+    const response = await api.get(import.meta.env.VITE_API_URL + "/frete");
     console.log(response);
   }
 
@@ -64,6 +69,12 @@ const ReviewCart = () => {
         <button onClick={integrateApi} className="bg-black text-white">
           Integrar
         </button>
+        <a
+          href={`https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code&state=${id}&scope=shipping-calculate`}
+          target="_blank"
+        >
+          TEste
+        </a>
       </div>
     </main>
   );

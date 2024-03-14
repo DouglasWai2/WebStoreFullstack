@@ -60,6 +60,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     if (user) {
+      console.log(user)
       const { name, lastName, email, phone, cpf, birth } = user;
       let formatedBirth;
       if (birth) {
@@ -92,14 +93,12 @@ const ProfilePage = () => {
   }, [response, error]);
 
   function handleSubmit() {
-
-    console.log(editData)
     setBody(editData);
   }
 
   return (
     <div className="w-full max-w-[1000px] border-[2px] rounded-md overflow-hidden shadow-md">
-      {!user || !address ? (
+      {!user ? (
         <SkeletonData />
       ) : (
         <table className="w-full">
