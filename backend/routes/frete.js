@@ -15,7 +15,7 @@ router.get("/frete/callback", async (req, res) => {
   const { code, state } = req.query;
   const client_id = 4287;
   const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`;
-  const client_secret = "g62EETgbR5DOzlbLwlcohu1rpW957wLzwRQ8pvUP";
+  const client_secret = process.env.MELHORENVIO_CLIENT_SECRET;
 
   const options = {
     method: "POST",
