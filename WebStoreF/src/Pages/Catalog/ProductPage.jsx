@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import ImageMagnifier from "../../components/Store/ImageMagnifier";
 import { moneyMask } from "../../helpers/moneyMask";
 import { Rating } from "react-simple-star-rating";
 import { useApi } from "../../hooks/useApi";
-import { addToCart } from "../../helpers/addToCart";
 import ProductPageSkeleton from "../../components/Catalog/ProductPageSkeleton";
 import Logo from "../../components/Store/MyStore/Logo";
 import LikeButton from "../../components/shared/LikeButton";
@@ -16,11 +15,13 @@ import {
   faCartPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCart } from "../../hooks/useCart";
 
 const ProductPage = () => {
   const api = useApi();
   const { productId } = useParams();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
   const [mainImage, setMainImage] = useState("");
   const [fullDescription, setFullDescription] = useState(null);
   const descriptionRef = useRef(null);

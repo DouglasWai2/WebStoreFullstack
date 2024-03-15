@@ -2,6 +2,7 @@ const UserSchema = require("../models/user.model");
 const AddressSchema = require("../models/address.model");
 const StoreSchema = require("../models/store.model");
 const ProductSchema = require("../models/product.model");
+const { default: mongoose } = require("mongoose");
 
 exports.sendUserInfo = async (req, res) => {
   try {
@@ -48,7 +49,6 @@ exports.getUsersInterests = async (req, res) => {
 };
 
 exports.updateUserData = async (req, res) => {
-
   const data = req.body;
   let user = await UserSchema.findById(req.userInfo.id);
 
@@ -223,5 +223,56 @@ exports.deleteAddress = async (req, res) => {
     res.status(200).send("Address deleted successfully");
   } catch (error) {
     console.log(error);
+  }
+};
+
+exports.addToCart = async (req, res) => {
+  const { productId, quantity, action } = req.body;
+
+  try {
+    if (action === "add") {
+      const user = await UserSchema.findByIdAndUpdate(req.userInfo.id, {
+        $addToSet: {
+          cart: {
+            product: productId,
+            quantity: quantity,
+          },
+        },
+      });
+    }
+
+    if (action === "update") {
+      const user = await UserSchema.updateOne(
+        {
+          _id: req.userInfo.id,
+          "cart.product": productId,
+        },
+        {
+          $set: {
+            "cart.$.quantity": quantity,
+          },
+        }
+      );
+    }
+
+    if(action === "remove") {
+      const user = await UserSchema.updateOne(
+        {
+          _id: req.userInfo.id,
+        },
+        {
+          $pull: {
+            cart: {
+              product: productId,
+            },
+          },
+        }
+      );
+    }
+
+    return res.status(200).send("ok");
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error);
   }
 };

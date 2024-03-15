@@ -49,6 +49,7 @@ const LoginForm = () => {
     // If logged in successfully set cookie and redirect
     if (userData?.authorization) {
       localStorage.setItem("accessToken", userData.authorization);
+      window.dispatchEvent(new Event("storage"));
       navigate("/");
     }
   }, [error, userData, loading]);

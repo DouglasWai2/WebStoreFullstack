@@ -1,4 +1,4 @@
-import Home from "./Pages/Home.jsx";
+import Home from "./Pages/index.jsx";
 import LoginForm from "./Pages/LoginForm.jsx";
 import RegisterForm from "./Pages/RegisterForm.jsx";
 import Terms from "./Pages/Terms.jsx";
@@ -52,11 +52,22 @@ function App() {
   }, [error]);
 
   useEffect(() => {
-    if (!loggedIn) return;
-    setUserUrl("/user");
+    if (loggedIn) setUserUrl("/user");
+    const handleStorage = () => {
+      if (window.localStorage.getItem("accessToken")) setUserUrl("/user");
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
 
-  const props = { user, address: user?.addressess, loading, loggedIn, refreshUser };
+  const props = {
+    user,
+    address: user?.addressess,
+    loading,
+    loggedIn,
+    refreshUser,
+  };
 
   const router = createBrowserRouter([
     error && error?.status !== 403
@@ -72,7 +83,7 @@ function App() {
         },
     {
       path: "/login",
-      element: <LoginForm />,
+      element: <LoginForm refreshUser={refreshUser} />,
       loader: redirectLoader(),
     },
     {

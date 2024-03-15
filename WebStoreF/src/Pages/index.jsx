@@ -9,7 +9,6 @@ import { Carousel } from "react-responsive-carousel";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import Logo from "../components/Store/MyStore/Logo";
 import { isMobile } from "react-device-detect";
-import { useOutsideAlerter } from "../hooks/useOutsideAlerter";
 
 const Home = ({ user, address, loading, refreshUser }) => {
   const [toggleCard, setToggleCard] = useState(false);

@@ -1,5 +1,10 @@
 export function addToCart(product) {
-
+  
+  var cart = JSON.parse(localStorage.getItem("cart"));
+  if (!cart) {
+    localStorage.setItem("cart", JSON.stringify([]));
+    return addToCart(product);
+  }
 
   const newProduct = {
     productId: product._id,
@@ -9,12 +14,6 @@ export function addToCart(product) {
     thumbnail: product.thumbnail,
     quantity: 1,
   };
-
-  var cart = JSON.parse(localStorage.getItem("cart"));
-  if (!cart) {
-    localStorage.setItem("cart", JSON.stringify([]));
-    return addToCart(product);
-  }
 
   if (
     cart.find((item, index) => {

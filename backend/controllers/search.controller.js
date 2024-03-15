@@ -6,6 +6,7 @@ const storeModel = require("../models/store.model");
 exports.search = async (req, res) => {
   const { search } = req.query;
 
+  
   try {
     const products = await productModel
       .find({
@@ -29,6 +30,7 @@ exports.search = async (req, res) => {
           },
         },
       },
+
       // De-normalize the array content to separate documents
       { $unwind: "$tags" },
 

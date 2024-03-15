@@ -1,22 +1,27 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
-import { useApi } from "../../hooks/useApi";
-import axios  from "axios";
+import { useFetchApi } from "../../hooks/useFetchApi";
 
-const ReviewCart = ({ id }) => {
-  const api = useApi();
+const ReviewCart = () => {
   const navigate = useNavigate();
-
+  const [body, setBody] = useState(null);
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
 
-  const clientId = 4287;
-  const redirect_uri = `${import.meta.env.VITE_API_URL}/api/v1/frete/callback`;
+  useEffect(() => {
+    setBody({
+      products: cartItems.map((item) => {
+        return { quantity: item.quantity, productId: item.productId };
+      }),
+    });
 
-  async function integrateApi() {
-    const response = await axios.get(import.meta.env.VITE_API_URL + "/frete");
-    console.log(response);
-  }
+  }, []);
+
+  const { data, loading, error } = useFetchApi(
+    "/shipment-calculate",
+    "POST",
+    body
+  );
 
   return (
     <main className="w-screen h-screen flex items-center justify-center">
@@ -66,15 +71,6 @@ const ReviewCart = ({ id }) => {
             </div>
           );
         })}
-        <button onClick={integrateApi} className="bg-black text-white">
-          Integrar
-        </button>
-        <a
-          href={`https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&response_type=code&state=${id}&scope=shipping-calculate`}
-          target="_blank"
-        >
-          TEste
-        </a>
       </div>
     </main>
   );

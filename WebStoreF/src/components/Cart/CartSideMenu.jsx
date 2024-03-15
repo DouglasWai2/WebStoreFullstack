@@ -1,15 +1,15 @@
 import { faCartShopping, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { moneyMask } from "../../helpers/moneyMask";
-import { removeFromCart } from "../../helpers/removeFromCart";
 import Delayed from "./Delayed";
 import { useNavigate } from "react-router-dom";
-import { isMobile } from "react-device-detect";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
+import { useCart } from "../../hooks/useCart";
 
 const CartSideMenu = ({ setCart, cartRef }) => {
   const navigate = useNavigate();
+  const {removeFromCart} = useCart()
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cart"))
   );
