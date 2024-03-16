@@ -5,7 +5,7 @@ export const useCart = (loggedIn) => {
   const [body, setBody] = useState(null);
   const { data, loading, error } = useFetchApi("/user/cart", "POST", body);
 
-  async function syncCart() {
+  function syncCart() {
     var cart = JSON.parse(localStorage.getItem("cart"));
     var products;
     if (cart?.length > 0) {

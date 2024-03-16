@@ -88,6 +88,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
   const props = {
     user,
     address,
+    loading,
     loggedIn,
     toggleCard,
     setToggleCard,

@@ -13,7 +13,7 @@ import NavCardMenu from "./NavCardMenu";
 import SearchInput from "./SearchInput";
 import SideMenuNav from "./SideMenuNav";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = ({
   user,
@@ -67,13 +67,13 @@ const Navbar = ({
             "w-full h-[80px] bg-[#152128] py-1 px-2 flex items-center justify-between gap-2 text-white"
           }
         >
-          <a href="/">
+          <Link to="/">
             <img
               className="h-[50px] max-md:h-[80px]"
               alt="logo"
               src={window.innerWidth < 768 ? Logo2 : Logo}
             />
-          </a>
+          </Link>
           <div
             onClick={() => {
               navigate("/user/address");
