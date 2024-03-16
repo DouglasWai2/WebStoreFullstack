@@ -7,8 +7,9 @@ import { useFetchApi } from "../hooks/useFetchApi";
 import SubmitButton from "../components/shared/SubmitButton";
 import { useGoogleLogin } from "@react-oauth/google";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
+import { useCart } from "../hooks/useCart";
 
-const LoginForm = () => {
+const LoginForm = ({ syncCart }) => {
   const [invalid, setInvalid] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,6 +29,8 @@ const LoginForm = () => {
     e.preventDefault();
     setBody({ email, password });
     setUrl("/auth/login");
+
+    if (error) refresh();
   };
   const handleEmailInput = (e) => setEmail(e.target.value);
   const handlePasswordInput = (e) => setPassword(e.target.value);
@@ -49,6 +52,7 @@ const LoginForm = () => {
     // If logged in successfully set cookie and redirect
     if (userData?.authorization) {
       localStorage.setItem("accessToken", userData.authorization);
+      syncCart();
       window.dispatchEvent(new Event("storage"));
       navigate("/");
     }

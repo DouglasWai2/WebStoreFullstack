@@ -21,11 +21,11 @@ const ProductPage = () => {
   const api = useApi();
   const { productId } = useParams();
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { user, setToggleCart, loggedIn } = useOutletContext();
+  const { addToCart } = useCart(loggedIn);
   const [mainImage, setMainImage] = useState("");
   const [fullDescription, setFullDescription] = useState(null);
   const descriptionRef = useRef(null);
-  const { user, setToggleCart } = useOutletContext();
   const {
     data: product,
     loading,

@@ -1,4 +1,4 @@
-import Home from "./Pages/index.jsx";
+import Index from "./Pages/Index.jsx";
 import LoginForm from "./Pages/LoginForm.jsx";
 import RegisterForm from "./Pages/RegisterForm.jsx";
 import Terms from "./Pages/Terms.jsx";
@@ -19,11 +19,13 @@ import Checkout from "./Pages/Checkout/Checkout.jsx";
 import PostCheckout from "./Pages/Checkout/PostCheckout.jsx";
 import ReviewCart from "./Pages/Checkout/ReviewCart.jsx";
 import VerificationPage from "./Pages/VerificationPage.jsx";
+import { useCart } from "./hooks/useCart.js";
 
 function App() {
+  const loggedIn = window.localStorage.getItem("accessToken") ? true : false;
   const logOut = useLogOut();
+  const { syncCart } = useCart(true);
   const [userUrl, setUserUrl] = useState(null);
-  const [toggleCart, setToggleCart] = useState(false);
   const {
     data: user,
     loading,
@@ -37,7 +39,6 @@ function App() {
     var value = re.exec(document.cookie);
     return value != null ? unescape(value[1]) : null;
   }
-  const loggedIn = window.localStorage.getItem("accessToken") ? true : false;
 
   function redirectLoader() {
     if (loggedIn) {
@@ -74,7 +75,7 @@ function App() {
       ? { path: "*", element: <UnexpectedError /> }
       : {
           path: "/",
-          element: <Home {...props} />,
+          element: <Index {...props} />,
 
           children: [
             ...PrivateRoutes(user, loggedIn, loading),
@@ -83,7 +84,7 @@ function App() {
         },
     {
       path: "/login",
-      element: <LoginForm refreshUser={refreshUser} />,
+      element: <LoginForm refreshUser={refreshUser} syncCart={syncCart} />,
       loader: redirectLoader(),
     },
     {

@@ -2,7 +2,7 @@ const UserSchema = require("../models/user.model");
 const AddressSchema = require("../models/address.model");
 const StoreSchema = require("../models/store.model");
 const ProductSchema = require("../models/product.model");
-const { default: mongoose } = require("mongoose");
+const { mongoose } = require("mongoose");
 
 exports.sendUserInfo = async (req, res) => {
   try {
@@ -226,10 +226,49 @@ exports.deleteAddress = async (req, res) => {
   }
 };
 
-exports.addToCart = async (req, res) => {
+exports.cart = async (req, res) => {
   const { productId, quantity, action } = req.body;
 
   try {
+    if (action === "sync") {
+      const { products } = req.body;
+      console.log(products)
+      const { cart } = await UserSchema.findById(req.userInfo.id, "cart");
+
+      if(products){
+        products.forEach((product) => {
+          const index = cart.findIndex(
+            (item) => item.product.toString() === product.product
+          );
+          if (index === -1) {
+            cart.push({
+              product: product.product,
+              quantity: product.quantity,
+            });
+          } else {
+            cart[index].quantity = product.quantity;
+          }
+        });
+      }
+    
+
+      const { cart: userCart } = await UserSchema.findByIdAndUpdate(
+        req.userInfo.id,
+        {
+          $set: {
+            cart: cart,
+          },
+        },
+        { new: true }
+      )
+        .select("cart -_id")
+        .populate("cart.product", "title price discount thumbnail");
+
+      return res
+        .status(200)
+        .send({ message: "Cart synced successfully", cart: userCart });
+    }
+
     if (action === "add") {
       const user = await UserSchema.findByIdAndUpdate(req.userInfo.id, {
         $addToSet: {
@@ -255,7 +294,7 @@ exports.addToCart = async (req, res) => {
       );
     }
 
-    if(action === "remove") {
+    if (action === "remove") {
       const user = await UserSchema.updateOne(
         {
           _id: req.userInfo.id,
@@ -270,7 +309,7 @@ exports.addToCart = async (req, res) => {
       );
     }
 
-    return res.status(200).send("ok");
+    return res.status(200).send("Cart updated successfully");
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);

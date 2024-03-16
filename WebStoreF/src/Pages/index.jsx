@@ -10,7 +10,7 @@ import LoadingSpinner from "../components/shared/LoadingSpinner";
 import Logo from "../components/Store/MyStore/Logo";
 import { isMobile } from "react-device-detect";
 
-const Home = ({ user, address, loading, refreshUser }) => {
+const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [toggleSideNav, setToggleSideNav] = useState(false);
   const [toggleCart, setToggleCart] = useState(false);
@@ -88,6 +88,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
   const props = {
     user,
     address,
+    loggedIn,
     toggleCard,
     setToggleCard,
     setToggleSideNav,
@@ -115,7 +116,7 @@ const Home = ({ user, address, loading, refreshUser }) => {
       <Navbar {...props} />
       <main className={"w-full h-full"}>
         {toggleCart && (
-          <CartSideMenu cartRef={cartRef} setCart={setToggleCart} />
+          <CartSideMenu cartRef={cartRef} setCart={setToggleCart}  loggedIn={loggedIn}/>
         )}
         {location.pathname !== "/" ? (
           <Outlet context={{ ...props }} />
@@ -209,4 +210,4 @@ const Home = ({ user, address, loading, refreshUser }) => {
   );
 };
 
-export default Home;
+export default Index;

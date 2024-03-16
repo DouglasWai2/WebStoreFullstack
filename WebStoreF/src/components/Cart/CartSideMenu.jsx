@@ -7,9 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import { useCart } from "../../hooks/useCart";
 
-const CartSideMenu = ({ setCart, cartRef }) => {
+const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
   const navigate = useNavigate();
-  const {removeFromCart} = useCart()
+  const { removeFromCart } = useCart(loggedIn);
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cart"))
   );
@@ -19,7 +19,8 @@ const CartSideMenu = ({ setCart, cartRef }) => {
   function totalSum(items) {
     var total = 0;
     items.forEach((item) => {
-      total += (item.price - item.price * item.discount) * item.quantity;
+      const { price, discount } = item.product;
+      total += (price - price * discount) * item.quantity;
     });
 
     return total;
@@ -33,7 +34,6 @@ const CartSideMenu = ({ setCart, cartRef }) => {
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
   }, []);
-
 
   return (
     <aside
@@ -62,38 +62,42 @@ const CartSideMenu = ({ setCart, cartRef }) => {
           <Delayed>
             {cartItems && cartItems.length ? (
               cartItems.map((item, index) => {
+                const { product, quantity } = item;
+
                 return (
                   <div
                     onClick={() => {
-                      navigate("/catalog/" + item.title + "/" + item.productId);
+                      navigate(
+                        "/catalog/" + item.title + "/" + item.product._id
+                      );
                       setCart(false);
                     }}
                     className="border-2 flex items-center justify-between
                      border-slate-200 rounded-md px-4 py-3 transition-colors duration-200
                       hover:border-slate-900 animate-appear cursor-pointer active:bg-gray-200"
-                    key={item.productId}
+                    key={product._id}
                   >
                     <div className="flex items-center">
                       <div className="w-[80px] object-contain mr-4">
                         <img
                           alt="product thumbnail"
                           className="w-full"
-                          src={item.thumbnail}
+                          src={product.thumbnail}
                         />
                       </div>
                       <div className="w-full">
-                        <p className="font-semibold">{item.title}</p>
+                        <p className="font-semibold">{product.title}</p>
                         <p>
                           Quantidade:{" "}
-                          <span className="font-semibold">{item.quantity}</span>
+                          <span className="font-semibold">{quantity}</span>
                         </p>
-                        {item.discount > 0 && (
+                        {product.discount > 0 && (
                           <p>
                             <span className="text-[#188fa7]">
-                              {item.discount * 100}% OFF
+                              {product.discount * 100}% OFF
                             </span>
                             <span className="strikethrough w-min h-min ml-2 text-gray-500 text-sm">
-                              {item.price}
+                              {product.price}
                             </span>
                           </p>
                         )}
@@ -102,7 +106,7 @@ const CartSideMenu = ({ setCart, cartRef }) => {
                           <span className="font-semibold">
                             {moneyMask(
                               Number(
-                                item.price - item.discount * item.price
+                                product.price - product.discount * product.price
                               ).toFixed(2)
                             )}
                           </span>
@@ -112,7 +116,7 @@ const CartSideMenu = ({ setCart, cartRef }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeFromCart(item.productId);
+                        removeFromCart(product._id);
                         setCartItems(
                           JSON.parse(window.localStorage.getItem("cart"))
                         );
