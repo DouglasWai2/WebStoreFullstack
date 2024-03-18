@@ -122,7 +122,7 @@ exports.calculateShipment = async (req, res) => {
     ]);
     console.log(cart);
 
-    const price = await getShipmentPrice(cart[0], to);
+    // const price = await getShipmentPrice(cart[0], to);
 
 
     console.log(price)

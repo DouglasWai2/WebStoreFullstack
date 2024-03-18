@@ -9,14 +9,16 @@ const ReviewCart = ({ user }) => {
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
 
   useEffect(() => {
+    const to = user?.address.filter((a) => a.main)[0].cep;
+
     setBody({
       products: cartItems.map((item) => {
         return {
           quantity: item.quantity,
           productId: item.productId,
-          to: user.address.filter((a) => a.main)[0].cep,
         };
       }),
+      to,
     });
   }, []);
 
