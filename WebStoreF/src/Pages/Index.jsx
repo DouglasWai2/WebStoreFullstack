@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar/Navbar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import TopBarProgress from "react-topbar-progress-indicator";
 import CartSideMenu from "../components/Cart/CartSideMenu";
 import ProductsCarousel from "../components/ProductsCarousel";
@@ -117,10 +117,16 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
       <Navbar {...props} />
       <main className={"w-full h-full"}>
         {toggleCart && (
-          <CartSideMenu cartRef={cartRef} setCart={setToggleCart}  loggedIn={loggedIn}/>
+          <CartSideMenu
+            cartRef={cartRef}
+            setCart={setToggleCart}
+            loggedIn={loggedIn}
+          />
         )}
         {location.pathname !== "/" ? (
-          <Outlet context={{ ...props }} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Outlet context={{ ...props }} />
+          </Suspense>
         ) : (
           <>
             <div className="w-full flex flex-col items-center gap-8">

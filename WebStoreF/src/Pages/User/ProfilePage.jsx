@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalData";
 import TableData from "../../components/User/PersonalData/TableData";
 import { useNavigate, useOutletContext } from "react-router-dom";
@@ -100,6 +100,7 @@ const ProfilePage = () => {
   }
 
   return (
+
     <div className="w-full max-w-[1000px] border-[2px] rounded-md overflow-hidden shadow-md">
       {!user ? (
         <SkeletonData />

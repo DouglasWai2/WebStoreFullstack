@@ -1,25 +1,27 @@
-import Index from "./Pages/Index.jsx";
-import LoginForm from "./Pages/LoginForm.jsx";
-import RegisterForm from "./Pages/RegisterForm.jsx";
-import Terms from "./Pages/Terms.jsx";
-import PrivacyPolicy from "./Pages/PrivacyPolicy.jsx";
+import { useEffect, useState, lazy, Suspense } from "react";
 import {
   createBrowserRouter,
+  Outlet,
   redirect,
   RouterProvider,
 } from "react-router-dom";
 import { useFetchApi } from "./hooks/useFetchApi";
-import { useEffect, useState } from "react";
+import { useLogOut } from "./hooks/useLogOut";
+import { useCart } from "./hooks/useCart.js";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import PublicRoutes from "./PublicRoutes.jsx";
-import NotFoundError from "./Pages/NotFoundError.jsx";
-import UnexpectedError from "./Pages/UnexpectedError.jsx";
-import { useLogOut } from "./hooks/useLogOut";
-import Checkout from "./Pages/Checkout/Checkout.jsx";
-import PostCheckout from "./Pages/Checkout/PostCheckout.jsx";
-import ReviewCart from "./Pages/Checkout/ReviewCart.jsx";
-import VerificationPage from "./Pages/VerificationPage.jsx";
-import { useCart } from "./hooks/useCart.js";
+import Logo from "./assets/logo-no-background.svg";
+const Index = lazy(() => import("./Pages/Index.jsx"));
+const LoginForm = lazy(() => import("./Pages/LoginForm.jsx"));
+const RegisterForm = lazy(() => import("./Pages/RegisterForm.jsx"));
+const Terms = lazy(() => import("./Pages/Terms.jsx"));
+const PrivacyPolicy = lazy(() => import("./Pages/PrivacyPolicy.jsx"));
+const NotFoundError = lazy(() => import("./Pages/NotFoundError.jsx"));
+const UnexpectedError = lazy(() => import("./Pages/UnexpectedError.jsx"));
+const Checkout = lazy(() => import("./Pages/Checkout/Checkout.jsx"));
+const PostCheckout = lazy(() => import("./Pages/Checkout/PostCheckout.jsx"));
+const ReviewCart = lazy(() => import("./Pages/Checkout/ReviewCart.jsx"));
+const VerificationPage = lazy(() => import("./Pages/VerificationPage.jsx"));
 
 function App() {
   const loggedIn = window.localStorage.getItem("accessToken") ? true : false;
@@ -33,7 +35,7 @@ function App() {
     refresh: refreshUser,
   } = useFetchApi(userUrl, "GET");
 
-  console.log(user)
+  console.log(user);
 
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
@@ -77,8 +79,8 @@ function App() {
       ? { path: "*", element: <UnexpectedError /> }
       : {
           path: "/",
+          errorElement: <NotFoundError />,
           element: <Index {...props} />,
-
           children: [
             ...PrivateRoutes(user, loggedIn, loading),
             ...PublicRoutes(),
@@ -121,10 +123,13 @@ function App() {
     { path: `/register/user/verify`, element: <VerificationPage /> },
     { path: "/termsandconditions", element: <Terms /> },
     { path: "/privacypolicy", element: <PrivacyPolicy /> },
-    { path: "*", element: <NotFoundError /> },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default App;

@@ -59,73 +59,89 @@ exports.getTokens = async (req, res) => {
 };
 
 exports.calculateShipment = async (req, res) => {
-  const { to, products } = req.body;
+  const { to } = req.body;
 
-  console.log(to)
+  const price = []
 
-  const _ids = products.map(
-    (product) => new mongoose.Types.ObjectId(product.productId)
-  );
+  const pipeline = [
+    {
+      $unwind: "$cart",
+    },
+    {
+      // "Populate" the product field in cart array
+      $lookup: {
+        from: "Catalog",
+        localField: "cart.product",
+        foreignField: "_id",
+        as: "cart.product",
+      },
+    },
+    {
+      $unwind: {
+        path: "$cart.product",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      // "Populate" the store field in products
+      $lookup: {
+        from: "Stores",
+        localField: "cart.product.store",
+        foreignField: "_id",
+        as: "store", 
+      },
+    },
+    {
+      $unwind: {
+        path: "$store",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      // Group results by store
+      $group: {
+        _id:  "$store._id",
+
+        // Get only the first because all info are the same for each element in products array
+        storeAddress: { $first: "$store.storeAddress.cep" }, 
+        storeName: { $first: "$store.storeName" }, 
+        storeImage: { $first: "$store.storeImage" }, 
+        products: { $push: "$cart" },
+      },
+    },
+    {
+      // Project ("select") only the necessary fields
+      $project: {
+        store: {
+          _id: "$_id",
+          storeAddress: "$storeAddress",
+          storeName: "$storeName",
+          storeImage: "$storeImage",
+        },
+        "products.product.thumbnail": 1,
+        "products.product.title": 1,
+        "products.product.discount": 1,
+        "products.product._id": 1,
+        "products.product.dimensions": 1,
+        "products.product.price": 1,
+        "products.quantity": 1,
+      },
+    },
+  ]
+
 
   try {
-    const cart = await userSchema.aggregate([
-      {
-        $unwind: "$cart", // Unwind the cart array
-      },
-      {
-        $lookup: {
-          from: "Catalog",
-          localField: "cart.product",
-          foreignField: "_id",
-          as: "cart.product", // Replace product ObjectId with product details
-        },
-      },
-      {
-        $unwind: {
-          path: "$cart.product",
-          preserveNullAndEmptyArrays: true, // Preserve unmatched products
-        },
-      },
-      {
-        $lookup: {
-          from: "Stores",
-          localField: "cart.product.store",
-          foreignField: "_id",
-          as: "store", // Replace store ObjectId with store details
-        },
-      },
-      {
-        $unwind: {
-          path: "$store",
-          preserveNullAndEmptyArrays: true, // Preserve unmatched stores
-        },
-      },
-      {
-        $group: {
-          _id: {
-            storeId: "$store._id",
-          },
-          storeAddress: { $first: "$store.storeAddress.cep" },
-          products: { $push: "$cart" }, // Push the products into an array
-        },
-      },
-      {
-        $project: {
-          _id: "$_id.storeId",
-          storeAddress: 1,
-          "products.product._id": 1,
-          "products.product.dimensions": 1,
-          "products.product.price": 1,
-          "products.quantity": 1,
-        },
-      },
-    ]);
+    const cart = await userSchema.aggregate(pipeline);
     console.log(cart);
 
-    const price = await getShipmentPrice(cart[0], to);
+    // for (let i = 0; i < cart.length; i++) {
+    //   const shipment = await getShipmentPrice(cart[i], to)
+    //   price.push({store: cart[i].store, shipment})
+    // }
 
     console.log(price)
 
+    return res.status(200).send(price);
 
   } catch (error) {
     console.error(error);
@@ -155,7 +171,7 @@ async function getShipmentPrice(cart, to) {
     url: "https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate",
     headers: { ...headers, Authorization: `Bearer ${access_token}` },
     data: {
-      from: { postal_code: cart.storeAddress },
+      from: { postal_code: cart.store.storeAddress },
       to: { postal_code: to },
       products
     },

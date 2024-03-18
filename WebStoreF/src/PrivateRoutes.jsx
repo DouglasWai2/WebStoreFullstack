@@ -1,6 +1,6 @@
-import React from "react";
-import ProfilePage from "./Pages/User/ProfilePage";
+import { Suspense, lazy } from "react";
 import { Navigate } from "react-router-dom";
+import ProfilePage from "./Pages/User/ProfilePage";
 import Address from "./Pages/User/Address";
 import User from "./Pages/User/User";
 import Security from "./Pages/User/Security";

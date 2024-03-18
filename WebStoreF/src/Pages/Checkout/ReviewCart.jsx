@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
+import price from "./price_example"
 
 const ReviewCart = ({ user }) => {
+
+  console.log(price)
+ 
   const navigate = useNavigate();
   const [body, setBody] = useState(null);
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
@@ -11,16 +15,12 @@ const ReviewCart = ({ user }) => {
   useEffect(() => {
     const to = user?.address.filter((a) => a.main)[0].cep;
 
-    setBody({
-      products: cartItems.map((item) => {
-        return {
-          quantity: item.quantity,
-          productId: item.productId,
-        };
-      }),
-      to,
-    });
-  }, []);
+    if (user && to) {
+      setBody({
+        to,
+      });
+    }
+  }, [user]);
 
   const { data, loading, error } = useFetchApi(
     "/shipment-calculate",
@@ -31,51 +31,7 @@ const ReviewCart = ({ user }) => {
   return (
     <main className="w-screen h-screen flex items-center justify-center">
       <div>
-        {cartItems.map((item, index) => {
-          return (
-            <div
-              className="border-b-[1px] border-gray-400 flex items-center justify-between px-4 py-3"
-              key={item.id + index}
-            >
-              <div className="flex items-center">
-                <div className="w-[80px] object-contain mr-4">
-                  <img
-                    alt="product thumbnail"
-                    className="w-full"
-                    src={item.thumbnail}
-                  />
-                </div>
-                <div className="w-full">
-                  <p className="font-semibold">{item.title}</p>
-                  <p>
-                    Quantidade:{" "}
-                    <span className="font-semibold">{item.quantity}</span>
-                  </p>
-                  {item.discount > 0 && (
-                    <p>
-                      <span className="text-[#188fa7]">
-                        {item.discount * 100}% OFF
-                      </span>
-                      <span className="strikethrough w-min h-min ml-2 text-gray-500 text-sm">
-                        {item.price}
-                      </span>
-                    </p>
-                  )}
-                  <p>
-                    Preço:{" "}
-                    <span className="font-semibold">
-                      {moneyMask(
-                        Number(item.price - item.discount * item.price).toFixed(
-                          2
-                        )
-                      )}
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        
       </div>
     </main>
   );
