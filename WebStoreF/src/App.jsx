@@ -33,6 +33,8 @@ function App() {
     refresh: refreshUser,
   } = useFetchApi(userUrl, "GET");
 
+  console.log(user)
+
   //Use this function to retrieve cookies by their names
   function getCookie(name) {
     var re = new RegExp(name + "=([^;]+)");
@@ -64,7 +66,7 @@ function App() {
 
   const props = {
     user,
-    address: user?.addressess,
+    address: user?.address,
     loading,
     loggedIn,
     refreshUser,
@@ -110,7 +112,7 @@ function App() {
     },
     {
       path: "/checkout/review-cart",
-      element: <ReviewCart id={user?._id} />,
+      element: <ReviewCart user={user} />,
       loader: () => {
         if (!loggedIn) redirect("/login");
         else return null;

@@ -8,6 +8,6 @@ router.get("/frete", redirectME);
 
 router.get("/frete/callback", getTokens);
 
-router.post("/shipment-calculate", calculateShipment);
+router.post("/shipment-calculate", auth, calculateShipment);
 
 module.exports = router;

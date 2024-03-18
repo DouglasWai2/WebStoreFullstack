@@ -9,6 +9,7 @@ const Address = () => {
   const navigate = useNavigate();
   const { address, loading } = useOutletContext();
 
+  console.log(address)
 
   return (
     <div className="w-full flex gap-5 flex-wrap justify-center max-md:justify-center">

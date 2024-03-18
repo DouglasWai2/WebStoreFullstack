@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
 
-const ReviewCart = () => {
+const ReviewCart = ({ user }) => {
   const navigate = useNavigate();
   const [body, setBody] = useState(null);
   const cartItems = JSON.parse(window.localStorage.getItem("cart"));
@@ -11,10 +11,13 @@ const ReviewCart = () => {
   useEffect(() => {
     setBody({
       products: cartItems.map((item) => {
-        return { quantity: item.quantity, productId: item.productId };
+        return {
+          quantity: item.quantity,
+          productId: item.productId,
+          to: user.address.filter((a) => a.main)[0].cep,
+        };
       }),
     });
-
   }, []);
 
   const { data, loading, error } = useFetchApi(

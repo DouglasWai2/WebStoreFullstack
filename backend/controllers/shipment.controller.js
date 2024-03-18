@@ -1,6 +1,7 @@
 const axios = require("axios");
 const storeSchema = require("../models/store.model");
 const productSchema = require("../models/product.model");
+const userSchema = require("../models/user.model");
 const mongoose = require("mongoose");
 const client_id = 4287;
 const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`;
@@ -59,131 +60,104 @@ exports.getTokens = async (req, res) => {
 
 exports.calculateShipment = async (req, res) => {
   const { to, products } = req.body;
+
+  console.log(to)
+
   const _ids = products.map(
     (product) => new mongoose.Types.ObjectId(product.productId)
   );
 
   try {
-    const productsByStore = await productSchema.aggregate([
+    const cart = await userSchema.aggregate([
       {
-        $match: {
-          _id: { $in: _ids },
+        $unwind: "$cart", // Unwind the cart array
+      },
+      {
+        $lookup: {
+          from: "Catalog",
+          localField: "cart.product",
+          foreignField: "_id",
+          as: "cart.product", // Replace product ObjectId with product details
+        },
+      },
+      {
+        $unwind: {
+          path: "$cart.product",
+          preserveNullAndEmptyArrays: true, // Preserve unmatched products
         },
       },
       {
         $lookup: {
           from: "Stores",
-          localField: "store",
+          localField: "cart.product.store",
           foreignField: "_id",
-          as: "store",
+          as: "store", // Replace store ObjectId with store details
         },
       },
       {
-        $project: {
-          _id: 1,
-          dimensions: 1,
-          price: 1,
-          store: {
-            _id: 1,
-            storeAdress: {
-              cep: 1,
-            },
-          },
+        $unwind: {
+          path: "$store",
+          preserveNullAndEmptyArrays: true, // Preserve unmatched stores
         },
       },
       {
         $group: {
-          _id: "$store._id",
-          items: { $push: "$$ROOT" },
+          _id: {
+            storeId: "$store._id",
+          },
+          storeAddress: { $first: "$store.storeAddress.cep" },
+          products: { $push: "$cart" }, // Push the products into an array
+        },
+      },
+      {
+        $project: {
+          _id: "$_id.storeId",
+          storeAddress: 1,
+          "products.product._id": 1,
+          "products.product.dimensions": 1,
+          "products.product.price": 1,
+          "products.quantity": 1,
         },
       },
     ]);
+    console.log(cart);
 
-    console.log(productsByStore);
-    
-
-    productsByStore.forEach(async (item) => {
-      // products: {
-      //   productId:
-      //   quantity:
-      // }
-      // productsByStore: [
-      //   {
-      //     _id: storeid,
-      //     item: {
-      //       _id: productid,
-      //       dimensions: 1,
-      //       price: 1,
-      //       store: {
-      //         _id: 1,
-      //         storeAdress: {
-      //           cep: 1,
-      //         },
-      //       },
-      //     },
-      //   },
-      //   {
-      //     _id: storeid,
-      //     item: {
-      //       _id: productid,
-      //       dimensions: 1,
-      //       price: 1,
-      //       store: {
-      //         _id: 1,
-      //         storeAdress: {
-      //           cep: 1,
-      //         },
-      //       },
-      //     },
-      //   },
-      // ];
+    const price = await getShipmentPrice(cart[0], to);
 
 
-
-    });
+    console.log(price)
+    // productsByStore.forEach(async (item) => {});
   } catch (error) {
     console.error(error);
     return res.status(400).send(error);
   }
 };
 
-async function getShipmentPrice(store, to) {
+async function getShipmentPrice(cart, to) {
+  const products = cart.products.map((item) => {
+    const { _id, dimensions, price, quantity } = item.product;
+    const { width, height, length, weight } = dimensions;
+    return {
+      id: _id,
+      width,
+      height,
+      length,
+      weight,
+      insurance_value: price,
+      quantity: item.quantity,
+    };
+  });
+
+  console.log("Products", products);
+
   const options = {
     method: "POST",
     url: "https://sandbox.melhorenvio.com.br/api/v2/me/shipment/calculate",
     headers: { ...headers, Authorization: `Bearer ${access_token}` },
     data: {
-      from: { postal_code: "96020360" },
-      to: { postal_code: "08451420" },
-      products: [
-        {
-          id: "x",
-          width: 11,
-          height: 17,
-          length: 11,
-          weight: 0.3,
-          insurance_value: 10.1,
-          quantity: 1,
-        },
-        {
-          id: "y",
-          width: 16,
-          height: 25,
-          length: 11,
-          weight: 0.3,
-          insurance_value: 55.05,
-          quantity: 2,
-        },
-        {
-          id: "z",
-          width: 22,
-          height: 30,
-          length: 11,
-          weight: 1,
-          insurance_value: 30,
-          quantity: 1,
-        },
-      ],
+      from: { postal_code: cart.storeAddress },
+      to: { postal_code: to },
+      products
     },
   };
 
