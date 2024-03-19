@@ -39,30 +39,66 @@ const SideMenuNav = ({ user, setToggleSideNav }) => {
         {user ? (
           // if user is logged in, render this
           <>
-           <NavBarItem onClick={() => setToggleSideNav(false)} to="/" icon={faHouse} text="Início"/>
+            <NavBarItem
+              onClick={() => setToggleSideNav(false)}
+              to="/"
+              icon={faHouse}
+              text="Início"
+            />
             <div className="flex flex-col gap-3 w-full animate-appear mt-6">
               <div className="flex flex-col gap-6">
                 <div>
                   <p className="text-xl px-4 animate-appear sidenav">
                     Seu perfil
                   </p>
-                  <NavBarItem onClick={() => setToggleSideNav(false)} to="/user/profile" icon={faUser} text="Meu cadastro"/>
+                  <NavBarItem
+                    onClick={() => setToggleSideNav(false)}
+                    to="/user/profile"
+                    icon={faUser}
+                    text="Meu cadastro"
+                  />
                 </div>
 
                 <div className="">
                   <p className="text-xl px-4">Sua loja</p>
-                  <NavBarItem onClick={() => setToggleSideNav(false)} to="/store/my-store" icon={faShop} text="Minha loja"/>
-                  <NavBarItem onClick={() => setToggleSideNav(false)} to="/store/new-product" icon={faPlus} text="Cadastrar produtos"/>
-                  <NavBarItem onClick={() => setToggleSideNav(false)} to="/store/my-products" icon={faBarcode} text="Meus produtos"/>
+                  {user?.role === "Seller" ? (
+                    <>
+                      <NavBarItem
+                        onClick={() => setToggleSideNav(false)}
+                        to="/store/my-store"
+                        icon={faShop}
+                        text="Minha loja"
+                      />
+                      <NavBarItem
+                        onClick={() => setToggleSideNav(false)}
+                        to="/store/new-product"
+                        icon={faPlus}
+                        text="Cadastrar produtos"
+                      />
+                      <NavBarItem
+                        onClick={() => setToggleSideNav(false)}
+                        to="/store/my-products"
+                        icon={faBarcode}
+                        text="Meus produtos"
+                      />
+                    </>
+                  ) : (
+                    <NavBarItem
+                      onClick={() => setToggleSideNav(false)}
+                      to="/store"
+                      icon={faShop}
+                      text="Venda seus produtos"
+                    />
+                  )}
                 </div>
               </div>
             </div>
             <NavLink onClick={() => logOut()}>
-                <p className="px-3 py-2 animate-appear bg-red-100 text-red-800 mt-6">
-                  <FontAwesomeIcon className="mr-2" icon={faPowerOff} />
-                  Sair
-                </p>
-              </NavLink>
+              <p className="px-3 py-2 animate-appear bg-red-100 text-red-800 mt-6">
+                <FontAwesomeIcon className="mr-2" icon={faPowerOff} />
+                Sair
+              </p>
+            </NavLink>
           </>
         ) : (
           // if user is not logged in, render this

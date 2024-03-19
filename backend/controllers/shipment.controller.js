@@ -61,9 +61,14 @@ exports.getTokens = async (req, res) => {
 exports.calculateShipment = async (req, res) => {
   const { to } = req.body;
 
-  const price = []
+  const price = [];
 
   const pipeline = [
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(req.userInfo.id),
+      },
+    },
     {
       $unwind: "$cart",
     },
@@ -79,7 +84,6 @@ exports.calculateShipment = async (req, res) => {
     {
       $unwind: {
         path: "$cart.product",
-        preserveNullAndEmptyArrays: true,
       },
     },
     {
@@ -88,25 +92,24 @@ exports.calculateShipment = async (req, res) => {
         from: "Stores",
         localField: "cart.product.store",
         foreignField: "_id",
-        as: "store", 
+        as: "store",
       },
     },
     {
       $unwind: {
         path: "$store",
-        preserveNullAndEmptyArrays: true,
       },
     },
     {
       // Group results by store
       $group: {
-        _id:  "$store._id",
+        _id: "$store._id",
 
-        // Get only the first because all info are the same for each element in products array
-        storeAddress: { $first: "$store.storeAddress.cep" }, 
-        storeName: { $first: "$store.storeName" }, 
-        storeImage: { $first: "$store.storeImage" }, 
-        products: { $push: "$cart" },
+        // Get only the first because all store info are the same for each element in products array
+        storeAddress: { $first: "$store.storeAddress.cep" },
+        storeName: { $first: "$store.storeName" },
+        storeImage: { $first: "$store.storeImage" },
+        products: { $addToSet: "$cart" },
       },
     },
     {
@@ -127,8 +130,7 @@ exports.calculateShipment = async (req, res) => {
         "products.quantity": 1,
       },
     },
-  ]
-
+  ];
 
   try {
     const cart = await userSchema.aggregate(pipeline);
@@ -136,13 +138,12 @@ exports.calculateShipment = async (req, res) => {
 
     // for (let i = 0; i < cart.length; i++) {
     //   const shipment = await getShipmentPrice(cart[i], to)
-    //   price.push({store: cart[i].store, shipment})
+    //   price.push({store: cart[i].store, products: cart[i].products, shipment})
     // }
 
-    console.log(price)
+    console.log(price);
 
     return res.status(200).send(price);
-
   } catch (error) {
     console.error(error);
     return res.status(400).send(error);
@@ -151,7 +152,7 @@ exports.calculateShipment = async (req, res) => {
 
 async function getShipmentPrice(cart, to) {
   const products = cart.products.map((item) => {
-    const { _id, dimensions, price, quantity } = item.product;
+    const { _id, dimensions, price } = item.product;
     const { width, height, length, weight } = dimensions;
     return {
       id: _id,
@@ -173,7 +174,7 @@ async function getShipmentPrice(cart, to) {
     data: {
       from: { postal_code: cart.store.storeAddress },
       to: { postal_code: to },
-      products
+      products,
     },
   };
 
