@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +10,8 @@ import LoadingSpinner from "../../components/shared/LoadingSpinner";
 
 const ReviewCart = ({ user }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams();
   const [body, setBody] = useState(null);
   const [currentShipment, setCurrentShipment] = useState([]);
   const [cep, setCep] = useState("");
@@ -17,13 +19,13 @@ const ReviewCart = ({ user }) => {
 
   useEffect(() => {
     if (user) {
-      const to = user.address.filter((a) => a.main)[0].cep;
-      if (to) {
-        setCep(to);
-        setBody({
-          to,
-        });
-      }
+      const to = user.address.filter((a) => a.main)[0]?.cep;
+
+      to && setCep(to);
+      if (id !== "review-cart") return setBody({ to, id, quantity: 1 });
+      setBody({
+        to,
+      });
     }
   }, [user]);
 
@@ -44,7 +46,13 @@ const ReviewCart = ({ user }) => {
           return (
             acc +
             products.reduce(
-              (acc, item) => acc + item.quantity * item.product.price,
+              (acc, item) =>
+                acc +
+                Number(item.quantity) *
+                  (
+                    item.product.price -
+                    item.product.price * item.product.discount
+                  ).toFixed(2),
               0
             )
           );
@@ -53,6 +61,7 @@ const ReviewCart = ({ user }) => {
           return acc + parseFloat(currentShipment[item].custom_price);
         }, 0);
 
+        console.log(total)
       setTotal(total);
     }
   }, [currentShipment, price]);
@@ -90,8 +99,18 @@ const ReviewCart = ({ user }) => {
                           <div className="mx-2 w-max">
                             {products[j].quantity}x
                           </div>
-                          <div className="w-max justify-self-end">
-                            {moneyMask(product.price)}
+                          <div className="w-max flex flex-col justify-self-end">
+                          {product.discount > 0 &&  <span className="strikethrough mr-2 text-nowrap h-min text-xs">
+                              {moneyMask(product.price)}
+                            </span>}
+                            <span>
+                              {moneyMask(
+                                (
+                                  product.price -
+                                  product.price * product.discount
+                                ).toFixed(2)
+                              )}
+                            </span>
                           </div>
                         </div>
                       );
@@ -102,7 +121,14 @@ const ReviewCart = ({ user }) => {
                         {moneyMask(
                           products
                             .reduce((acc, { quantity, product }) => {
-                              return acc + quantity * product.price;
+                              return (
+                                acc +
+                                quantity *
+                                  (
+                                    product.price -
+                                    product.price * product.discount
+                                  ).toFixed(2)
+                              );
                             }, 0)
                             .toFixed(2)
                         )}
@@ -129,13 +155,16 @@ const ReviewCart = ({ user }) => {
                             )}
                           </p>
                         </>
-                      ) : (
+                      ) : !loading && shipment ? (
                         `Selecione o frete`
+                      ) : (
+                        "Insira um cep"
                       )}
                       {loading && <LoadingSpinner />}
                     </div>
                     <div id={store._id} className="max-h-0 overflow-hidden">
                       {!loading &&
+                        shipment &&
                         shipment.map((item) => (
                           <label
                             htmlFor={item.name + i}
@@ -183,20 +212,22 @@ const ReviewCart = ({ user }) => {
                         ))}
                     </div>
                     <div>
-                      <button
-                        className="rounded-lg border border-blue-600 px-2 py-1 
+                      {shipment && (
+                        <button
+                          className="rounded-lg border border-blue-600 px-2 py-1 
                     hover:bg-blue-600 hover:text-white duration-150 mt-3 text-blue-600"
-                        onClick={() => {
-                          document
-                            .getElementById(store._id)
-                            .classList.toggle("max-h-0");
-                          document
-                            .getElementById(store._id)
-                            .classList.toggle("animate-expand");
-                        }}
-                      >
-                        Alterar frete
-                      </button>
+                          onClick={() => {
+                            document
+                              .getElementById(store._id)
+                              .classList.toggle("max-h-0");
+                            document
+                              .getElementById(store._id)
+                              .classList.toggle("animate-expand");
+                          }}
+                        >
+                          Alterar frete
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
@@ -220,14 +251,15 @@ const ReviewCart = ({ user }) => {
                   alert("CEP inválido");
                   return;
                 }
-                setBody({
+                setBody((p) => ({
+                  ...p,
                   to: cep,
-                });
+                }));
               }}
               className="rounded-lg border ml-2 border-blue-600 px-2 py-1 
                     hover:bg-blue-600 hover:text-white duration-150 mt-3 text-blue-600"
             >
-              Alterar cep
+              Calcular frete
             </button>
           </div>
         </div>

@@ -59,11 +59,10 @@ exports.getTokens = async (req, res) => {
 };
 
 exports.calculateShipment = async (req, res) => {
-  const { to } = req.body;
-
+  const { to, id } = req.body;
   const price = [];
 
-  const pipeline = [
+  const cartPipeline = [
     {
       $match: {
         _id: new mongoose.Types.ObjectId(req.userInfo.id),
@@ -132,23 +131,106 @@ exports.calculateShipment = async (req, res) => {
     },
   ];
 
-  try {
-    const cart = await userSchema.aggregate(pipeline);
+  const productPipeline = [
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    },
+    {
+      $lookup: {
+        from: "Stores",
+        localField: "store",
+        foreignField: "_id",
+        as: "store",
+      },
+    },
+    {
+      $unwind: {
+        path: "$store",
+      },
+    },
+    {
+      $group: {
+        _id: {
+          products: { product: "$$ROOT" },
+          storeAddress: "$store.storeAddress.cep",
+          storeName: "$store.storeName",
+          storeImage: "$store.storeImage",
+          storeId: "$store._id",
+        },
+      },
+    },
+    {
+      $project: {
+        _id: {
+          products: [
+            {
+              product: {
+                title: "$_id.products.product.title",
+                thumbnail: "$_id.products.product.thumbnail",
+                price: "$_id.products.product.price",
+                discount: "$_id.products.product.discount",
+                _id: "$_id.products.product._id",
+                dimensions: "$_id.products.product.dimensions",
+              },
+            },
+          ],
 
+          store: {
+            _id: "$_id.storeId",
+            storeAddress: "$_id.storeAddress",
+            storeName: "$_id.storeName",
+            storeImage: "$_id.storeImage",
+          },
+        },
+      },
+    },
+  ];
 
-    for (let i = 0; i < cart.length; i++) {
-      const shipment = await getShipmentPrice(cart[i], to);
+  if (id) {
+    try {
+      const result = await productSchema.aggregate(productPipeline);
+
+      const { _id: cart } = result[0];
+
+      cart.products[0].quantity = 1
+
+      if (!to) return res.status(200).send([cart]);
+
+      const shipment = await getShipmentPrice(cart, to);
+
       price.push({
-        store: cart[i].store,
-        products: cart[i].products,
+        store: cart.store,
+        products: cart.products,
         shipment,
       });
-    }
 
-    return res.status(200).send(price);
-  } catch (error) {
-    console.error(error);
-    return res.status(400).send(error);
+      return res.status(200).send(price);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).send(error);
+    }
+  } else {
+    try {
+      const cart = await userSchema.aggregate(cartPipeline);
+
+      if (!to) return res.status(200).send(cart);
+
+      for (let i = 0; i < cart.length; i++) {
+        const shipment = await getShipmentPrice(cart[i], to);
+        price.push({
+          store: cart[i].store,
+          products: cart[i].products,
+          shipment,
+        });
+      }
+
+      return res.status(200).send(price);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).send(error);
+    }
   }
 };
 
@@ -166,7 +248,6 @@ async function getShipmentPrice(cart, to) {
       quantity: item.quantity,
     };
   });
-
 
   const options = {
     method: "POST",

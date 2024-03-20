@@ -25,6 +25,7 @@ export const useCart = (loggedIn) => {
   }
 
   useEffect(() => {
+
     if (data?.message === "Cart synced successfully") {
       const { cart } = data;
       localStorage.setItem("cart", JSON.stringify(cart));
@@ -76,7 +77,7 @@ export const useCart = (loggedIn) => {
     cart.push(newProduct);
     localStorage.setItem("cart", JSON.stringify(cart));
     if (loggedIn)
-      setBody({ productId: product._id, quantity: quantity, action: "add" });
+    setBody({ productId: product._id, quantity: quantity, action: "add" });
     return window.dispatchEvent(new Event("storage"));
   }
 
@@ -91,5 +92,5 @@ export const useCart = (loggedIn) => {
     window.dispatchEvent(new Event("storage"));
   }
 
-  return { addToCart, removeFromCart, syncCart };
+  return { addToCart, removeFromCart, syncCart, data, loading };
 };

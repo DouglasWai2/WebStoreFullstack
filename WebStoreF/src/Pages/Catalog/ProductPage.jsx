@@ -22,7 +22,7 @@ const ProductPage = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const { user, setToggleCart, loggedIn } = useOutletContext();
-  const { addToCart } = useCart(loggedIn);
+  const { addToCart, loading: addToCartLoading, data } = useCart(loggedIn);
   const [mainImage, setMainImage] = useState("");
   const [fullDescription, setFullDescription] = useState(null);
   const descriptionRef = useRef(null);
@@ -178,7 +178,9 @@ const ProductPage = () => {
               </div>
               <div className="min-w-[200px] w-1/2 max-lg:w-full">
                 <button
-                  onClick={() => getPaymentIntent(product._id)}
+                  onClick={() => 
+                    navigate("/checkout/" + product._id)
+                  }
                   className="bg-[#188fa7] w-full px-2 py-2 h-[65px]
                                   rounded-md text-xl text-center text-white shadow
                                   hover:brightness-75 mb-2

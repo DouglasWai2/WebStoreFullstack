@@ -58,7 +58,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
             X
           </button>
         </div>
-        <div className="overflow-y-auto overflow-x-hidden flex flex-col gap-5 mt-6">
+        <div className="overflow-y-scroll max-h-[70vh] overflow-x-hidden flex flex-col gap-5 mt-6">
           <Delayed>
             {cartItems && cartItems.length ? (
               cartItems.map((item, index) => {

@@ -111,7 +111,7 @@ function App() {
       },
     },
     {
-      path: "/checkout/review-cart",
+      path: "/checkout/:id",
       element: <ReviewCart user={user} />,
       loader: () => {
         if (!loggedIn) return redirect("/login");
