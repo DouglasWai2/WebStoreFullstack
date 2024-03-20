@@ -134,14 +134,16 @@ exports.calculateShipment = async (req, res) => {
 
   try {
     const cart = await userSchema.aggregate(pipeline);
-    console.log(cart);
 
-    // for (let i = 0; i < cart.length; i++) {
-    //   const shipment = await getShipmentPrice(cart[i], to)
-    //   price.push({store: cart[i].store, products: cart[i].products, shipment})
-    // }
 
-    console.log(price);
+    for (let i = 0; i < cart.length; i++) {
+      const shipment = await getShipmentPrice(cart[i], to);
+      price.push({
+        store: cart[i].store,
+        products: cart[i].products,
+        shipment,
+      });
+    }
 
     return res.status(200).send(price);
   } catch (error) {
@@ -165,7 +167,6 @@ async function getShipmentPrice(cart, to) {
     };
   });
 
-  console.log("Products", products);
 
   const options = {
     method: "POST",
