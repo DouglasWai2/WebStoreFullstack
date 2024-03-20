@@ -98,7 +98,7 @@ function App() {
       path: "/checkout/:productName/:productId/:client_secret",
       element: <Checkout />,
       loader: () => {
-        if (!loggedIn) redirect("/login");
+        if (!loggedIn) return redirect("/login");
         else return null;
       },
     },
@@ -106,7 +106,7 @@ function App() {
       path: "/checkout/post-checkout",
       element: <PostCheckout />,
       loader: () => {
-        if (!loggedIn) redirect("/login");
+        if (!loggedIn) return redirect("/login");
         else return null;
       },
     },
@@ -114,7 +114,7 @@ function App() {
       path: "/checkout/review-cart",
       element: <ReviewCart user={user} />,
       loader: () => {
-        if (!loggedIn) redirect("/login");
+        if (!loggedIn) return redirect("/login");
         else return null;
       },
     },
