@@ -4,6 +4,8 @@ const storeSchema = require("../models/store.model");
 const productSchema = require("../models/product.model");
 const Stripe = require("stripe");
 const { decryptData } = require("../utils/encryption");
+const { calculateOrderAmount } = require("../helpers/calculateOrderAmount");
+const { default: mongoose } = require("mongoose");
 const stripe = Stripe(process.env.STRIPE_KEY);
 
 const STRIPE_URL = "https://api.stripe.com";
@@ -11,8 +13,9 @@ const STRIPE_URL = "https://api.stripe.com";
 exports.validateOrder = async (req, res, next) => {
   const { order } = req.body;
 
-  try {
+  if (!order.items.length) return res.status(400).send("Invalid order");
 
+  try {
     // Check if given products are from given store
     for (let i = 0; i < order.items.length; i++) {
       const { products } = await storeSchema
@@ -25,8 +28,6 @@ exports.validateOrder = async (req, res, next) => {
           .every((item) => products.includes(item))
       ) {
         return res.status(400).send("Invalid store");
-      } else {
-        console.log("valid store");
       }
     }
 
@@ -40,8 +41,6 @@ exports.validateOrder = async (req, res, next) => {
         decryptData(order.items[i].shipment_hash)
       );
 
-      console.log(decryptedShipment)
-
       // Check if given shipment method is valid
       if (
         !decryptedShipment.some((element) =>
@@ -51,17 +50,16 @@ exports.validateOrder = async (req, res, next) => {
         return res.status(400).send("Invalid shipment");
       }
 
-        for (let j = 0; j < order.items[i].products.length; j++) {
-          const current = await productSchema
-            .findById(order.items[i].products[j].product._id)
-            .select("price discount dimensions");
+      for (let j = 0; j < order.items[i].products.length; j++) {
+        const current = await productSchema
+          .findById(order.items[i].products[j].product._id)
+          .select("price discount dimensions");
 
-          order.items[i].products[j].currentPrice = current.price;
-          order.items[i].products[j].currentDiscount = current.discount;
-        }
+        order.items[i].products[j].currentPrice = current.price;
+        order.items[i].products[j].currentDiscount = current.discount;
+      }
     }
 
-  
     req.order = order;
 
     next();
@@ -79,7 +77,7 @@ exports.createOrder = async (req, res) => {
     await userSchema.updateOne(
       { _id: req.userInfo.id },
       { $set: { orders: [] } }
-    )
+    );
     await storeSchema.updateMany({}, { $pull: { orders: order._id } });
 
     const orderCreated = await orderSchema.create({
@@ -119,24 +117,7 @@ exports.createPaymentIntent = async (req, res) => {
 
   if (!order) return res.status(400).send("Order not found");
 
-  const amount = order.items
-    .reduce((acc, item) => {
-      return (
-        acc +
-        parseFloat(item.shipment.custom_price) +
-        parseFloat(
-          item.products.reduce(
-            (acc2, product) =>
-              acc2 +
-              (product.currentPrice -
-                product.currentPrice * product.currentDiscount) *
-                product.quantity,
-            0
-          )
-        )
-      );
-    }, 0)
-    .toFixed(2);
+  const amount = calculateOrderAmount(order.items);
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
@@ -144,9 +125,33 @@ exports.createPaymentIntent = async (req, res) => {
       currency: "brl",
     });
 
-    return res
-      .status(200)
-      .send({ client_secret: paymentIntent.client_secret, order });
+
+    return res.status(200).send({
+      client_secret: paymentIntent.client_secret,
+      order_id: order._id,
+      amount,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error.message);
+  }
+};
+
+exports.retrieveOrder = async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await orderSchema
+      .findById(orderId)
+      .populate("items.store", "name")
+      .populate("items.products.product", "title thumbnail")
+      .populate("user", "_id");
+  
+
+    if (req.userInfo.id !== order.user.id)
+      return res.status(400).send("Unauthorized user");
+
+    return res.status(200).send(order);
   } catch (error) {
     console.log(error);
     return res.status(400).send(error.message);

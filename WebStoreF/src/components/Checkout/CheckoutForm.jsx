@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import {
   PaymentElement,
   useStripe,
-  useElements
+  useElements,
 } from "@stripe/react-stripe-js";
+import LoadingSpinner from "../shared/LoadingSpinner";
+import { moneyMask } from "../../helpers/moneyMask";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({total}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -77,16 +79,26 @@ export default function CheckoutForm() {
   };
 
   const paymentElementOptions = {
-    layout: "tabs"
-  }
+    layout: "tabs",
+  };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-
+    <form className="bg-white h-full py-4 px-4 shadow" id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button
+        className="bg-[#188fa7] flex justify-center items-center mt-4
+        hover:brightness-90 text-white font-bold py-2 px-4 rounded w-full"
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+      >
         <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          {isLoading ? (
+            <div className="w-[24px]">
+              <LoadingSpinner color="white" />
+            </div>
+          ) : (
+            "Pagar " + moneyMask(parseFloat(total).toFixed(2))
+          )}
         </span>
       </button>
       {/* Show any error or success messages */}

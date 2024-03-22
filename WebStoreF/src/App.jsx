@@ -95,8 +95,8 @@ function App() {
       loader: redirectLoader(),
     },
     {
-      path: "/checkout/:productName/:productId/:client_secret",
-      element: <Checkout />,
+      path: "/checkout/payment/:client_secret/:order_id",
+      element: <Checkout user={user} />,
       loader: () => {
         if (!loggedIn) return redirect("/login");
         else return null;

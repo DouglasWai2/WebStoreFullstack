@@ -63,181 +63,177 @@ exports.calculateShipment = async (req, res) => {
   const { to, id } = req.body;
   const price = [];
 
+  try {
 
-  const cartPipeline = [
-    {
-      $match: {
-        _id: new mongoose.Types.ObjectId(req.userInfo.id),
-      },
-    },
-    {
-      $unwind: "$cart",
-    },
-    {
-      // "Populate" the product field in cart array
-      $lookup: {
-        from: "Catalog",
-        localField: "cart.product",
-        foreignField: "_id",
-        as: "cart.product",
-      },
-    },
-    {
-      $unwind: {
-        path: "$cart.product",
-      },
-    },
-    {
-      // "Populate" the store field in products
-      $lookup: {
-        from: "Stores",
-        localField: "cart.product.store",
-        foreignField: "_id",
-        as: "store",
-      },
-    },
-    {
-      $unwind: {
-        path: "$store",
-      },
-    },
-    {
-      // Group results by store
-      $group: {
-        _id: "$store._id",
-
-        // Get only the first because all store info are the same for each element in products array
-        storeAddress: { $first: "$store.storeAddress.cep" },
-        storeName: { $first: "$store.storeName" },
-        storeImage: { $first: "$store.storeImage" },
-        products: { $addToSet: "$cart" },
-      },
-    },
-    {
-      // Project ("select") only the necessary fields
-      $project: {
-        store: {
-          _id: "$_id",
-          storeAddress: "$storeAddress",
-          storeName: "$storeName",
-          storeImage: "$storeImage",
-        },
-        "products.product.thumbnail": 1,
-        "products.product.title": 1,
-        "products.product.discount": 1,
-        "products.product._id": 1,
-        "products.product.dimensions": 1,
-        "products.product.price": 1,
-        "products.quantity": 1,
-      },
-    },
-  ];
-
-  const productPipeline = [
-    {
-      $match: {
-        _id: new mongoose.Types.ObjectId(id),
-      },
-    },
-    {
-      $lookup: {
-        from: "Stores",
-        localField: "store",
-        foreignField: "_id",
-        as: "store",
-      },
-    },
-    {
-      $unwind: {
-        path: "$store",
-      },
-    },
-    {
-      $group: {
-        _id: {
-          products: { product: "$$ROOT" },
-          storeAddress: "$store.storeAddress.cep",
-          storeName: "$store.storeName",
-          storeImage: "$store.storeImage",
-          storeId: "$store._id",
-        },
-      },
-    },
-    {
-      $project: {
-        _id: {
-          products: [
-            {
-              product: {
-                title: "$_id.products.product.title",
-                thumbnail: "$_id.products.product.thumbnail",
-                price: "$_id.products.product.price",
-                discount: "$_id.products.product.discount",
-                _id: "$_id.products.product._id",
-                dimensions: "$_id.products.product.dimensions",
-              },
-            },
-          ],
-
-          store: {
-            _id: "$_id.storeId",
-            storeAddress: "$_id.storeAddress",
-            storeName: "$_id.storeName",
-            storeImage: "$_id.storeImage",
+    if (id) {
+      const productPipeline = [
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(id),
           },
         },
-      },
-    },
-  ];
-
-  if (id) {
-    try {
+        {
+          $lookup: {
+            from: "Stores",
+            localField: "store",
+            foreignField: "_id",
+            as: "store",
+          },
+        },
+        {
+          $unwind: {
+            path: "$store",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              products: { product: "$$ROOT" },
+              storeAddress: "$store.storeAddress.cep",
+              storeName: "$store.storeName",
+              storeImage: "$store.storeImage",
+              storeId: "$store._id",
+            },
+          },
+        },
+        {
+          $project: {
+            _id: {
+              products: [
+                {
+                  product: {
+                    title: "$_id.products.product.title",
+                    thumbnail: "$_id.products.product.thumbnail",
+                    price: "$_id.products.product.price",
+                    discount: "$_id.products.product.discount",
+                    _id: "$_id.products.product._id",
+                    dimensions: "$_id.products.product.dimensions",
+                  },
+                },
+              ],
+    
+              store: {
+                _id: "$_id.storeId",
+                storeAddress: "$_id.storeAddress",
+                storeName: "$_id.storeName",
+                storeImage: "$_id.storeImage",
+              },
+            },
+          },
+        },
+      ];
+    
       const result = await productSchema.aggregate(productPipeline);
 
       const { _id: cart } = result[0];
 
-      cart.products[0].quantity = 1
+      cart.products[0].quantity = 1;
 
       if (!to) return res.status(200).send([cart]);
 
       const shipment = await getShipmentPrice(cart, to);
-      const shipment_hash = encryptData(JSON.stringify(shipment))
+      const shipment_hash = encryptData(JSON.stringify(shipment));
 
       price.push({
         store: cart.store,
         products: cart.products,
         shipment,
-        shipment_hash
+        shipment_hash,
       });
+    } else {
 
-      return res.status(200).send(price);
-    } catch (error) {
-      console.log(error);
-      return res.status(400).send(error);
-    }
-  } else {
+      const cartPipeline = [
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(req.userInfo.id),
+          },
+        },
+        {
+          $unwind: "$cart",
+        },
+        {
+          // "Populate" the product field in cart array
+          $lookup: {
+            from: "Catalog",
+            localField: "cart.product",
+            foreignField: "_id",
+            as: "cart.product",
+          },
+        },
+        {
+          $unwind: {
+            path: "$cart.product",
+          },
+        },
+        {
+          // "Populate" the store field in products
+          $lookup: {
+            from: "Stores",
+            localField: "cart.product.store",
+            foreignField: "_id",
+            as: "store",
+          },
+        },
+        {
+          $unwind: {
+            path: "$store",
+          },
+        },
+        {
+          // Group results by store
+          $group: {
+            _id: "$store._id",
+    
+            // Get only the first because all store info are the same for each element in products array
+            storeAddress: { $first: "$store.storeAddress.cep" },
+            storeName: { $first: "$store.storeName" },
+            storeImage: { $first: "$store.storeImage" },
+            products: { $addToSet: "$cart" },
+          },
+        },
+        {
+          // Project ("select") only the necessary fields
+          $project: {
+            store: {
+              _id: "$_id",
+              storeAddress: "$storeAddress",
+              storeName: "$storeName",
+              storeImage: "$storeImage",
+            },
+            "products.product.thumbnail": 1,
+            "products.product.title": 1,
+            "products.product.discount": 1,
+            "products.product._id": 1,
+            "products.product.dimensions": 1,
+            "products.product.price": 1,
+            "products.quantity": 1,
+          },
+        },
+      ];
 
-    try {
       const cart = await userSchema.aggregate(cartPipeline);
 
       if (!to) return res.status(200).send(cart);
 
       for (let i = 0; i < cart.length; i++) {
         const shipment = await getShipmentPrice(cart[i], to);
-        const shipment_hash = encryptData(JSON.stringify(shipment))
+        const shipment_hash = encryptData(JSON.stringify(shipment));
         price.push({
           store: cart[i].store,
           products: cart[i].products,
           shipment,
-          shipment_hash
+          shipment_hash,
         });
       }
-
-      return res.status(200).send(price);
-    } catch (error) {
-      console.error(error);
-      return res.status(400).send(error);
     }
+
+    return res.status(200).send(price);
+
+  } catch (error) {
+
+    console.log(error);
+    return res.status(400).send(error);
+    
   }
 };
 

@@ -13,7 +13,7 @@ const SubmitButton = ({ loading, text, onClick, disabled }) => {
       }
       type="submit"
     >
-      {loading ? <LoadingSpinner /> : text}
+      {loading ? <div className="w-[1.4em]"><LoadingSpinner /></div> : text}
     </button>
   );
 };

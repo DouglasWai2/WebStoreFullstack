@@ -103,11 +103,13 @@ const LoginForm = ({ syncCart }) => {
                 value={password}
               />
             </label>
-            <SubmitButton
-              onClick={handleSubmit}
-              loading={loading}
-              text="Fazer Login"
-            />
+            <div className="h-[2.5em]">
+              <SubmitButton
+                onClick={handleSubmit}
+                loading={loading}
+                text="Fazer Login"
+              />
+            </div>
             <div className="relative flex justify-center w-full text-gray-500">
               <span className="w-full border-b-[1px] border-gray-500 absolute top-[50%]"></span>
               <p className="bg-[#f4f4f4] z-10 px-4">Ou faça login com</p>

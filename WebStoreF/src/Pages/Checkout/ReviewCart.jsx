@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faCreditCard } from "@fortawesome/free-solid-svg-icons";
-// import price from "./price_example";
+import { calculateShipment, calculateSubTotal } from "../../helpers/totalSum";
 import SkeletonReviewCart from "../../components/Checkout/ReviewCart/SkeletonReviewCart";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import ErrorCard from "../../components/shared/ErrorCard";
+import CheckoutProduct from "../../components/Checkout/CheckoutProduct";
+import CheckoutSection from "../../components/Checkout/CheckoutSection";
+import CheckoutShipment from "../../components/Checkout/CheckoutShipment";
 
 const ReviewCart = ({ user }) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [body, setBody] = useState(null);
   const [body_2, setBody_2] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [currentShipment, setCurrentShipment] = useState([]);
   const [cep, setCep] = useState("");
   const [total, setTotal] = useState(0);
@@ -41,18 +47,25 @@ const ReviewCart = ({ user }) => {
     if (price) setCurrentShipment([]);
   }, [price]);
 
+  useEffect(() => {
+    if (data)
+      navigate("/checkout/payment/" + data.client_secret + "/" + data.order_id);
+  }, [data]);
+
   const handleSubmit = () => {
     const items = [];
 
-    price.forEach((p, i) => {
+    for (let i = 0; i < price.length; i++) {
+      if (!currentShipment["shipment-method-" + i])
+        return setErrorMessage("Selecione o(s) método(s) de envio");
+
       items.push({
-        store: p.store,
+        store: price[i].store,
         products: price[i].products,
         shipment: currentShipment["shipment-method-" + i],
-        shipment_hash: currentShipment["shipment-method-hash-" + i],
+        shipment_hash: price[i].shipment_hash,
       });
-    });
-
+    }
 
     setBody_2({
       order: {
@@ -63,37 +76,25 @@ const ReviewCart = ({ user }) => {
 
   useEffect(() => {
     if (price) {
-      const total =
+      const subTotal =
         price.reduce((acc, { products }) => {
-          return (
-            acc +
-            products.reduce(
-              (acc, item) =>
-                acc +
-                Number(item.quantity) *
-                  (
-                    item.product.price -
-                    item.product.price * item.product.discount
-                  ).toFixed(2),
-              0
-            )
-          );
-        }, 0) +
-        Object.keys(currentShipment).reduce((acc, i) => {
-          if (!currentShipment["shipment-method-" + i]?.custom_price)
-            return acc;
-          return (
-            acc +
-            parseFloat(currentShipment["shipment-method-" + i]?.custom_price)
-          );
-        }, 0);
+          return acc + calculateSubTotal(products);
+        }, 0) + calculateShipment(Object.keys(currentShipment), currentShipment);
 
-      setTotal(total);
+      setTotal(subTotal);
     }
   }, [currentShipment, price]);
 
   return (
     <main className="w-screen h-screen flex items-center justify-center py-1 px-1 overflow-y-scroll sm:py-4">
+      {errorMessage && (
+        <div className="absolute top-10 animate-expand">
+          <ErrorCard
+            invalid={errorMessage}
+            handleClick={() => setErrorMessage(null)}
+          />
+        </div>
+      )}
       <div className="h-full max-w-[800px] w-full">
         <div className="text-3xl font-bold">Resumo do pedido</div>
         <div className="flex flex-col gap-4">
@@ -102,94 +103,29 @@ const ReviewCart = ({ user }) => {
             : price &&
               price.map(({ store, products, shipment, shipment_hash }, i) => {
                 return (
-                  <div
-                    className="shadow-md py-4 px-2 rounded-lg bg-[#fcfcfc] border-b-[1px] border-[#152128] text-sm lg:px-6"
-                    key={i}
-                  >
-                    <div>Vendido por: {store.storeName}</div>
+                  <CheckoutSection index={i} store={store.storeName}>
                     {products.map(({ product }, j) => {
                       return (
-                        <div
-                          key={j}
-                          className="flex justify-between items-center border-b-[1px] border-gray-300 text-sm py-2 mx-1"
-                        >
-                          <div className="flex gap-3 items-center">
-                            <div className="h-[80px] w-[80px] object-contain text-center">
-                              <img
-                                className="h-full object-contain"
-                                src={product.thumbnail}
-                              />
-                            </div>
-                            <div>{product.title}</div>
-                          </div>
-                          <div className="mx-2 w-max">
-                            {products[j].quantity}x
-                          </div>
-                          <div className="w-max flex flex-col justify-self-end">
-                            {product.discount > 0 && (
-                              <span className="strikethrough mr-2 text-nowrap h-min text-xs">
-                                {moneyMask(product.price)}
-                              </span>
-                            )}
-                            <span>
-                              {moneyMask(
-                                (
-                                  product.price -
-                                  product.price * product.discount
-                                ).toFixed(2)
-                              )}
-                            </span>
-                          </div>
-                        </div>
+                        <CheckoutProduct
+                          price={product.price}
+                          discount={product.discount}
+                          thumbnail={product.thumbnail}
+                          title={product.title}
+                          index={j}
+                          quantity={products[j].quantity}
+                        />
                       );
                     })}
                     <div className="text-justify font-bold flex justify-between mt-2">
                       <p>Subtotal </p>
-                      <p>
-                        {moneyMask(
-                          products
-                            .reduce((acc, { quantity, product }) => {
-                              return (
-                                acc +
-                                quantity *
-                                  (
-                                    product.price -
-                                    product.price * product.discount
-                                  ).toFixed(2)
-                              );
-                            }, 0)
-                            .toFixed(2)
-                        )}
-                      </p>
+                      <p>{moneyMask(calculateSubTotal(products).toFixed(2))}</p>
                     </div>
-                    <div className="mt-2 grid grid-cols-4 justify-between py-4">
-                      <p className="font-bold">Frete:</p>
-                      {!loading && currentShipment["shipment-method-" + i] ? (
-                        <>
-                          {" "}
-                          <p>{currentShipment["shipment-method-" + i].name}</p>
-                          <p className="justify-self-center">
-                            {currentShipment["shipment-method-" + i]
-                              .custom_delivery_range.min +
-                              " - " +
-                              currentShipment["shipment-method-" + i]
-                                .custom_delivery_range.max}{" "}
-                            dias úteis
-                          </p>
-                          <p className="justify-self-end font-bold">
-                            {moneyMask(
-                              currentShipment["shipment-method-" + i]
-                                .custom_price
-                            )}
-                          </p>
-                        </>
-                      ) : !loading && shipment ? (
-                        `Selecione o frete`
-                      ) : (
-                        "Insira um cep"
-                      )}
-                      {loading && <LoadingSpinner />}
-                    </div>
+                    <CheckoutShipment
+                      loading={loading}
+                      currentShipment={currentShipment["shipment-method-" + i]}
+                      shipment={shipment}
+                      index={i}
+                    />
                     <div id={store._id} className="max-h-0 overflow-hidden">
                       {!loading &&
                         shipment &&
@@ -259,7 +195,7 @@ const ReviewCart = ({ user }) => {
                         </button>
                       )}
                     </div>
-                  </div>
+                  </CheckoutSection>
                 );
               })}
         </div>
@@ -311,10 +247,8 @@ const ReviewCart = ({ user }) => {
                         duration-100"
           >
             {loadingOrder ? (
-              <div className="loader-3 w-[1.4em]">
-                <svg className="" viewBox="25 25 50 50">
-                  <circle r="20" cy="50" cx="50"></circle>
-                </svg>
+              <div className="w-[1.4em]">
+                <LoadingSpinner color="white" />
               </div>
             ) : (
               <>
