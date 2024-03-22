@@ -9,7 +9,8 @@ const {
   updateUserData,
   likeStore,
   getUsersInterests,
-  cart
+  cart,
+  createOrder
 } = require("../controllers/user.controller");
 require("dotenv").config();
 

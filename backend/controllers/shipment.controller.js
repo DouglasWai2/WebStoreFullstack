@@ -3,6 +3,7 @@ const storeSchema = require("../models/store.model");
 const productSchema = require("../models/product.model");
 const userSchema = require("../models/user.model");
 const mongoose = require("mongoose");
+const { encryptData } = require("../utils/encryption");
 const client_id = 4287;
 const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`;
 const client_secret = process.env.MELHORENVIO_CLIENT_SECRET;
@@ -61,6 +62,7 @@ exports.getTokens = async (req, res) => {
 exports.calculateShipment = async (req, res) => {
   const { to, id } = req.body;
   const price = [];
+
 
   const cartPipeline = [
     {
@@ -212,6 +214,7 @@ exports.calculateShipment = async (req, res) => {
       return res.status(400).send(error);
     }
   } else {
+
     try {
       const cart = await userSchema.aggregate(cartPipeline);
 
@@ -219,10 +222,12 @@ exports.calculateShipment = async (req, res) => {
 
       for (let i = 0; i < cart.length; i++) {
         const shipment = await getShipmentPrice(cart[i], to);
+        const shipment_hash = encryptData(JSON.stringify(shipment))
         price.push({
           store: cart[i].store,
           products: cart[i].products,
           shipment,
+          shipment_hash
         });
       }
 

@@ -78,7 +78,7 @@ const ProductPage = () => {
     <ProductPageSkeleton />
   ) : (
     product && (
-      <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6 max-sm:px-0">
+      <div className="w-full py-10 flex flex-col items-center gap-5 max-lg:px-6 max-sm:px-0">
         <article className="shadow-md p-6 w-full max-w-[1440px]">
           <div className="flex justify-between py-5 max-lg:flex-col max-lg:justify-normal">
             <section

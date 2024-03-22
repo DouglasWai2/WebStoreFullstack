@@ -2,6 +2,7 @@ const UserSchema = require("../models/user.model");
 const AddressSchema = require("../models/address.model");
 const StoreSchema = require("../models/store.model");
 const ProductSchema = require("../models/product.model");
+const OrderSchema = require("../models/order.model");
 const { mongoose } = require("mongoose");
 
 exports.sendUserInfo = async (req, res) => {
@@ -147,51 +148,6 @@ exports.saveAddress = async (req, res) => {
   }
 };
 
-exports.sendAddressInfo = async (req, res) => {
-  const userid = req.userInfo.id;
-  const user = await UserSchema.findById(userid).populate("address");
-
-  const { address } = user;
-  const modifiedAddress = address.map((item) => {
-    const {
-      id,
-      cep,
-      street,
-      number,
-      neighborhood,
-      city,
-      CPF,
-      recieverName,
-      nickname,
-      state,
-      country,
-      main,
-    } = item;
-
-    let lastCPFDigits = CPF.toString().slice(7, 11);
-
-    return {
-      id,
-      cep,
-      street,
-      number,
-      neighborhood,
-      city,
-      CPF: "******" + lastCPFDigits,
-      recieverName,
-      nickname,
-      state,
-      country,
-      main,
-    };
-  });
-
-  try {
-    res.status(200).send(modifiedAddress);
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 exports.updateMainAddress = async (req, res) => {
   const addressId = req.params.address_id;

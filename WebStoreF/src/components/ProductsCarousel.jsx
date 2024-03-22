@@ -81,13 +81,13 @@ const ProductsCarousel = ({ queries, category, topSelling, isMobile }) => {
 
           <div
             ref={scrollRef}
-            className="py-5 px-4 w-full flex items-center gap-6 overflow-x-scroll carousel-scroll"
+            className="overflow-x-scroll py-5 px-4 w-full flex items-center gap-6 carousel-scroll"
           >
             {products &&
               products?.products.map((item, index) => {
                 return (
                   <ProductCard
-                    className={"!min-w-[200px] !text-sm"}
+                    className={"!text-sm"}
                     key={index}
                     item={item}
                   />

@@ -9,10 +9,9 @@ import SkeletonReviewCart from "../../components/Checkout/ReviewCart/SkeletonRev
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 
 const ReviewCart = ({ user }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { id } = useParams();
   const [body, setBody] = useState(null);
+  const [body_2, setBody_2] = useState(null);
   const [currentShipment, setCurrentShipment] = useState([]);
   const [cep, setCep] = useState("");
   const [total, setTotal] = useState(0);
@@ -22,10 +21,9 @@ const ReviewCart = ({ user }) => {
       const to = user.address.filter((a) => a.main)[0]?.cep;
 
       to && setCep(to);
+
       if (id !== "review-cart") return setBody({ to, id, quantity: 1 });
-      setBody({
-        to,
-      });
+      else return setBody({ to });
     }
   }, [user]);
 
@@ -34,10 +32,34 @@ const ReviewCart = ({ user }) => {
     loading,
     error,
   } = useFetchApi("/shipment-calculate", "POST", body);
+  const {
+    data,
+    loading: loadingOrder,
+    error: errorOrder,
+  } = useFetchApi("/order/create", "POST", body_2);
 
   useEffect(() => {
     if (price) setCurrentShipment([]);
   }, [price]);
+
+  const handleSubmit = () => {
+    const items = [];
+
+    price.forEach((p, i) => {
+      items.push({
+        store: p.store,
+        products: price[i].products,
+        shipment: currentShipment["shipment-method-" + i],
+        shipment_hash: currentShipment["shipment-method-hash-" + i],
+      });
+    });
+
+    setBody_2({
+      order: {
+        items,
+      },
+    });
+  };
 
   useEffect(() => {
     if (price) {
@@ -57,11 +79,15 @@ const ReviewCart = ({ user }) => {
             )
           );
         }, 0) +
-        Object.keys(currentShipment).reduce((acc, item) => {
-          return acc + parseFloat(currentShipment[item].custom_price);
+        Object.keys(currentShipment).reduce((acc, item, i) => {
+          if (!currentShipment["shipment-method-" + i]?.custom_price)
+            return acc;
+          return (
+            acc +
+            parseFloat(currentShipment["shipment-method-" + i]?.custom_price)
+          );
         }, 0);
 
-        console.log(total)
       setTotal(total);
     }
   }, [currentShipment, price]);
@@ -74,7 +100,7 @@ const ReviewCart = ({ user }) => {
           {!price && loading
             ? [1, 2].map(() => <SkeletonReviewCart />)
             : price &&
-              price.map(({ store, products, shipment }, i) => {
+              price.map(({ store, products, shipment, shipment_hash }, i) => {
                 return (
                   <div
                     className="shadow-md py-4 px-2 rounded-lg bg-[#fcfcfc] border-b-[1px] border-[#152128] text-sm lg:px-6"
@@ -100,9 +126,11 @@ const ReviewCart = ({ user }) => {
                             {products[j].quantity}x
                           </div>
                           <div className="w-max flex flex-col justify-self-end">
-                          {product.discount > 0 &&  <span className="strikethrough mr-2 text-nowrap h-min text-xs">
-                              {moneyMask(product.price)}
-                            </span>}
+                            {product.discount > 0 && (
+                              <span className="strikethrough mr-2 text-nowrap h-min text-xs">
+                                {moneyMask(product.price)}
+                              </span>
+                            )}
                             <span>
                               {moneyMask(
                                 (
@@ -203,6 +231,8 @@ const ReviewCart = ({ user }) => {
                                   setCurrentShipment((p) => ({
                                     ...p,
                                     ["shipment-method-" + i]: item,
+                                    ["shipment-method-hash-" + i]:
+                                      shipment_hash,
                                   }));
                                 }}
                                 disabled={item.error}
@@ -273,14 +303,25 @@ const ReviewCart = ({ user }) => {
             <div>{moneyMask(total.toFixed(2))}</div>
           </div>
           <button
+            onClick={handleSubmit}
             className="bg-[#188fa7] mt-3 w-full px-2 py-2
-                        rounded-md text-xl text-center text-white shadow
+                        rounded-md text-xl flex items-center justify-center text-white shadow
                         hover:brightness-75 mb-2
                         active:shadow-none active:text-black
                         duration-100"
           >
-            <FontAwesomeIcon className="mr-2" icon={faCreditCard} />
-            Ir para pagamento
+            {loadingOrder ? (
+              <div className="loader-3 w-[1.4em]">
+                <svg className="" viewBox="25 25 50 50">
+                  <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+              </div>
+            ) : (
+              <>
+                <FontAwesomeIcon className="mr-2" icon={faCreditCard} />
+                Ir para pagamento
+              </>
+            )}
           </button>
         </div>
       </div>

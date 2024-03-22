@@ -75,6 +75,7 @@ const StoreSchema = new mongoose.Schema(
     },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
     categories: [{ type: String }],
     likes: { type: Number },
     melhorEnvios: {

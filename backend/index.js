@@ -41,7 +41,7 @@ app.use("/api/v1", require("./routes/rating"));
 app.use("/api/v1", require("./routes/user"));
 app.use("/api/v1", require("./routes/frete"));
 app.use("/api/v1", storeLimiter, require("./routes/store"));
-app.use("/api/v1", require("./routes/payments"));
+app.use("/api/v1", require("./routes/order"));
 app.use("/api/v1/auth", require("./routes/auth/register"));
 app.use("/api/v1/auth", require("./routes/auth/login"));
 app.use("/api/v1/auth", require("./routes/auth/refreshToken"));
