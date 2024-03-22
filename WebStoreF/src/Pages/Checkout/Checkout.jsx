@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
+const stripePromise = loadStripe(process.env.STRIPE_KEY);
 
 const Checkout = () => {
   const { client_secret } = useParams();

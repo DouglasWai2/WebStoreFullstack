@@ -75,6 +75,13 @@ exports.createOrder = async (req, res) => {
   const order = req.order;
 
   try {
+    await orderSchema.deleteMany({ user: req.userInfo.id });
+    await userSchema.updateOne(
+      { _id: req.userInfo.id },
+      { $set: { orders: [] } }
+    )
+    await storeSchema.updateMany({}, { $pull: { orders: order._id } });
+
     const orderCreated = await orderSchema.create({
       status: "PENDING_PAYMENT",
       user: req.userInfo.id,
@@ -130,8 +137,6 @@ exports.createPaymentIntent = async (req, res) => {
       );
     }, 0)
     .toFixed(2);
-
-  console.log(amount);
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({

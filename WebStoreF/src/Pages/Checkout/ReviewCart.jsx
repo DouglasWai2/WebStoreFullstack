@@ -19,7 +19,6 @@ const ReviewCart = ({ user }) => {
   useEffect(() => {
     if (user) {
       const to = user.address.filter((a) => a.main)[0]?.cep;
-
       to && setCep(to);
 
       if (id !== "review-cart") return setBody({ to, id, quantity: 1 });
@@ -80,7 +79,7 @@ const ReviewCart = ({ user }) => {
             )
           );
         }, 0) +
-        Object.keys(currentShipment).reduce((acc, item, i) => {
+        Object.keys(currentShipment).reduce((acc, i) => {
           if (!currentShipment["shipment-method-" + i]?.custom_price)
             return acc;
           return (
