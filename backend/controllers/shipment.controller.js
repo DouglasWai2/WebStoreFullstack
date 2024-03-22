@@ -201,11 +201,13 @@ exports.calculateShipment = async (req, res) => {
       if (!to) return res.status(200).send([cart]);
 
       const shipment = await getShipmentPrice(cart, to);
+      const shipment_hash = encryptData(JSON.stringify(shipment))
 
       price.push({
         store: cart.store,
         products: cart.products,
         shipment,
+        shipment_hash
       });
 
       return res.status(200).send(price);

@@ -12,8 +12,6 @@ exports.validateOrder = async (req, res, next) => {
   const { order } = req.body;
 
   try {
-    await storeSchema.updateMany({}, { $set: { orders: [] } });
-    await userSchema.updateMany({}, { $set: { orders: [] } });
 
     // Check if given products are from given store
     for (let i = 0; i < order.items.length; i++) {
@@ -42,6 +40,9 @@ exports.validateOrder = async (req, res, next) => {
         decryptData(order.items[i].shipment_hash)
       );
 
+      console.log(decryptedShipment)
+
+      // Check if given shipment method is valid
       if (
         !decryptedShipment.some((element) =>
           isEqual(element, order.items[i].shipment)
