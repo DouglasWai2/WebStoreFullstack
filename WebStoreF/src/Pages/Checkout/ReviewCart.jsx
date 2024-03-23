@@ -87,7 +87,7 @@ const ReviewCart = ({ user }) => {
   }, [currentShipment, price]);
 
   return (
-    <main className="w-screen h-screen flex items-center justify-center py-1 px-1 overflow-y-scroll sm:py-4">
+    <main className="w-screen min-h-screen flex items-center justify-center py-1 px-1 overflow-y-auto sm:py-4">
       {errorMessage && (
         <div className="absolute top-10 animate-expand">
           <ErrorCard

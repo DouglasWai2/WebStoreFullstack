@@ -79,7 +79,7 @@ export default function CheckoutForm({total}) {
   };
 
   const paymentElementOptions = {
-    layout: "accordion",
+    layout: "tabs",
   };
 
   return (
