@@ -207,6 +207,10 @@ input[type="date"] {
   border-radius: 3px;
 }
 
+.max-sm\:sticky{
+  bottom: env(safe-area-inset-bottom);
+}
+
 .strikethrough {
   position: relative;
 }

@@ -100,13 +100,13 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
   };
 
   useEffect(() => {
-    if (toggleCard || toggleSideNav) {
+    if (toggleCard || toggleSideNav || (isMobile && toggleCart)) {
       document.body.style.overflow = "hidden";
     }
-    if (!toggleCard && !toggleSideNav) {
+    if (!toggleCard && !toggleSideNav && (isMobile && !toggleCart)) {
       document.body.style.overflow = "auto";
     }
-  }, [toggleCard, toggleSideNav]);
+  }, [toggleCard, toggleSideNav, toggleCart]);
 
   return (
     <>

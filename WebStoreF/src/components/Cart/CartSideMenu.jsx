@@ -39,7 +39,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
     <aside
       ref={cartRef}
       className="fixed bg-white shadow-md right-0 top-0 flex flex-col justify-between w-[600px] 
-    min-h-screen h-full overflow-y-auto animate-appear py-8 px-3 z-50 max-lg:w-2/3 max-md:w-3/4 max-sm:w-full"
+        min-h-screen h-full overflow-y-auto animate-appear py-8 px-3 z-50 max-lg:w-2/3 max-md:w-3/4 max-sm:w-full"
     >
       <div className="flex flex-col h-max">
         <div className="flex items-center justify-between">
