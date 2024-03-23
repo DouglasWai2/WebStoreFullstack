@@ -211,6 +211,11 @@ input[type="date"] {
   bottom: env(safe-area-inset-bottom);
 }
 
+.min-h-screen{
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+}
+
 .strikethrough {
   position: relative;
 }
