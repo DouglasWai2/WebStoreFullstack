@@ -130,8 +130,8 @@ const RegisterForm = () => {
     }));
   };
   return (
-    <main className="flex flex-col z-[-1] p-10 justify-center items-center w-screen bg-[#fcfcfc] max-sm:px-0">
-      <div className="w-full max-w-[600px] rounded-lg shadow-md p-8 py-20">
+    <main className="flex flex-col z-[-1] p-10 justify-center items-center min-w-screen bg-white max-sm:px-0">
+      <div className="w-full max-w-[600px] rounded-lg shadow-md p-8 py-20 bg-[#fcfcfc]">
         {errMessage !== "" && (
           <div
             className="fixed flex top-4 gap-3 justify-center items-center z-10 bg-white rounded-sm border-[1px]

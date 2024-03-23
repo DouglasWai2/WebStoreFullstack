@@ -3,7 +3,7 @@ function calculateOrderAmount(items) {
     .reduce((acc, item) => {
       return (
         acc +
-        parseFloat(item.shipment.custom_price) +
+        parseFloat(item.shipment.custom_price - item.shipment.discount) +
         parseFloat(
           item.products.reduce(
             (acc2, product) =>

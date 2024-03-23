@@ -60,7 +60,7 @@ const LoginForm = ({ syncCart }) => {
 
   return (
     <>
-      <main className="flex flex-col justify-center items-center w-screen h-screen overflow-scroll bg-[#f5f5f5]">
+      <main className="flex flex-col py-10 justify-center items-center w-screen min-h-screen overflow-scroll bg-white">
         {invalid && (
           <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4 animate-expand">
             <FontAwesomeIcon icon={faTriangleExclamation} />
@@ -75,12 +75,12 @@ const LoginForm = ({ syncCart }) => {
             </button>
           </div>
         )}
-        <div className="w-[500px] rounded-lg shadow-md p-8 py-24 max-sm:w-full">
+        <div className="w-[500px] bg-[#fcfcfc] rounded-lg shadow-md p-8 py-20 max-sm:w-full">
           <a href="/">
             <img src={Logo} />
           </a>
           <form
-            className="flex flex-col justify-center gap-8 relative"
+            className="flex flex-col justify-center gap-8 relative mt-8"
             onSubmit={handleSubmit}
           >
             <label htmlFor="email" className="flex flex-col">
@@ -112,7 +112,7 @@ const LoginForm = ({ syncCart }) => {
             </div>
             <div className="relative flex justify-center w-full text-gray-500">
               <span className="w-full border-b-[1px] border-gray-500 absolute top-[50%]"></span>
-              <p className="bg-[#f4f4f4] z-10 px-4">Ou faça login com</p>
+              <p className="bg-[#fcfcfc] z-10 px-4">Ou faça login com</p>
             </div>
             <button
               onClick={() => login()}

@@ -1,7 +1,7 @@
 import { moneyMask } from "../../helpers/moneyMask";
 import LoadingSpinner from "../shared/LoadingSpinner";
 
-const CheckoutShipment = ({loading, currentShipment, shipment, index}) => {
+const CheckoutShipment = ({ loading, currentShipment, shipment, index }) => {
   return (
     <div className="mt-2 grid grid-cols-4 justify-between py-4">
       <p className="font-bold">Frete:</p>
@@ -12,12 +12,15 @@ const CheckoutShipment = ({loading, currentShipment, shipment, index}) => {
           <p className="justify-self-center">
             {currentShipment.custom_delivery_range.min +
               " - " +
-              currentShipment.custom_delivery_range
-                .max}{" "}
+              currentShipment.custom_delivery_range.max}{" "}
             dias úteis
           </p>
           <p className="justify-self-end font-bold">
-            {moneyMask(currentShipment.custom_price)}
+            {moneyMask(
+              parseFloat(
+                currentShipment.custom_price - currentShipment.discount
+              ).toFixed(2)
+            )}
           </p>
         </>
       ) : !loading && shipment ? (

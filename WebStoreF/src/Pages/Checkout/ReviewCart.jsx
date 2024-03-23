@@ -79,7 +79,8 @@ const ReviewCart = ({ user }) => {
       const subTotal =
         price.reduce((acc, { products }) => {
           return acc + calculateSubTotal(products);
-        }, 0) + calculateShipment(Object.keys(currentShipment), currentShipment);
+        }, 0) +
+        calculateShipment(Object.keys(currentShipment), currentShipment);
 
       setTotal(subTotal);
     }
@@ -157,7 +158,13 @@ const ReviewCart = ({ user }) => {
                                   icon={faBan}
                                 />
                               ) : (
-                                <div>{moneyMask(item.custom_price)}</div>
+                                <div>
+                                  {moneyMask(
+                                    parseFloat(
+                                      item.custom_price - item.discount
+                                    ).toFixed(2)
+                                  )}
+                                </div>
                               )}
                               <input
                                 id={item.name + i}

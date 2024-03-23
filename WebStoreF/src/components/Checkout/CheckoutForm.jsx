@@ -79,11 +79,11 @@ export default function CheckoutForm({total}) {
   };
 
   const paymentElementOptions = {
-    layout: "tabs",
+    layout: "accordion",
   };
 
   return (
-    <form className="bg-white h-full py-4 px-4 shadow" id="payment-form" onSubmit={handleSubmit}>
+    <form className="bg-white h-full w-full py-4 px-4 shadow" id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button
         className="bg-[#188fa7] flex justify-center items-center mt-4

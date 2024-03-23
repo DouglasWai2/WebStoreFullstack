@@ -8,6 +8,7 @@ import LoadingSpinner from "../../components/shared/LoadingSpinner";
 import CheckoutSection from "../../components/Checkout/CheckoutSection";
 import CheckoutProduct from "../../components/Checkout/CheckoutProduct";
 import CheckoutShipment from "../../components/Checkout/CheckoutShipment";
+import Logo from "../../assets/logo-no-background-2.svg";
 import { useEffect, useState } from "react";
 
 const stripePromise = loadStripe(process.env.STRIPE_KEY);
@@ -23,14 +24,19 @@ const Checkout = ({ user }) => {
   );
 
   useEffect(() => {
-    if(data){
-      const total =calculateOrderAmount(data.items);
+    if (data) {
+      const total = calculateOrderAmount(data.items);
       setTotal(total);
     }
-  }, [data])
+  }, [data]);
 
   const appearance = {
     theme: "stripe",
+
+    variables: {
+      colorPrimary: "#188fa7",
+      borderRadius: "3px",
+    },
   };
   const options = {
     clientSecret: client_secret,
@@ -38,48 +44,55 @@ const Checkout = ({ user }) => {
   };
 
   return (
-    <main className="flex justify-center items-center w-screen h-screen">
+    <main className="min-h-screen h-full w-screen overflow-y-auto flex flex-col gap-4 justify-center items-center">
       <div
-        className="relative shadow-md rounded-lg bg-[#fcfcfc] max-h-[900px] max-w-[1200px]
-      px-10 py-8 flex items-center gap-8 duration-300 
-      transition-all"
+        className="shadow-md rounded-lg bg-[#fcfcfc] h-max max-w-[1200px]
+      px-10 flex flex-col items-center py-8 gap-8 duration-300
+      transition-all max-sm:px-2"
       >
-        {loading ? (
-          <div className="w-full flex justify-center">
-            <LoadingSpinner />
-          </div>
-        ) : (
-          <>
-            {" "}
-            <div className="max-h-full flex flex-col gap-3 border-r border-gray-300 pr-10">
-              {data && data.items.map(({products, shipment}, i) => (
-                <CheckoutSection index={i} >
-                  {products.map(({ product }, j) => (
-                    <CheckoutProduct
-                      price={products[j].currentPrice}
-                      discount={products[j].currentDiscount}
-                      thumbnail={product.thumbnail}
-                      title={product.title}
-                      index={j}
-                      quantity={products[j].quantity}
-                    />
+        <img className="w-[300px]" src={Logo} />
+        <div className="flex items-center h-full max-md:flex-col max-md:gap-4">
+          {loading ? (
+            <div className="w-full flex justify-center">
+              <LoadingSpinner />
+            </div>
+          ) : (
+            <>
+              {" "}
+              <div
+                className="max-h-[600px] overflow-y-auto flex flex-col gap-3 border-r border-gray-300 px-6 
+              max-md:border-b max-md:border-r-0 max-md:py-4 max-md:px-0"
+              >
+                {data &&
+                  data.items.map(({ products, shipment }, i) => (
+                    <CheckoutSection index={i}>
+                      {products.map(({ product }, j) => (
+                        <CheckoutProduct
+                          price={products[j].currentPrice}
+                          discount={products[j].currentDiscount}
+                          thumbnail={product.thumbnail}
+                          title={product.title}
+                          index={j}
+                          quantity={products[j].quantity}
+                        />
+                      ))}
+                      <CheckoutShipment
+                        loading={loading}
+                        currentShipment={shipment}
+                        shipment={shipment}
+                        index={i}
+                      />
+                    </CheckoutSection>
                   ))}
-                  <CheckoutShipment 
-                    loading={loading}
-                    currentShipment={shipment}
-                    shipment={shipment}
-                    index={i}
-                  />
-                </CheckoutSection>
-              ))}
-            </div>
-            <div className="w-full h-full px-4">
-              <Elements options={options} stripe={stripePromise}>
-                <CheckoutForm total={total} />
-              </Elements>
-            </div>
-          </>
-        )}
+              </div>
+              <div className="w-full px-6 max-md:px-0">
+                <Elements options={options} stripe={stripePromise}>
+                  <CheckoutForm total={total} />
+                </Elements>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </main>
   );

@@ -22,7 +22,7 @@ const SideMenuNav = ({ user, setToggleSideNav }) => {
 
   return (
     <div
-      className="h-screen text-black 
+      className="min-h-screen h-full overflow-y-auto text-black 
     w-1/2 bg-white fixed right-0 z-50 py-14 text-xl flex flex-col items-center
     animate-appear top-0 md:hidden max-sm:w-4/5"
     >

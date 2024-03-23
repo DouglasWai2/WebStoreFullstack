@@ -12,6 +12,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 const SearchInput = () => {
   const [url, setUrl] = useState(null);
   const [search, setSearch] = useState("");
+
   const [showResult, setShowResult] = useState(false);
   const [searchFull, setSearchFull] = useState(false);
   const location = useLocation();
@@ -26,20 +27,19 @@ const SearchInput = () => {
   } = useFetchApi(url, "GET");
 
   useEffect(() => {
-    var delayDebounceFn;
+    var delay;
 
     let params = new URL(document.location).searchParams;
     if (params.get("search") === search) return;
 
-
     if (search) {
-      delayDebounceFn = setTimeout(() => {
+      delay = setTimeout(() => {
         setUrl(`/search?search=${search}`);
         setShowResult(true);
-      }, 2000);
+      }, 1000);
     }
-    return () => clearTimeout(delayDebounceFn);
-  }, [search, location]);
+    return () => clearTimeout(delay);
+  }, [search]);
 
   useOutsideAlerter(results, () => {
     setShowResult(false);

@@ -217,6 +217,7 @@ exports.calculateShipment = async (req, res) => {
 
       for (let i = 0; i < cart.length; i++) {
         const shipment = await getShipmentPrice(cart[i], to);
+        console.log(shipment)
         const shipment_hash = encryptData(JSON.stringify(shipment));
         price.push({
           store: cart[i].store,

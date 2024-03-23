@@ -9,7 +9,7 @@ export function calculateSubTotal(products) {
 export function calculateShipment(items, shipment){
     return items.reduce((acc, i) => {
         if (!shipment[i]?.custom_price) return acc;
-        return acc + parseFloat(shipment[i]?.custom_price);
+        return acc + parseFloat(shipment[i]?.custom_price - shipment[i]?.discount);
       }, 0);
 }
 
@@ -18,7 +18,7 @@ export function calculateOrderAmount(items) {
       .reduce((acc, item) => {
         return (
           acc +
-          parseFloat(item.shipment.custom_price) +
+          parseFloat(item.shipment.custom_price - item.shipment.discount) +
           parseFloat(
             item.products.reduce(
               (acc2, product) =>
