@@ -89,7 +89,7 @@ const ReviewCart = ({ user }) => {
   return (
     <main className="w-screen h-screen flex items-center justify-center py-1 px-1 overflow-y-auto sm:py-4">
       {errorMessage && (
-        <div className="absolute top-10 animate-expand">
+        <div className="absolute top-10 animate-expand z-10">
           <ErrorCard
             invalid={errorMessage}
             handleClick={() => setErrorMessage(null)}
@@ -239,7 +239,7 @@ const ReviewCart = ({ user }) => {
         <div
           className="mt-5 py-4 px-2 rounded-lg shadow-lg 
         bg-[#fcfcfc] border-b border-[#152128] 
-        max-sm:sticky max-sm:bottom-0 max-sm:w-full max-sm:rounded-none"
+        max-sm:sticky max-sm:w-full max-sm:rounded-none"
         >
           <div className="flex justify-between text-xl">
             <div>Total</div>
