@@ -103,7 +103,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
     if (toggleCard || toggleSideNav || (isMobile && toggleCart)) {
       document.body.style.overflow = "hidden";
     }
-    if (!toggleCard && !toggleSideNav && (isMobile && !toggleCart)) {
+    if (!toggleCard && !toggleSideNav || (isMobile && !toggleCart)) {
       document.body.style.overflow = "auto";
     }
   }, [toggleCard, toggleSideNav, toggleCart]);
