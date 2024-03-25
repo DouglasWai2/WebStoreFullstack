@@ -30,6 +30,7 @@ const ReviewCart = ({ user }) => {
       const to = user.address.filter((a) => a.main)[0];
       to && setAddress(to);
 
+      if(!to.length) return
       if (id !== "review-cart") return setBody({ to: to.cep, id, quantity: 1 });
       else return setBody({ to: to.cep });
     }
