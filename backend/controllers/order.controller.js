@@ -18,13 +18,13 @@ exports.validateOrder = async (req, res, next) => {
 
   try {
     // check if address exist
-    const address = await addressSchema.findById(order.address, "-main")
+    const address = await addressSchema.findById(order.address, "-main");
 
     if (!address) {
       return res.status(400).send("Invalid address");
     }
 
-    order.address = address
+    order.address = address;
 
     // Check if given products are from given store
     for (let i = 0; i < order.items.length; i++) {
@@ -81,7 +81,7 @@ exports.validateOrder = async (req, res, next) => {
 
 exports.createOrder = async (req, res) => {
   const order = req.order;
-  console.log(order.address)
+  console.log(order.address);
 
   try {
     await orderSchema.deleteMany({ user: req.userInfo.id });
@@ -120,7 +120,10 @@ exports.createPaymentIntent = async (req, res) => {
   const { orderId } = req.params;
   let order;
   try {
-    order = await orderSchema.findById(orderId).populate('user', 'address');
+    order = await orderSchema
+      .findById(orderId)
+      .populate("user")
+      .populate("items.products.product", "title");
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
@@ -134,11 +137,39 @@ exports.createPaymentIntent = async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: parseInt(amount.replace(".", "")),
       currency: "brl",
+      // line_items: [
+      //   order.items.map((item, i) =>
+      //     item.products.map((product) => ({
+      //       price_data: {
+      //         currency: "brl",
+      //         product_data: {
+      //           name: product.product.title,
+      //         },
+      //         unit_amount: parseInt(
+      //           product.currentPrice.toFixed(2).replace(".", "")
+      //         ),
+      //       },
+      //       quantity: product.quantity,
+      //     }))
+      //   ),
+      // ],
       metadata: {
-        order_id: order._id,
-      }
+        order_id: order.id,
+      },
+      shipping: {
+        address: {
+          city: order.address.city,
+          country: "BR",
+          line1: order.address.street + ", " + order.address.number,
+          postal_code: order.address.cep,
+          state: order.address.state,
+        },
+        name: order.address.recieverName,
+      },
+      receipt_email: order.user.email,
     });
 
+    console.log(paymentIntent);
 
     return res.status(200).send({
       client_secret: paymentIntent.client_secret,
@@ -160,7 +191,6 @@ exports.retrieveOrder = async (req, res) => {
       .populate("items.store", "name")
       .populate("items.products.product", "title thumbnail")
       .populate("user", "_id");
-  
 
     if (req.userInfo.id !== order.user.id)
       return res.status(400).send("Unauthorized user");
@@ -172,11 +202,73 @@ exports.retrieveOrder = async (req, res) => {
   }
 };
 
-exports.paymentIntents = async (req, res) => {
-  const { payment_intent } = req.params;
+exports.handleWebhook = async (req, res) => {
+  const sig = req.headers['stripe-signature'];
 
-  const payment = await stripe.paymentIntents.retrieve(payment_intent);
+  let event;
 
-  console.log(payment)
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    res.status(400).send(`Webhook Error: ${err.message}`);
+    return;
+  }
 
-}
+  // Return a 200 response to acknowledge receipt of the event
+  response.send();
+
+  // Handle the event
+  switch (event.type) {
+    case 'payment_intent.amount_capturable_updated':
+      const paymentIntentAmountCapturableUpdated = event.data.object;
+      // Then define and call a function to handle the event payment_intent.amount_capturable_updated
+      break;
+    case 'payment_intent.canceled':
+      const paymentIntentCanceled = event.data.object;
+      // Then define and call a function to handle the event payment_intent.canceled
+      break;
+    case 'payment_intent.created':
+      const paymentIntentCreated = event.data.object;
+      // Then define and call a function to handle the event payment_intent.created
+      break;
+    case 'payment_intent.partially_funded':
+      const paymentIntentPartiallyFunded = event.data.object;
+      // Then define and call a function to handle the event payment_intent.partially_funded
+      break;
+    case 'payment_intent.payment_failed':
+      const paymentIntentPaymentFailed = event.data.object;
+      // Then define and call a function to handle the event payment_intent.payment_failed
+      break;
+    case 'payment_intent.processing':
+      const paymentIntentProcessing = event.data.object;
+      // Then define and call a function to handle the event payment_intent.processing
+      break;
+    case 'payment_intent.requires_action':
+      const paymentIntentRequiresAction = event.data.object;
+      // Then define and call a function to handle the event payment_intent.requires_action
+      break;
+    case 'payment_intent.succeeded':
+      const paymentIntentSucceeded = event.data.object;
+        try {
+          const payment = await stripe.paymentIntents.retrieve(paymentIntentSucceeded);
+          const { order_id } = payment.metadata;
+          const order = await orderSchema
+            .findByIdAndUpdate(
+              order_id,
+              { status: "PAYMENT_APPROVED" },
+              { new: true }
+            )
+
+            console.log(order)
+
+        } catch (error) {
+          console.log(error);
+        }
+      break;
+    // ... handle other event types
+    default:
+      console.log(`Unhandled event type ${event.type}`);
+  }
+
+
+};
