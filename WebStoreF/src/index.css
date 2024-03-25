@@ -207,15 +207,6 @@ input[type="date"] {
   border-radius: 3px;
 }
 
-.max-sm\:sticky{
-  bottom: env(safe-area-inset-bottom);
-}
-
-.min-h-screen{
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-}
-
 .strikethrough {
   position: relative;
 }

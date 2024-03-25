@@ -134,9 +134,12 @@ exports.saveAddress = async (req, res) => {
 
   try {
     const user = await UserSchema.find({ _id: userid }, { address: 1 });
-    if (user[0].address.length === 0) {
-      newAddress.main = true;
-    }
+    await AddressSchema.findOneAndUpdate(
+      { user: userid, main: true },
+      { main: false }
+    );
+
+    newAddress.main = true;
     await newAddress.save();
     await UserSchema.findByIdAndUpdate(userid, {
       $push: { address: newAddress },
@@ -147,7 +150,6 @@ exports.saveAddress = async (req, res) => {
     res.status(400).json({ message: "Bad request", error });
   }
 };
-
 
 exports.updateMainAddress = async (req, res) => {
   const addressId = req.params.address_id;
@@ -188,10 +190,10 @@ exports.cart = async (req, res) => {
   try {
     if (action === "sync") {
       const { products } = req.body;
-      console.log(products)
+      console.log(products);
       const { cart } = await UserSchema.findById(req.userInfo.id, "cart");
 
-      if(products){
+      if (products) {
         products.forEach((product) => {
           const index = cart.findIndex(
             (item) => item.product.toString() === product.product
@@ -206,7 +208,6 @@ exports.cart = async (req, res) => {
           }
         });
       }
-    
 
       const { cart: userCart } = await UserSchema.findByIdAndUpdate(
         req.userInfo.id,

@@ -60,7 +60,7 @@ export default function CheckoutForm({total}) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000/checkout/post-checkout",
+        return_url: import.meta.env.VITE_DOMAIN + "/checkout/post-checkout",
       },
     });
 
@@ -72,7 +72,7 @@ export default function CheckoutForm({total}) {
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
     } else {
-      setMessage("An unexpected error occurred.");
+      setMessage("Ocorreu um erro inesperado. Tente novamente.");
     }
 
     setIsLoading(false);
@@ -102,7 +102,7 @@ export default function CheckoutForm({total}) {
         </span>
       </button>
       {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      {message && <div id="payment-message" className="text-red-500">{message}</div>}
     </form>
   );
 }

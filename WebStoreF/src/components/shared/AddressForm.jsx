@@ -62,7 +62,7 @@ const AddressForm = ({ url, type }) => {
       setSuccess("Endereço adicionado com sucesso. Redirecionando...");
       setTimeout(() => {
         navigate(-1, { replace: true });
-      }, 600);
+      }, 1000);
     }
 
     if (badRequest) {

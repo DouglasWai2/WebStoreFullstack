@@ -2,6 +2,7 @@ const orderSchema = require("../models/order.model");
 const userSchema = require("../models/user.model");
 const storeSchema = require("../models/store.model");
 const productSchema = require("../models/product.model");
+const addressSchema = require("../models/address.model");
 const Stripe = require("stripe");
 const { decryptData } = require("../utils/encryption");
 const { calculateOrderAmount } = require("../helpers/calculateOrderAmount");
@@ -16,6 +17,15 @@ exports.validateOrder = async (req, res, next) => {
   if (!order.items.length) return res.status(400).send("Invalid order");
 
   try {
+    // check if address exist
+    const address = await addressSchema.findById(order.address, "-main")
+
+    if (!address) {
+      return res.status(400).send("Invalid address");
+    }
+
+    order.address = address
+
     // Check if given products are from given store
     for (let i = 0; i < order.items.length; i++) {
       const { products } = await storeSchema
@@ -71,6 +81,7 @@ exports.validateOrder = async (req, res, next) => {
 
 exports.createOrder = async (req, res) => {
   const order = req.order;
+  console.log(order.address)
 
   try {
     await orderSchema.deleteMany({ user: req.userInfo.id });
@@ -109,7 +120,7 @@ exports.createPaymentIntent = async (req, res) => {
   const { orderId } = req.params;
   let order;
   try {
-    order = await orderSchema.findById(orderId);
+    order = await orderSchema.findById(orderId).populate('user', 'address');
   } catch (error) {
     console.log(error);
     return res.status(400).send(error);
@@ -123,6 +134,9 @@ exports.createPaymentIntent = async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: parseInt(amount.replace(".", "")),
       currency: "brl",
+      metadata: {
+        order_id: order._id,
+      }
     });
 
 
@@ -157,3 +171,12 @@ exports.retrieveOrder = async (req, res) => {
     return res.status(400).send(error.message);
   }
 };
+
+exports.paymentIntents = async (req, res) => {
+  const { payment_intent } = req.params;
+
+  const payment = await stripe.paymentIntents.retrieve(payment_intent);
+
+  console.log(payment)
+
+}

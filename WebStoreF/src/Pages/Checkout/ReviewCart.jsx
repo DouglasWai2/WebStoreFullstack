@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { moneyMask } from "../../helpers/moneyMask";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +11,8 @@ import ErrorCard from "../../components/shared/ErrorCard";
 import CheckoutProduct from "../../components/Checkout/CheckoutProduct";
 import CheckoutSection from "../../components/Checkout/CheckoutSection";
 import CheckoutShipment from "../../components/Checkout/CheckoutShipment";
+import { CEPMask } from "../../helpers/CEPMask";
+import WarningCard from "../../components/shared/WarningCard";
 
 const ReviewCart = ({ user }) => {
   const navigate = useNavigate();
@@ -18,17 +20,18 @@ const ReviewCart = ({ user }) => {
   const [body, setBody] = useState(null);
   const [body_2, setBody_2] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [warning, setWarning] = useState(null);
   const [currentShipment, setCurrentShipment] = useState([]);
-  const [cep, setCep] = useState("");
+  const [address, setAddress] = useState("");
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     if (user) {
-      const to = user.address.filter((a) => a.main)[0]?.cep;
-      to && setCep(to);
+      const to = user.address.filter((a) => a.main)[0];
+      to && setAddress(to);
 
-      if (id !== "review-cart") return setBody({ to, id, quantity: 1 });
-      else return setBody({ to });
+      if (id !== "review-cart") return setBody({ to: to.cep, id, quantity: 1 });
+      else return setBody({ to: to.cep });
     }
   }, [user]);
 
@@ -55,6 +58,11 @@ const ReviewCart = ({ user }) => {
   const handleSubmit = () => {
     const items = [];
 
+    if (!address?._id){
+      setWarning("Coloque as informções do endereço de entrega"); 
+      return document.getElementById("address-warning").scrollIntoView({ behavior: "smooth" });
+    }
+
     for (let i = 0; i < price.length; i++) {
       if (!currentShipment["shipment-method-" + i])
         return setErrorMessage("Selecione o(s) método(s) de envio");
@@ -70,6 +78,7 @@ const ReviewCart = ({ user }) => {
     setBody_2({
       order: {
         items,
+        address: address._id,
       },
     });
   };
@@ -88,12 +97,20 @@ const ReviewCart = ({ user }) => {
 
   return (
     <main className="w-screen h-screen flex items-center justify-center py-1 px-1 overflow-y-auto sm:py-4">
-      {errorMessage && (
+      {(errorMessage || warning) && (
         <div className="absolute top-10 animate-expand z-10">
-          <ErrorCard
-            invalid={errorMessage}
-            handleClick={() => setErrorMessage(null)}
-          />
+          {errorMessage && (
+            <ErrorCard
+              invalid={errorMessage}
+              handleClick={() => setErrorMessage(null)}
+            />
+          )}
+          {warning && (
+            <WarningCard
+              warning={warning}
+              handleClick={() => setWarning(null)}
+            />
+          )}
         </div>
       )}
       <div className="h-full max-w-[800px] w-full">
@@ -177,6 +194,12 @@ const ReviewCart = ({ user }) => {
                                     ["shipment-method-hash-" + i]:
                                       shipment_hash,
                                   }));
+                                  document
+                                    .getElementById(store._id)
+                                    .classList.toggle("max-h-0");
+                                  document
+                                    .getElementById(store._id)
+                                    .classList.toggle("animate-expand");
                                 }}
                                 disabled={item.error}
                               />
@@ -208,33 +231,66 @@ const ReviewCart = ({ user }) => {
         </div>
         <div className="shadow-md py-4 px-2 rounded-lg bg-[#fcfcfc] border-b-[1px] border-[#152128] text-sm lg:px-6">
           <div className="">
-            <p className="text-lg">CEP: </p>
+            {address?._id && (
+              <div className="flex justify-between items-center border border-gray-300 rounded-lg p-3">
+                <div>
+                  <p>
+                    Entregar para:{" "}
+                    <span className="font-bold">{address.recieverName}</span>
+                  </p>
+                  <p>
+                    Em:{" "}
+                    <span className="font-bold">
+                      {address.street} - No {address.number} / {address.city} -{" "}
+                      {address.state}
+                    </span>
+                  </p>
+                </div>
+                <Link to="/user/address" className="text-blue-600 hover:underline">
+                  Alterar
+                </Link>
+              </div>
+            )}
+            <p className="text-lg mt-2">CEP: </p>
             <input
               name="cep"
               placeholder="00000-000"
-              value={cep}
+              maxLength={9}
+              value={CEPMask(address.cep)}
               onChange={(e) => {
-                setCep(e.target.value);
+                setAddress({ cep: e.target.value });
               }}
               className="border-b-[1px] border-[#152128] py-1 px-2"
             />
             <button
               onClick={() => {
-                if (cep.length !== 8) {
-                  alert("CEP inválido");
+                if (address.cep.replace("-", "").length !== 8) {
+                  setErrorMessage("CEP inválido");
                   return;
                 }
                 setBody((p) => ({
                   ...p,
-                  to: cep,
+                  to: address.cep.replace("-", ""),
                 }));
               }}
-              className="rounded-lg border ml-2 border-blue-600 px-2 py-1 
-                    hover:bg-blue-600 hover:text-white duration-150 mt-3 text-blue-600"
+              className={
+                "rounded-lg border ml-2 border-blue-600 px-2 py-1 " +
+                "hover:bg-blue-600 hover:text-white duration-150 mt-3 text-blue-600"
+              }
             >
               Calcular frete
             </button>
           </div>
+          {warning && (
+            <div className="mt-2">
+              <Link to="/user/new-address">
+                <p id="address-warning" className="text-yellow-500 hover:underline">
+                  Clique aqui para colocar informações do seu endereço de
+                  entrega
+                </p>
+              </Link>
+            </div>
+          )}
         </div>
         <div
           className="mt-5 py-4 px-2 rounded-lg shadow-lg 

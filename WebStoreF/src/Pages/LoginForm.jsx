@@ -60,7 +60,7 @@ const LoginForm = ({ syncCart }) => {
 
   return (
     <>
-      <main className="flex flex-col py-10 justify-center items-center w-screen min-h-screen overflow-scroll bg-white">
+      <main className="flex flex-col py-10 justify-center items-center w-screen min-h-screen overflow-auto bg-white">
         {invalid && (
           <div className="absolute top-[100px] bg-white rounded-sm border-[1px] border-red-500 text-red-500 p-4 animate-expand">
             <FontAwesomeIcon icon={faTriangleExclamation} />
