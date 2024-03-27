@@ -210,7 +210,7 @@ const AddressForm = ({ url, type }) => {
   return (
     <div
       className={
-        "flex flex-col border-[1px] relative shadow-md w-full max-w-[1440px] py-10 px-6 rounded-sm max-sm:px-2"
+        "flex flex-col border-[1px] relative bg-white shadow-md w-full max-w-[1440px] py-10 px-6 rounded-sm max-sm:px-2"
       }
     >
       {type && (

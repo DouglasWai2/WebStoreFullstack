@@ -101,7 +101,8 @@ const ProfilePage = () => {
 
   return (
 
-    <div className="w-full max-w-[1000px] border-[2px] rounded-md overflow-hidden shadow-md">
+    <div className="w-full max-w-[1000px] bg-white 
+    border-[2px] rounded-md overflow-hidden shadow-md">
       {!user ? (
         <SkeletonData />
       ) : (
@@ -111,7 +112,7 @@ const ProfilePage = () => {
               return (
                 <tr
                   key={Object.keys(item)[0]}
-                  className="flex border-b-[1px] p-10 w-full max-sm:flex-col max-sm:px-0"
+                  className="flex rounded-md border-b-[1px] p-10 w-full max-sm:flex-col max-sm:px-0"
                 >
                   <th className="flex text-start items-center w-[20%] max-sm:justify-center max-sm:w-full">
                     {Object.keys(item)[0]}:
@@ -127,7 +128,7 @@ const ProfilePage = () => {
                 </tr>
               );
             })}
-            <tr className="flex border-b-[1px] p-10 w-full max-sm:flex-col">
+            <tr className="flex rounded-lg border-b-[1px] p-10 w-full max-sm:flex-col">
               <th className="flex text-start items-center w-[20%] max-sm:w-full max-sm:justify-center">
                 Endereço
               </th>

@@ -10,7 +10,6 @@ import { useLogOut } from "./hooks/useLogOut";
 import { useCart } from "./hooks/useCart.js";
 import PrivateRoutes from "./PrivateRoutes.jsx";
 import PublicRoutes from "./PublicRoutes.jsx";
-import Logo from "./assets/logo-no-background.svg";
 const Index = lazy(() => import("./Pages/Index.jsx"));
 const LoginForm = lazy(() => import("./Pages/LoginForm.jsx"));
 const RegisterForm = lazy(() => import("./Pages/RegisterForm.jsx"));

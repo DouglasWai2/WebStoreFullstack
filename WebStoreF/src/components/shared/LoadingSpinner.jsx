@@ -1,5 +1,6 @@
 const LoadingSpinner = ({ size = "w-6 h-6", color = "#188FA7" }) => {
   return (
+
     <div
       className={"brightness-105 text-center w-fit loader-3"}
       aria-label="Loading..."

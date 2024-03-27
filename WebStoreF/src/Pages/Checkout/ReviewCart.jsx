@@ -13,10 +13,12 @@ import CheckoutSection from "../../components/Checkout/CheckoutSection";
 import CheckoutShipment from "../../components/Checkout/CheckoutShipment";
 import { CEPMask } from "../../helpers/CEPMask";
 import WarningCard from "../../components/shared/WarningCard";
+import { useCart } from "../../hooks/useCart";
 
 const ReviewCart = ({ user }) => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { removeFromCart, loading: cartLoading } = useCart(true);
   const [body, setBody] = useState(null);
   const [body_2, setBody_2] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -30,7 +32,8 @@ const ReviewCart = ({ user }) => {
       const to = user.address.filter((a) => a.main)[0];
       to && setAddress(to);
 
-      if (id !== "review-cart") return setBody({ to: to?.cep, id, quantity: 1 });
+      if (id !== "review-cart")
+        return setBody({ to: to?.cep, id, quantity: 1 });
       else return setBody({ to: to?.cep });
     }
   }, [user]);
@@ -40,6 +43,7 @@ const ReviewCart = ({ user }) => {
     loading,
     error,
   } = useFetchApi("/shipment-calculate", "POST", body);
+
   const {
     data,
     loading: loadingOrder,
@@ -51,16 +55,26 @@ const ReviewCart = ({ user }) => {
   }, [price]);
 
   useEffect(() => {
-    if (data)
-      navigate("/checkout/payment/" + data.client_secret + "/" + data.order_id);
-  }, [data]);
+    if (data) {
+      const idsToRemove = price.map((i) =>
+        i.products.map((product) => product.product._id)
+      );
+      removeFromCart(idsToRemove.flat());
+      !cartLoading &&
+        navigate(
+          "/checkout/payment/" + data.client_secret + "/" + data.order_id
+        );
+    }
+  }, [data, cartLoading]);
 
   const handleSubmit = () => {
     const items = [];
 
-    if (!address?._id){
-      setWarning("Coloque as informções do endereço de entrega"); 
-      return document.getElementById("address-warning").scrollIntoView({ behavior: "smooth" });
+    if (!address?._id) {
+      setWarning("Coloque as informções do endereço de entrega");
+      return document
+        .getElementById("address-warning")
+        .scrollIntoView({ behavior: "smooth" });
     }
 
     for (let i = 0; i < price.length; i++) {
@@ -246,7 +260,10 @@ const ReviewCart = ({ user }) => {
                     </span>
                   </p>
                 </div>
-                <Link to="/user/address" className="text-blue-600 hover:underline">
+                <Link
+                  to="/user/address"
+                  className="text-blue-600 hover:underline"
+                >
                   Alterar
                 </Link>
               </div>
@@ -284,7 +301,10 @@ const ReviewCart = ({ user }) => {
           {warning && (
             <div className="mt-2">
               <Link to="/user/new-address">
-                <p id="address-warning" className="text-yellow-500 hover:underline">
+                <p
+                  id="address-warning"
+                  className="text-yellow-500 hover:underline"
+                >
                   Clique aqui para colocar informações do seu endereço de
                   entrega
                 </p>

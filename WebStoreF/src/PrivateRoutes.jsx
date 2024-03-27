@@ -50,7 +50,7 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           { path: "security", element: <Security /> },
           { path: "new-address", element: <AddressForm url="/user/address" /> },
           { path: "payment-methods", element: <PaymentMethods /> },
-          { path: "your-purchases", element: <YourPurchases /> },
+          { path: "your-orders", element: <YourPurchases /> },
         ],
       },
     ];

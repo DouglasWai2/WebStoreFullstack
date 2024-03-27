@@ -79,7 +79,7 @@ const ProductPage = () => {
   ) : (
     product && (
       <div className="w-full py-10 flex flex-col items-center gap-5 max-lg:px-6 max-sm:px-0">
-        <article className="shadow-md p-6 w-full max-w-[1440px]">
+        <article className="shadow-md p-6 w-full max-w-[1440px] bg-white rounded-lg">
           <div className="flex justify-between py-5 max-lg:flex-col max-lg:justify-normal">
             <section
               id="product-images-section"
@@ -229,7 +229,7 @@ const ProductPage = () => {
               className="relative flex items-center justify-center cursor-pointer group"
             >
               <span className="w-full border-b-[1px] border-black absolute"></span>
-              <div className="absolute flex items-center gap-2 bg-white px-3">
+              <div className="absolute flex items-center gap-2 bg-[#f5f5f5] px-3">
                 <span className="group-hover:underline">
                   {fullDescription ? "Mostrar menos" : "Mostrar mais"}
                 </span>

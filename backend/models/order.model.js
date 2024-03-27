@@ -12,6 +12,9 @@ const orderSchema = new mongoose.Schema(
       type: Object,
       required: true,
     },
+    payment_intent: {
+      type: String,
+    },
     items: [
       {
         products: [

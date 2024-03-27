@@ -8,13 +8,13 @@ const Security = () => {
 
   return (
     <div className="w-full max-w-[1000px] h-fit border-[2px] rounded-md overflow-hidden shadow-md">
-      <table className="w-full">
+      <table className="w-full bg-white">
         <tbody className="w-full">
           {Object.keys(securityInfo).map((item) => {
             return (
               <tr
                 key={item}
-                className="flex border-b-[1px] p-10 w-full max-sm:flex-col max-sm:px-0"
+                className="flex rounded-lg border-b-[1px] p-10 w-full max-sm:flex-col max-sm:px-0"
               >
                 <th className="flex w-[20%] max-sm:w-full max-sm:justify-center">
                   {item}:

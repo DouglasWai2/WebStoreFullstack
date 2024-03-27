@@ -8,13 +8,14 @@ const { decryptData } = require("../utils/encryption");
 const { calculateOrderAmount } = require("../helpers/calculateOrderAmount");
 const { default: mongoose } = require("mongoose");
 const stripe = Stripe(process.env.STRIPE_KEY);
+const endpointSecret = process.env.STRIPE_WHSEC;
 
 const STRIPE_URL = "https://api.stripe.com";
 
 exports.validateOrder = async (req, res, next) => {
   const { order } = req.body;
 
-  if (!order.items.length) return res.status(400).send("Invalid order");
+  if (!order?.items.length) return res.status(400).send("Invalid order");
 
   try {
     // check if address exist
@@ -81,7 +82,6 @@ exports.validateOrder = async (req, res, next) => {
 
 exports.createOrder = async (req, res) => {
   const order = req.order;
-  console.log(order.address);
 
   try {
     await orderSchema.deleteMany({ user: req.userInfo.id });
@@ -98,9 +98,14 @@ exports.createOrder = async (req, res) => {
     });
     const user = await userSchema.findByIdAndUpdate(
       req.userInfo.id,
+
       { $push: { orders: orderCreated._id } },
+      
+      // TODO: remove items from cart
       { new: true }
     );
+
+
 
     for (let i = 0; i < order.items.length; i++) {
       await storeSchema.updateOne(
@@ -137,22 +142,6 @@ exports.createPaymentIntent = async (req, res) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: parseInt(amount.replace(".", "")),
       currency: "brl",
-      // line_items: [
-      //   order.items.map((item, i) =>
-      //     item.products.map((product) => ({
-      //       price_data: {
-      //         currency: "brl",
-      //         product_data: {
-      //           name: product.product.title,
-      //         },
-      //         unit_amount: parseInt(
-      //           product.currentPrice.toFixed(2).replace(".", "")
-      //         ),
-      //       },
-      //       quantity: product.quantity,
-      //     }))
-      //   ),
-      // ],
       metadata: {
         order_id: order.id,
       },
@@ -168,8 +157,6 @@ exports.createPaymentIntent = async (req, res) => {
       },
       receipt_email: order.user.email,
     });
-
-    console.log(paymentIntent);
 
     return res.status(200).send({
       client_secret: paymentIntent.client_secret,
@@ -202,73 +189,12 @@ exports.retrieveOrder = async (req, res) => {
   }
 };
 
-exports.handleWebhook = async (req, res) => {
-  const sig = req.headers['stripe-signature'];
+exports.paymentIntents = async (req, res) => {
+  const { payment_intent } = req.params;
 
-  let event;
+  const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
 
-  try {
-    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-  } catch (err) {
-    res.status(400).send(`Webhook Error: ${err.message}`);
-    return;
-  }
-
-  // Return a 200 response to acknowledge receipt of the event
-  response.send();
-
-  // Handle the event
-  switch (event.type) {
-    case 'payment_intent.amount_capturable_updated':
-      const paymentIntentAmountCapturableUpdated = event.data.object;
-      // Then define and call a function to handle the event payment_intent.amount_capturable_updated
-      break;
-    case 'payment_intent.canceled':
-      const paymentIntentCanceled = event.data.object;
-      // Then define and call a function to handle the event payment_intent.canceled
-      break;
-    case 'payment_intent.created':
-      const paymentIntentCreated = event.data.object;
-      // Then define and call a function to handle the event payment_intent.created
-      break;
-    case 'payment_intent.partially_funded':
-      const paymentIntentPartiallyFunded = event.data.object;
-      // Then define and call a function to handle the event payment_intent.partially_funded
-      break;
-    case 'payment_intent.payment_failed':
-      const paymentIntentPaymentFailed = event.data.object;
-      // Then define and call a function to handle the event payment_intent.payment_failed
-      break;
-    case 'payment_intent.processing':
-      const paymentIntentProcessing = event.data.object;
-      // Then define and call a function to handle the event payment_intent.processing
-      break;
-    case 'payment_intent.requires_action':
-      const paymentIntentRequiresAction = event.data.object;
-      // Then define and call a function to handle the event payment_intent.requires_action
-      break;
-    case 'payment_intent.succeeded':
-      const paymentIntentSucceeded = event.data.object;
-        try {
-          const payment = await stripe.paymentIntents.retrieve(paymentIntentSucceeded);
-          const { order_id } = payment.metadata;
-          const order = await orderSchema
-            .findByIdAndUpdate(
-              order_id,
-              { status: "PAYMENT_APPROVED" },
-              { new: true }
-            )
-
-            console.log(order)
-
-        } catch (error) {
-          console.log(error);
-        }
-      break;
-    // ... handle other event types
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
-
-
+  return res.redirect(
+    "/api/v1/order/retrieve/" + paymentIntent.metadata.order_id
+  );
 };

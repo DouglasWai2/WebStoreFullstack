@@ -259,7 +259,7 @@ exports.cart = async (req, res) => {
         {
           $pull: {
             cart: {
-              product: productId,
+              product: { $in: [...productId] },
             },
           },
         }
@@ -272,3 +272,10 @@ exports.cart = async (req, res) => {
     return res.status(400).send(error);
   }
 };
+
+exports.orders = async (req, res) => {
+  const { id } = req.userInfo;
+  const orders = await OrderSchema.find({ user: id });
+  console.log(orders);
+  return res.status(200).send(orders);
+}

@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom";
 import Logo from "../../assets/logo-no-background-2.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleCheck } from "@fortawesome/free-solid-svg-icons";
 import { useFetchApi } from "../../hooks/useFetchApi";

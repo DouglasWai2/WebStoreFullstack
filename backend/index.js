@@ -17,17 +17,16 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.use(
   cors({
     credentials: true,
-    origin: [`${process.env.ORIGIN}`,`https://sandbox.melhorenvio.com.br`],
+    origin: [`${process.env.ORIGIN}`, `https://sandbox.melhorenvio.com.br`],
   })
 );
-
 app.use(cookieParser());
+app.use('/api/v1/webhook', express.raw({type: 'application/json'}), require('./routes/webhook'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get("/api/v1", (req, res) => {
   console.log("user hit the server");

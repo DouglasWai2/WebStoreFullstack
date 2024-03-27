@@ -116,7 +116,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        removeFromCart(product._id);
+                        removeFromCart([product._id]);
                         setCartItems(
                           JSON.parse(window.localStorage.getItem("cart"))
                         );

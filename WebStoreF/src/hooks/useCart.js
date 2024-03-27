@@ -20,8 +20,6 @@ export const useCart = (loggedIn) => {
         action: "sync",
       });
 
-
-    return { data, loading, error };
   }
 
   useEffect(() => {
@@ -35,11 +33,11 @@ export const useCart = (loggedIn) => {
 
   function addToCart(product) {
     var quantity = 1;
-    var cart = JSON.parse(localStorage.getItem("cart"));
-    if (!cart) {
-      localStorage.setItem("cart", JSON.stringify([]));
-      return addToCart(product);
-    }
+    var cart = localStorage.getItem("cart") || "[]";
+
+    var parsedCart = JSON.parse(cart)
+
+    console.log(parsedCart)
 
     const newProduct = {
       product: {
@@ -53,16 +51,15 @@ export const useCart = (loggedIn) => {
     };
 
     if (
-      cart.find((item, index) => {
+      parsedCart.find((item, index) => {
         if (item?.product._id === product._id) {
-          quantity = cart[index].quantity + quantity;
-          cart[index].quantity = quantity;
+          parsedCart[index].quantity = parsedCart[index].quantity + quantity;
           return true;
         }
         return false;
       })
     ) {
-      localStorage.setItem("cart", JSON.stringify(cart));
+      localStorage.setItem("cart", JSON.stringify(parsedCart));
 
       if (loggedIn)
         setBody({
@@ -74,21 +71,20 @@ export const useCart = (loggedIn) => {
       return window.dispatchEvent(new Event("storage"));
     }
 
-    cart.push(newProduct);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    if (loggedIn)
-    setBody({ productId: product._id, quantity: quantity, action: "add" });
+    parsedCart.push(newProduct);
+    localStorage.setItem("cart", JSON.stringify(parsedCart));
+    if (loggedIn) setBody({ productId: product._id, quantity: quantity, action: "add" });
     return window.dispatchEvent(new Event("storage"));
   }
 
   function removeFromCart(_id) {
     let cart = JSON.parse(window.localStorage.getItem("cart"));
 
-    const newCart = cart.filter((item) => item?.product._id !== _id);
+    const newCart = cart.filter(item => ![..._id].includes(item.product._id));
 
     localStorage.setItem("cart", JSON.stringify(newCart));
 
-    if (loggedIn) setBody({ productId: _id, action: "remove" });
+    if (loggedIn) setBody({ productId: [..._id], action: "remove" });
     window.dispatchEvent(new Event("storage"));
   }
 

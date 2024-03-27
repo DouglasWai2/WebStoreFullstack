@@ -10,7 +10,7 @@ const {
   likeStore,
   getUsersInterests,
   cart,
-  createOrder
+  orders
 } = require("../controllers/user.controller");
 require("dotenv").config();
 
@@ -22,5 +22,6 @@ router.post("/user/address", auth, saveAddress);
 router.get("/user/address/set/:address_id", auth, updateMainAddress);
 router.get("/user/address/delete/:address_id", auth, deleteAddress);
 router.post("/user/cart", auth, cart)
+router.get("/user/orders", auth, orders)
 
 module.exports = router;

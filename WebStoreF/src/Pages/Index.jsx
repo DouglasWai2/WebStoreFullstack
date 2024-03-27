@@ -115,7 +115,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
       )}
       {loading && <TopBarProgress />}
       <Navbar {...props} />
-      <main className={"w-full h-full"}>
+      <main className={"w-full h-full bg-[#f5f5f5]"}>
         {toggleCart && (
           <CartSideMenu
             cartRef={cartRef}
@@ -130,7 +130,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
         ) : (
           <>
             <div className="w-full flex flex-col items-center gap-8">
-              <div className="max-w-[1440px] h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]">
+              <div className="max-w-[1440px] h-[40vh] max-sm:w-full max-sm:h-[30vh]">
                 {fetchingImages ? (
                   <div className="w-full h-full flex justify-center items-center">
                     <LoadingSpinner size="w-12 h-12" />
@@ -140,7 +140,6 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                     axis="horizontal"
                     autoPlay={true}
                     infiniteLoop={true}
-                    // showIndicators={false}
                     showThumbs={false}
                     showArrows={false}
                   >
@@ -149,7 +148,8 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                           return (
                             <div
                               key={item}
-                              className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
+                              className="relative w-full pickgradient h-[40vh] 
+                              max-sm:w-full max-sm:h-[30vh]"
                             >
                               <img
                                 alt="banner image from store"

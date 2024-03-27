@@ -1,6 +1,6 @@
 const SkeletonData = () => {
   return (
-    <div className="w-full overflow-hidden animate-pulse">
+    <div className="w-full overflow-hidden animate-pulse bg-white">
       <div className="w-full">
         <div className="w-full">
           <div className="flex border-b-[1px] p-12 w-full">

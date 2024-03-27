@@ -61,13 +61,18 @@ const MyStore = () => {
 
   useEffect(() => {
     if (logoResponse || bannerResponse) {
-      refresh()
+      refresh();
       setEdit(false);
     }
   }, [logoResponse, bannerResponse]);
 
   useEffect(() => {
-    if (user && user.role !== "Seller" && location.pathname === "/store/my-store") navigate("/store");
+    if (
+      user &&
+      user.role !== "Seller" &&
+      location.pathname === "/store/my-store"
+    )
+      navigate("/store");
   }, [user]);
 
   const handleStoreScroll = useCallback(() => {
@@ -94,7 +99,8 @@ const MyStore = () => {
   }, [handleStoreScroll]);
 
   useEffect(() => {
-    if(location.pathname !== "/store/my-store/address") setUrl(`${location.pathname}`);
+    if (location.pathname !== "/store/my-store/address")
+      setUrl(`${location.pathname}`);
   }, [location]);
 
   //send edit info to backend
@@ -129,74 +135,75 @@ const MyStore = () => {
               </div>
             </div>
           )}
-          <div className="flex justify-center -mt-6">
-            <div className="w-full flex flex-col">
-              <div className="flex relative justify-between px-6 shadow bg-white max-sm:flex-col max-sm:py-3">
-                <div className="flex max-sm:flex-col">
-                  <Logo
-                    edit={edit}
-                    image={data?.storeImage}
-                    refresh={refresh}
-                    setImageEdit={setImageEdit}
-                    imageEdit={imageEdit}
-                    className={
-                      "h-[150px] mt-[-75px] flex top-[-50%] items-center justify-center w-[150px] overflow-hidden rounded-full border-white border-4"
-                    }
-                  />
-                  <div>
-                    <p className="text-4xl max-sm:text-lg">{data?.storeName}</p>
-                    <div className="flex gap-3 ml-4 mt-1">
-                      <ShareButton
-                        storeName={data?.storeName}
-                        storeId={data?._id}
-                      />
-                      <LikeButton
-                        numLikes={data?.likes}
-                        storeId={data?._id}
-                        user={user?.saved_stores}
-                      />
-                    </div>
+          <div className="flex justify-center -mt-10">
+            <div
+              className="w-full flex flex-col relative py-10 pb-32 justify-between px-6 
+              bg-white pickgradient max-sm:flex-col max-sm:pb-44"
+            >
+              <div className="flex max-sm:flex-col">
+                <Logo
+                  edit={edit}
+                  image={data?.storeImage}
+                  refresh={refresh}
+                  setImageEdit={setImageEdit}
+                  imageEdit={imageEdit}
+                  className="h-[150px] mt-[-100px] flex top-[-50%] 
+                      items-center justify-center w-[150px] overflow-hidden rounded-full
+                       border-white border-4"
+                />
+                <div>
+                  <p className="text-4xl max-sm:text-lg">{data?.storeName}</p>
+                  <div className="flex gap-3 ml-4 mt-1">
+                    <ShareButton
+                      storeName={data?.storeName}
+                      storeId={data?._id}
+                    />
+                    <LikeButton
+                      numLikes={data?.likes}
+                      storeId={data?._id}
+                      user={user?.saved_stores}
+                    />
                   </div>
                 </div>
-                <div className="flex gap-1 flex-col items-end py-2">
-                  {edit ? (
-                    <>
-                      <button
-                        className="bg-blue-600 border-2 border-blue-600 
+              </div>
+              <div className="flex gap-1 flex-col items-end py-2">
+                {edit ? (
+                  <>
+                    <button
+                      className="bg-blue-600 border-2 border-blue-600 
                         !text-lg text-white px-6 rounded h-fit hover:bg-white 
                         hover:text-blue-600 duration-200 max-sm:w-full"
-                        onClick={handleSubmit}
-                      >
-                        Salvar
-                      </button>
-                      <button
-                        className="bg-red-600 text-white text-sm px-1 
+                      onClick={handleSubmit}
+                    >
+                      Salvar
+                    </button>
+                    <button
+                      className="bg-red-600 text-white text-sm px-1 
                         rounded h-fit w-full hover:brightness-75 
                         duration-300"
-                        onClick={() => {
-                          setEdit(false);
-                          setBannerEdit(null);
-                          setImageEdit(null);
-                        }}
-                      >
-                        Cancelar
-                      </button>
-                    </>
-                  ) : (
-                    user &&
-                    location.pathname === "/store/my-store" && (
-                      <p
-                        className="link h-fit mt-3 w-fit"
-                        onClick={() => setEdit(true)}
-                      >
-                        <FontAwesomeIcon icon={faPenToSquare} />
-                        Editar
-                      </p>
-                    )
-                  )}
-                </div>
+                      onClick={() => {
+                        setEdit(false);
+                        setBannerEdit(null);
+                        setImageEdit(null);
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  </>
+                ) : (
+                  user &&
+                  location.pathname === "/store/my-store" && (
+                    <p
+                      className="link h-fit mt-3 w-fit"
+                      onClick={() => setEdit(true)}
+                    >
+                      <FontAwesomeIcon icon={faPenToSquare} />
+                      Editar
+                    </p>
+                  )
+                )}
               </div>
-              <div className="text-justify bg-white z-10 px-10">
+              <div className="text-justify bg-white z-10 px-10 max-sm:px-0">
                 <p className="text-gray-600">Descrição</p>
                 <p>{data?.storeDescription}</p>
                 {data && data?.storeAddress ? (
@@ -217,7 +224,7 @@ const MyStore = () => {
               </div>
             </div>
           </div>
-          <div className="mt-[100px] px-6 max-sm:px-2 max-sm:flex max-sm:flex-col max-sm:gap-7">
+          <div className="mt-[100px] flex flex-col gap-8 px-6 max-sm:px-2 max-sm:gap-7">
             {data && data.products.length ? (
               <>
                 <ProductCategory
@@ -250,7 +257,7 @@ const MyStore = () => {
     </div>
   ) : (
     <div className="w-full h-[70vh] py-28 flex justify-center items-center">
-      <Outlet context={{refresh, refreshUser} } />
+      <Outlet context={{ refresh, refreshUser }} />
     </div>
   );
 };
