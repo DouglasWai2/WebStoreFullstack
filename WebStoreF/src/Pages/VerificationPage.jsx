@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFetchApi } from "../hooks/useFetchApi";
 import { useLocation, useSearchParams } from "react-router-dom";
-import LoadingSpinner from "../components/shared/LoadingSpinner";
+import LoadingSpinner from "../components/shared/UI/LoadingSpinner";
 import Logo from "../assets/logo-no-background-2.svg";
 const VerificationPage = () => {
   const location = useLocation();
