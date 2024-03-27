@@ -11,6 +11,7 @@ const ProductsCarousel = ({
   topSelling,
   isMobile,
   setToggleCart,
+  loggedIn,
 }) => {
   const [productsUrl, setProductsUrl] = useState(null);
   const [phrase, setPhrase] = useState(null);
@@ -95,6 +96,7 @@ const ProductsCarousel = ({
                 return (
                   <ProductCard
                     setToggleCart={setToggleCart}
+                    loggedIn={loggedIn}
                     className={"!text-sm"}
                     key={index}
                     item={item}

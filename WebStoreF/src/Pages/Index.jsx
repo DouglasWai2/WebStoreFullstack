@@ -198,11 +198,12 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                   </Carousel>
                 )}
               </div>
-              <ProductsCarousel setToggleCart={setToggleCart} toggleCart={toggleCart} isMobile={isMobile} topSelling />
+              <ProductsCarousel loggedIn={loggedIn} setToggleCart={setToggleCart} toggleCart={toggleCart} isMobile={isMobile} topSelling />
               {categories && (
                 <>
                   {categories.map((item) => (
                     <ProductsCarousel
+                      loggedIn={loggedIn}
                       isMobile={isMobile}
                       key={item}
                       toggleCart={toggleCart}

@@ -3,8 +3,8 @@ import { useCart } from "../../../hooks/useCart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 
-const AddToCartButton = ({ product, setToggleCart, hidden }) => {
-  const { addToCart } = useCart();
+const AddToCartButton = ({ product, setToggleCart, hidden, loggedIn }) => {
+  const { addToCart } = useCart(loggedIn);
 
   return (
     <button

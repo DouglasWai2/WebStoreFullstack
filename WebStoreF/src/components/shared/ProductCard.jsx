@@ -4,7 +4,7 @@ import { moneyMask } from "../../helpers/moneyMask";
 import { useNavigate } from "react-router-dom";
 import AddToCartButton from "./UI/AddToCartButton";
 
-const ProductCard = ({ item, className, setToggleCart }) => {
+const ProductCard = ({ item, className, setToggleCart, loggedIn }) => {
   const navigate = useNavigate();
 
   return (
@@ -65,7 +65,7 @@ const ProductCard = ({ item, className, setToggleCart }) => {
           </div>
         </div>
       </div>
-      <AddToCartButton hidden setToggleCart={setToggleCart} product={item} />
+      <AddToCartButton loggedIn={loggedIn} hidden setToggleCart={setToggleCart} product={item} />
     </article>
   );
 };
