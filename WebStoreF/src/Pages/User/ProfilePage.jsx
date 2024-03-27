@@ -3,7 +3,7 @@ import SkeletonData from "../../components/User/PersonalData/SkeletonPersonalDat
 import TableData from "../../components/User/PersonalData/TableData";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
-import SubmitButton from "../../components/shared/SubmitButton";
+import SubmitButton from "../../components/shared/UI/SubmitButton";
 import { formatPhoneNumber } from "../../helpers/formatPhoneNumber";
 import { CPFMask } from "../../helpers/CPFMask";
 

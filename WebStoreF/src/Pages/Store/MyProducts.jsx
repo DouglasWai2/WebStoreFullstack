@@ -10,7 +10,7 @@ import {
 import ConfirmDelete from "../../components/Store/MyProducts/ConfirmDelete";
 import Filters from "../../components/Store/MyProducts/Filters";
 import DiscountBox from "../../components/Store/MyProducts/DiscountBox";
-import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import LoadingSpinner from "../../components/shared/UI/LoadingSpinner";
 import { Link } from "react-router-dom";
 
 const MyProducts = () => {

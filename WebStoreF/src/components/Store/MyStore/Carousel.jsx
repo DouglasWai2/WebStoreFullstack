@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import LoadingSpinner from "../../shared/LoadingSpinner";
+import LoadingSpinner from "../../shared/UI/LoadingSpinner";
 import { useFetchApi } from "../../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";

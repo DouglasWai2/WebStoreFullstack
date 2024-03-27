@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "../../shared/ProductCard";
 import { useFetchApi } from "../../../hooks/useFetchApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAnglesDown } from "@fortawesome/free-solid-svg-icons";
@@ -30,7 +30,7 @@ const ProductCategory = ({ text, queries, storeId }) => {
         <h1 className="text-2xl mt-[-15px] bg-[#f5f5f5] w-fit mx-2 px-2 max-sm:text-lg max-sm:text-center">
           {text}
         </h1>
-        <div className="py-5 px-3 flex flex-wrap gap-6 max-sm:justify-center max-sm:px-0 max-sm:gap-0">
+        <div className="py-5 px-3 flex flex-wrap gap-6 max-sm:px-0 max-sm:gap-0">
           {products &&
             products.map((item, index) => {
               if (index >= limit) return;

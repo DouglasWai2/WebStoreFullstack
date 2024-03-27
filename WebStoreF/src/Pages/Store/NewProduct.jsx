@@ -10,8 +10,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ProductPreview from "../../components/Store/ProductPreview";
 import { moneyMask } from "../../helpers/moneyMask";
-import SubmitButton from "../../components/shared/SubmitButton";
-import ErrorCard from "../../components/shared/ErrorCard";
+import SubmitButton from "../../components/shared/UI/SubmitButton";
+import ErrorCard from "../../components/shared/UI/ErrorCard";
 import FeaturesInput from "../../components/Store/NewProduct/FeaturesInput";
 import FormInput from "../../components/Store/NewProduct/FormInput";
 

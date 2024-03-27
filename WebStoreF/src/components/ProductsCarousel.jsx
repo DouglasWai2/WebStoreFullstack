@@ -1,11 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFetchApi } from "../hooks/useFetchApi";
-import ProductCard from "./Store/MyStore/ProductCard";
+import ProductCard from "./shared/ProductCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const ProductsCarousel = ({ queries, category, topSelling, isMobile }) => {
+const ProductsCarousel = ({
+  queries,
+  category,
+  topSelling,
+  isMobile,
+  setToggleCart,
+}) => {
   const [productsUrl, setProductsUrl] = useState(null);
   const [phrase, setPhrase] = useState(null);
   const [scrollable, setScrollable] = useState(false);
@@ -81,12 +87,18 @@ const ProductsCarousel = ({ queries, category, topSelling, isMobile }) => {
 
           <div
             ref={scrollRef}
-            className="overflow-x-scroll py-5 px-4 w-full flex items-center gap-6 carousel-scroll"
+            className="overflow-x-scroll py-5 px-4 w-full flex 
+            items-center gap-6 max-sm:gap-1 carousel-scroll"
           >
             {products &&
               products?.products.map((item, index) => {
                 return (
-                  <ProductCard className={"!text-sm"} key={index} item={item} />
+                  <ProductCard
+                    setToggleCart={setToggleCart}
+                    className={"!text-sm"}
+                    key={index}
+                    item={item}
+                  />
                 );
               })}
             {products && products.countQuery > products.products.length && (

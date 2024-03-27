@@ -6,7 +6,7 @@ import {
   faArrowLeft,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import LoadingSpinner from "../shared/LoadingSpinner";
+import LoadingSpinner from "../shared/UI/LoadingSpinner";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SearchInput = () => {

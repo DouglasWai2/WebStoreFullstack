@@ -2,7 +2,7 @@ import { faCartShopping, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { moneyMask } from "../../helpers/moneyMask";
-import Delayed from "./Delayed";
+import Delayed from "../shared/Delayed";
 import { useNavigate } from "react-router-dom";
 import { useOutsideAlerter } from "../../hooks/useOutsideAlerter";
 import { useCart } from "../../hooks/useCart";

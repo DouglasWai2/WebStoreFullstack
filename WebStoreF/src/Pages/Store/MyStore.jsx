@@ -16,9 +16,9 @@ import CarouselStore from "../../components/Store/MyStore/Carousel";
 import CarouselPlaceholder1 from "../../assets/carouselplaceholder1.jpg";
 import CarouselPlaceholder2 from "../../assets/carouselplaceholder2.png";
 import CarouselPlaceholder3 from "../../assets/carouselplaceholder3.svg";
-import LikeButton from "../../components/shared/LikeButton";
+import LikeButton from "../../components/shared/UI/LikeButton";
 import Logo from "../../components/Store/MyStore/Logo";
-import ShareButton from "../../components/shared/ShareButton";
+import ShareButton from "../../components/shared/UI/ShareButton";
 
 const MyStore = () => {
   const navigate = useNavigate();
@@ -224,7 +224,7 @@ const MyStore = () => {
               </div>
             </div>
           </div>
-          <div className="mt-[100px] flex flex-col gap-8 px-6 max-sm:px-2 max-sm:gap-7">
+          <div className="mt-[100px] flex flex-col gap-8 px-6 max-sm:px-0 max-sm:gap-7">
             {data && data.products.length ? (
               <>
                 <ProductCategory

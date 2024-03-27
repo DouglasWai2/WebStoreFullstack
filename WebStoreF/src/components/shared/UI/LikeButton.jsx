@@ -1,8 +1,8 @@
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { useApi } from "../../hooks/useApi";
-import { useFetchApi } from "../../hooks/useFetchApi";
+import { useApi } from "../../../hooks/useApi";
+import { useFetchApi } from "../../../hooks/useFetchApi";
 import { redirect, useNavigate } from "react-router-dom";
 
 const LikeButton = ({ storeId, user, numLikes }) => {

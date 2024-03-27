@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useFetchApi } from "../../hooks/useFetchApi";
-import ProductCard from "../../components/Store/MyStore/ProductCard";
+import ProductCard from "../../components/shared/ProductCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";

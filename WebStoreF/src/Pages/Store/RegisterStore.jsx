@@ -4,7 +4,7 @@ import { useFetchApi } from "../../hooks/useFetchApi";
 import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import AddressForm from "../../components/shared/AddressForm";
-import SubmitButton from "../../components/shared/SubmitButton";
+import SubmitButton from "../../components/shared/UI/SubmitButton";
 
 const RegisterStore = () => {
   const [storeInfo, setStoreInfo] = useState({

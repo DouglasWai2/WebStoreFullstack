@@ -8,7 +8,7 @@ import {
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useRef, useState } from "react";
-import SkeletonNavAddress from "../shared/SkeletonNavAddress";
+import SkeletonNavAddress from "./SkeletonNavAddress";
 import NavCardMenu from "./NavCardMenu";
 import SearchInput from "./SearchInput";
 import SideMenuNav from "./SideMenuNav";

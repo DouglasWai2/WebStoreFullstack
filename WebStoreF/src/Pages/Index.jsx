@@ -6,14 +6,15 @@ import CartSideMenu from "../components/Cart/CartSideMenu";
 import ProductsCarousel from "../components/ProductsCarousel";
 import { useFetchApi } from "../hooks/useFetchApi";
 import { Carousel } from "react-responsive-carousel";
-import LoadingSpinner from "../components/shared/LoadingSpinner";
+import LoadingSpinner from "../components/shared/UI/LoadingSpinner";
 import Logo from "../components/Store/MyStore/Logo";
 import { isMobile } from "react-device-detect";
+import { useCart } from "../hooks/useCart";
 
 const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [toggleSideNav, setToggleSideNav] = useState(false);
-  const [toggleCart, setToggleCart] = useState(false);
+  const {toggleCart, setToggleCart } = useCart();
   const [productsIds, setProductsIds] = useState(null);
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
@@ -101,10 +102,10 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
 
   useEffect(() => {
     if (toggleCard || toggleSideNav || (isMobile && toggleCart)) {
-      document.body.style.overflow = "hidden";
+     document.body.style.overflow = "hidden";
     }
-    if (!toggleCard && !toggleSideNav || (isMobile && !toggleCart)) {
-      document.body.style.overflow = "auto";
+    if ((!toggleCard && !toggleSideNav) || (isMobile && !toggleCart)) {
+     document.body.style.overflow = "auto";
     }
   }, [toggleCard, toggleSideNav, toggleCart]);
 
@@ -148,7 +149,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                           return (
                             <div
                               key={item}
-                              className="relative w-full pickgradient h-[40vh] 
+                              className="relative w-full h-[40vh] 
                               max-sm:w-full max-sm:h-[30vh]"
                             >
                               <img
@@ -163,7 +164,8 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                           return (
                             <div
                               key={item}
-                              className="relative flex items-center h-[40vh] overflow-hidden max-sm:w-full max-sm:h-[30vh]"
+                              className="relative flex items-center h-[40vh] w-full
+                              overflow-hidden max-sm:w-full max-sm:h-[30vh]"
                             >
                               <img
                                 alt="banner image from store"
@@ -196,13 +198,15 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                   </Carousel>
                 )}
               </div>
-              <ProductsCarousel isMobile={isMobile} topSelling />
+              <ProductsCarousel setToggleCart={setToggleCart} toggleCart={toggleCart} isMobile={isMobile} topSelling />
               {categories && (
                 <>
                   {categories.map((item) => (
                     <ProductsCarousel
                       isMobile={isMobile}
                       key={item}
+                      toggleCart={toggleCart}
+                      setToggleCart={setToggleCart}
                       category={item}
                       {...item}
                     />

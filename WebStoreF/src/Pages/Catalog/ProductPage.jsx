@@ -7,8 +7,8 @@ import { Rating } from "react-simple-star-rating";
 import { useApi } from "../../hooks/useApi";
 import ProductPageSkeleton from "../../components/Catalog/ProductPageSkeleton";
 import Logo from "../../components/Store/MyStore/Logo";
-import LikeButton from "../../components/shared/LikeButton";
-import ShareButton from "../../components/shared/ShareButton";
+import LikeButton from "../../components/shared/UI/LikeButton";
+import ShareButton from "../../components/shared/UI/ShareButton";
 import {
   faAnglesDown,
   faAnglesUp,
@@ -16,13 +16,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCart } from "../../hooks/useCart";
+import AddToCartButton from "../../components/shared/UI/AddToCartButton";
 
 const ProductPage = () => {
   const api = useApi();
   const { productId } = useParams();
   const navigate = useNavigate();
   const { user, setToggleCart, loggedIn } = useOutletContext();
-  const { addToCart, loading: addToCartLoading, data } = useCart(loggedIn);
+  const { addToCart, data } = useCart(loggedIn);
   const [mainImage, setMainImage] = useState("");
   const [fullDescription, setFullDescription] = useState(null);
   const descriptionRef = useRef(null);
@@ -62,16 +63,6 @@ const ProductPage = () => {
     if (child_height > parent_height) {
       setFullDescription(false);
     }
-  }
-
-  function getPaymentIntent(productId) {
-    api
-      .get(import.meta.env.VITE_API_URL + "/payment_intents/" + productId)
-      .then((response) =>
-        navigate(
-          `/checkout/${product.title}/${product._id}/${response.data.client_secret}`
-        )
-      );
   }
 
   return loading ? (
@@ -189,15 +180,7 @@ const ProductPage = () => {
                 >
                   Comprar
                 </button>
-                <button
-                  onClick={() => {
-                    addToCart(product);
-                    setToggleCart(true);
-                  }}
-                  className="px-6 bg-[#ade6f1] text-center w-full h-[30px] rounded-md hover:brightness-95"
-                >
-                  <FontAwesomeIcon icon={faCartPlus} /> Adicionar ao carrinho
-                </button>
+                <AddToCartButton product={product} setToggleCart={setToggleCart}/>
               </div>
             </div>
           </section>

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useLogOut } from "../../hooks/useLogOut";
-import Delayed from "../Cart/Delayed";
+import Delayed from "../shared/Delayed";
 import close from "../../assets/closepane.png";
 import {
   faArrowRight,

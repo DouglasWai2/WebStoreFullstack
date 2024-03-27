@@ -8,6 +8,7 @@
     -webkit-appearance: none;
     margin: 0;
   }
+
 }
 
 html {
@@ -20,6 +21,16 @@ html {
 body{
   min-height: 100vh;
 }
+
+#root{
+  @apply min-h-screen flex flex-col
+}
+
+main{
+  @apply flex-auto
+}
+
+
 
 .hover-border {
   @apply border-[1px] border-transparent hover:border-white;
@@ -90,9 +101,6 @@ body{
 
 .address-form input {
   @apply p-2;
-}
-main {
-  @apply bg-white;
 }
 
 :focus {

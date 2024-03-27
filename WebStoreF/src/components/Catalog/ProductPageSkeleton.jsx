@@ -1,7 +1,7 @@
 import React from "react";
 import { Rating } from "react-simple-star-rating";
-import ShareButton from "../shared/ShareButton";
-import LikeButton from "../shared/LikeButton";
+import ShareButton from "../shared/UI/ShareButton";
+import LikeButton from "../shared/UI/LikeButton";
 import { faHeart, faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 

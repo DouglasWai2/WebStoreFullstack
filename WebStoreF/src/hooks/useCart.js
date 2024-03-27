@@ -4,6 +4,7 @@ import { useFetchApi } from "./useFetchApi";
 export const useCart = (loggedIn) => {
   const [body, setBody] = useState(null);
   const { data, loading, error } = useFetchApi("/user/cart", "POST", body);
+  const [toggleCart, setToggleCart] = useState(false);
 
   function syncCart() {
     var cart = JSON.parse(localStorage.getItem("cart"));
@@ -37,8 +38,6 @@ export const useCart = (loggedIn) => {
 
     var parsedCart = JSON.parse(cart)
 
-    console.log(parsedCart)
-
     const newProduct = {
       product: {
         _id: product._id,
@@ -68,12 +67,14 @@ export const useCart = (loggedIn) => {
           action: "update",
         });
 
+      setToggleCart(true);
       return window.dispatchEvent(new Event("storage"));
     }
 
     parsedCart.push(newProduct);
     localStorage.setItem("cart", JSON.stringify(parsedCart));
     if (loggedIn) setBody({ productId: product._id, quantity: quantity, action: "add" });
+    setToggleCart(true);
     return window.dispatchEvent(new Event("storage"));
   }
 
@@ -88,5 +89,5 @@ export const useCart = (loggedIn) => {
     window.dispatchEvent(new Event("storage"));
   }
 
-  return { addToCart, removeFromCart, syncCart, data, loading };
+  return { addToCart, removeFromCart, syncCart, data, loading, toggleCart, setToggleCart };
 };
