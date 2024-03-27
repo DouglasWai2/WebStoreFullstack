@@ -7,7 +7,7 @@ import { useFetchApi } from "../../hooks/useFetchApi";
 import CheckoutSection from "../../components/Checkout/CheckoutSection";
 import CheckoutProduct from "../../components/Checkout/CheckoutProduct";
 import CheckoutShipment from "../../components/Checkout/CheckoutShipment";
-import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import LoadingSpinner from "../../components/shared/UI/LoadingSpinner";
 
 const PostCheckout = () => {
   const [searchParams, setSearchParams] = useSearchParams();

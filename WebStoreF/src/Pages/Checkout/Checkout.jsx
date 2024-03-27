@@ -4,7 +4,7 @@ import CheckoutForm from "../../components/Checkout/CheckoutForm";
 import { useParams } from "react-router-dom";
 import { useFetchApi } from "../../hooks/useFetchApi";
 import { calculateOrderAmount } from "../../helpers/totalSum";
-import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import LoadingSpinner from "../../components/shared/UI/LoadingSpinner";
 import CheckoutSection from "../../components/Checkout/CheckoutSection";
 import CheckoutProduct from "../../components/Checkout/CheckoutProduct";
 import CheckoutShipment from "../../components/Checkout/CheckoutShipment";

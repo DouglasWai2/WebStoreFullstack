@@ -6,13 +6,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBan, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { calculateShipment, calculateSubTotal } from "../../helpers/totalSum";
 import SkeletonReviewCart from "../../components/Checkout/ReviewCart/SkeletonReviewCart";
-import LoadingSpinner from "../../components/shared/LoadingSpinner";
-import ErrorCard from "../../components/shared/ErrorCard";
+import LoadingSpinner from "../../components/shared/UI/LoadingSpinner";
+import ErrorCard from "../../components/shared/UI/ErrorCard";
+import WarningCard from "../../components/shared/UI/WarningCard";
 import CheckoutProduct from "../../components/Checkout/CheckoutProduct";
 import CheckoutSection from "../../components/Checkout/CheckoutSection";
 import CheckoutShipment from "../../components/Checkout/CheckoutShipment";
 import { CEPMask } from "../../helpers/CEPMask";
-import WarningCard from "../../components/shared/WarningCard";
 import { useCart } from "../../hooks/useCart";
 
 const ReviewCart = ({ user }) => {

@@ -1,5 +1,5 @@
 import { moneyMask } from "../../helpers/moneyMask";
-import LoadingSpinner from "../shared/LoadingSpinner";
+import LoadingSpinner from "../shared/UI/LoadingSpinner";
 
 const CheckoutShipment = ({ loading, currentShipment, shipment, index }) => {
   return (

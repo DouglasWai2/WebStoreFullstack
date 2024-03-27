@@ -6,7 +6,7 @@ import RegisterRegex from "../components/RegisterForm/RegisterRegex";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTriangleExclamation } from "@fortawesome/free-solid-svg-icons";
 import { useFetchApi } from "../hooks/useFetchApi";
-import SubmitButton from "../components/shared/SubmitButton";
+import SubmitButton from "../components/shared/UI/SubmitButton";
 
 const RegisterForm = () => {
   const navigate = useNavigate();

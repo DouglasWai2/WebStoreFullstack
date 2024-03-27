@@ -4,7 +4,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import LoadingSpinner from "../shared/LoadingSpinner";
+import LoadingSpinner from "../shared/UI/LoadingSpinner";
 import { moneyMask } from "../../helpers/moneyMask";
 
 export default function CheckoutForm({total}) {
