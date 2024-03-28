@@ -5,13 +5,14 @@ import Address from "./Pages/User/Address";
 import User from "./Pages/User/User";
 import Security from "./Pages/User/Security";
 import PaymentMethods from "./Pages/User/PaymentMethods";
-import YourPurchases from "./Pages/User/YourPurchases";
+import YourPurchases from "./Pages/User/YourOrders/YourPurchases";
 import AddressForm from "./components/shared/AddressForm";
 import Store from "./Pages/Store/Store";
 import RegisterStore from "./Pages/Store/RegisterStore";
 import MyStore from "./Pages/Store/MyStore";
 import NewProduct from "./Pages/Store/NewProduct";
 import MyProducts from "./Pages/Store/MyProducts";
+import OrderDetails from "./Pages/User/YourOrders/OrderDetails";
 
 const PrivateRoutes = (user, loggedIn, loading) => {
   if (!loggedIn || (loading === false && !user)) {
@@ -50,7 +51,9 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           { path: "security", element: <Security /> },
           { path: "new-address", element: <AddressForm url="/user/address" /> },
           { path: "payment-methods", element: <PaymentMethods /> },
-          { path: "your-orders", element: <YourPurchases /> },
+          { path: "your-orders", element: <YourPurchases />, children: [
+            {path: "order-details/:order_id", element: <OrderDetails />},
+          ] },
         ],
       },
     ];

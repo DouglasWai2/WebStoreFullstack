@@ -8,9 +8,6 @@ const { decryptData } = require("../utils/encryption");
 const { calculateOrderAmount } = require("../helpers/calculateOrderAmount");
 const { default: mongoose } = require("mongoose");
 const stripe = Stripe(process.env.STRIPE_KEY);
-const endpointSecret = process.env.STRIPE_WHSEC;
-
-const STRIPE_URL = "https://api.stripe.com";
 
 exports.validateOrder = async (req, res, next) => {
   const { order } = req.body;
@@ -84,13 +81,6 @@ exports.createOrder = async (req, res) => {
   const order = req.order;
 
   try {
-    await orderSchema.deleteMany({ user: req.userInfo.id });
-    await userSchema.updateOne(
-      { _id: req.userInfo.id },
-      { $set: { orders: [] } }
-    );
-    await storeSchema.updateMany({}, { $pull: { orders: order._id } });
-
     const orderCreated = await orderSchema.create({
       status: "PENDING_PAYMENT",
       user: req.userInfo.id,
@@ -100,12 +90,10 @@ exports.createOrder = async (req, res) => {
       req.userInfo.id,
 
       { $push: { orders: orderCreated._id } },
-      
+
       // TODO: remove items from cart
       { new: true }
     );
-
-
 
     for (let i = 0; i < order.items.length; i++) {
       await storeSchema.updateOne(
@@ -175,7 +163,7 @@ exports.retrieveOrder = async (req, res) => {
   try {
     const order = await orderSchema
       .findById(orderId)
-      .populate("items.store", "name")
+      .populate("items.store", "storeName")
       .populate("items.products.product", "title thumbnail")
       .populate("user", "_id");
 
@@ -191,10 +179,32 @@ exports.retrieveOrder = async (req, res) => {
 
 exports.paymentIntents = async (req, res) => {
   const { payment_intent } = req.params;
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
 
-  const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
+    return res.redirect(
+      "/api/v1/order/retrieve/" + paymentIntent.metadata.order_id
+    );
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error.message);
+  }
+};
+exports.getClientSecret = async (req, res) => {
+  const { payment_intent } = req.params;
 
-  return res.redirect(
-    "/api/v1/order/retrieve/" + paymentIntent.metadata.order_id
-  );
+  try {
+    const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent);
+    const order = await orderSchema
+      .findById(paymentIntent.metadata.order_id, "user")
+      .populate("user", "_id");
+
+    if (req.userInfo.id !== order.user.id)
+      return res.status(400).send("Unauthorized user");
+
+    return res.status(200).send({ client_secret: paymentIntent.client_secret });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error.message);
+  }
 };

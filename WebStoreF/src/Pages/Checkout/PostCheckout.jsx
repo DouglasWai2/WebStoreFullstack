@@ -87,7 +87,7 @@ const PostCheckout = () => {
           )}
         </div>
         <div>
-          <Link to="/user/orders" className="text-blue-600 hover:underline">
+          <Link to="/user/your-orders" className="text-blue-600 hover:underline">
             <p>Ir para meus pedidos</p>
           </Link>
         </div>

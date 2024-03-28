@@ -1,16 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import { moneyMask } from "../../../helpers/moneyMask";
 import { calculateOrderAmount } from "../../../helpers/totalSum";
+import { orderStatus } from "../../../helpers/OrderDictionary";
 
 const OrderCard = ({ order }) => {
-  const orderStatus = {
-    PENDING_PAYMENT: { text: "Pagamento pendente", color: "text-yellow-500" },
-    PAYMENT_APPROVED: { text: "Pagamento aprovado", color: "text-green-500" },
-    PAYMENT_PROCESSING: { text: "Processando pagamento", color: "" },
-    PAYMENT_REJECTED: { text: "Pagamento rejeitado", color: "text-red-500" },
-    SHIPPED: { text: "Enviado", color: "" },
-    DELIVERED: { text: "Entregue", color: "" },
-    CANCELLED: { text: "Cancelado", color: "" },
-  };
+  const navigate = useNavigate();
 
   let total = order.items.reduce((acc, item) => acc + item.products.length, 0);
 
@@ -18,8 +12,9 @@ const OrderCard = ({ order }) => {
 
   return (
     <div
-      className="w-full flex items-center 
-  justify-between shadow-md rounded max-sm:flex-col max-sm:gap-4 px-5 py-3"
+      onClick={() => navigate("/user/your-orders/order-details/" + order._id)}
+      className="w-full cursor-pointer flex items-center active:bg-gray-200 duration-500
+  justify-between shadow rounded max-sm:flex-col max-sm:gap-4 px-5 py-3"
     >
       <div className="">
         <div className="flex items-center mb-4 max-sm:flex-col">
@@ -41,7 +36,7 @@ const OrderCard = ({ order }) => {
                     >
                       <div className="w-full h-full absolute bg-white/70 z-10 flex items-center justify-center">
                         {" "}
-                        + {current - 3}
+                        + {total - 3}
                       </div>
                       <img
                         className="w-full h-full object-cover brightness-90"
@@ -69,29 +64,44 @@ const OrderCard = ({ order }) => {
               })
             )}
           </div>
-          <div className="line-clamp-4">
-            <p>Produtos: </p>
-            {order.items.map((item) =>
-              item.products.map((product) => (
-                <p className="text-ellipsis">
-                  {product.quantity} x {product.product.title}
-                </p>
-              ))
-            )}
+          <div>
+            <div className="h-[6rem] overflow-hidden">
+              <p>Produtos: </p>
+              {order.items.map((item) =>
+                item.products.map((product, i) => (
+                  <p key={i} className="line-clamp-1 font-medium">
+                    {product.quantity} x {product.product.title}
+                  </p>
+                ))
+              )}
+            </div>
+            {total > 3 && <p> + {total - 3} itens</p>}
           </div>
         </div>
-        <div>Data: {new Date(order.createdAt).toLocaleDateString()}</div>
-        <div>Pedido: {order._id}</div>
+        <p>
+          Data:{" "}
+          <span className="font-medium">
+            {new Date(order.createdAt).toLocaleDateString()}
+          </span>
+        </p>
+        <p>
+          Pedido: <span className="font-medium">{order._id}</span>
+        </p>
 
-        <div>Total: {moneyMask(calculateOrderAmount(order.items))}</div>
-        <div>
+        <p>
+          Total:{" "}
+          <span className="font-medium">
+            {moneyMask(calculateOrderAmount(order.items))}
+          </span>
+        </p>
+        <p>
           Status:{" "}
           <span className={orderStatus[order.status].color}>
             {orderStatus[order.status].text}
           </span>
-        </div>
+        </p>
       </div>
-      <div>Ver detalhes</div>
+      <div className="hover:underline">Ver detalhes</div>
     </div>
   );
 };

@@ -31,7 +31,7 @@ const ProductPreview = ({
   return (
     <article className="w-2/3 max-2xl:w-full max-2xl:max-w-[1440px]">
       <h1 className="font-bold px-2">Previsualização do produto:</h1>
-      <section id="product" className="shadow p-4 flex gap-10 max-lg:flex-col">
+      <section id="product" className="shadow bg-white p-4 flex gap-10 max-lg:flex-col">
         <div id="images-container" className="">
           <div className="w-[578px] !h-[433px] flex items-center justify-center object-contain max-md:w-full">
             {files.length ? (

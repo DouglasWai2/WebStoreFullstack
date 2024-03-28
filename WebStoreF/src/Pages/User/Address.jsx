@@ -10,8 +10,12 @@ const Address = () => {
   const { address, loading } = useOutletContext();
 
   return (
-    <div className="w-full flex gap-5 flex-wrap justify-center max-md:justify-center">
-      {(address && !loading) &&
+    <div
+      className="w-full shadow bg-white rounded-lg mx-6 py-4 flex gap-5 flex-wrap 
+    justify-center max-md:justify-center max-sm:-mx-6"
+    >
+      {address &&
+        !loading &&
         address.map((address) => {
           return <AddressCard key={address.nickname} address={address} />;
         })}

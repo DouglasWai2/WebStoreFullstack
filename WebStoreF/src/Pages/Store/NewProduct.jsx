@@ -259,7 +259,7 @@ const NewProduct = () => {
           <ErrorCard invalid={invalid} handleClick={() => setInvalid("")} />
         </div>
       )}
-      <form className="flex flex-col gap-3 shadow w-2/5 py-5 px-8 max-2xl:w-full max-2xl:max-w-[1440px] max-md:gap-6">
+      <form className="flex flex-col gap-3 shadow bg-white rounded w-2/5 py-5 px-8 max-2xl:w-full max-2xl:max-w-[1440px] max-md:gap-6">
         <FormInput
           props={{ id: "title" }}
           value={title}
