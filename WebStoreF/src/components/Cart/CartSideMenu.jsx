@@ -97,7 +97,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
                               {product.discount * 100}% OFF
                             </span>
                             <span className="strikethrough w-min h-min ml-2 text-gray-500 text-sm">
-                              {product.price}
+                              {moneyMask(product.price)}
                             </span>
                           </p>
                         )}

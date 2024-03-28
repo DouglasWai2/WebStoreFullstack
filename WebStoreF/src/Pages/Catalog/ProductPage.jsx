@@ -19,11 +19,9 @@ import { useCart } from "../../hooks/useCart";
 import AddToCartButton from "../../components/shared/UI/AddToCartButton";
 
 const ProductPage = () => {
-  const api = useApi();
   const { productId } = useParams();
   const navigate = useNavigate();
   const { user, setToggleCart, loggedIn } = useOutletContext();
-  const { addToCart, data } = useCart(loggedIn);
   const [mainImage, setMainImage] = useState("");
   const [fullDescription, setFullDescription] = useState(null);
   const descriptionRef = useRef(null);
@@ -169,9 +167,7 @@ const ProductPage = () => {
               </div>
               <div className="min-w-[200px] w-1/2 max-lg:w-full">
                 <button
-                  onClick={() => 
-                    navigate("/checkout/" + product._id)
-                  }
+                  onClick={() => navigate("/checkout/" + product._id)}
                   className="bg-[#188fa7] w-full px-2 py-2 h-[65px]
                                   rounded-md text-xl text-center text-white shadow
                                   hover:brightness-75 mb-2
@@ -180,7 +176,11 @@ const ProductPage = () => {
                 >
                   Comprar
                 </button>
-                <AddToCartButton product={product} setToggleCart={setToggleCart}/>
+                <AddToCartButton
+                  loggedIn={loggedIn}
+                  product={product}
+                  setToggleCart={setToggleCart}
+                />
               </div>
             </div>
           </section>
