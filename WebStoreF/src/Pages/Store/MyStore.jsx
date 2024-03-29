@@ -99,7 +99,10 @@ const MyStore = () => {
   }, [handleStoreScroll]);
 
   useEffect(() => {
-    if (location.pathname !== "/store/my-store/address")
+    if (
+      location.pathname !== "/store/my-store/address" &&
+      location.pathname !== "/store/my-store/orders"
+    )
       setUrl(`${location.pathname}`);
   }, [location]);
 
@@ -113,7 +116,7 @@ const MyStore = () => {
     }
   }
 
-  return location.pathname !== "/store/my-store/address" ? (
+  return location.pathname !== "/store/my-store/address" && location.pathname !== "/store/my-store/orders" ? (
     <div className="flex flex-col items-center">
       <>
         <CarouselStore
@@ -205,9 +208,9 @@ const MyStore = () => {
               </div>
               <div className="text-justify bg-white z-10 px-10 max-sm:px-0">
                 <p className="text-gray-600">Descrição</p>
-                <p>{data?.storeDescription}</p>
+                <p className="font-medium">{data?.storeDescription}</p>
                 {data && data?.storeAddress ? (
-                  <p className="">
+                  <p className="font-medium">
                     {data?.storeAddress.street} - {data?.storeAddress.number} -{" "}
                     {data?.storeAddress.city} / {data?.storeAddress.state}
                   </p>
@@ -256,9 +259,7 @@ const MyStore = () => {
       </>
     </div>
   ) : (
-    <div className="w-full h-[70vh] py-28 flex justify-center items-center">
       <Outlet context={{ refresh, refreshUser }} />
-    </div>
   );
 };
 

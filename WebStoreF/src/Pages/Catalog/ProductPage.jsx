@@ -99,7 +99,29 @@ const ProductPage = () => {
             <section className="max-w-[50%] max-lg:max-w-full w-max flex flex-col gap-3">
               <h1 className="text-3xl">{product.title}</h1>
               <div className="flex justify-between items-center">
-                <h3 className="text-xl">{moneyMask(product.price)}</h3>
+                <div className="text-xl h-fit flex">
+                  <p className="h-min relative flex flex-col">
+                    {product.discount > 0 && (
+                      <span className="strikethrough absolute top-0 text-sm w-fit">
+                        {moneyMask(product.price)}
+                      </span>
+                    )}
+                    <span>
+                      {moneyMask(
+                        (
+                          product.price -
+                          product.discount * product.price
+                        ).toFixed(2)
+                      )}
+                    </span>
+                  </p>
+                  {product.discount > 0 && (
+                    <p className="text-lg font-bold text-[#188fa7] text-nowrap justify-self-start">
+                      {" "}
+                      {product.discount * 100}% OFF
+                    </p>
+                  )}
+                </div>
                 <p className="text-gray-600">{product.sells} vendidos</p>
               </div>
               <div className="flex gap-2 items-center">

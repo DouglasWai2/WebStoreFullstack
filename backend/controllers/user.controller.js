@@ -275,7 +275,9 @@ exports.cart = async (req, res) => {
 
 exports.orders = async (req, res) => {
   const { id } = req.userInfo;
-  const orders = await OrderSchema.find({ user: id }).populate("items.products.product", "title thumbnail");
-  console.log(orders);
+  const orders = await OrderSchema.find({ user: id })
+    .populate("items.products.product", "title thumbnail")
+    .sort({ createdAt: -1 });
+
   return res.status(200).send(orders);
-}
+};

@@ -65,7 +65,7 @@ const ProductsCarousel = ({
   }
 
   return (
-    <div className="bg-white py-6 px-4 max-w-[1440px] w-full shadow rounded-md mt-6 max-sm:mx-2 max-sm:px-2">
+    <div className={"bg-white py-6 px-4 max-w-[1440px] w-full shadow rounded-md mt-10 max-sm:mx-2 max-sm:px-2 " + (topSelling && "!mt-0")}>
       <h1 className="text-2xl px-4">
         {!topSelling ? phrase + ` ` + category : "Mais vendidos hoje"}
       </h1>

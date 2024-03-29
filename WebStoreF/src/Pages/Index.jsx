@@ -130,7 +130,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
           </Suspense>
         ) : (
           <>
-            <div className="w-full flex flex-col items-center gap-8">
+            <div className="w-full flex flex-col items-center gap-0">
               <div className="max-w-[1440px] h-[40vh] max-sm:w-full max-sm:h-[30vh]">
                 {fetchingImages ? (
                   <div className="w-full h-full flex justify-center items-center">
@@ -198,7 +198,12 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
                   </Carousel>
                 )}
               </div>
-              <ProductsCarousel loggedIn={loggedIn} setToggleCart={setToggleCart} toggleCart={toggleCart} isMobile={isMobile} topSelling />
+              <ProductsCarousel 
+              loggedIn={loggedIn} 
+              setToggleCart={setToggleCart} 
+              toggleCart={toggleCart} 
+              isMobile={isMobile} 
+              topSelling />
               {categories && (
                 <>
                   {categories.map((item) => (

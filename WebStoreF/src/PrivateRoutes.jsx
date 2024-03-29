@@ -13,6 +13,7 @@ import MyStore from "./Pages/Store/MyStore";
 import NewProduct from "./Pages/Store/NewProduct";
 import MyProducts from "./Pages/Store/MyProducts";
 import OrderDetails from "./Pages/User/YourOrders/OrderDetails";
+import Orders from "./Pages/Store/Orders";
 
 const PrivateRoutes = (user, loggedIn, loading) => {
   if (!loggedIn || (loading === false && !user)) {
@@ -35,6 +36,10 @@ const PrivateRoutes = (user, loggedIn, loading) => {
                 path: "address",
                 element: <AddressForm url="/store/address" type="store" />,
               },
+              {
+                path: "orders",
+                element: <Orders />,
+              },
             ],
           },
           { path: "new-product", element: <NewProduct /> },
@@ -51,9 +56,13 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           { path: "security", element: <Security /> },
           { path: "new-address", element: <AddressForm url="/user/address" /> },
           { path: "payment-methods", element: <PaymentMethods /> },
-          { path: "your-orders", element: <YourPurchases />, children: [
-            {path: "order-details/:order_id", element: <OrderDetails />},
-          ] },
+          {
+            path: "your-orders",
+            element: <YourPurchases />,
+            children: [
+              { path: "order-details/:order_id", element: <OrderDetails /> },
+            ],
+          },
         ],
       },
     ];

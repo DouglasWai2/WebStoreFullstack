@@ -81,6 +81,12 @@ const SideMenuNav = ({ user, setToggleSideNav }) => {
                         icon={faBarcode}
                         text="Meus produtos"
                       />
+                      <NavBarItem
+                        onClick={() => setToggleSideNav(false)}
+                        to="/store/my-store/orders"
+                        icon={faBarcode}
+                        text="Pedidos"
+                      />
                     </>
                   ) : (
                     <NavBarItem

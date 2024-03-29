@@ -68,6 +68,16 @@ const NavCardMenu = ({ user, setToggleCard, wrapperRef }) => {
                         Meus produtos
                       </Link>
                     </div>
+                    <div>
+                      {" "}
+                      <Link
+                        onClick={() => setToggleCard(false)}
+                        to="/store/my-store/orders"
+                        className="text-sm text-blue-600 cursor-pointer hover:underline"
+                      >
+                        Pedidos
+                      </Link>
+                    </div>
                   </>
                 ) : (
                   <div>

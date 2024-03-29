@@ -140,7 +140,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
       </div>
       <Delayed>
         <div className="animate-appear">
-          {cartItems && cartItems.length && (
+          {cartItems?.length && (
             <>
               <p className="text-lg font-semibold mb-4">
                 Total: {moneyMask(Number(totalSum(cartItems)).toFixed(2))}
@@ -150,10 +150,10 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
                   navigate("/checkout/review-cart");
                 }}
                 className="bg-[#188fa7] w-full px-16 py-2 text-lg
-          rounded-md text-white shadow 
-          hover:brightness-75
-          active:shadow-none active:text-black
-          duration-100"
+                  rounded-md text-white shadow 
+                  hover:brightness-75
+                  active:shadow-none active:text-black
+                  duration-100"
               >
                 Finalizar compra
               </button>

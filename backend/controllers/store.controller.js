@@ -1,11 +1,13 @@
 const StoreSchema = require("../models/store.model");
 const UserSchema = require("../models/user.model");
 const productSchema = require("../models/product.model");
+const OrderSchema = require("../models/order.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
 const diacriticSensitiveRegex = require("../helpers/diacriticSensitiveRegex");
 const applyFilters = require("../helpers/applyFilters");
+const mongoose = require("mongoose");
 
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
@@ -302,3 +304,47 @@ exports.getCarouselImages = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.sendOrders = async (req, res) => {
+
+  try{
+    let orders  = await StoreSchema.aggregate([
+      {
+        $match: {
+          user: new mongoose.Types.ObjectId(req.userInfo.id)
+        }
+      },
+      {
+        $lookup: {
+          from: "Orders",
+          localField: "orders",
+          foreignField: "_id",
+          as: "orders"
+        }
+      },
+      {
+        $project: {
+          orders: {
+            items: {
+              cond: {
+                $eq: {
+                  "store.id": "$$this._id",
+                }
+              }
+            }
+          }
+        }
+      }
+    ])
+
+
+    console.log(orders[0].orders);
+
+
+
+
+  }catch(error){
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+}
