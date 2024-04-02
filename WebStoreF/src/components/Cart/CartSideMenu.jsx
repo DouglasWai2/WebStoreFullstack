@@ -68,7 +68,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
                   <div
                     onClick={() => {
                       navigate(
-                        "/catalog/" + item.title + "/" + item.product._id
+                        "/catalog/" + product.title.replace("/", "%2F") + "/" + item.product._id
                       );
                       setCart(false);
                     }}
