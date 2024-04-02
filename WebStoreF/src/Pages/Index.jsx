@@ -135,7 +135,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
               <div className="max-w-[1440px] h-[40vh] max-sm:w-full max-sm:h-[30vh]">
                 {fetchingImages ? (
                   <div className="w-full h-full flex justify-center items-center">
-                    <LoadingSpinner size="w-12 h-12" />
+                    <LoadingSpinner size="80px" />
                   </div>
                 ) : (
                   <Carousel

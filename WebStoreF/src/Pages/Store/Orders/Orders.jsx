@@ -8,7 +8,7 @@ const Orders = () => {
   const navigate = useNavigate();
 
   function onClick(url) {
-    navigate(url)
+    navigate(url);
   }
 
   return (
@@ -25,7 +25,10 @@ const Orders = () => {
           </tr>
         </thead>
         <tbody className="w-full">
-          {data && data.map((item, i) => <StoreOrder onClick={onClick} key={i} item={item} />)}
+          {data &&
+            data.map((item, i) => (
+              <StoreOrder onClick={onClick} key={i} item={item} />
+            ))}
         </tbody>
       </table>
       {loading && (
