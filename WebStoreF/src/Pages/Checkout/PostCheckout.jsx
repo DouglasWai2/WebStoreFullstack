@@ -35,11 +35,7 @@ const PostCheckout = () => {
             <p className="">Pagamento realizado com sucesso</p>
           </div>
         )}
-        {loading && !data && (
-          <div className="w-[100px] h-[100px]">
-            <LoadingSpinner />
-          </div>
-        )}
+        {loading && !data && <LoadingSpinner size="100px" />}
         {data && (
           <div className="h-full overflow-y-auto flex flex-col gap-3 px-6 max-md:py-4 max-md:px-0">
             {data.items.map(({ products, shipment }, i) => (
@@ -65,11 +61,7 @@ const PostCheckout = () => {
           </div>
         )}
         <div className="w-full flex justify-center items-center border border-gray-300 rounded-lg p-3">
-          {loading && !data && (
-            <div className="w-[50px] h-[50px]">
-              <LoadingSpinner />
-            </div>
-          )}
+          {loading && !data && <LoadingSpinner size="50px" />}
           {data && (
             <div>
               <p>
@@ -87,7 +79,10 @@ const PostCheckout = () => {
           )}
         </div>
         <div>
-          <Link to="/user/your-orders" className="text-blue-600 hover:underline">
+          <Link
+            to="/user/your-orders"
+            className="text-blue-600 hover:underline"
+          >
             <p>Ir para meus pedidos</p>
           </Link>
         </div>

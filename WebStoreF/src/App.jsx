@@ -76,10 +76,9 @@ function App() {
       ? { path: "*", element: <UnexpectedError /> }
       : {
           path: "/",
-          errorElement: <NotFoundError />,
           element: <Index {...props} />,
           children: [
-            ...PrivateRoutes(user, loggedIn, loading),
+            ...PrivateRoutes(user, loggedIn, loading, refreshUser),
             ...PublicRoutes(),
           ],
         },
@@ -123,7 +122,7 @@ function App() {
   ]);
 
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <RouterProvider router={router} />
     </Suspense>
   );

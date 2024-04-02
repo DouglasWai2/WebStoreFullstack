@@ -39,47 +39,54 @@ const OrderDetails = () => {
   return (
     <div className="w-full flex flex-col gap-3">
       <h1 className="text-2xl">Detalhes do pedido:</h1>
-      {loading && <LoadingSpinner size="50px" />}
+      {loading && <div className="flex justify-center"><LoadingSpinner size="50px" /></div>}
       {data && (
         <>
-          {data.items.map(({ products, shipment, store }, i) => (
-            <CheckoutSection color="bg-white" store={store.storeName} index={i}>
-              {products.map(({ product }, j) => (
-                <CheckoutProduct
-                  price={products[j].currentPrice}
-                  discount={products[j].currentDiscount}
-                  thumbnail={product.thumbnail}
-                  title={product.title}
-                  index={j}
-                  quantity={products[j].quantity}
-                />
-              ))}
-              <div className="text-justify font-bold flex justify-between mt-2">
-                <p>Subtotal </p>
-                <p>
-                  {moneyMask(
-                    calculateSubTotal(
-                      products.map((item) => {
-                        return {
-                          quantity: item.quantity,
-                          product: {
-                            price: item.currentPrice,
-                            discount: item.currentDiscount,
-                          },
-                        };
-                      })
-                    ).toFixed(2)
-                  )}
-                </p>
-              </div>
-              <CheckoutShipment
-                loading={loading}
-                currentShipment={shipment}
-                shipment={shipment}
+          {data.items.map(
+            ({ products, shipment, store, shipment_status }, i) => (
+              <CheckoutSection
+                color="bg-white"
+                status={shipment_status}
+                store={store.storeName}
                 index={i}
-              />
-            </CheckoutSection>
-          ))}
+              >
+                {products.map(({ product }, j) => (
+                  <CheckoutProduct
+                    price={products[j].currentPrice}
+                    discount={products[j].currentDiscount}
+                    thumbnail={product.thumbnail}
+                    title={product.title}
+                    index={j}
+                    quantity={products[j].quantity}
+                  />
+                ))}
+                <div className="text-justify font-bold flex justify-between mt-2">
+                  <p>Subtotal </p>
+                  <p>
+                    {moneyMask(
+                      calculateSubTotal(
+                        products.map((item) => {
+                          return {
+                            quantity: item.quantity,
+                            product: {
+                              price: item.currentPrice,
+                              discount: item.currentDiscount,
+                            },
+                          };
+                        })
+                      ).toFixed(2)
+                    )}
+                  </p>
+                </div>
+                <CheckoutShipment
+                  loading={loading}
+                  currentShipment={shipment}
+                  shipment={shipment}
+                  index={i}
+                />
+              </CheckoutSection>
+            )
+          )}
           <p>
             Data:{" "}
             <span className="font-medium">

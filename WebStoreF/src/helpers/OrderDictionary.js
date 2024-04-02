@@ -5,5 +5,6 @@ export const orderStatus = {
     PAYMENT_REJECTED: { text: "Pagamento rejeitado", color: "text-red-500" },
     SHIPPED: { text: "Enviado", color: "" },
     DELIVERED: { text: "Entregue", color: "" },
-    CANCELLED: { text: "Cancelado", color: "" },
+    CANCELLED: { text: "Cancelado", color: "text-red-500" },
+    PREPARING_SHIPMENT: { text: "Preparando para envio", color: "text-orange-500" },
 };

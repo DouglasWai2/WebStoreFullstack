@@ -99,10 +99,6 @@ const MyStore = () => {
   }, [handleStoreScroll]);
 
   useEffect(() => {
-    if (
-      location.pathname !== "/store/my-store/address" &&
-      location.pathname !== "/store/my-store/orders"
-    )
       setUrl(`${location.pathname}`);
   }, [location]);
 
@@ -116,8 +112,7 @@ const MyStore = () => {
     }
   }
 
-  return location.pathname !== "/store/my-store/address" && location.pathname !== "/store/my-store/orders" ? (
-    <div className="flex flex-col items-center">
+  return  <div className="flex flex-col items-center">
       <>
         <CarouselStore
           images={data?.storeBanner}
@@ -258,9 +253,6 @@ const MyStore = () => {
         </div>
       </>
     </div>
-  ) : (
-      <Outlet context={{ refresh, refreshUser }} />
-  );
 };
 
 export default MyStore;

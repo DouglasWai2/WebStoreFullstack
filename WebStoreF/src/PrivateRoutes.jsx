@@ -13,9 +13,10 @@ import MyStore from "./Pages/Store/MyStore";
 import NewProduct from "./Pages/Store/NewProduct";
 import MyProducts from "./Pages/Store/MyProducts";
 import OrderDetails from "./Pages/User/YourOrders/OrderDetails";
-import Orders from "./Pages/Store/Orders";
+import Orders from "./Pages/Store/Orders/Orders";
+import Details from "./Pages/Store/Orders/Details";
 
-const PrivateRoutes = (user, loggedIn, loading) => {
+const PrivateRoutes = (user, loggedIn, loading, refreshUser) => {
   if (!loggedIn || (loading === false && !user)) {
     return [
       { path: "/user/*", element: <Navigate to="/login" replace /> },
@@ -31,16 +32,18 @@ const PrivateRoutes = (user, loggedIn, loading) => {
           {
             path: "my-store",
             element: <MyStore />,
-            children: [
-              {
-                path: "address",
-                element: <AddressForm url="/store/address" type="store" />,
-              },
-              {
-                path: "orders",
-                element: <Orders />,
-              },
-            ],
+          },
+          {
+            path: "/store/my-store/orders",
+            element: <Orders />,
+          },
+          {
+            path: "/store/my-store/orders/:order_id",
+            element: <Details />,
+          },
+          {
+            path: "/store/my-store/address",
+            element: <AddressForm refreshUser={refreshUser} url="/store/address" type="store" />,
           },
           { path: "new-product", element: <NewProduct /> },
           { path: "my-products", element: <MyProducts /> },
@@ -60,7 +63,7 @@ const PrivateRoutes = (user, loggedIn, loading) => {
             path: "your-orders",
             element: <YourPurchases />,
             children: [
-              { path: "order-details/:order_id", element: <OrderDetails /> },
+              { path: ":order_id", element: <OrderDetails /> },
             ],
           },
         ],

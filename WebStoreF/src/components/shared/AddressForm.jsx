@@ -8,7 +8,7 @@ import { CEPMask } from "../../helpers/CEPMask";
 import { CPFMask } from "../../helpers/CPFMask";
 import SubmitButton from "./UI/SubmitButton";
 
-const AddressForm = ({ url, type }) => {
+const AddressForm = ({ url, type, refreshUser }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [body, setBody] = useState(null);
@@ -48,7 +48,7 @@ const AddressForm = ({ url, type }) => {
     refresh: retry,
   } = useFetchApi(url, "POST", body);
 
-  const { refreshUser, refresh } = useOutletContext();
+  const { refresh } = useOutletContext();
 
   useEffect(() => {
     if (data) {

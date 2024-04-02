@@ -81,6 +81,7 @@ exports.createOrder = async (req, res) => {
   const order = req.order;
 
   try {
+  
     const orderCreated = await orderSchema.create({
       status: "PENDING_PAYMENT",
       user: req.userInfo.id,
@@ -101,6 +102,12 @@ exports.createOrder = async (req, res) => {
         { $push: { orders: orderCreated._id } }
       );
     }
+
+    const lastOrder = await orderSchema.find({}, "order_number").sort({
+      order_number: -1,
+    }).limit(1);
+    orderCreated.order_number = lastOrder[0].order_number + 1 || 1;
+    await orderCreated.save()
 
     return res.redirect("/api/v1/order/payment_intents/" + orderCreated._id);
   } catch (error) {

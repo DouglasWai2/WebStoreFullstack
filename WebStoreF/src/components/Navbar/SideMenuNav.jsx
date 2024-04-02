@@ -11,6 +11,7 @@ import {
   faPlus,
   faPowerOff,
   faShop,
+  faTruckFast,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -84,7 +85,7 @@ const SideMenuNav = ({ user, setToggleSideNav }) => {
                       <NavBarItem
                         onClick={() => setToggleSideNav(false)}
                         to="/store/my-store/orders"
-                        icon={faBarcode}
+                        icon={faTruckFast}
                         text="Pedidos"
                       />
                     </>

@@ -15,6 +15,9 @@ const orderSchema = new mongoose.Schema(
     payment_intent: {
       type: String,
     },
+    order_number: {
+      type: Number,
+    },
     items: [
       {
         products: [
@@ -49,6 +52,9 @@ const orderSchema = new mongoose.Schema(
           type: Object,
           required: true,
         },
+        shipment_status: {
+          type: String,
+        }
       },
     ],
   },

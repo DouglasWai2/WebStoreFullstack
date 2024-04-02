@@ -101,6 +101,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
   };
 
   useEffect(() => {
+    console.log(isMobile)
     if (toggleCard || toggleSideNav || (isMobile && toggleCart)) {
      document.body.style.overflow = "hidden";
     }

@@ -5,10 +5,7 @@ const OrderSchema = require("../models/order.model");
 const { DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const client = require("../utils/s3.util");
 const { autoGenerateCategory } = require("../helpers/autoGenerateCategory");
-const diacriticSensitiveRegex = require("../helpers/diacriticSensitiveRegex");
 const applyFilters = require("../helpers/applyFilters");
-const mongoose = require("mongoose");
-
 exports.registerStore = async (req, res) => {
   const { storeName, storeDescription, storeCategory } = req.body;
 
@@ -60,10 +57,9 @@ exports.storeInfo = async (req, res) => {
 };
 
 exports.addStoreAddress = async (req, res) => {
-
   const { cep, street, number, neighborhood, city, state } = req.body.address;
 
-  if(!cep || !street || !number || !neighborhood || !city || !state){
+  if (!cep || !street || !number || !neighborhood || !city || !state) {
     return res.status(400).send("Missing address data");
   }
 
@@ -306,44 +302,75 @@ exports.getCarouselImages = async (req, res) => {
 };
 
 exports.sendOrders = async (req, res) => {
+  try {
+    const store = await StoreSchema.findOne({ user: req.userInfo.id }).select(
+      "_id"
+    );
 
-  try{
-    let orders  = await StoreSchema.aggregate([
+    const orders = await OrderSchema.find(
+      { "items.store": store._id },
       {
-        $match: {
-          user: new mongoose.Types.ObjectId(req.userInfo.id)
-        }
-      },
-      {
-        $lookup: {
-          from: "Orders",
-          localField: "orders",
-          foreignField: "_id",
-          as: "orders"
-        }
-      },
-      {
-        $project: {
-          orders: {
-            items: {
-              cond: {
-                $eq: {
-                  "store.id": "$$this._id",
-                }
-              }
-            }
-          }
-        }
+        items: { $elemMatch: { store: store.id } },
+        status: 1,
+        user: 1,
+        order_number: 1,
+        createdAt: 1,
       }
-    ])
+    )
+      .populate("items.products.product", "title")
+      .populate("user", "_id name email")
+      .sort({ createdAt: -1 });
 
+    return res.status(200).send(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+};
+exports.sendOrderDetails = async (req, res) => {
+  const { order_id } = req.params;
+  try {
+    const store = await StoreSchema.findOne({ user: req.userInfo.id }).select(
+      "_id"
+    );
 
-    console.log(orders[0].orders);
+    if(!store) return res.status(400).send("No store found");
 
+    const order = await OrderSchema.findById(order_id, {
+      items: { $elemMatch: { store: store.id } },
+      status: 1,
+      user: 1,
+      address: 1,
+      order_number: 1,
+      createdAt: 1,
+    })
+      .populate("items.products.product")
+      .populate("user", "-_id name lastName email");
 
+    return res.status(200).send(order);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+};
 
+exports.setOrderStatus = async (req, res) => {
+  const { order_id, action } = req.body;
 
-  }catch(error){
+  let status
+  if(action === "accept") status = "PREPARING_SHIPMENT"
+  if(action === "reject") status = "CANCELLED"
+
+  if(!status) return res.status(400).send("No action provided");
+
+  try {
+    const store = await StoreSchema.findOne({ user: req.userInfo.id }).select(
+      "_id"
+    )
+   const order = await OrderSchema.findOneAndUpdate({_id: order_id, "items.store": store._id}, {"items.$.shipment_status": status}, {new: true});
+   if(order)
+    return res.status(200).send("Order status updated");
+  } catch (error) {
     console.log(error);
     res.status(500).send("Internal server error");
   }

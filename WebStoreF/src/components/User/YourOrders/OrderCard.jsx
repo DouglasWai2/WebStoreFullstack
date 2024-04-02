@@ -12,7 +12,7 @@ const OrderCard = ({ order }) => {
 
   return (
     <div
-      onClick={() => navigate("/user/your-orders/order-details/" + order._id)}
+      onClick={() => navigate("/user/your-orders/" + order._id)}
       className="w-full cursor-pointer flex items-center active:bg-gray-200 duration-500
   justify-between shadow rounded max-sm:flex-col max-sm:gap-4 px-5 py-3"
     >

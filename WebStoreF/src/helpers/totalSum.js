@@ -24,7 +24,7 @@ export function calculateOrderAmount(items) {
               (acc2, product) =>
                 acc2 +
                 (product.currentPrice -
-                  product.currentPrice * product.currentDiscount) *
+                  (product.currentPrice * product.currentDiscount)) *
                   product.quantity,
               0
             )
