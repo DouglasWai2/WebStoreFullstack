@@ -140,7 +140,7 @@ const CartSideMenu = ({ setCart, cartRef, loggedIn }) => {
       </div>
       <Delayed>
         <div className="animate-appear">
-          {cartItems?.length && (
+          {!!cartItems?.length && (
             <>
               <p className="text-lg font-semibold mb-4">
                 Total: {moneyMask(Number(totalSum(cartItems)).toFixed(2))}

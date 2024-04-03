@@ -65,7 +65,6 @@ const PrivateRoutes = (user, loggedIn, loading, refreshUser) => {
           { path: "address", element: <Address /> },
           { path: "security", element: <Security /> },
           { path: "new-address", element: <AddressForm url="/user/address" /> },
-          { path: "payment-methods", element: <PaymentMethods /> },
           {
             path: "your-orders",
             element: <YourPurchases />,

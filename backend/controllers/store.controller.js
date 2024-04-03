@@ -176,7 +176,7 @@ exports.myProducts = async (req, res) => {
   try {
     var { products } = await StoreSchema.findOne({ user: userId }).populate({
       path: "products",
-      select: "title thumbnail brand price rating sells discount",
+      select: "title thumbnail brand price rating sells sellsToday discount",
       match,
       options,
     });

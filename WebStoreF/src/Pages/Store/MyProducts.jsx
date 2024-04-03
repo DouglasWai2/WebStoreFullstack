@@ -63,6 +63,11 @@ const MyProducts = () => {
     }
   }, [response, submiting]);
 
+  useEffect(() => {
+    if (confirm || discount) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "auto";
+  }, [confirm, discount]);
+
   return (
     <>
       {discount && (
@@ -76,10 +81,13 @@ const MyProducts = () => {
       {confirm && (
         <ConfirmDelete handleClick={deleteSelected} setConfirm={setConfirm} />
       )}
-      <div className="flex justify-center w-full h-full py-4">
-        <div className="flex flex-col items-center max-w-[1440px] w-full max-sm:overflow-x-scroll">
+      <div className="flex justify-center  py-4 ">
+        <div
+          className="flex flex-col bg-white shadow rounded-lg 
+        items-center max-w-[1440px] py-4 px-2 w-full max-sm:overflow-x-scroll"
+        >
           <h1 className="text-2xl">Meus produtos</h1>
-          <div className="border-2 border-gray-200 py-4 px-2 rounded-sm relative">
+          <div className="border-2 w-full border-gray-200 py-4 px-2 rounded-sm relative">
             <div className="w-full bg-gray-200">
               <div className="w-full bg-gray-300 flex items-center justify-between px-2 py-4">
                 <label

@@ -7,8 +7,8 @@ const DiscountBox = ({
   setDiscountValue,
 }) => {
   return (
-    <div className="fixed right-0 top-0 w-screen h-screen overflow-hidden bg-black/65 flex items-center justify-center z-20">
-      <div className="bg-white w-1/5 px-6 py-6 flex flex-col gap-6">
+    <div className="fixed right-0 top-0 w-screen h-screen overflow-hidden bg-black/65 flex items-center justify-center z-50">
+      <div className="bg-white max-w-[500px] w-full px-6 py-6 flex flex-col gap-6 rounded-lg shadow">
         <h3 className="text-xl">Valor do desconto</h3>
         <label htmlFor="discount">
           <input
@@ -27,7 +27,7 @@ const DiscountBox = ({
         <div className="flex justify-between">
           <button
             onClick={handleClick}
-            className="bg-green-500 text-white px-4 hover:brightness-90"
+            className="bg-green-500 text-white px-4 hover:brightness-90 rounded"
           >
             Confirmar
           </button>

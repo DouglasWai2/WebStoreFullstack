@@ -85,7 +85,7 @@ const OrderCard = ({ order }) => {
           </span>
         </p>
         <p>
-          Pedido: <span className="font-medium">{order._id}</span>
+          Pedido: <span className="font-medium">#{order.order_number}</span>
         </p>
 
         <p>

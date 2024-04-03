@@ -10,8 +10,10 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFetchApi } from "../../../hooks/useFetchApi";
 import ConfirmDelete from "./ConfirmDelete";
+import { useNavigate } from "react-router-dom";
 
 const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
+  const navigate = useNavigate();
   const [body, setBody] = useState(null);
   const [url, setUrl] = useState(null);
   const [confirm, setConfirm] = useState(false);
@@ -38,6 +40,10 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
     setBody({ productIDs: [item._id] });
     setUrl("/store/my-store/delete-products");
   }
+  useEffect(() => {
+    if (confirm) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "auto";
+  }, [confirm]);
 
   return (
     <>
@@ -49,22 +55,28 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
         />
       )}
       <div
-        className="shadow flex bg-white justify-between py-3 px-2 my-3 gap-2 
-      hover:brightness-80 duration-400 min-w-[400px]"
+        onClick={() =>
+          navigate(`/catalog/${item.title.replace(" ", "%2F")}/${item._id}`)
+        }
+        className="shadow flex w-full bg-white justify-between py-3 px-2 my-3 gap-2 
+      hover:brightness-80 duration-400 cursor-pointer"
       >
-        <div className="flex items-center">
+        <div className="flex items-center justify-between">
           <input
             id={"item_" + item._id}
             type="checkbox"
             checked={checked.includes(item._id)}
             value={item._id}
-            onClick={(e) => handleCheck(e.target.value)}
-            onChange={(e) => {}}
+            onClick={(e) => {
+              e.stopPropagation()
+              handleCheck(e.target.value)
+            }}
+            onChange={(e) => {e.stopPropagation()}}
           />
           <div className="h-[100px] aspect-[4/3] px-3 max-sm:h-[60px]">
             <img className="object-contain h-full" src={item.thumbnail} />
           </div>
-          <div className="max-w-[750px]">
+          <div className="w-full">
             <h1 className="w-full max-sm:text-sm">{item.title}</h1>
             <Rating
               size={25}
@@ -74,15 +86,18 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
               emptyColor="rgb(209 213 219)"
               fillColor="#facc15"
             />
+            <p>{item.sells} Vendidos</p>
+            <p>{item.sellsToday} Vendidos hoje</p>
           </div>
         </div>
         <div className="flex flex-col justify-between">
-          <div className="flex justify-end text-nowrap">
+          <div className="flex justify-end text-nowrap max-sm:flex-col max-sm:items-start">
             {discount && (
               <label htmlFor="discount" className="mr-4 max-sm:mr-1">
                 <input
                   value={discountValue}
                   onChange={(e) => {
+                    e.stopPropagation()
                     if (e.target.value > 100) return;
                     setDiscountValue(e.target.value);
                   }}
@@ -101,7 +116,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
             )}
             <div>
               {item.discount > 0 && (
-                <p className="strikethrough text-xs text-center">
+                <p className="strikethrough text-xs text-center w-fit">
                   {moneyMask(item.price)}
                 </p>
               )}
@@ -114,12 +129,13 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
               </p>
             </div>
           </div>
-          <div className="flex gap-4 justify-end">
+          <div className="flex gap-4 justify-end max-sm:flex-col max-sm:items-center">
             {discount ? (
               <>
                 <button
                   className="hover:underline"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setUrl("/store/my-store/discount-products");
                     setBody({
                       productIDs: [item._id],
@@ -132,7 +148,8 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                 </button>
                 <button
                   className="hover:underline text-red-600"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setDiscount(false);
                   }}
                 >
@@ -143,8 +160,10 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
             ) : (
               <>
                 <button
-                  className="hover:underline rounded-md p-1 text transition-colors duration-200 active:bg-green-300 active:text-green-600"
-                  onClick={() => {
+                  className="hover:underline rounded-md p-1 max-sm:text-wrap max-sm:w-min 
+                  transition-colors duration-200 active:bg-green-300 active:text-green-600"
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setDiscount(true);
                   }}
                 >
@@ -152,8 +171,10 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                   <span className="">Desconto</span>
                 </button>
                 <button
-                  className="hover:underline rounded-md text p-1 transition-colors duration-200 active:bg-red-300 active:text-red-600"
-                  onClick={() => {
+                  className="hover:underline rounded-md max-sm:text-wrap max-sm:w-min p-1 
+                  transition-colors duration-200 active:bg-red-300 active:text-red-600"
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setConfirm(true);
                   }}
                 >

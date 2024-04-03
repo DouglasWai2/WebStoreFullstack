@@ -15,7 +15,7 @@ const YourPurchases = () => {
         <>
           {" "}
           {loading && <LoadingSpinner size="50px" />}
-          {data && data.map((order) => <OrderCard order={order} />)}{" "}
+          {data && data.map((order, i) => <OrderCard order={order} key={i}/>)}{" "}
         </>
       ) : <Outlet />}
     </div>

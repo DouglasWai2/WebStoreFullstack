@@ -23,7 +23,7 @@ const Filters = ({ categories, setUrl, url, title }) => {
   }
 
   return (
-    <div className="py-10 px-6 flex">
+    <div className="py-10 px-6 flex max-sm:flex-col max-sm:gap-4">
       <div className="flex flex-col gap-10 w-1/2">
         <div>
           <p className="text-lg">Data</p>
@@ -126,7 +126,7 @@ const Filters = ({ categories, setUrl, url, title }) => {
           </select>
         </div>
       </div>
-      <div className="flex flex-col justify-between w-1/2">
+      <div className="flex flex-col justify-between w-1/2 max-sm:flex-row max-sm:w-full">
         <div>
           <input id="has-discount" type="checkbox" />
           <label htmlFor="has-discount">Tem disconto</label>
