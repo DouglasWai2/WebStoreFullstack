@@ -237,7 +237,6 @@ const NewProduct = () => {
   useEffect(() => {
     if (error) {
       setInvalid(error.data._message + ". Preencha os campos corretamente");
-      console.log(error)
       Object.keys(error.data.errors).forEach((item) => {
         const element = document.getElementById(item);
         if (element) {

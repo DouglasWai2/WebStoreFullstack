@@ -90,9 +90,13 @@ const SearchInput = () => {
               navigate(
                 `/catalog/products/search/result?search=${search}&sortBy=sells&order=-1`
               );
+              setShowResult(false);
             }
           }}
-          className={"w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200 " + (searchFull && "w-[60px]")}
+          className={
+            "w-[40px] h-full bg-orange-300 hover:bg-orange-400 transition-colors duration-200 " +
+            (searchFull && "w-[60px]")
+          }
         >
           <FontAwesomeIcon
             icon={faMagnifyingGlass}

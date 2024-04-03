@@ -88,8 +88,7 @@ const RegisterStore = () => {
 
   return (
     <div className="flex justify-center items-center h-full py-10">
-      
-      <div className="flex flex-col shadow gap-8 px-5 py-9 w-[500px]">
+      <div className="flex flex-col shadow gap-8 px-5 py-9 w-[500px] bg-white rounded-lg">
         <h1 className="text-3xl">Cadastre sua loja</h1>
         <form className="flex flex-col gap-3">
           <div className="relative mx-4 my-2 z-0">
@@ -102,10 +101,7 @@ const RegisterStore = () => {
               id="storeName"
               placeholder=""
             />
-            <label
-              className="floating-label"
-              htmlFor="storeName"
-            >
+            <label className="floating-label" htmlFor="storeName">
               Nome da loja
             </label>
           </div>
@@ -123,10 +119,7 @@ const RegisterStore = () => {
               placeholder=""
               className="floating-input-effect peer !transition-[filter] w-full min-h-[200px] max-h-[500px]"
             />
-            <label
-              className="floating-label"
-              htmlFor="storeDescription"
-            >
+            <label className="floating-label" htmlFor="storeDescription">
               Descrição
             </label>
           </div>
@@ -175,7 +168,7 @@ const RegisterStore = () => {
               />
             </label>
           </div>
-        
+
           <div className="mx-4 my-2 z-0 flex flex-col">
             <label
               className="w-full left-2 !z-10 text-sm text-gray-500"
@@ -215,10 +208,14 @@ const RegisterStore = () => {
             </div>
           </div>
           <div className="px-4">
-             <SubmitButton loading={loading} text="Criar loja" onClick={(e) => {
+            <SubmitButton
+              loading={loading}
+              text="Criar loja"
+              onClick={(e) => {
                 e.preventDefault();
                 setBody(storeInfo);
-              }} />
+              }}
+            />
           </div>
         </form>
       </div>

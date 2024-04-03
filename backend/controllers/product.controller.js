@@ -20,19 +20,6 @@ exports.addProduct = async (req, res) => {
     dimensions,
   } = req.body;
 
-  if (
-    !title ||
-    !description ||
-    !brand ||
-    !model ||
-    !tags ||
-    !genre ||
-    !price ||
-    !dimensions
-  ) {
-    return res.status(400).send("Missing fields");
-  }
-
   const newProduct = new productSchema({
     title,
     description,

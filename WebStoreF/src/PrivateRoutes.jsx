@@ -43,7 +43,14 @@ const PrivateRoutes = (user, loggedIn, loading, refreshUser) => {
           },
           {
             path: "/store/my-store/address",
-            element: <AddressForm refreshUser={refreshUser} url="/store/address" type="store" />,
+            element: (
+              <div className="w-full h-full flex items-center justify-center">
+                <AddressForm
+                  url="/store/address"
+                  type="store"
+                />
+              </div>
+            ),
           },
           { path: "new-product", element: <NewProduct /> },
           { path: "my-products", element: <MyProducts /> },
@@ -62,9 +69,7 @@ const PrivateRoutes = (user, loggedIn, loading, refreshUser) => {
           {
             path: "your-orders",
             element: <YourPurchases />,
-            children: [
-              { path: ":order_id", element: <OrderDetails /> },
-            ],
+            children: [{ path: ":order_id", element: <OrderDetails /> }],
           },
         ],
       },

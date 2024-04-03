@@ -3,11 +3,12 @@ import { useCart } from "../../../hooks/useCart";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartPlus } from "@fortawesome/free-solid-svg-icons";
 
-const AddToCartButton = ({ product, setToggleCart, hidden, loggedIn }) => {
+const AddToCartButton = ({ product, setToggleCart, hidden, loggedIn, disabled }) => {
   const { addToCart } = useCart(loggedIn);
 
   return (
     <button
+    disabled={disabled}
       onClick={(e) => {
         e.stopPropagation();
         addToCart(product);

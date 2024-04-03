@@ -43,11 +43,13 @@ const OrderDetails = () => {
       {data && (
         <>
           {data.items.map(
-            ({ products, shipment, store, shipment_status }, i) => (
+            ({ products, shipment, store, shipment_status, shipment_track_code, shipment_date }, i) => (
               <CheckoutSection
                 color="bg-white"
                 status={shipment_status}
                 store={store.storeName}
+                tracking_code={shipment_track_code}
+                shipment_date={shipment_date}
                 index={i}
               >
                 {products.map(({ product }, j) => (

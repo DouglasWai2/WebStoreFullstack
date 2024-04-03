@@ -13,7 +13,6 @@ const SearchResult = () => {
   const [pageCount, setPageCount] = useState([]);
   const { data, loading, error } = useFetchApi(url, "GET");
 
-
   useEffect(() => {
     setUrl(location.pathname + location.search + `&page=${page}`);
   }, [location, page]);
@@ -31,17 +30,20 @@ const SearchResult = () => {
   }, [data]);
 
   return (
-    <div className="flex flex-col gap-4 items-center w-full px-2">
+    <div className="flex flex-col items-center gap-4 w-full px-2 max-sm:px-0">
       <h1 className="text-left w-full max-w-[1440px]">
         Total de resultados: {data?.countQuery}
       </h1>
-      <div className="max-w-[1440px] flex flex-wrap gap-3 w-full">
+      <div
+        className="max-w-[1440px] bg-white rounded-lg shadow p-3 w-full
+      flex flex-wrap gap-3 max-sm:gap-0 max-sm:px-0"
+      >
         {loading ? (
           <SearchResultSkeleton />
         ) : (
           data &&
           data?.products.map((product) => (
-            <ProductCard item={product} className="w-1/4" key={product._id} />
+            <ProductCard item={product} key={product._id} />
           ))
         )}
       </div>

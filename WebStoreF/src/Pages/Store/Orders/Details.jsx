@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 
 const Details = () => {
   const [body, setBody] = useState(null);
+  const [url, setUrl] = useState(null);
   const { order_id } = useParams();
 
   const {
     data: status,
-    loading: loadingStatus,
+    loading: submitting,
     error: errorStatus,
-  } = useFetchApi("/store/my-store/order/status", "POST", body);
+  } = useFetchApi(url, "POST", body);
 
   const { data, loading, error, refresh } = useFetchApi(
     `/store/my-store/orders/${order_id}`,
@@ -177,6 +178,7 @@ const Details = () => {
               <div className="flex flex-col gap-1">
                 <button
                   onClick={() => {
+                    setUrl("/store/my-store/order/status");
                     setBody({
                       order_id: data._id,
                       action: "accept",
@@ -184,7 +186,7 @@ const Details = () => {
                   }}
                   className="bg-blue-600 flex justify-center text-white hover:brightness-95 rounded px-3 py-1"
                 >
-                  {loadingStatus ? (
+                  {submitting || loading ? (
                     <LoadingSpinner size="30px" color="white" />
                   ) : (
                     'Aceitar pedido e marcar como "Processando para envio"'
@@ -199,7 +201,7 @@ const Details = () => {
                   }}
                   className="bg-red-600 flex justify-center text-white hover:brightness-95 rounded px-3 py-1"
                 >
-                  {loadingStatus ? (
+                  {submitting ? (
                     <LoadingSpinner size="24px" color="white" />
                   ) : (
                     "Recusar pedido"
@@ -207,6 +209,44 @@ const Details = () => {
                 </button>
               </div>
             )}
+          {data.items[0].shipment_status === "PREPARING_SHIPMENT" && (
+            <>
+              <label
+                className="text-lg flex gap-2 max-sm:flex-col"
+                htmlFor="shipment-code"
+              >
+                <p>Digite aqui o código de rastreio:</p>
+                <input
+                  className="px-1 mx-2 border-b flex-shrink-0"
+                  id="shipment-code"
+                  type="text"
+                  placeholder="PC123456789BR"
+                />
+                <button
+                  onClick={() => {
+                    setUrl("/store/my-store/order/shipment-tracking-code");
+                    setBody({
+                      tracking_code:
+                        document.getElementById("shipment-code").value,
+                      order_id: data._id,
+                    });
+                  }}
+                  className="w-full flex items-center justify-center mx-2 p-1 px-3 rounded bg-blue-600 text-white hover:brightness-95"
+                >
+                  {submitting || loading ? (
+                    <LoadingSpinner size="24px" color="white" />
+                  ) : (
+                    "Definir código de rastreio e marcar como 'Enviado'"
+                  )}
+                </button>
+              </label>
+            </>
+          )}
+          {data.items[0].shipment_track_code && (
+            <p className="text-lg">
+              Código de rastreio: {data.items[0].shipment_track_code}
+            </p>
+          )}
         </div>
       )}
     </div>

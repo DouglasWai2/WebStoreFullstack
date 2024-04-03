@@ -54,6 +54,12 @@ const orderSchema = new mongoose.Schema(
         },
         shipment_status: {
           type: String,
+        },
+        shipment_track_code: {
+          type: String,
+        },
+        shipment_date: {
+          type: Date,
         }
       },
     ],

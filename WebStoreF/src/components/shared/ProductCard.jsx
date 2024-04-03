@@ -4,17 +4,16 @@ import { moneyMask } from "../../helpers/moneyMask";
 import { useNavigate } from "react-router-dom";
 import AddToCartButton from "./UI/AddToCartButton";
 
-const ProductCard = ({ item, className, setToggleCart, loggedIn }) => {
+const ProductCard = ({ item, setToggleCart, loggedIn }) => {
   const navigate = useNavigate();
 
   return (
     <article
       id="product-card"
-      className="max-w-[250px] flex flex-col 
+      className="max-w-[250px] flex flex-col flex-[50%]
       justify-between py-5 bg-white px-5 shadow-md 
       max-sm:shadow-sm
-      cursor-pointer duration-200 max-sm:!w-[179px] max-sm:px-2 flex-shrink-0 "
-      
+      cursor-pointer duration-200 max-sm:max-w-full max-sm:px-2 flex-shrink-0 "
       onClick={() => {
         navigate("/catalog/" + item.title.replace("/", "%2F") + "/" + item._id);
       }}
@@ -65,7 +64,12 @@ const ProductCard = ({ item, className, setToggleCart, loggedIn }) => {
           </div>
         </div>
       </div>
-      <AddToCartButton loggedIn={loggedIn} hidden setToggleCart={setToggleCart} product={item} />
+      <AddToCartButton
+        loggedIn={loggedIn}
+        hidden
+        setToggleCart={setToggleCart}
+        product={item}
+      />
     </article>
   );
 };

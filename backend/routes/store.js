@@ -13,6 +13,7 @@ const {
   sendOrders,
   sendOrderDetails,
   setOrderStatus,
+  setTrackingCode,
 } = require("../controllers/store.controller");
 const auth = require("../middlewares/verifyToken");
 const router = express.Router();
@@ -23,6 +24,7 @@ router.get("/store/my-products", auth, myProducts);
 router.get("/store/my-store/orders", auth, sendOrders);
 router.get("/store/my-store/orders/:order_id", auth, sendOrderDetails);
 router.post("/store/my-store/order/status", auth, setOrderStatus);
+router.post("/store/my-store/order/shipment-tracking-code", auth, setTrackingCode);
 router.get("/store/:storename/:storeid", storeInfo);
 router.post("/store/register-store", auth, upload.single("storeImage"), registerStore);
 router.post("/store/address", auth, addStoreAddress);

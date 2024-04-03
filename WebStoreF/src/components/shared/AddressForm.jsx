@@ -54,15 +54,19 @@ const AddressForm = ({ url, type, refreshUser }) => {
     if (data) {
       if (data === "Address saved successfully") {
         refreshUser();
+        setTimeout(() => {
+          navigate(-1, { replace: true });
+        }, 1000);
       }
 
       if (data === "Store Address updated") {
         refresh();
+        setTimeout(() => {
+          navigate('/store', { replace: true });
+        }, 1000);
       }
       setSuccess("Endereço adicionado com sucesso. Redirecionando...");
-      setTimeout(() => {
-        navigate(-1, { replace: true });
-      }, 1000);
+     
     }
 
     if (badRequest) {

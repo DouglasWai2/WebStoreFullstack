@@ -6,6 +6,8 @@ const CheckoutSection = ({
   store,
   color = "bg-[#fcfcfc]",
   status,
+  tracking_code,
+  shipment_date,
 }) => {
   return (
     <div
@@ -15,15 +17,29 @@ const CheckoutSection = ({
       }
       key={index}
     >
-      {store && <div>Vendido por: {store}</div>}
-      {status && (
-        <div>
-          Status:{" "}
-          <span className={orderStatus[status].color}>
-            {orderStatus[status].text}
-          </span>
-        </div>
-      )}
+      <div className="flex flex-col gap-4">
+        {store && <div>Vendido por: {store}</div>}
+        {status && (
+          <div>
+            Status:{" "}
+            <span className={orderStatus[status].color}>
+              {orderStatus[status].text}
+            </span>
+            {status === "SHIPPED" && (
+              <span className="ml-4">
+                Data: {new Date(shipment_date).toLocaleDateString()}
+              </span>
+            )}
+          </div>
+        )}
+        {tracking_code && (
+          <div className="text-lg font-medium">
+            <span className="mr-4">
+              Código de rastreamento: {tracking_code}
+            </span>
+          </div>
+        )}
+      </div>
       {children}
     </div>
   );

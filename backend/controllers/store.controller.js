@@ -334,7 +334,7 @@ exports.sendOrderDetails = async (req, res) => {
       "_id"
     );
 
-    if(!store) return res.status(400).send("No store found");
+    if (!store) return res.status(400).send("No store found");
 
     const order = await OrderSchema.findById(order_id, {
       items: { $elemMatch: { store: store.id } },
@@ -357,21 +357,48 @@ exports.sendOrderDetails = async (req, res) => {
 exports.setOrderStatus = async (req, res) => {
   const { order_id, action } = req.body;
 
-  let status
-  if(action === "accept") status = "PREPARING_SHIPMENT"
-  if(action === "reject") status = "CANCELLED"
+  let status;
+  if (action === "accept") status = "PREPARING_SHIPMENT";
+  if (action === "reject") status = "CANCELLED";
 
-  if(!status) return res.status(400).send("No action provided");
+  if (!status) return res.status(400).send("No action provided");
 
   try {
     const store = await StoreSchema.findOne({ user: req.userInfo.id }).select(
       "_id"
-    )
-   const order = await OrderSchema.findOneAndUpdate({_id: order_id, "items.store": store._id}, {"items.$.shipment_status": status}, {new: true});
-   if(order)
-    return res.status(200).send("Order status updated");
+    );
+    const order = await OrderSchema.findOneAndUpdate(
+      { _id: order_id, "items.store": store._id },
+      { "items.$.shipment_status": status },
+      { new: true }
+    );
+    if (order) return res.status(200).send("Order status updated");
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal server error");
   }
-}
+};
+
+exports.setTrackingCode = async (req, res) => {
+  const { order_id, tracking_code } = req.body;
+
+  try {
+    const store = await StoreSchema.findOne({ user: req.userInfo.id }).select(
+      "_id"
+    );
+    const order = await OrderSchema.findOneAndUpdate(
+      { _id: order_id, "items.store": store._id },
+      {
+        "items.$.shipment_track_code": tracking_code,
+        "items.$.shipment_status": "SHIPPED",
+        "items.$.shipment_date": new Date(),
+      },
+      { new: true }
+    );
+
+    return res.status(200).send("Tracking code updated");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal server error");
+  }
+};
