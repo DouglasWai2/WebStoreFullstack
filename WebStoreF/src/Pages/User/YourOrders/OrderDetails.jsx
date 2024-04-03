@@ -96,7 +96,7 @@ const OrderDetails = () => {
             </span>
           </p>
           <p>
-            Pedido: <span className="font-medium">{data._id}</span>
+            Pedido: <span className="font-medium">#{data.order_number}</span>
           </p>
 
           <p>
