@@ -80,8 +80,7 @@ exports.handleWebhook = async (req, res) => {
           products.forEach(async (product) => {
             const { quantity } = product;
             await productSchema.findByIdAndUpdate(product.product, {
-              $inc: { sellsToday: quantity },
-              $inc: { sells: quantity },
+              $inc: { sellsToday: quantity, sells: quantity },
             });
           });
         });
