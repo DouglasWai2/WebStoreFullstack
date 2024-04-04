@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { resetSellsToday } = require("./controllers/product.controller");
+const orderSchema = require("./models/order.model");
 const schedule = require("node-schedule");
 const cookieParser = require("cookie-parser");
 const {
@@ -10,7 +12,6 @@ const {
   productsLimiter,
   storeLimiter,
 } = require("./middlewares/rateLimitMiddleware");
-const { resetSellsToday } = require("./controllers/product.controller");
 require("dotenv").config();
 
 mongoose
@@ -33,8 +34,6 @@ app.use(
 );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-const job = schedule.scheduleJob("00 00 * * *", resetSellsToday);
 
 app.get("/api/v1", (req, res) => {
   console.log("user hit the server");
@@ -60,3 +59,22 @@ app.listen(process.env.PORT, () => {
 });
 
 module.exports = app;
+
+
+// Schedules
+const job = schedule.scheduleJob("00 00 * * *", resetSellsToday);
+
+schedule.scheduleJob("0 */3 * * *", async () => {
+  try {
+    await orderSchema.updateMany(
+      {
+        status: "PENDING_PAYMENT",
+        createdAt: { $lt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) },
+      },
+      { status: "CANCELED" }
+    );
+    console.log("orders canceled");
+  } catch (error) {
+    console.log(error);
+  }
+});

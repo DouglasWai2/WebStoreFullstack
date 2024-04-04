@@ -69,10 +69,4 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-orderSchema.post('save', function() {
-  setTimeout(() => {
-    this.order_status = "CANCELED";
-  }, 60 * 1000);
-})
-
 module.exports = mongoose.model("Order", orderSchema, "Orders");

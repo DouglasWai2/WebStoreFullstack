@@ -1,8 +1,7 @@
-const crypto = require('crypto')
-
 const encryption_secret_key = process.env.ENCRYPTION_SECRET_KEY
 const encryption_secret_iv  = process.env.ENCRYPTION_SECRET_KEY
 const ecnryption_method  = process.env.ENCRYPTION_METHOD
+const crypto = require('crypto')
 
 if (!encryption_secret_key || !encryption_secret_iv || !ecnryption_method) {
   throw new Error('secretKey, secretIV, and ecnryptionMethod are required')
