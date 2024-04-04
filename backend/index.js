@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const schedule = require("node-schedule");
 const cookieParser = require("cookie-parser");
 const {
   defaultLimiter,
@@ -9,6 +10,7 @@ const {
   productsLimiter,
   storeLimiter,
 } = require("./middlewares/rateLimitMiddleware");
+const { resetSellsToday } = require("./controllers/product.controller");
 require("dotenv").config();
 
 mongoose
@@ -24,9 +26,15 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use('/api/v1/webhook', express.raw({type: 'application/json'}), require('./routes/webhook'));
+app.use(
+  "/api/v1/webhook",
+  express.raw({ type: "application/json" }),
+  require("./routes/webhook")
+);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+const job = schedule.scheduleJob("00 00 * * *", resetSellsToday);
 
 app.get("/api/v1", (req, res) => {
   console.log("user hit the server");

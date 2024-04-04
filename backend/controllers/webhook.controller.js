@@ -16,7 +16,6 @@ exports.handleWebhook = async (req, res) => {
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-
   } catch (err) {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -70,11 +69,22 @@ exports.handleWebhook = async (req, res) => {
       const paymentIntentSucceeded = event.data.object;
       try {
         const succeededOrderId = paymentIntentSucceeded.metadata.order_id;
-        await orderSchema.findByIdAndUpdate(
+        const { items } = await orderSchema.findByIdAndUpdate(
           succeededOrderId,
           { status: "PAYMENT_APPROVED" },
           { new: true }
         );
+
+        items.forEach(async (item) => {
+          const { products } = item;
+          products.forEach(async (product) => {
+            const { quantity } = product;
+            await productSchema.findByIdAndUpdate(product.product, {
+              $inc: { sellsToday: quantity },
+              $inc: { sells: quantity },
+            });
+          });
+        });
       } catch (error) {
         console.log(error);
       }

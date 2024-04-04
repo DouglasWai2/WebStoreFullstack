@@ -130,3 +130,16 @@ exports.mostSelledProducts = async (req, res) => {
     console.log(error);
   }
 };
+
+exports.resetSellsToday = async () => {
+  try {
+    const products = await productSchema.updateMany(
+      { sellsToday: { $gt: 0 } },
+      { $set: { sellsToday: 0 } }
+    );
+
+    console.log("Sells today reseted");
+  } catch (error) {
+    console.log(error);
+  }
+};
