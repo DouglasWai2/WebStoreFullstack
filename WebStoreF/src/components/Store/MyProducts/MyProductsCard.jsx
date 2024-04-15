@@ -9,8 +9,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useFetchApi } from "../../../hooks/useFetchApi";
-import ConfirmDelete from "./ConfirmDelete";
 import { useNavigate } from "react-router-dom";
+import ConfirmBox from "../../shared/UI/ConfirmBox";
 
 const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
   const navigate = useNavigate();
@@ -48,10 +48,12 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
   return (
     <>
       {confirm && (
-        <ConfirmDelete
+        <ConfirmBox
+          handleCancel={() => setConfirm(false)}
+          text={"Tem certeza que deseja excluir este(s) produto(s)?"}
+          buttonColor={"bg-red-500"}
+          buttonText={"Excluir"}
           loading={submiting}
-          handleClick={handleClick}
-          setConfirm={setConfirm}
         />
       )}
       <div
@@ -68,10 +70,12 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
             checked={checked.includes(item._id)}
             value={item._id}
             onClick={(e) => {
-              e.stopPropagation()
-              handleCheck(e.target.value)
+              e.stopPropagation();
+              handleCheck(e.target.value);
             }}
-            onChange={(e) => {e.stopPropagation()}}
+            onChange={(e) => {
+              e.stopPropagation();
+            }}
           />
           <div className="h-[100px] aspect-[4/3] px-3 max-sm:h-[60px]">
             <img className="object-contain h-full" src={item.thumbnail} />
@@ -97,7 +101,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                 <input
                   value={discountValue}
                   onChange={(e) => {
-                    e.stopPropagation()
+                    e.stopPropagation();
                     if (e.target.value > 100) return;
                     setDiscountValue(e.target.value);
                   }}
@@ -135,7 +139,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                 <button
                   className="hover:underline"
                   onClick={(e) => {
-                    e.stopPropagation()
+                    e.stopPropagation();
                     setUrl("/store/my-store/discount-products");
                     setBody({
                       productIDs: [item._id],
@@ -149,7 +153,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                 <button
                   className="hover:underline text-red-600"
                   onClick={(e) => {
-                    e.stopPropagation()
+                    e.stopPropagation();
                     setDiscount(false);
                   }}
                 >
@@ -163,7 +167,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                   className="hover:underline rounded-md p-1 max-sm:text-wrap max-sm:w-min 
                   transition-colors duration-200 active:bg-green-300 active:text-green-600"
                   onClick={(e) => {
-                    e.stopPropagation()
+                    e.stopPropagation();
                     setDiscount(true);
                   }}
                 >
@@ -174,7 +178,7 @@ const MyProductsCard = ({ item, checked, handleCheck, refresh }) => {
                   className="hover:underline rounded-md max-sm:text-wrap max-sm:w-min p-1 
                   transition-colors duration-200 active:bg-red-300 active:text-red-600"
                   onClick={(e) => {
-                    e.stopPropagation()
+                    e.stopPropagation();
                     setConfirm(true);
                   }}
                 >

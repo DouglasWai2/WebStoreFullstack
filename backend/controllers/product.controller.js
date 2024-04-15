@@ -102,6 +102,7 @@ exports.searchResult = async (req, res) => {
   const { page } = req.query || 1;
 
   try {
+
     const products = await productSchema
       .find(match)
       .sort(options.sort)

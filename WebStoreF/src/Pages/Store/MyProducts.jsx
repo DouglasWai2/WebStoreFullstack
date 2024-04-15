@@ -7,11 +7,10 @@ import {
   faChevronDown,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import ConfirmDelete from "../../components/Store/MyProducts/ConfirmDelete";
 import Filters from "../../components/Store/MyProducts/Filters";
-import DiscountBox from "../../components/Store/MyProducts/DiscountBox";
 import LoadingSpinner from "../../components/shared/UI/LoadingSpinner";
 import { Link } from "react-router-dom";
+import ConfirmBox from "../../components/shared/UI/ConfirmBox";
 
 const MyProducts = () => {
   const [filter, setFilter] = useState(false);
@@ -71,15 +70,28 @@ const MyProducts = () => {
   return (
     <>
       {discount && (
-        <DiscountBox
+        <ConfirmBox
           handleClick={discountSelected}
+          handleCancel={() => setDiscount(false)}
           setDiscount={setDiscount}
+          discount={true}
+          loading={submiting}
           discountValue={discountValue}
           setDiscountValue={setDiscountValue}
+          text={"Valor do desconto em porcentagem"}
+          buttonColor={"bg-green-500"}
+          buttonText={"Aplicar"}
         />
       )}
       {confirm && (
-        <ConfirmDelete handleClick={deleteSelected} setConfirm={setConfirm} />
+        <ConfirmBox
+          handleClick={deleteSelected}
+          handleCancel={() => setConfirm(false)}
+          text={"Tem certeza que deseja excluir este(s) produto(s)?"}
+          buttonColor={"bg-red-500"}
+          buttonText={"Excluir"}
+          loading={submiting}
+        />
       )}
       <div className="flex justify-center  py-4 ">
         <div

@@ -8,6 +8,7 @@ const CheckoutSection = ({
   status,
   tracking_code,
   shipment_date,
+  handleProductRecived
 }) => {
   return (
     <div
@@ -41,6 +42,14 @@ const CheckoutSection = ({
         )}
       </div>
       {children}
+      {tracking_code && (
+        <button
+          onClick={handleProductRecived}
+          className="bg-[#188fa7] mt-3 w-full px-2 py-2 rounded-md text-white hover:brightness-95"
+        >
+          Recebi o produto
+        </button>
+      )}
     </div>
   );
 };

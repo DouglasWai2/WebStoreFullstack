@@ -13,11 +13,13 @@ import CheckoutShipment from "../../../components/Checkout/CheckoutShipment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import ConfirmBox from "../../../components/shared/UI/ConfirmBox";
 
 const OrderDetails = () => {
   const { order_id } = useParams();
   const [url, setUrl] = useState(null);
   const navigate = useNavigate();
+  const [confirm, setConfirm] = useState(false);
 
   const { data, loading, error } = useFetchApi(
     `/order/retrieve/${order_id}`,
@@ -39,11 +41,33 @@ const OrderDetails = () => {
   return (
     <div className="w-full flex flex-col gap-3">
       <h1 className="text-2xl">Detalhes do pedido:</h1>
-      {loading && <div className="flex justify-center"><LoadingSpinner size="50px" /></div>}
+      {confirm && (
+        <ConfirmBox
+          handleCancel={() => setConfirm(false)}
+          text="Deseja marcar como recebido?"
+          buttonColor={"bg-green-500"}
+          buttonText={"Marcar como recebido"}
+        />
+      )}
+      {loading && (
+        <div className="flex justify-center">
+          <LoadingSpinner size="50px" />
+        </div>
+      )}
       {data && (
         <>
           {data.items.map(
-            ({ products, shipment, store, shipment_status, shipment_track_code, shipment_date }, i) => (
+            (
+              {
+                products,
+                shipment,
+                store,
+                shipment_status,
+                shipment_track_code,
+                shipment_date,
+              },
+              i
+            ) => (
               <CheckoutSection
                 color="bg-white"
                 status={shipment_status}
@@ -51,6 +75,7 @@ const OrderDetails = () => {
                 tracking_code={shipment_track_code}
                 shipment_date={shipment_date}
                 index={i}
+                handleProductRecived={() => setConfirm(true)}
               >
                 {products.map(({ product }, j) => (
                   <CheckoutProduct

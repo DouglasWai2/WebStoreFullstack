@@ -34,6 +34,7 @@ exports.storeInfo = async (req, res) => {
   const storeId = req.userInfo?.id || req.params.storeid;
 
   try {
+   
     let store = await StoreSchema.findOne(
       {
         $or: [
@@ -172,6 +173,7 @@ exports.changeImage = async (req, res) => {
 exports.myProducts = async (req, res) => {
   const userId = req.userInfo.id;
   const { match, options } = applyFilters(req.query);
+
 
   try {
     var { products } = await StoreSchema.findOne({ user: userId }).populate({
