@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { orderStatus } from "../../helpers/OrderDictionary";
 
 const CheckoutSection = ({
@@ -9,7 +10,9 @@ const CheckoutSection = ({
   tracking_code,
   shipment_date,
   handleProductRecived,
+  handleRateProducts
 }) => {
+  const navigate = useNavigate();
   return (
     <div
       className={
@@ -51,7 +54,7 @@ const CheckoutSection = ({
         </button>
       )}
       {status === "DELIVERED" && (
-        <a className="text-blue-600 hover:underline cursor-pointer text-xl">
+        <a onClick={handleRateProducts} className="text-blue-600 hover:underline cursor-pointer text-xl">
           Avaliar produto(s)
         </a>
       )}

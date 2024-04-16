@@ -97,6 +97,7 @@ const OrderDetails = () => {
                   setConfirm(true) 
                   setStoreId(store._id)
                 }}
+                handleRateProducts={() => navigate("/rating/" + store._id + "/" + order_id)}
               >
                 {products.map(({ product }, j) => (
                   <CheckoutProduct

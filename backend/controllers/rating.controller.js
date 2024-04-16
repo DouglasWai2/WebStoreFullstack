@@ -7,6 +7,9 @@ exports.rateProduct = (req, res) => {
     images,
     rating } = req.body;
 
+    console.log(req.body)
+    return
+
   const newRating = new RatingSchema({
     title,
     comment,
@@ -20,5 +23,8 @@ exports.rateProduct = (req, res) => {
     res.status(200).send("Comment posted");
   } catch (error) {
     console.log(error);
+    res.status(500).send("Error posting comment");
   }
 };
+
+

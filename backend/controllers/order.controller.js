@@ -222,7 +222,10 @@ exports.markAsDelivered = async (req, res) => {
   const { orderId, storeId } = req.body;
 
   try {
-    const order = await orderSchema.findById(orderId, "user items status").populate("user", "_id").populate("items.store", "_id");
+    const order = await orderSchema
+      .findById(orderId, "user items status")
+      .populate("user", "_id")
+      .populate("items.store", "_id");
     if (!order) return res.status(400).send("Order not found");
     if (order.status !== "PAYMENT_APPROVED")
       return res.status(400).send("Payment not approved");
@@ -236,10 +239,33 @@ exports.markAsDelivered = async (req, res) => {
         return res.status(200).send("Order marked as delivered");
       }
     }
-
-  
   } catch (error) {
     console.log(error);
     return res.status(400).send(error.message);
+  }
+};
+
+exports.sendProductsToRate = async (req, res) => {
+  const { store_id, order_id } = req.params;
+  try {
+    const products = await orderSchema
+      .findById(order_id, {
+        items: { $elemMatch: { store: store_id } },
+        status: 1,
+        user: 1,
+        order_number: 1,
+        createdAt: 1,
+      })
+      .populate("items.products.product", "title thumbnail rating")
+      .populate("user", "_id")
+      .populate("items.store", "storeName storeImage");
+
+    if (products.user.id !== req.userInfo.id)
+      return res.status(400).send("Unauthorized user");
+
+    return res.status(200).send(products);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send(error);
   }
 };
