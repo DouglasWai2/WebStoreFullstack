@@ -1,8 +1,112 @@
 {
-  "hash": "e2e0097a",
+  "hash": "634bcac7",
   "configHash": "a22eca85",
-  "lockfileHash": "e3b0c442",
-  "browserHash": "b2ef5818",
-  "optimized": {},
-  "chunks": {}
+  "lockfileHash": "417feed3",
+  "browserHash": "664a029e",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "5cbbedb4",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "9980ccb3",
+      "needsInterop": true
+    },
+    "@react-oauth/google": {
+      "src": "../../node_modules/@react-oauth/google/dist/index.esm.js",
+      "file": "@react-oauth_google.js",
+      "fileHash": "549f0d32",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "b5c4d4ac",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "c9b8dd01",
+      "needsInterop": false
+    },
+    "react-simple-star-rating": {
+      "src": "../../node_modules/react-simple-star-rating/dist/index.js",
+      "file": "react-simple-star-rating.js",
+      "fileHash": "7b1eb010",
+      "needsInterop": true
+    },
+    "@fortawesome/free-solid-svg-icons": {
+      "src": "../../node_modules/@fortawesome/free-solid-svg-icons/index.mjs",
+      "file": "@fortawesome_free-solid-svg-icons.js",
+      "fileHash": "333c5a71",
+      "needsInterop": false
+    },
+    "@fortawesome/react-fontawesome": {
+      "src": "../../node_modules/@fortawesome/react-fontawesome/index.es.js",
+      "file": "@fortawesome_react-fontawesome.js",
+      "fileHash": "fa4b056e",
+      "needsInterop": false
+    },
+    "@stripe/react-stripe-js": {
+      "src": "../../node_modules/@stripe/react-stripe-js/dist/react-stripe.esm.js",
+      "file": "@stripe_react-stripe-js.js",
+      "fileHash": "77c3d312",
+      "needsInterop": false
+    },
+    "@stripe/stripe-js": {
+      "src": "../../node_modules/@stripe/stripe-js/dist/stripe.esm.js",
+      "file": "@stripe_stripe-js.js",
+      "fileHash": "710e626c",
+      "needsInterop": false
+    },
+    "@lottiefiles/react-lottie-player": {
+      "src": "../../node_modules/@lottiefiles/react-lottie-player/dist/lottie-react.esm.js",
+      "file": "@lottiefiles_react-lottie-player.js",
+      "fileHash": "77ee3b09",
+      "needsInterop": false
+    },
+    "react-responsive-carousel": {
+      "src": "../../node_modules/react-responsive-carousel/lib/js/index.js",
+      "file": "react-responsive-carousel.js",
+      "fileHash": "bbd58907",
+      "needsInterop": true
+    },
+    "react-topbar-progress-indicator": {
+      "src": "../../node_modules/react-topbar-progress-indicator/src/index.js",
+      "file": "react-topbar-progress-indicator.js",
+      "fileHash": "78c4e481",
+      "needsInterop": true
+    },
+    "react-device-detect": {
+      "src": "../../node_modules/react-device-detect/dist/lib.js",
+      "file": "react-device-detect.js",
+      "fileHash": "93da7e48",
+      "needsInterop": true
+    },
+    "react-beautiful-dnd": {
+      "src": "../../node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js",
+      "file": "react-beautiful-dnd.js",
+      "fileHash": "b23a4309",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-PXJLUKTU": {
+      "file": "chunk-PXJLUKTU.js"
+    },
+    "chunk-JCOAQERU": {
+      "file": "chunk-JCOAQERU.js"
+    },
+    "chunk-FQO5W7GE": {
+      "file": "chunk-FQO5W7GE.js"
+    },
+    "chunk-ZS7NZCD4": {
+      "file": "chunk-ZS7NZCD4.js"
+    }
+  }
 }

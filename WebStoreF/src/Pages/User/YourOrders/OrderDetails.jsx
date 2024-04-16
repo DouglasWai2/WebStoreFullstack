@@ -18,18 +18,32 @@ import ConfirmBox from "../../../components/shared/UI/ConfirmBox";
 const OrderDetails = () => {
   const { order_id } = useParams();
   const [url, setUrl] = useState(null);
+  const [body, setBody] = useState(null);
   const navigate = useNavigate();
   const [confirm, setConfirm] = useState(false);
+  const [storeId, setStoreId] = useState(null);
 
   const { data, loading, error } = useFetchApi(
     `/order/retrieve/${order_id}`,
     "GET"
   );
 
+  const {
+    data: received,
+    loading: loadingRecieved,
+    error: errorRecieved,
+  } = useFetchApi("/order/received", "POST", body);
+
   const { data: client_secret, loading: loadingClientSecret } = useFetchApi(
     url,
     "GET"
   );
+
+  useEffect(() => {
+    if(received) {
+      setConfirm(false);
+    }
+  }, [received])
 
   useEffect(() => {
     if (client_secret)
@@ -44,6 +58,10 @@ const OrderDetails = () => {
       {confirm && (
         <ConfirmBox
           handleCancel={() => setConfirm(false)}
+          handleClick={() => {
+            setBody({ orderId: order_id, storeId: storeId });
+          }}
+          loading={loadingRecieved}
           text="Deseja marcar como recebido?"
           buttonColor={"bg-green-500"}
           buttonText={"Marcar como recebido"}
@@ -75,7 +93,10 @@ const OrderDetails = () => {
                 tracking_code={shipment_track_code}
                 shipment_date={shipment_date}
                 index={i}
-                handleProductRecived={() => setConfirm(true)}
+                handleProductRecived={() => {
+                  setConfirm(true) 
+                  setStoreId(store._id)
+                }}
               >
                 {products.map(({ product }, j) => (
                   <CheckoutProduct

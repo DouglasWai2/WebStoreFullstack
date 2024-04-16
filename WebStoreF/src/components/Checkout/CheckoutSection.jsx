@@ -8,7 +8,7 @@ const CheckoutSection = ({
   status,
   tracking_code,
   shipment_date,
-  handleProductRecived
+  handleProductRecived,
 }) => {
   return (
     <div
@@ -33,7 +33,7 @@ const CheckoutSection = ({
             )}
           </div>
         )}
-        {tracking_code && (
+        {tracking_code && status !== "DELIVERED" && (
           <div className="text-lg font-medium">
             <span className="mr-4">
               Código de rastreamento: {tracking_code}
@@ -42,13 +42,18 @@ const CheckoutSection = ({
         )}
       </div>
       {children}
-      {tracking_code && (
+      {tracking_code && status !== "DELIVERED" && (
         <button
           onClick={handleProductRecived}
           className="bg-[#188fa7] mt-3 w-full px-2 py-2 rounded-md text-white hover:brightness-95"
         >
-          Recebi o produto
+          Recebi o(s) produto(s)
         </button>
+      )}
+      {status === "DELIVERED" && (
+        <a className="text-blue-600 hover:underline cursor-pointer text-xl">
+          Avaliar produto(s)
+        </a>
       )}
     </div>
   );
