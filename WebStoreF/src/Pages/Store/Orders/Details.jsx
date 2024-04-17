@@ -79,7 +79,7 @@ const Details = () => {
                   <div>
                     {item.currentDiscount > 0 && (
                       <p className="strikethrough mr-2 text-nowrap h-min w-min text-xs group-hover:underline">
-                        {moneyMask(item.currentPrice)}
+                        {item.currentPrice}
                       </p>
                     )}
                     <p className="text-nowrap flex flex-wrap gap-1 group-hover:underline">
@@ -125,8 +125,6 @@ const Details = () => {
                         <p>Peso: {item.weight} kg</p>
                         <p>Formato: {item.format}</p>
                       </div>
-                      <p>Preço: {moneyMask(item.price)}</p>
-                      <p>Desconto: {moneyMask(item.discount)}</p>
                     </div>
                     <p>
                       Produtos:{" "}
@@ -144,6 +142,15 @@ const Details = () => {
                   </>
                 );
               })}
+              <p>
+                Frete:{" "}
+                {moneyMask(
+                  (
+                    data.items[0].shipment.custom_price -
+                    data.items[0].shipment.discount
+                  ).toFixed(2)
+                )}
+              </p>
             </div>
           </div>
           <div className="border border-gray-200 rounded p-2">
