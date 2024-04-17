@@ -1,4 +1,5 @@
 import React from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 const ConfirmBox = ({
   handleClick,
@@ -36,10 +37,12 @@ const ConfirmBox = ({
             disabled={loading}
             onClick={handleClick}
             className={
-              "text-white px-4 hover:brightness-90 rounded " + buttonColor
+              "text-white flex gap-2 px-2 py-1 duration-200 transition-width hover:brightness-90 rounded " +
+              buttonColor
             }
           >
-            {loading ? <span className="loader-2"></span> : buttonText}
+            {loading && <LoadingSpinner color="white" />}
+            {buttonText}
           </button>
           <button onClick={handleCancel} className="hover:underline">
             Cancelar

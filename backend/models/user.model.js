@@ -90,6 +90,12 @@ const UserSchema = new mongoose.Schema({
       },
     },
   ],
+  ratings: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Rating",
+    },
+  ],
   orders: [
     {
       type: mongoose.Schema.Types.ObjectId,

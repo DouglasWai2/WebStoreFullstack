@@ -41,10 +41,10 @@ const NewProduct = () => {
     brand: "",
     model: "",
     dimensions: {
-      weight: null,
-      length: null,
-      width: null,
-      height: null,
+      weight: "",
+      length: "",
+      width: "",
+      height: "",
     },
   });
 
@@ -261,7 +261,7 @@ const NewProduct = () => {
       <form className="flex flex-col gap-3 shadow bg-white rounded w-2/5 py-5 px-8 max-2xl:w-full max-2xl:max-w-[1440px] max-md:gap-6">
         <FormInput
           props={{ id: "title" }}
-          value={title}
+          value={title || ""}
           name="title"
           label="Título"
           handleChange={handleChange}
@@ -286,7 +286,7 @@ const NewProduct = () => {
             id="description"
             className="floating-input-effect w-full peer !transition-[filter] min-h-[200px] max-h-[500px]"
             onChange={handleChange}
-            value={description}
+            value={description || ""}
             name="description"
             type="text"
             aria-multiline={true}
@@ -301,14 +301,14 @@ const NewProduct = () => {
         </div>
         <FormInput
           props={{ id: "brand" }}
-          value={brand}
+          value={brand || ""}
           name="brand"
           label="Marca"
           handleChange={handleChange}
         />
         <FormInput
           props={{ id: "model" }}
-          value={model}
+          value={model || ""}
           name="model"
           label="Modelo"
           handleChange={handleChange}
@@ -354,7 +354,7 @@ const NewProduct = () => {
             className="floating-input-effect w-full peer"
             onKeyDown={handleTagsArray}
             onChange={handleChange}
-            value={tags.replace(",", "")}
+            value={tags.replace(",", "") || ""}
             name="tags"
             id="tags"
             // placeholder="Ex: Eletrônicos, jogos, computador, videogame..."
@@ -370,7 +370,7 @@ const NewProduct = () => {
         </div>
         <FormInput
           props={{ id: "price" }}
-          value={price}
+          value={price || ""}
           name="price"
           label="Preço base"
           handleChange={handleChange}

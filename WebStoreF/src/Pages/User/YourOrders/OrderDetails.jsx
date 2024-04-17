@@ -11,7 +11,7 @@ import CheckoutSection from "../../../components/Checkout/CheckoutSection";
 import CheckoutProduct from "../../../components/Checkout/CheckoutProduct";
 import CheckoutShipment from "../../../components/Checkout/CheckoutShipment";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import ConfirmBox from "../../../components/shared/UI/ConfirmBox";
 
@@ -23,7 +23,7 @@ const OrderDetails = () => {
   const [confirm, setConfirm] = useState(false);
   const [storeId, setStoreId] = useState(null);
 
-  const { data, loading, error } = useFetchApi(
+  const { data, loading, error, refresh } = useFetchApi(
     `/order/retrieve/${order_id}`,
     "GET"
   );
@@ -40,10 +40,11 @@ const OrderDetails = () => {
   );
 
   useEffect(() => {
-    if(received) {
+    if (received) {
       setConfirm(false);
+      refresh();
     }
-  }, [received])
+  }, [received]);
 
   useEffect(() => {
     if (client_secret)
@@ -83,6 +84,7 @@ const OrderDetails = () => {
                 shipment_status,
                 shipment_track_code,
                 shipment_date,
+                rated,
               },
               i
             ) => (
@@ -93,12 +95,29 @@ const OrderDetails = () => {
                 tracking_code={shipment_track_code}
                 shipment_date={shipment_date}
                 index={i}
-                handleProductRecived={() => {
-                  setConfirm(true) 
-                  setStoreId(store._id)
-                }}
-                handleRateProducts={() => navigate("/rating/" + store._id + "/" + order_id)}
               >
+                <div className="flex flex-col gap-4">
+                  {shipment_status && (
+                    <div>
+                      Status:{" "}
+                      <span className={orderStatus[shipment_status].color}>
+                        {orderStatus[shipment_status].text}
+                      </span>
+                      {shipment_status === "SHIPPED" && (
+                        <span className="ml-4">
+                          Data: {new Date(shipment_date).toLocaleDateString()}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                  {shipment_track_code && shipment_status !== "DELIVERED" && (
+                    <div className="text-lg font-medium">
+                      <span className="mr-4">
+                        Código de rastreamento: {shipment_track_code}
+                      </span>
+                    </div>
+                  )}
+                </div>
                 {products.map(({ product }, j) => (
                   <CheckoutProduct
                     price={products[j].currentPrice}
@@ -133,6 +152,32 @@ const OrderDetails = () => {
                   shipment={shipment}
                   index={i}
                 />
+                {shipment_track_code && shipment_status !== "DELIVERED" && (
+                  <button
+                    onClick={() => {
+                      setConfirm(true);
+                      setStoreId(store._id);
+                    }}
+                    className="bg-[#188fa7] mt-3 w-full px-2 py-2 rounded-md text-white hover:brightness-95"
+                  >
+                    Recebi o(s) produto(s)
+                  </button>
+                )}
+                {shipment_status === "DELIVERED" && !rated && (
+                  <a
+                    onClick={() =>
+                      navigate("/rating/" + store._id + "/" + order_id)
+                    }
+                    className="text-blue-600 hover:underline cursor-pointer text-xl"
+                  >
+                    Avaliar produto(s)
+                  </a>
+                )}
+                {rated && (
+                  <p>
+                    <FontAwesomeIcon icon={faCheck} /> Avaliado
+                  </p>
+                )}
               </CheckoutSection>
             )
           )}

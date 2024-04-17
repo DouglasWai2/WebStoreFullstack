@@ -60,6 +60,10 @@ const orderSchema = new mongoose.Schema(
         },
         shipment_date: {
           type: Date,
+        },
+        rated: {
+          type: Boolean,
+          default: false,
         }
       },
     ],

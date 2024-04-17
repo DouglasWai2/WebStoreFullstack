@@ -78,6 +78,7 @@ const StoreSchema = new mongoose.Schema(
     orders: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
     categories: [{ type: String }],
     likes: { type: Number },
+    rating: [{ type: Number }],
     melhorEnvios: {
       access_token: { type: String },
       refresh_token: { type: String },
