@@ -125,8 +125,8 @@ const Details = () => {
                         <p>Peso: {item.weight} kg</p>
                         <p>Formato: {item.format}</p>
                       </div>
-                      <p>Preço: {moneyMask(item.price)}</p>
-                      <p>Desconto: {moneyMask(item.discount)}</p>
+                      <p>Preço: {item.price}</p>
+                      <p>Desconto: {item.discount}</p>
                     </div>
                     <p>
                       Produtos:{" "}

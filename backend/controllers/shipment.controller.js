@@ -41,6 +41,8 @@ exports.getTokens = async (req, res) => {
   try {
     const { data } = await axios.request(options);
 
+    console.log(data)
+
     const store = await storeSchema.findOneAndUpdate(
       {
         user: state,
@@ -64,7 +66,6 @@ exports.calculateShipment = async (req, res) => {
   const price = [];
 
   try {
-
     if (id) {
       const productPipeline = [
         {
@@ -111,7 +112,7 @@ exports.calculateShipment = async (req, res) => {
                   },
                 },
               ],
-    
+
               store: {
                 _id: "$_id.storeId",
                 storeAddress: "$_id.storeAddress",
@@ -122,7 +123,7 @@ exports.calculateShipment = async (req, res) => {
           },
         },
       ];
-    
+
       const result = await productSchema.aggregate(productPipeline);
 
       const { _id: cart } = result[0];
@@ -141,7 +142,6 @@ exports.calculateShipment = async (req, res) => {
         shipment_hash,
       });
     } else {
-
       const cartPipeline = [
         {
           $match: {
@@ -183,7 +183,7 @@ exports.calculateShipment = async (req, res) => {
           // Group results by store
           $group: {
             _id: "$store._id",
-    
+
             // Get only the first because all store info are the same for each element in products array
             storeAddress: { $first: "$store.storeAddress.cep" },
             storeName: { $first: "$store.storeName" },
@@ -228,12 +228,9 @@ exports.calculateShipment = async (req, res) => {
     }
 
     return res.status(200).send(price);
-
   } catch (error) {
-
     console.log(error);
     return res.status(400).send(error);
-    
   }
 };
 
@@ -269,6 +266,33 @@ async function getShipmentPrice(cart, to) {
     return response.data;
   } catch (error) {
     console.log(error);
+    if (error.response.status === 401) {
+      access_token = await getAccessToken();
+      return getShipmentPrice(cart, to);
+    }
     return error;
+  }
+}
+
+async function getAccessToken() {
+  const user = await userSchema.findOne({ storeName: "WebStore" });
+  const options = {
+    method: "POST",
+    url: "https://sandbox.melhorenvio.com.br/oauth/token",
+    headers,
+    data: {
+      grant_type: "refresh_token",
+      client_id,
+      client_secret,
+      refresh_token: user.melhorEnvios.refresh_token,
+    },
+  };
+
+  try {
+    const response = await axios.request(options);
+    console.log(response.data);
+    return response.data.access_token;
+  } catch (error) {
+    console.log(error);
   }
 }

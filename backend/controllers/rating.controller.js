@@ -39,9 +39,12 @@ exports.rateProduct = async (req, res, next) => {
         $push: { ratings: newRating._id },
       })
 
-      await productSchema.findByIdAndUpdate(product, {
+      const product = await productSchema.findByIdAndUpdate(product, {
         $push: { ratings: newRating._id },
-      });
+      }, { new: true }).populate("ratings", "rating");
+
+      product.rating = product.ratings.reduce((a, b) => a + b.rating, 0) / product.ratings.length;
+      await product.save();
     } catch (error) {
       console.log(error);
       return res.status(500).send("Error posting comment");
