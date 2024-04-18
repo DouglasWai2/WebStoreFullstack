@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const ProductPageSkeleton = () => {
   return (
     <div className="w-screen py-10 flex flex-col items-center gap-5 max-lg:px-6 animate-pulse max-sm:px-0">
-      <article className="shadow-md p-6 w-full max-w-[1440px]">
+      <article className="shadow bg-white rounded-lg p-6 w-full max-w-[1440px]">
         <div className="flex justify-between py-5 max-lg:flex-col max-lg:justify-normal">
           <section
             id="product-images-section"
@@ -89,7 +89,7 @@ const ProductPageSkeleton = () => {
           </div>
         </section>
       </article>
-      <section className="w-full max-w-[1440px] mt-10 max-sm:px-2" id="Product-description">
+      <section className="w-full shadow bg-white rounded-lg px-6 py-8 max-w-[1440px] mt-2 max-sm:px-2" id="Product-description">
           <div className="text-left">
             <div className="bg-gray-300 w-1/6 h-7"></div>
             <div className="bg-gray-300 w-1/6 h-4 mt-3"></div>

@@ -15,8 +15,8 @@ import {
   faCartPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useCart } from "../../hooks/useCart";
 import AddToCartButton from "../../components/shared/UI/AddToCartButton";
+import Comment from "../../components/Catalog/ProductPage/Comment";
 
 const ProductPage = () => {
   const { productId } = useParams();
@@ -125,7 +125,7 @@ const ProductPage = () => {
                 <p className="text-gray-600">{product.sells} vendidos</p>
               </div>
               <div className="flex gap-2 items-center">
-                <Rating readonly initialValue={product.rating} />
+                <Rating allowFraction readonly initialValue={product.rating} />
                 <span>({product.rating})</span>
               </div>
               <div className="flex flex-col gap-10 justify-between h-full max-lg:flex-col-reverse">
@@ -180,7 +180,10 @@ const ProductPage = () => {
                   </div>
                   <Rating
                     readonly
-                    initialValue={4.3}
+                    initialValue={
+                      product.store.rating.reduce((a, b) => a + b, 0) /
+                      product.store.rating.length
+                    }
                     allowFraction
                     fillColor={"#188fa7"}
                     size={25}
@@ -208,7 +211,7 @@ const ProductPage = () => {
           </section>
         </article>
         <section
-          className="w-full max-w-[1440px] mt-8 px-2"
+          className="w-full max-w-[1440px] mt-2 px-6 py-8 bg-white rounded-lg shadow"
           id="Product-description"
         >
           <div
@@ -234,7 +237,7 @@ const ProductPage = () => {
               className="relative flex items-center justify-center cursor-pointer group"
             >
               <span className="w-full border-b-[1px] border-black absolute"></span>
-              <div className="absolute flex items-center gap-2 bg-[#f5f5f5] px-3">
+              <div className="absolute flex items-center gap-2 bg-white px-3">
                 <span className="group-hover:underline">
                   {fullDescription ? "Mostrar menos" : "Mostrar mais"}
                 </span>
@@ -254,32 +257,23 @@ const ProductPage = () => {
             </div>
           )}
         </section>
-        <section id="ratings" className="max-w-[1440px] px-2">
+        <section
+          id="ratings"
+          className="max-w-[1440px] px-6 w-full bg-white rounded-lg shadow py-4"
+        >
           <h1 className="text-2xl mb-4">Avaliações</h1>
-
-          <div className="border-b-[1px] border-slate-200 py-3 w-full">
-            <div className="flex items-center gap-2">
-              <p className="font-semibold">Augusto Silva</p>
-              <Rating size={30} />
-            </div>
-
-            <p className="relative w-full pl-12 before:border-b-2 before:border-l-2 before:absolute before:border-gray-400 before:w-3 before:h-1/2 before:left-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-              pulvinar tellus enim, ut aliquet arcu finibus sit amet. Sed quis
-              lacus nulla. Vestibulum a dolor sed nunc varius tempor. Etiam quis
-              sapien quis sem commodo aliquet. Donec augue sem, tempor vel
-              auctor sed, lacinia a ante. Curabitur vehicula auctor feugiat.
-              Mauris aliquet lacus enim, a elementum ex pellentesque sit amet.
-              Fusce volutpat diam sit amet elementum laoreet. Etiam lacinia
-              risus vel metus feugiat placerat. Nullam sed lacus vel odio
-              ullamcorper facilisis sit amet a sapien. Nam feugiat volutpat
-              metus, eget laoreet nulla sagittis eget. Duis at ornare massa. Nam
-              augue odio, tristique vel nibh dignissim, malesuada maximus diam.
-              Mauris placerat ante nec massa fringilla, at placerat sem
-              porttitor. Nullam rutrum, odio id porta aliquet, mauris quam
-              lacinia quam, et rhoncus nulla leo eu dolor.
-            </p>
-          </div>
+          {product.ratings.length > 0 ? (
+            product.ratings.map((rating) => (
+              <Comment
+                name={rating.user.name + " " + rating.user.lastName}
+                rating={rating.rating}
+                comment={rating.comment}
+                title={rating.title}
+              />
+            ))
+          ) : (
+            <p>Sem avaliações</p>
+          )}
         </section>
       </div>
     )

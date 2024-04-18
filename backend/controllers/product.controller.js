@@ -69,7 +69,14 @@ exports.sendProduct = async (req, res) => {
     const product = await productSchema
       .findById(productId)
       .select("-legacyCreatedAt -store -updatedAt -createdAt")
-      .populate("store", "storeName storeImage likes");
+      .populate("store", "storeName storeImage likes rating")
+      .populate({
+        path: "ratings",
+        select: "rating user title comment",
+        limit: 3,
+        sort: { createdAt: -1 },
+        populate: { path: "user", select: "name lastName" },
+      });
 
     return res.send(product);
   } catch (error) {
@@ -102,7 +109,6 @@ exports.searchResult = async (req, res) => {
   const { page } = req.query || 1;
 
   try {
-
     const products = await productSchema
       .find(match)
       .sort(options.sort)

@@ -6,20 +6,12 @@ const orderSchema = require("../models/order.model");
 
 exports.rateProduct = async (req, res, next) => {
   const { ratings, storeId, orderId } = req.body;
+  const order = await orderSchema.findById(orderId, {
+    items: { $elemMatch: { store: storeId } },
+  });
+  if(!order) return res.status(400).send("Order not found");
+  if(order.items[0].rated) return res.status(400).send("Already rated");
   
-  try {
-    const order = await orderSchema.findById(orderId, {
-      items: { $elemMatch: { store: storeId } },
-    });
-
-    if(order.items[0].rated) return res.status(400).send("Already rated");
-    order.items[0].rated = true;
-    await order.save();
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send(error);
-  }
 
   for (let i = 0; i < ratings.length; i++) {
     const { product, title, comment, rating } = ratings[i];
@@ -39,19 +31,20 @@ exports.rateProduct = async (req, res, next) => {
         $push: { ratings: newRating._id },
       })
 
-      const product = await productSchema.findByIdAndUpdate(product, {
+      const rate = await productSchema.findByIdAndUpdate(product, {
         $push: { ratings: newRating._id },
       }, { new: true }).populate("ratings", "rating");
 
-      product.rating = product.ratings.reduce((a, b) => a + b.rating, 0) / product.ratings.length;
-      await product.save();
+      rate.rating = rate.ratings.reduce((a, b) => a + b.rating, 0) / rate.ratings.length;
+      await rate.save();
     } catch (error) {
       console.log(error);
       return res.status(500).send("Error posting comment");
     }
   }
 
-  
+  order.items[0].rated = true;
+  await order.save();
   next();
 };
 
