@@ -6,6 +6,7 @@ const FormInput = ({
   handleChange,
   label,
   type = "text",
+  id,
   props,
 }) => {
   return (
@@ -14,9 +15,10 @@ const FormInput = ({
         placeholder=""
         className={"floating-input-effect w-full peer "}
         onChange={handleChange}
-        value={value || ""}
+        value={value}
         name={name}
         type={type}
+        id={id}
         required
         {...props}
       />

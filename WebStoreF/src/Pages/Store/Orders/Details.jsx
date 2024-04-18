@@ -125,6 +125,8 @@ const Details = () => {
                         <p>Peso: {item.weight} kg</p>
                         <p>Formato: {item.format}</p>
                       </div>
+                      <p>Preço: {item.price}</p>
+                      <p>Desconto: {item.discount}</p>
                     </div>
                     <p>
                       Produtos:{" "}

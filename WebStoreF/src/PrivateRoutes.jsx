@@ -15,6 +15,7 @@ import MyProducts from "./Pages/Store/MyProducts";
 import OrderDetails from "./Pages/User/YourOrders/OrderDetails";
 import Orders from "./Pages/Store/Orders/Orders";
 import Details from "./Pages/Store/Orders/Details";
+import Rating from "./Pages/Rating";
 
 const PrivateRoutes = (user, loggedIn, loading, refreshUser) => {
   if (!loggedIn || (loading === false && !user)) {
@@ -72,6 +73,10 @@ const PrivateRoutes = (user, loggedIn, loading, refreshUser) => {
           },
         ],
       },
+      {
+        path: "rating/:store_id/:order_id",
+        element: <Rating />,
+      }
     ];
   }
 };
