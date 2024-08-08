@@ -39,6 +39,10 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
     error,
   } = useFetchApi("/user/interests", "POST", productsIds);
 
+  const {
+
+  } = useFetchApi("/", "GET");
+
   useEffect(() => {
     if (data) {
       setCategories((categories) => [...categories, data.interest[counter]]);

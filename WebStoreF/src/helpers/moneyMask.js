@@ -1,7 +1,5 @@
 export const moneyMask = (value) => {
   let newValue = value;
-  console.log(value)
-  
   const addZeroes = (num) =>
     Number(num).toFixed(Math.max(num.split(".")[1]?.length, 2) || 2);
 

@@ -1,8 +1,11 @@
 const multerS3 = require("multer-s3");
 const multer = require("multer");
 const path = require("path");
+require('dotenv').config
 
 const s3 = require("../utils/s3.util");
+
+console.log(process.env.AWS_BUCKET)
 
 const upload = multer({
   storage: multerS3({

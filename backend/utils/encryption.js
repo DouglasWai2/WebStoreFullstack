@@ -1,5 +1,5 @@
 const encryption_secret_key = process.env.ENCRYPTION_SECRET_KEY
-const encryption_secret_iv  = process.env.ENCRYPTION_SECRET_KEY
+const encryption_secret_iv  = process.env.ENCRYPTION_SECRET_IV
 const ecnryption_method  = process.env.ENCRYPTION_METHOD
 const crypto = require('crypto')
 

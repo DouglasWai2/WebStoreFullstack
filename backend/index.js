@@ -20,6 +20,9 @@ mongoose
   .catch((error) => console.log(error));
 
 const app = express();
+
+console.log(process.env.ORIGIN)
+
 app.use(
   cors({
     credentials: true,
