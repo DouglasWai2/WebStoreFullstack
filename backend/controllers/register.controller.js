@@ -27,9 +27,10 @@ exports.register = async (req, res) => {
   const message = `<p>Este é seu e-mail de verificação, não compartilhe com ninguem:</p> 
   <a href="${process.env.ORIGIN}/register/user/verify?id=${newUser.id}&token=${token.token}">Clique aqui para verificar</a>`;
   try {
+    await sendEmail(newUser.email, "Verifique sua conta WebStore", message);
     await newUser.save();
     await token.save();
-    await sendEmail(newUser.email, "Verifique sua conta WebStore", message);
+
     return res
       .status(201)
       .send(

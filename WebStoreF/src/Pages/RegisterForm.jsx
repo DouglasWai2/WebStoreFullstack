@@ -130,7 +130,7 @@ const RegisterForm = () => {
     }));
   };
   return (
-    <main className="flex flex-col z-[-1] p-10 justify-center items-center min-w-screen bg-white max-sm:px-0">
+    <main className="flex flex-col p-10 justify-center items-center min-w-screen bg-white max-sm:px-0">
       <div className="w-full max-w-[600px] rounded-lg shadow-md p-8 py-20 bg-[#fcfcfc]">
         {errMessage !== "" && (
           <div
@@ -153,7 +153,7 @@ const RegisterForm = () => {
           className="flex flex-col justify-center gap-8 relative"
         >
           <div className="flex gap-2 justify-between max-sm:flex-col max-sm:gap-8">
-            <label htmlFor="Nome" className="flex flex-col">
+            <label htmlFor="Nome" className="flex flex-col w-1/2">
               <span className="flex justify-between">Nome</span>
               <input
                 required
@@ -164,7 +164,7 @@ const RegisterForm = () => {
                 name="name"
               />
             </label>
-            <label htmlFor="sobrenome" className="flex flex-col">
+            <label htmlFor="sobrenome" className="flex flex-col w-1/2">
               <span className="flex justify-between">Sobrenome</span>
               <input
                 required

@@ -41,8 +41,6 @@ exports.getTokens = async (req, res) => {
   try {
     const { data } = await axios.request(options);
 
-    console.log(data);  
-
     const store = await storeSchema.findOneAndUpdate(
       {
         user: state,
