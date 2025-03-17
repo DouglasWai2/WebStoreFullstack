@@ -28,6 +28,7 @@ const MyStore = () => {
 
   const [edit, setEdit] = useState(false);
   const [url, setUrl] = useState(null);
+  const [meUrl, setMeUrl] = useState(null);
   const [counter, setCounter] = useState(0);
   const [categories, setCategories] = useState([]);
   const [lastTime, setLastTime] = useState(0);
@@ -102,6 +103,10 @@ const MyStore = () => {
       setUrl(`${location.pathname}`);
   }, [location]);
 
+  useFetchApi(meUrl, `GET`);
+  const handleMercadoEnviosIntegration = () => {
+    setMeUrl(`/frete&storeId=${data._id}`);
+  }
   //send edit info to backend
   function handleSubmit() {
     if (bannerEdit) {
@@ -164,7 +169,8 @@ const MyStore = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex gap-1 flex-col items-end py-2">
+             <div className="flex gap-1 flex-col items-end py-2">
+              <button onClick={handleMercadoEnviosIntegration}>Integrar mercado envio</button>
                 {edit ? (
                   <>
                     <button

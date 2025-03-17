@@ -4,7 +4,7 @@ const auth = require("../middlewares/verifyToken");
 const { redirectME, getTokens, calculateShipment } = require("../controllers/shipment.controller");
 
 
-router.get("/frete", redirectME);
+router.get("/frete:storeId", redirectME);
 
 router.get("/frete/callback", getTokens);
 

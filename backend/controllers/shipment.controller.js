@@ -4,27 +4,29 @@ const productSchema = require("../models/product.model");
 const userSchema = require("../models/user.model");
 const mongoose = require("mongoose");
 const { encryptData } = require("../utils/encryption");
-const client_id = 4287;
+const client_id = 5468;
 const redirect_uri = `${process.env.BASE_URL}/api/v1/frete/callback`;
 const client_secret = process.env.MELHORENVIO_CLIENT_SECRET;
 const headers = {
   Accept: "application/json",
   "Content-Type": "application/json",
-  "User-Agent": "WebStore (douglas.wai@outlook.com)",
+  "User-Agent": "WebStore (douglas.wai2@outlook.com)",
 };
 
 let access_token = process.env.MELHORENVIO_ACCESS_TOKEN;
 
 exports.redirectME = async (req, res) => {
+  const storeId = req.query.storeId;
+  console.log(req.query.storeId);
   return res.redirect(
     301,
-    `https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&scope=shipping-calculate shipping-calculate shipping-cancel shipping-checkout shipping-companies shipping-generate shipping-preview shipping-print shipping-share shipping-tracking`
+    `https://sandbox.melhorenvio.com.br/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code&state=${storeId}&scope=shipping-calculate shipping-calculate shipping-cancel shipping-checkout shipping-companies shipping-generate shipping-preview shipping-print shipping-share shipping-tracking`
   );
 };
 
 exports.getTokens = async (req, res) => {
   const { code, state } = req.query;
-
+ 
   const options = {
     method: "POST",
     url: "https://sandbox.melhorenvio.com.br/oauth/token",
@@ -50,7 +52,7 @@ exports.getTokens = async (req, res) => {
 
     return res.status(200).send(
       `<script>
-          window.location.href = 'https://webstore-app.shop/'
+          window.location.href = ${process.env.ORIGIN}
         </script>`
     );
   } catch (error) {
