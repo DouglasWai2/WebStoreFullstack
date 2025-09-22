@@ -61,7 +61,7 @@ const Navbar = ({
 
   return (
     <header>
-      <nav>
+      <nav className={""}>
         <div
           className={
             "w-full h-[80px] bg-[#152128] py-1 px-2 flex items-center justify-between gap-2 text-white"

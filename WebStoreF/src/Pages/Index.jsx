@@ -39,10 +39,6 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
     error,
   } = useFetchApi("/user/interests", "POST", productsIds);
 
-  const {
-
-  } = useFetchApi("/", "GET");
-
   useEffect(() => {
     if (data) {
       setCategories((categories) => [...categories, data.interest[counter]]);
@@ -53,7 +49,6 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
   const {
     data: images,
     loading: fetchingImages,
-    error: errorImages,
   } = useFetchApi("/store/get-carousel-images", "POST", data);
 
   const handleHomeScroll = useCallback(() => {
@@ -104,13 +99,15 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
     refreshUser,
   };
 
-  useEffect(() => {
-    if (toggleCard || toggleSideNav || (isMobile && toggleCart)) {
-     document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [toggleCard, toggleSideNav, toggleCart]);
+  // useEffect(() => {
+  //   if (toggleCard || toggleSideNav || (isMobile && toggleCart)) {
+  //    document.body.style.overflow = "hidden";
+  //   } else {
+  //     document.body.style.overflow = "auto";
+  //   }
+  // }, [toggleCard, toggleSideNav, toggleCart]);
+
+  document.body.style.height = "100vh"
 
   return (
     <>
@@ -119,7 +116,7 @@ const Index = ({ user, address, loading, refreshUser, loggedIn }) => {
       )}
       {loading && <TopBarProgress />}
       <Navbar {...props} />
-      <main className={"w-full h-full bg-[#f5f5f5]"}>
+      <main className={"w-full h-screen bg-[#f5f5f5] overflow-scroll"}>
         {toggleCart && (
           <CartSideMenu
             cartRef={cartRef}
