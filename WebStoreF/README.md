@@ -1,8 +1,9 @@
-# React + Vite
+# WebStoreF
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este frontend faz parte do projeto WebStoreFullstack.
 
-Currently, two official plugins are available:
+A documentação completa de instalação, variáveis de ambiente, rotas do frontend e endpoints do backend está no README da raiz:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```text
+../README.md
+```
